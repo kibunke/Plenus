@@ -1,0 +1,16 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\CompetenciaSerie
+ *
+ * @ORM\Entity()
+ *
+ */
+class CompetenciaSerie extends Competencia
+{ 
+}

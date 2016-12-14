@@ -1,0 +1,64 @@
+#acreditacionTable .colAcreditados{
+    background: rgb(230,107,107);
+}
+#acreditacionTable .colHospedados{
+    background: rgb(255,202,118);
+}
+#acreditacionTable .colTransportados{
+    background: rgb(95,130,149);
+}
+#acreditacionTable .colPresupuestado{
+    background: rgb(31,187,166);
+}
+#acreditacionTable tbody td.colAcreditados, #acreditacionTable tbody td.colHospedados, #acreditacionTable tbody td.colTransportados, #acreditacionTable tbody td.colPresupuestado,  #acreditacionTable tfoot td.colTotales{
+    font-size: 20px;
+}
+#acreditacionTable tfoot td{
+    background-color: rgb(221,221,221);
+}
+
+#acreditacionTable thead tr  th{
+    background-color: #5f8295;
+    color: #f9f9f9;
+    border: 1px solid #dfe1e5;
+}
+#contenedorExport{
+    visibility: hidden;
+}
+#acreditacionTable .superCent{
+    text-decoration: line-through;
+    font-variant: super;
+}
+.panel-white .table, .partition-white .table{
+    font-size: 12px;
+}
+
+div.popover{
+    width: 200px !important;
+}
+
+.popoverHeader, .popoverHeader h4{
+    background-color: rgb(95,130,149);
+    padding: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: none;
+    font-weight: bold;
+    color: white;
+}
+div.popover div{
+    padding: 0px;
+}
+.popoverHeader div:last-child{
+    padding-right: 5px !important;
+    padding-top: 5px;
+}
+.popover span.popoverClose:hover{
+    cursor: pointer;
+}
+li.headerTotalesGral:hover{
+    cursor: help;
+}
+.rate .value{
+    font-size: 2em;
+}

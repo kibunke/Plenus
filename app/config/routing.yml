@@ -1,0 +1,12 @@
+common:
+    resource: "@CommonBundle/Controller/"
+    type:     annotation
+    prefix:   /system
+seguridad:
+    resource: "@SeguridadBundle/Controller/"
+    type:     annotation
+    prefix:   /
+gestion:
+    resource: "@GestionBundle/Controller/"
+    type:     annotation
+    prefix:   /system

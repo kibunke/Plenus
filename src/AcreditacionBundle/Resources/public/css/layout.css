@@ -1,0 +1,178 @@
+#acreditacion-body{
+    border: 2px solid #5f8295;
+    border-bottom-width: 6px;
+    border-top: none;
+    padding: 10px;
+    background-color: rgb(255,255,255);
+}
+.panel-heading{
+    padding-top: 20px;
+    padding-right: 40px;
+    padding-left: 40px;
+    padding-bottom: 0px;
+    margin-bottom: 0px; 
+}
+.panel-body{
+    padding-right: 40px;
+    padding-left: 40px;
+    padding-top: 0px;
+    margin-top: -1px;
+}
+.form-horizontal .form-group{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.panel-heading li a{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+span.input-group-addon, div.input-group-addon{
+    background-color: rgb(95,130,149);
+}
+label{
+    font-style: italic;
+}
+#acreditacion-body label, #blockContenidoContent label{
+    color: rgb(95,130,149);
+    font-size: 12px;
+}
+legend.botonera{
+    border: 1px dotted #8b91a0;
+    margin-bottom: 10px;
+}
+.nav-tabs.nav-justified > li > a{
+    border-radius: 10px 10px 0 0;
+    background-color: #F5F5F5;
+    border-right: 1px solid white;
+    border-left: 1px solid white;
+}
+.nav-tabs.nav-justified > li > a.datosValidados, .nav-tabs.nav-justified > li > a.datosValidados:hover h4, .nav-tabs.nav-justified > li > a.datosValidados:hover{
+    background-color: #23d1b9;
+    color: white;
+    cursor: auto;   
+}
+.nav-tabs.nav-justified > li > a:hover, .nav-tabs.nav-justified > li > a:hover h4{
+    background-color: #dddddd;
+    color: black;
+}
+.nav-tabs.nav-justified > li > a.datosValidados h4{
+    color: white;
+    font-weight: 600 !important;
+}
+#acreditacionNav a h4{
+    font-weight: 500;
+}
+#acreditacion_back button, #acreditacion_save button, #acreditacion_next button, #acreditacion_back i, #acreditacion_save i, #acreditacion_next i{
+    background: none;
+    border: none;
+    font-size: 50px;
+    color: #88bbc8;
+}
+#acreditacion_back button:hover, #acreditacion_save button:hover, #acreditacion_next button:hover{
+    background: none;
+    border:none;
+    font-size: 55px;
+    color: #5f8295;
+}
+#acreditacion_back, #acreditacion_next, #acreditacion_save{
+    margin: 0px;
+    padding-left: 40px;
+    padding-right: 40px;
+
+}
+#blockContenidoData > div.panel-heading li.active h4{
+    font-weight: 600 !important;
+    color: white;
+}
+#blockContenidoData > div.panel-heading li.active a, #blockContenidoData > div.panel-heading li.active a:hover h4{
+    background-color: #5f8295;
+}
+#blockContenidoData > div.panel-heading li.active.hasError a, #blockContenidoData > div.panel-heading li.active.hasError a:hover h4{
+    background-color: #DC143C;
+}
+.nav-tabs.nav-justified > .active > a, .nav-tabs.nav-justified > .active > a:hover, .nav-tabs.nav-justified > .active > a:focus{
+    border-bottom: 1px solid #5f8295;
+}
+h6{
+    color: #858585;
+}
+#acreditacion_step, #buttonSaveIcon, #buttonSaveTitle{
+    margin-bottom: 0px;
+}
+#buttonSaveIcon{
+    margin-bottom: -10px;
+}
+#acreditacion_step > div.row:last-child > div.form-group{
+    margin-bottom: 0px;
+}
+.buttonLabel, #buttonSaveTitle{
+    font-size: 17px;
+    font-style: italic;
+    padding-left: 7px;
+    padding-right: 7px;
+    vertical-align: middle;
+}
+#acreditacion_save button, #acreditacion_next button {
+    border: none;
+    background: none;
+}
+#acreditacion_siguiente i:hover{
+    font-size: 55px;
+    cursor: pointer;
+}
+#acreditacion_siguiente span:hover{
+    cursor: pointer;
+}
+#acreditacion_siguiente span{
+    padding-bottom: 20px;
+}
+a.datosValidados{
+    background-color: #23d1b9;
+}
+#acreditacionNav{
+    border-bottom: 2px solid #5f8295;
+}
+#acreditacion-body.hasError, #acreditacionNav.hasError{
+    border-color: #DC143C;
+}
+
+textarea, select, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]{
+    border: 1px solid rgb(136,187,200) ;
+    color: black ;
+}
+
+select.form-control{
+    border: 1px solid rgb(136,187,200) ;
+    color: black ;
+}
+
+#acreditacion-contenedorBotones{
+    min-height: 105px;
+}
+a.acreditacion-nolink, a.acreditacion-nolink:hover, a.acreditacion-nolink:hover h4{
+    cursor: default;
+    background-color: #f5f5f5 !important ;
+    color: #8e9aa2 !important;
+}
+textarea{
+    color: black !important;
+}
+.select2-drop-active{
+    border: none;
+}
+.select2-results .select2-highlighted{
+    background: rgb(95, 130, 149) none repeat scroll 0 0;
+}
+span.areaCents{
+    text-decoration: line-through;
+    font-variant: super;
+}
+#acreditacionObject{
+    width: 100%;
+    height:75vh;
+}
+#acreditacionExport .modal-lg{
+    width: 90%; 
+    height: 90%;
+}
+

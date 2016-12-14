@@ -1,0 +1,194 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% form_theme form 'AcreditacionBundle:Fields:checkbox.html.twig' %}
+
+{% block acreditacion_tab_personal %}
+    {% if(accion == 'NUEVO') %}
+        <li role="presentation"><a class='datosValidados' href="#"><h4 class="panel-title">DATOS DE IDENTIFICACION</h4></a></li>
+        {% else %}
+            {{ parent()}}
+        {% endif %}
+    {% endblock %}
+
+{% block acreditacion_tab_acreditacion %}
+    {% if(accion == 'NUEVO') %}
+        <li role="presentation"><a class='datosValidados' href="#"><h4 class="panel-title">DATOS DE ACREDITACION</h4></a></li>
+        {% else %}
+            {{ parent()}}
+        {% endif %}
+
+{% endblock %}
+
+{% block acreditacion_tab_tesoreria %}
+    {% if(accion == 'NUEVO') %}
+        <li role="presentation"><a class='datosValidados' href="#"><h4 class="panel-title">DATOS DE TESORERIA</h4></a></li>
+        {% else %}
+            {{ parent()}}
+        {% endif %}
+
+{% endblock %}
+
+{% block acreditacion_tab_operativo %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS OPERATIVOS</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <legend></legend>
+    <div class="row">
+        <div class="form-group col-md-2">
+            <h6>
+                <i class="fa fa-bus"></i> TRANSPORTE
+            </h6>
+            <div class="input-group">
+                <div class="form-group text-left" id="operativo_necesitaTrasnporte">
+                    {{ form_widget(form.datosOperativo.necesitaTransporte) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-1 operativo_detalle_flecha operativo_NT" {% if not(entity.getDatosOperativo().getNecesitaTransporte()) %} style="display: none" {% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="operativo_NT_detalle" class="form-group col-md-9 text-center operativo_NT" {% if not(entity.getDatosOperativo().getNecesitaTransporte()) %} style="display: none" {% endif %}>
+            <div class="form-group col-sm-12">
+                {{ form_label(form.datosOperativo.rangoTransporte ,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+                <div class="input-group margin-bottom-sm text-center col-sm-12" id="rangoTrabajo">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        {{ form_widget(form.datosOperativo.rangoTransporte) }}
+                </div>
+                {{ form_errors(form.datosOperativo.rangoTransporte)}}
+            </div>
+            <div class="form-group col-sm-12">
+                <div class="form-group col-sm-6">
+                    {{ form_label(form.datosOperativo.idaOrigen,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+                    <div class="input-group margin-bottom- col-sm-12">
+                        <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                            {{ form_widget(form.datosOperativo.idaOrigen) }}
+                    </div>
+                    {{ form_errors(form.datosOperativo.idaOrigen)}}
+                </div>
+                <div class="form-group col-sm-6">
+                    {{ form_label(form.datosOperativo.regresoDestino,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+                    <div class="input-group margin-bottom-sm col-sm-12">
+                        <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                            {{ form_widget(form.datosOperativo.regresoDestino) }}
+                    </div>
+                    {{ form_errors(form.datosOperativo.regresoDestino)}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <legend></legend>
+    <div class="row">
+        <div class="form-group col-md-2">
+            <h6><i class="fa fa-building"></i> HOSPEDAJE</h6>
+            <div class="input-group">
+                <div class="form-group text-left" id="operativo_necesitaTrasnporte">
+                    {{ form_widget(form.datosOperativo.necesitaHospedaje) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-1 operativo_detalle_flecha operativo_NH" {% if not(entity.getDatosOperativo().getNecesitaHospedaje()) %} style="display: none" {% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="operativo_NO_detalle" class="form-group col-md-9 text-center operativo_NH" {% if not(entity.getDatosOperativo().getNecesitaHospedaje()) %} style="display: none" {% endif %}>
+            <div class="form-group col-sm-12">
+                {{ form_label(form.datosOperativo.rangoHospedaje,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+                <div class="input-group margin-bottom-sm text-center col-sm-12">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        {{ form_widget(form.datosOperativo.rangoHospedaje) }}
+                </div>
+                {{ form_errors(form.datosOperativo.rangoHospedaje)}}
+            </div>
+        </div>
+    </div>
+
+    <legend></legend>
+    <h6><i class="fa fa-cogs"></i> OTROS</h6>
+    <div id="operativo_otros" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table id="doperativoTable" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center col-md-8" >DESCRIPCIÓN</th>
+                        <th class="text-center col-md-4">VALOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span>  CERTIFICADO RESOLUCIÓN NRO 1409/08 DGyE</td>
+                        <td>{{ form_widget(form.datosOperativo.certificado140908) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span>  CERTIFICADO ESTABLECIMIENTO PRIVADO</td>
+                        <td>{{ form_widget(form.datosOperativo.certificadoEstablecimientoPrivado) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span>  CERTIFICADO LABORAL</td>
+                        <td>{{ form_widget(form.datosOperativo.certificadoLaboral) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-cutlery"></span>  CONTABILIZAR VIANDA</td>
+                        <td>{{ form_widget(form.datosOperativo.vianda) }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-tags"></span>  TALLE (INDUMENTARIA)</td>
+                        <td>
+                            <div  class="doperativosTalle">
+                                {{ form_widget(form.datosOperativo.talleIndumentaria) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-user"></span>  PERSONAL DE LA GESTIÓN</td>
+                        <td>{{ form_widget(form.datosOperativo.esPersonalGestion) }}</td>
+                    </tr>
+                    {% if (is_granted('ROLE_ADMIN') and accion == 'EDITAR') %}
+                        <tr>
+                            <td><span class="glyphicon glyphicon-flag"></span>  PERSONAL ACTIVO</td>
+                            <td>{{ form_widget(form.activo) }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if accion != 'VER' %}
+        <div class="row">
+            <div class="form-group col-sm-12 text-right">
+                <div id="acreditacion_back" class="form-group col-sm-5 text-left">
+                    {% if accion == 'NUEVO'%}
+                        {{ form_widget(form.backDatosTesoreria) }}
+                    {% endif %}
+                </div>
+                <div id="acreditacion_save" class="form-group col-sm-2 text-center">
+
+                </div>
+                <div id="acreditacion_next" class="form-group col-sm-5 text-right">
+                    {{ form_widget(form.submit,{'attr': {'class': 'btn-primary btn-lg'} }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock%}
+
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosOperativo.css') }}">
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/datosOperativo.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $.DatosOperativo.init();
+        });
+    </script>
+{% endblock %}
+

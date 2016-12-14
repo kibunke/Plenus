@@ -1,0 +1,43 @@
+**1 - agregar opcion 0 a categoria
+2 - agrandar el tamaño de la credencial
+**3 - cupo sin tilde
+**4 - cupo de viaje por área
+**5 - cupo de categoría
+**6 - cambiar lo de empleado publico por empleado provincial
+**7 - agregar los campos del select:
+        <select name="organismoss" id="organismoss"><option value="0">Seleccione</option><option value="180">Autoridad del Agua</option><option value="14 ">Centro Único Coordinador de Ablación e Implante</option><option value="27 ">Contaduría General</option><option value="10 ">Dirección General de Cultura y Educación</option><option value="172">Escribania General</option><option value="22 ">Instituto de la Vivienda</option><option value="30 ">Instituto de Obra Médico Asistencial (I.O.M.A)</option><option value="16 ">Instituto de Previsión Social  (I.P.S)</option><option value="173">Instituto Provincial de Lotería y Casinos</option><option value="32 ">Ministerio  de la  Producción Ciencia y Tecnología</option><option value="3  ">Ministerio  de Salud</option><option value="26 ">Ministerio  de Trabajo</option><option value="8  ">Ministerio de Asuntos Agrarios</option><option value="459">Ministerio de Desarrollo Social</option><option value="2  ">Ministerio de Economía</option><option value="7  ">Ministerio de Infraestructura</option><option value="12 ">Ministerio de Jefatura de Gabinete de Ministros</option><option value="5  ">Ministerio de Justicia y Seguridad (Justicia)</option><option value="4  ">Ministerio de Justicia y Seguridad (Seguridad)</option><option value="28 ">O.C.E.B.A</option><option value="19 ">Organismo Provincial para el Desarrollo Sostenible</option><option value="465">Poder Judicial</option><option value="456">Secretaría de Deportes</option><option value="15 ">Secretaría de Turismo</option><option value="176">Secretaría General  de la Gobernación</option><option value="461">Secretaría Legal y Técnica</option><option value="170">Tesorería General</option></select>
+**8 - usuario Acreditado ne vez de admin
+**9 - agregar cupo max hoteleria gestion + max hoteleria personal
+**10- admin quitar modificar/borrars
+**11 - agregar en el dimesiones el amb de valores por categoria de  pago
+
+cambios:
+
+cambie el nombre del path del barlef del view del common linea 239
+
+{% if is_granted('ROLE_ACREDITACION') %}
+					<li>
+						<a href="javascript:;" class="active">
+							<i class="fa fa-users"></i> <span class="title"> Acreditación </span> <i class="icon-arrow"></i>
+						</a>
+						<ul class="sub-menu">
+							{% if is_granted('ROLE_ADMIN') %}
+								<li>
+									<a href="{{ path('acreditacion_parameters') }}">
+										<i class="fa fa-cogs"></i>
+										<span class="title">Parámetros</span>
+									</a>
+								</li>						
+							{% endif %}
+							<li>
+								<a href="{{ path('acreditacion_listado_area') }}">
+									<i class="fa fa-users"></i>
+									Acreditados
+								</a>
+							</li>
+						</ul>
+					</li>
+				{% endif %}
+
+
+cambié el PersonaType del common

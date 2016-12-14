@@ -1,0 +1,140 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% form_theme form 'AcreditacionBundle:Fields:checkbox.html.twig' %}
+
+{% block acreditacion_tab_personal %}
+    {% if(accion == 'NUEVO') %}
+        <li role="presentation"><a class='datosValidados' href="#"><h4 class="panel-title">DATOS DE IDENTIFICACION</h4></a></li>
+        {% else %}
+            {{ parent()}}
+        {% endif %}
+    {% endblock %}
+
+{% block acreditacion_tab_acreditacion %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS DE ACREDITACION</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <div class="form-group col-md-8 datosIzq">
+        {{ form_label(form.area,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+        <div class="input-group col-md-12">
+            <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                {{ form_widget(form.area) }}
+        </div>
+        {{ form_label(form.funcion,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+        <div class="input-group margin-bottom-sm col-md-12">
+            <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                {{ form_widget(form.funcion) }}
+        </div>
+        {{ form_label(form.letraIdentificacion ,null, {'label_attr': {'class': 'col-md-12 text-left'} }) }}
+        <div class="input-group margin-bottom-sm col-md-12">
+            <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                {{ form_widget(form.letraIdentificacion, {'attr': {'class': 'text-center'} }) }}
+        </div>
+        <label class="col-md-12 control-label required">
+            Accesos
+        </label> 
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center col-md-2" ><small>SECTOR 1</small></th>
+                    <th class="text-center col-md-2" ><small>SECTOR 2</small></th>
+                    <th class="text-center col-md-2" ><small>SECTOR 3</small></th>
+                    <th class="text-center col-md-2" ><small>SECTOR 4</small></th>
+                    <th class="text-center col-md-2" ><small>SECTOR 5</small></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{ form_widget(form.accesoSector1) }}</td>
+                    <td class="text-center">{{ form_widget(form.accesoSector2) }}</td>
+                    <td class="text-center">{{ form_widget(form.accesoSector3) }}</td>
+                    <td class="text-center">{{ form_widget(form.accesoSector4) }}</td>
+                    <td class="text-center">{{ form_widget(form.accesoSector5) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="form-group col-md-4 datosDer text-center">
+        <a id="contenedorAvatar" class="thumbnail">
+            {% if (entity.hasAvatar()) %}
+                <img id="personal_avatar" src="data:image/jpg;base64,{{ entity.avatar.archivo() }}" alt="Foto de Acreditación"/>
+            {% else%}
+                <img id="personal_avatar" src=" {{asset('bundles/acreditacion/images/avatar.png') }}" alt="Foto de Acreditación"/>
+            {% endif %}
+        </a>
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <button onclick="$.DatosAcreditativo.cargar();" type="button" class="btn btn-xs btn-azure"><span class="glyphicon glyphicon-open"></span>  Cargar</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button onclick="$.DatosAcreditativo.capturar();" type="button" class="btn btn-xs btn-dark-red"><span class="glyphicon glyphicon-camera"></span>  Capturar</button>
+                </div>
+            </div> 
+        </div>
+        <div id="avatarCaptureContainer" class="hidden">
+            {{ form_widget(form.avatarCapture) }}
+        </div>
+    </div>
+
+    <div class="modal fade" id="capturadorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog panel-primary" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Capturar Foto</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="fotoCapturador" class=""></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if accion != 'VER' %}
+        <div class="row">
+            <div class="form-group col-md-12 text-right">
+                <div id="acreditacion_back" class="form-group col-md-5 text-left">
+                    {% if accion == 'NUEVO'%}
+                        {{ form_widget(form.backDatosPersonales) }}
+                    {% endif %}
+                </div>
+                <div id="acreditacion_save" class="form-group col-md-2 text-center">
+                    {% if accion == 'EDITAR'%}
+
+                    {% endif %}
+                </div>
+                <div id="acreditacion_next" class="form-group col-md-5 text-right">
+                    {% if accion == 'NUEVO'%}
+                        {{ form_widget(form.datosAcreditativoVal) }}
+                    {% else %}
+                        {{ form_widget(form.submit) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock acreditacion_contenido %}
+
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosAcreditativo.css') }}">
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}   
+    <script src="{{ asset('bundles/common/plugins/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/datosAcreditativo.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/photobooth/photobooth_min.js') }}"></script>
+    <script>
+                        $(document).ready(function () {
+                            $.DatosAcreditativo.init("{{ path('funcionjuegos_funciones') }}");
+                        });
+    </script>
+{% endblock %}

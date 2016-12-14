@@ -1,0 +1,94 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TipoDocumento
+ *
+ * @ORM\Table(name="plenus_admin.TipoDocumento")
+ * @ORM\Entity
+ */
+class TipoDocumento
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string $nombre
+     *
+     * @ORM\Column(name="nombre", type="string", length=10, unique=true)
+     */
+    private $nombre;
+
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */
+    private $updatedBy;
+
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean")
+     */
+    protected $isActive;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->setActive(true);
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * __toString
+     */    
+    public function __toString()
+    {
+        return $this->getNombre();
+    }
+    
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

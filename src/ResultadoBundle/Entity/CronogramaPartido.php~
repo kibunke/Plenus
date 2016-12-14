@@ -1,0 +1,51 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\Cronograma
+ *
+ * @ORM\Entity()
+ */
+class CronogramaPartido extends Cronograma
+{
+    /**
+     * @ORM\OneToOne(targetEntity="Partido", inversedBy="cronograma")
+     * @ORM\JoinColumn(name="partido", referencedColumnName="id")
+     **/
+    private $partido;
+    
+    /**
+     * Constructor
+     */
+    public function __construct($user = null)
+    {
+        parent::__construct($user);
+    }
+    
+    /**
+     * Set partido
+     *
+     * @param \JuegosBA\ResultadoBundle\Entity\Partido $partido
+     * @return CronogramaPartido
+     */
+    public function setPartido(\JuegosBA\ResultadoBundle\Entity\Partido $partido = null)
+    {
+        $this->partido = $partido;
+
+        return $this;
+    }
+
+    /**
+     * Get partido
+     *
+     * @return \JuegosBA\ResultadoBundle\Entity\Partido 
+     */
+    public function getPartido()
+    {
+        return $this->partido;
+    }
+}

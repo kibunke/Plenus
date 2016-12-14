@@ -1,0 +1,166 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
+{% endblock %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Escenarios <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('escenario_new') }}">
+                            <i class="fa fa-plus"></i> NUEVO
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                
+                <li>
+                    <a href="{{ path('homepage_gestion') }}">
+                        Gestion
+                    </a>
+                </li>
+                <li class="active">
+                    Escenario
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <h4 class="panel-title">Tabla <span class="text-bold"> de Escenarios</span></h4>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Refresh</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-config" href="#panel-config" data-toggle="modal">
+                            <i class="fa fa-wrench"></i> <span>Configurations</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a class="btn btn-xs btn-link panel-close" href="#">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="eventoTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="center"><span class="fa fa-building-o"></span></th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th class="center"><span class="fa fa-lg fa-globe"></span></th>
+                    <th style="min-width: 95px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td class="center"><span class="fa fa-building-o"></span></td>
+                        <td>{{ entity }}</td>
+                        <td>{{ entity.getDireccionRaw() | raw }}</td>
+                        <td class="center">
+                            {% if (entity.latLng) %}
+                                <span class="fa fa-lg text-red fa-map-marker" title="Escenario Georeferenciado"></span>
+                            {% endif %}
+                        </td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="{{ path('escenario_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+                                <a href="{{ path('escenario_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
+                                <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group">
+                                    <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                        <i class="fa fa-cog"></i> <span class="caret"></span>
+                                    </a>
+                                    <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="{{ path('escenario_show', { 'id': entity.id }) }}">
+                                                <i class="fa fa-eye"></i> Ver
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="{{ path('escenario_edit', { 'id': entity.id }) }}">
+                                                <i class="fa fa-edit"></i> Editar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="#">
+                                                <i class="fa fa-times"></i> Eliminar
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            $.Default = $.Default || {};
+            $.Default.init = function() {        
+                table=$('#eventoTable').dataTable( {
+                    "language": {
+                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                    },                
+                    "columnDefs": [ {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": [4]
+                    } ],
+                    "order": [[ 1, 'asc' ]]
+                });
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();});   
+    </script>
+{% endblock %}    

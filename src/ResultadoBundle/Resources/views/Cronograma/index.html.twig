@@ -1,0 +1,428 @@
+{% extends app.request.isXmlHttpRequest()
+            ? 'CommonBundle::layout.ajax.html.twig'
+            : 'CommonBundle::layout.html.twig'
+%}
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Cronogramas Generales <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>             
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('homepage')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#1" onclick="$.Default.subview.loadNew('{{ path('cronograma_general_new') }}')" >
+                            <i class="fa fa-plus"></i> NUEVO
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>               
+                <li class="active">
+                    Cronogramas Generales
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-md-4" style="overflow: hidden;">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Arbol de Filtros <span class="text-bold">sobre sus eventos</span>
+                        <span class="badge badge-danger pull-right" title="Eventos filtrados">
+                            <span class="fa fa-filter"></span>
+                            <span id="eventos_filtrados">{{ eventos | length }}</span>
+                        </span>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div id="tree" class="tree-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div style="" id="reloadTable" class="col-md-8">
+            {{ include ('ResultadoBundle:Cronograma:index.table.html.twig') }}
+        </div>
+    </div>
+    <!-- start: SUBVIEW EXAMPLE FOR THIS PAGE ONLY -->
+    <a id="sub_go" href="#example-subview-1" class="hidden show-sv"></a>
+    <div id="example-subview-1" class="no-display">
+        <div class="col-md-10 col-md-offset-1 ajax-cont"></div>
+    </div>
+{% endblock %}
+
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
+    
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datepicker/css/datepicker.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/css/datetimepicker.css' ) }}" />
+    
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootbox/bootbox.min.js' )}}"></script>
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            var cantEditOriginal;
+            $.Default = $.Default || {};
+            $.Default.init = function() {          
+                $('.sb-toggle-left').trigger('click');
+                $.Default.initTable();
+                $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+                // panel refresh
+                $('body').on('click', '.panel-refresh', function(e) {;
+                    var el = $(this).parents(".panel");
+                    el.block({
+                        overlayCSS: { backgroundColor: '#fff' },
+                        message: '<i class="fa fa-spinner fa-spin"></i>',
+                        css: { border: 'none', color: '#333', background: 'none' }
+                    });
+                    $('#blockContenidoContent').load('{{ path('cronograma_general_list') }}',function(){
+                        el.unblock();
+                    });
+                    e.preventDefault();
+                });
+                
+                $("#tree").on('ready.jstree', function (e, data) {
+                    $('#tree').jstree('close_all').on('changed.jstree', function (e, data) {
+                        $.Default.reloadTable();
+                    });
+                }).jstree({
+                    "core" : {
+                        "themes" : {
+                            "responsive" : false
+                        },
+                        // so that create works
+                        "check_callback" : true,
+                        'data' : {{ tree | raw }},
+                    },
+                    "types" : {
+                        "default" : {
+                            "icon" : "fa fa-folder text-red fa-lg"
+                        },
+                        "file" : {
+                            "icon" : "fa fa-file text-red fa-lg"
+                        }
+                    },
+                    "checkbox" : {
+                          "keep_selected_style" : false
+                        },                    
+                    "plugins" : ["checkbox", "types"]
+                });
+                setTimeout(function(){$("#tree").jstree("open_node", "root");},1300);
+            }
+            $.Default.reloadTable = function(){
+                var cant=0;
+                var str=[];
+                $.map($('#tree').jstree('get_selected'),function(nodeId){
+                    if (nodeId.indexOf("ev-") >= 0) {
+                        id=nodeId.split('-');
+                        str.push(id[1]);
+                    }
+                })
+                $("#eventos_filtrados").html(str.length);
+                var el = $('#cronogramaTable').parents(".panel");
+                el.block({
+                    overlayCSS: { backgroundColor: '#fff' },
+                    message: '<i class="fa fa-spinner fa-spin"></i>',
+                    css: { border: 'none', color: '#333', background: 'none' }
+                });
+                $.post( '{{ path('cronograma_general_list') }}', {'eventos':str}, function(data){
+                    $('#reloadTable').html(data);
+                    el.unblock();
+                    $.Default.initTable();
+                });                
+            }
+            $.Default.initTable = function() {
+                table=$('#cronogramaTable').dataTable( {
+                    "language": {
+                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                    },                
+                    "columnDefs": [ {
+                                    "searchable": false,
+                                    "orderable": false,
+                                    "targets": [4]
+                                }
+                    ],
+                    "order": [[ 1, 'asc' ]],
+                    "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"] // change per page values here
+                    ],
+                    // set the initial value
+                    "iDisplayLength" : 25,
+                });                
+            }            
+            $.Default.eventoDetalle = function(node) {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-title').html("Eventos alcanzados por el Cronograma");
+                $('#panel-config .modal-body').html($(node).parent().find(".eventos_detalles").html());
+                $('#panel-config').modal();
+            }
+            $.Default.cronogramaDelete = function(url) {
+                jQuery.get(url, function(data){
+                    if (data.success != false) {
+                        swal({
+                            title: "Seguro quiere eliminar el cronograma ?",
+                            text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Si, eliminar!",
+                            cancelButtonText: "No, cancelar!",
+                            closeOnConfirm: true,
+                            closeOnCancel: true,
+                            html: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $('#deleteFormAux form').submit(function(){
+                                    jQuery.post($(this).attr("action"),$(this).serialize(), function(data){
+                                        if (data.success) {
+                                            toastr['success'](data.msj, 'Excelente');
+                                        }else{
+                                            toastr['warning'](data.msj, 'Cuidado');
+                                        }
+                                        $.Default.reloadTable()
+                                    })
+                                    return false;
+                                });
+                                $('#deleteFormAux form').submit();
+                            }
+                        });
+                    }else{
+                        toastr['warning'](data.msj, 'Cuidado');
+                    }
+                });
+            }            
+            $.Default.subview = function() {}
+            $.Default.subview.loadNew = function(url) {
+                $("#sub_go").trigger("click");
+                $('#example-subview-1 .ajax-cont').html("");
+                $('#example-subview-1 .ajax-cont').load(url,function(){
+                    var cant=0;
+                    $.map($('#tree').jstree('get_selected'),function(nodeId){
+                        if (nodeId.indexOf("ev-") >= 0) {
+                            id=nodeId.split('-');
+                            cant++;
+                            $("#juegosba_resultadobundle_cronograma_eventos option[value='" + id[1] + "']").prop("selected", true);
+                        }
+                    })
+                    $('#juegosba_resultadobundle_cronograma_eventos option:selected').each(function(){
+                        $('#juegosba_resultadobundle_cronograma_eventos_aux').append('<option>'+$(this).text()+'</option>');
+                    })                    
+                    $('#cant_eve_selec').html(cant);
+                    $('#eventos_seleccionados').html(cant);
+                });
+            }
+            $.Default.subview.loadEdit = function(url) {
+                $("#sub_go").trigger("click");
+                $('#example-subview-1 .ajax-cont').html("");
+                $('#example-subview-1 .ajax-cont').load(url,function(){
+                    cantEditOriginal=$('#juegosba_resultadobundle_cronograma_eventos option:selected').length;
+                    $('#eventos_seleccionados').html(cantEditOriginal);
+                    $('#cant_eve_selec').html(cantEditOriginal);
+                    $('#juegosba_resultadobundle_cronograma_eventos option:selected').each(function(){
+                        $('#juegosba_resultadobundle_cronograma_eventos_aux').append('<option>'+$(this).text()+'</option>');
+                    })                     
+                });
+            }            
+            $.Default.save = function(btn){
+                var ok=true;
+                $('#example-subview-1 [required="required"]').each(function(){
+                    if (typeof $(this).val()=='undefinded' || $(this).val()=='' || $(this).val()==null)
+                    {
+                        $(this).parents('.form-group').addClass('has-error');
+                        $(this).focus();
+                        ok=false;
+                    }
+                })
+                if (ok) {
+                    $(btn).attr("disabled","true");
+                    /* Realiza la peticon */
+                    $form=$("#example-subview-1 form");
+                    jQuery.post($form.attr('action'), $form.serialize(), function(data){
+                        if (data.success){
+                            //location.reload();
+                            $.hideSubview();
+                            $.Default.reloadTable()
+                            toastr['success'](data.msj, 'Excelente');
+                        }else{
+                            $(btn).removeAttr("disabled");
+                            toastr['warning'](data.msj, 'Cuidado');
+                        }
+                    });
+                }else{
+                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado');
+                } 
+            }
+            
+            $.Default.selectEventos = function () {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-title').html('Seleccione los eventos');
+                $('#panel-config .modal-body').html('');
+                $('#panel-config .modal-body').append('<table class="table"><thead><tr><th style="vertical-align: middle;">#</th><th></th><th style="vertical-align: middle;">'+
+                                                        '<input type="text" class="form-control pull-left" style="width:75% !important;margin-right: 5px;" onKeyUp="$.Default.selectEventos.search(this)" placeholder="Buscar"><button type="button" onClick="$.Default.selectEventos.select()" class="btn btn-primary pull-left">Listo</button>'+
+                                                        '</th></tr></thead><tbody></tbody></table>');
+                $('#juegosba_resultadobundle_cronograma_eventos option').each(function(){
+                    if ($(this).attr('value')) {
+                        chk=$(this).is(':selected')? "checked":"";
+                        $('#panel-config .modal-body .table>tbody').append('<tr><td class="td_id">'+$(this).attr('value')+'</td><td><input type="checkbox" '+chk+'></td><td class="descript">'+$(this).text().toUpperCase()+'</td></tr>');
+                    }
+                })
+                $('#panel-config').modal();
+                $('#panel-config .modal-dialog').addClass('modal-lg');
+            }
+            $.Default.selectEventos.search = function (node){
+                $('#panel-config .modal-body .table>tbody>tr').hide();
+                $('#panel-config .modal-body .table>tbody>tr input:checked').parents('tr').show();
+                $('#panel-config .modal-body .table>tbody :contains("'+$(node).val().toUpperCase()+'")').each(function(){
+                    $(this).parents('tr').show();
+                });
+            }
+            $.Default.selectEventos.select = function (){
+                aux=[];
+                $('#juegosba_resultadobundle_cronograma_eventos_aux').html("");
+                $('#panel-config .modal-body .table>tbody>tr input:checked').each(function(){
+                    $('#juegosba_resultadobundle_cronograma_eventos_aux').append('<option>'+$(this).parent().siblings(".descript").text()+'</option>');
+                    aux.push($(this).parent().siblings(".td_id").text());
+                })
+                $('#eventos_seleccionados').html(aux.length);
+                $('#cant_eve_selec').html(aux.length);
+                $('#juegosba_resultadobundle_cronograma_eventos').val(aux);
+                $('#panel-config').modal('hide');
+            }
+            $.Default.print = function() {
+                var url = '{{ path('cronograma_print')}}';
+                cronogramas=[];
+                rows = $("#cronogramaTable").dataTable().$('tr', {"filter":"applied"});
+                $.map(rows,function(tr){
+                    if ($(tr).data("cronograma")) {
+                        cronogramas.push($(tr).data("cronograma"))
+                    }
+                })
+                eventos = [];
+                $.map($('#tree').jstree('get_selected'),function(nodeId){
+                    if (nodeId.indexOf("ev-") >= 0) {
+                        id=nodeId.split('-');
+                        eventos.push(id[1]);
+                    }
+                })
+                if (cronogramas.length < 1) {
+                    toastr['warning']('No hay cronogramas visibles para imprimir.', 'Cuidado');
+                }else{
+                    bootbox.dialog({
+                        message : "Tiene más de un Evento seleccionado. Prefiere imprimir una copia del cronograma por evento ?",
+                        title : "Configuración de Impresión",
+                        buttons : {
+                            success : {
+                                label : "Si",
+                                className : "btn-success",
+                                callback : function() {
+                                    toastr.success("Esto puede demorar unos segundos.","Generando PDF");
+                                    window.location = url + "/" + eventos + "/" + cronogramas + "/1";
+                                }
+                            },
+                            danger : {
+                                label : "No",
+                                className : "btn-danger",
+                                callback : function() {
+                                    toastr.success("Esto puede demorar unos segundos.","Generando PDF");
+                                    window.location = url + "/" + eventos + "/" + cronogramas;
+                                }
+                            }
+                        }
+                    });                    
+                    
+                }   
+            }            
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();$.TableExport.init()});
+        
+        (function ($) {
+            var exportTable = "#cronogramaTable";
+            var ignoreColumn;
+            // no se sobreescribe el namespace, si ya existe
+            $.TableExport = $.TableExport || {};
+            $.TableExport.init = function() {
+				$(".export-excel").on("click", function(e) {
+					e.preventDefault();
+                    $('#cronogramaTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'excel',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#cronogramaTable thead>tr').toggle();
+				});
+				$(".export-doc").on("click", function(e) {
+					e.preventDefault();
+                    $('#cronogramaTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'doc',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#cronogramaTable thead>tr').toggle();
+				});
+				$(".export-csv").on("click", function(e) {
+					e.preventDefault();
+                    $('#cronogramaTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'csv',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#cronogramaTable thead>tr').toggle();
+				});
+				$(".export-txt").on("click", function(e) {
+					e.preventDefault();
+                    $('#cronogramaTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'txt',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#cronogramaTable thead>tr').toggle();
+				});                
+            }
+        })(jQuery);
+    </script>
+{% endblock %}

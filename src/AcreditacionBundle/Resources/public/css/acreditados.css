@@ -1,0 +1,58 @@
+#acreditacionTable thead tr  th{
+    background-color: #5f8295;
+    color: #f9f9f9;
+    overflow: no-display;
+    border: 1px solid #dfe1e5;
+}
+#acreditacionTable .accion{
+    min-width: 12% !important;
+}
+.header5p{
+    width: 5% !important;
+}
+.header15p{
+    width: 15% !important;
+}
+.header10p{
+    width: 10% !important;
+}
+.header20p{
+    width: 20% !important;
+}
+.header25p{
+    width: 25% !important;
+}
+.header30p{
+    width: 30% !important;
+}
+.header40p{
+    width: 40% !important;
+}
+.header8p{
+    width: 8% !important;
+}
+#acreditacionTable img{
+    width: 50px;
+    margin: 0px;
+}
+#acreditacionTable img.imgAll{
+    width: 30px;
+}
+#acreditacionTable div.media div.media-body{
+    vertical-align: middle;
+}
+.panel-white .table, .partition-white .table{
+    font-size: 12px;
+}
+table.table-hover > tbody > tr.seleccionado, table.table-hover > tbody > tr.seleccionado td{
+    background-color: #cafdde !important;
+}
+
+#acreditacionObject{
+    width: 100%;
+    height:75vh;
+}
+#acreditacionExport .modal-lg{
+    width: 90%; 
+    height: 90%;
+}

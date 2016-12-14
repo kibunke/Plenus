@@ -1,0 +1,38 @@
+<div>
+    <div class="row">
+        {% if competencia.zonas | length %}
+            <div class="tabbable tabs-left">
+                <ul id="tab_zonas" class="nav nav-tabs">
+                    {% for zona in competencia.zonas %}                
+                        <li class="{% if loop.index == 1%}active{% endif %}">
+                            <a href="#tab_zona_{{ zona.id }}" data-toggle="tab">
+                                <i class="pink fa fa-table"></i> {{ zona }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+                    {% for zona in competencia.zonas %}                
+                        <div class="tab-pane fade{% if loop.index == 1%} in active{% endif %}" id="tab_zona_{{ zona.id }}" >
+                            <h2 style="margin-top: 0;" class="pull-left">
+                                <i class="fa fa-edit"></i>
+                                Detalle <span class="text-bold">{{ zona }}</span>                            
+                            </h2>
+                            <div>
+                                {% include 'PublicoBundle:Competencia:Liga/zona.html.twig' with { 'zona' : zona } %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-block alert-danger fade in">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                <p>
+                    Esta <strong>Liga</strong> aún no tiene informacion disponibl.<br>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>

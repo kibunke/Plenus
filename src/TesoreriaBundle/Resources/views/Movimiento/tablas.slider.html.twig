@@ -1,0 +1,100 @@
+<div id="carousel-tablas-generic" class="carousel slide" data-ride="" data-interval="false">
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        <div class="item active" id="tabla_personas">
+            <div id="panel-personal-list" class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Listado por <span class="text-bold"> Persona</span></h4>
+                </div>
+                <div class="panel-body" style="padding-top:0px">
+                    <div class="table-responsive">
+                        <div class="">
+                            <div class="col-sm-3">
+                                <select id="table_page_length" class="form-control">
+                                    <option>10</option>
+                                    <option selected>15</option>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>50</option>
+                                    <option>100</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-9 pull-right">
+                                <div class="input-group">
+                                    <div class="input-group-btn" id="search_option" data-op="todos">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b>Buscar en todos los Fondos</b> <span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li data-op="todos"><a href="#1">Buscar en todos los Fondos</a></li>
+                                            <li data-op="soloActivo"><a href="#1">Buscar solo en Fondo activo</a></li>
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                    <input id="table_search_input" type="text" class="form-control" aria-label="...">
+                                </div><!-- /input-group -->
+                            </div>
+                        </div>
+                    
+                        <table id="personalTable" class="table table-striped table-hover" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="" style="width: 40%;">Nombre</th>
+                                    <th class="text-center">DNI</th>
+                                    <th class="">Area</th>
+                                    <th class="text-center" title="Remuneracion"><i class="fa fa-usd" aria-hidden="true"></i></th>
+                                    <th class="text-center" title="Fondo asignado"><i class="fa fa-money" aria-hidden="true"></i></th>
+                                    <th class="text-center" title="Estado"><i class="fa fa-flag-o" aria-hidden="true"></i></th>
+                                    <th class="text-center" style="min-width: 70px !important;">Ver</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item"  id="tabla_areas">
+            <div id="panel-area-list" class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Listado por <span class="text-bold"> Areas</span></h4>
+                </div>
+                <div class="panel-body" style="padding-top:0px">
+                    <div class="table-responsive">
+                        {#<div class="">
+                            <div class="col-sm-3">
+                                <select id="table_page_length" class="form-control">
+                                    <option>10</option>
+                                    <option selected>15</option>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>50</option>
+                                    <option>100</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-9 pull-right">
+                                <div class="input-group">
+                                    <div class="input-group-btn" id="search_option" data-op="todos">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b>Buscar en todos los Fondos</b> <span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li data-op="todos"><a href="#1">Buscar en todos los Fondos</a></li>
+                                            <li data-op="soloActivo"><a href="#1">Buscar solo en Fondo activo</a></li>
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                    <input id="table_search_input" type="text" class="form-control" aria-label="...">
+                                </div><!-- /input-group -->
+                            </div>
+                        </div>#}
+                        <div id="cont_table">
+                            {#% include 'TesoreriaBundle:Movimiento:areas.table.html.twig' with {'areas': areas} %#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Controls -->
+    <a class="carousel-control-nb control-table-left" href="#carousel-tablas-generic" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    </a>
+    <a class="carousel-control-nb control-table-right" href="#carousel-tablas-generic" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </a>
+</div>

@@ -1,0 +1,410 @@
+<!-- start: PAGESLIDE LEFT -->
+<a class="closedbar inner hidden-sm hidden-xs" href="#">
+</a>
+<nav id="pageslide-left" class="pageslide inner">
+	<div class="navbar-content">
+		<!-- start: SIDEBAR -->
+		<div class="main-navigation left-wrapper transition-left">
+			<div class="navigation-toggler hidden-sm hidden-xs">
+				<a href="#main-navbar" class="sb-toggle-left"></a>
+			</div>
+			<div class="user-profile border-top padding-horizontal-10 block">
+				<div class="inline-block">
+					<img class="img-thumbnail" style="max-width: 50px;" src="{{app.user.avatar}}" alt="Avatar" />
+				</div>
+				<div class="inline-block">
+					<h5 class="no-margin"> Bienvenid@ </h5>
+					<h4 class="no-margin"> {{ app.user.username }} </h4>
+					{# Muestra el slide de arriba para abajo
+					<a class="btn user-options sb_toggle">
+						<i class="fa fa-cog"></i>
+					</a>
+					#}
+				</div>
+			</div>
+			<!-- start: MAIN NAVIGATION MENU -->
+			<ul class="main-navigation-menu">
+				{% if is_granted('ROLE_DASHBOARD') %}
+					<li class="" style="background-color: #1e2129 !important;">
+						<a href="{#{ path('dashboard') }#}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
+					</li>
+				{% endif %}
+				{% if is_granted('ROLE_ADMIN') %}	
+					<li class="" style="background-color: #1e2129 !important;">
+						<a href="javascript:void(0)"><i class="fa fa-cogs"></i> <span class="title"> Gestión </span><i class="icon-arrow"></i> </a>
+						<ul class="sub-menu">
+							<li>
+								<a href="{#{ path('gestion_configuracion') }#}">
+									<i class="fa fa-cog"></i>
+									<span class="title"> Configuración </span>
+								</a>							
+								<a href="javascript:;">
+									<i class="fa fa-shield"></i>
+									Seguridad <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="{#{ path('usuario') }#}">
+											<i class="fa fa-user"></i>
+											<span class="title"> Usuarios </span>
+										</a>
+									</li>
+									<li>
+										<a href="{#{ path('perfil') }#}">
+											<i class="fa fa-sitemap"></i>
+											<span class="title"> Perfiles </span>
+										</a>
+									</li>
+									<li>
+										<a href="{#{ path('rol') }#}">
+											<i class="fa fa-check-square-o"></i>
+											<span class="title"> Roles </span>
+										</a>
+									</li>
+								</ul>
+							</li>						
+							<li>
+								<a href="{#{ path('evento') }#}">
+									<i class="fa fa-bullseye"></i>
+									<span class="title"> Eventos </span>
+								</a>
+							</li>
+							<li>
+								<a href="{#{ path('escenario') }#}">
+									<i class="fa fa-building-o"></i>
+									<span class="title"> Escenarios </span>
+								</a>
+							</li>							
+							<li>
+								<a href="{#{ path('partido') }#}">
+									<i class="fa fa-bullseye"></i>
+									<span class="title"> Partidos </span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;">
+									<i class="fa fa-puzzle-piece"></i>
+									Dimensiones <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="{#{ path('disciplina') }#}">
+											<i class="fa fa-list-alt"></i>
+											<span class="title"> Disciplinas </span>
+										</a>
+									</li>
+									<li>
+										<a href="{#{ path('dimension') }#}">
+											<i class="fa fa-list-alt"></i>
+											<span class="title" title="Torneo,Modalida,Categoría y Género"> Otras </span>
+										</a>
+									</li>
+								</ul>
+							</li>												
+							<li>
+								<a href="javascript:;">
+									<i class="fa fa-question-circle"></i>
+									Consultas <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="#1">
+											<i class="fa fa-play"></i>
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#1">
+											<i class="fa fa-play"></i>
+											Sample Link 2
+										</a>
+									</li>
+									<li>
+										<a href="#1">
+											<i class="fa fa-play"></i>
+											Sample Link 3
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				{% endif %}
+				{% if is_granted('ROLE_INSCRIPCION') %}
+					<li>
+						<a href="javascript:void(0)"><i class="fa fa-pencil-square-o"></i> <span class="title"> Inscripción </span><i class="icon-arrow"></i> </a>
+						<ul class="sub-menu">
+							<li>
+								<a href="{#{ path('inscripcion') }#}">
+									<i class="fa fa-list-ol"></i>
+									<span class="title">Listado</span>
+								</a>
+							</li>
+							{% if is_granted('ROLE_INSCRIPCION_CONSULTA') %}
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-question-circle"></i>
+										Consultas <i class="icon-arrow"></i>
+									</a>
+									<ul class="sub-menu">
+										<li>
+											<a href="{#{ path('consulta_analitico_inscripcion') }#}">
+												<i class="fa fa-play"></i>
+												Analítico
+											</a>
+										</li>
+										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_REGIONAL') %}
+											<li>
+												<a href="{#{ path('consulta_resumenregional_inscripcion') }#}">
+													<i class="fa fa-play"></i>
+													Resumen regionales
+												</a>
+											</li>
+										{% endif %}
+										<li>
+											<a href="{#{ path('inscripcion_mapa') }#}">
+												<i class="fa fa-play"></i>
+												Mapa
+											</a>
+										</li>									
+										<!--
+										<li>
+											<a href="#1">
+												<i class="fa fa-play"></i>
+												Sample Link 2
+											</a>
+										</li>
+										<li>
+											<a href="#1">
+												<i class="fa fa-play"></i>
+												Sample Link 3
+											</a>
+										</li>-->
+									</ul>
+								</li>
+							{% endif %}
+						</ul>
+					</li>
+				{% endif %}
+				{% if is_granted('ROLE_SORTEO') %}
+					<li>
+						<a href="javascript:void(0)"><i class="fa fa-spinner"></i> <span class="title">Finalistas</span><i class="icon-arrow"></i> </a>
+						<ul class="sub-menu">
+							{% if is_granted('ROLE_SORTEO') %}
+								<li>
+									<a href="{#{ path('sorteo_carga') }#}">
+										<span class="title">Finalistas por equipo</span>
+									</a>
+								</li>
+							{% endif %}
+							{% if is_granted('ROLE_SORTEO_ACTIVIDADES_SOSPECHOSAS') %}
+								<li>
+									<a href="{#{ path('resultado_actividades_sospechosas') }#}">
+										<span class="title">
+											<span class="fa fa-crosshairs"></span>
+											Actividades Sospechosas
+										</span>
+									</a>
+								</li>
+							{% endif %}						
+							{% if is_granted('ROLE_SORTEO_CONSULTA') %}
+							<li>
+								<a href="javascript:;">
+									<i class="fa fa-question-circle"></i>
+									Consultas <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="{#{ path("consulta_analitico_finalistas") }}">
+											<i class="fa fa-play"></i>
+											Analítico
+										</a>
+									</li>
+								</ul>
+							</li>
+							{% endif %}
+						</ul>
+					</li>					
+				{% endif %}
+				 {% if is_granted('ROLE_ACREDITACION') or is_granted('ROLE_DIRECTOR') %}
+                   <li>
+                        <a href="javascript:;" class="active">
+                            <i class="fa fa-users"></i> <span class="title"> Acreditación </span> <i class="icon-arrow"></i>
+                        </a>
+                        <ul class="sub-menu">
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li>
+                                    <a href="{#{ path('acreditacion_parameters') }#}">
+                                        <i class="fa fa-cogs"></i>
+                                        <span class="title">Parámetros</span>
+                                    </a>
+                                </li>						
+                            {% endif %}
+                            <li>
+                                <a href="{#{ path('acreditacion_listado_area') }#}">
+                                    <i class="fa fa-users"></i>
+                                    Acreditados
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{#{ path('acreditacion_credenciales_especiales') }#}">
+                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                    Credenciales Especiales
+                                </a>
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa fa-question-circle"></i>
+                                        Consultas <i class="icon-arrow"></i>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a href="{#{ path("acreditacion_listado_hospedados") }#}">
+                                                <i class="fa fa-play"></i>
+                                                Hospedados
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{#{ path("acreditacion_listado_transportados") }#}">
+                                                <i class="fa fa-play"></i>
+                                                Transportados
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+				{% if is_granted('ROLE_TESORERIA') %}
+					<li>
+						<a href="javascript:void(0)"><i class="fa fa-university"></i> <span class="title"> Tesoreria</span><i class="icon-arrow"></i> </a>
+						<ul class="sub-menu">
+							{# % if is_granted('ROLE_TESORERIA_DASHBOARD') %}
+								<li class="" style="background-color: #1e2129 !important;">
+									<a href="{{ path('dashboard_tesoreria') }}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
+								</li>			
+							{% endif % #}
+							{% if is_granted('ROLE_TESORERIA_FONDO') %}
+								<li>
+									<a href="{#{ path('tesoreria_fondo_list') }#}">
+										<i class="fa fa-money"></i>
+										Administración de Fondos
+									</a>
+								</li>
+							{% endif %}
+							{% if is_granted('ROLE_TESORERIA_ENTIDAD') %}
+								<li>
+									<a href="{#{ path('tesoreria_entidad_list') }#}">
+										<i class="fa fa-university"></i>
+										Administración de Entidades
+									</a>
+								</li>
+							{% endif %}							
+							{% if is_granted('ROLE_TESORERIA_MOVIMIENTO') %}
+								<li>
+									<a href="{#{ path('tesoreria_movimiento_list') }#}">
+										<i class="fa fa-usd"></i>
+										<span class="title"> Administración de Movimientos </span>
+									</a>
+								</li>
+							{% endif %}
+							{% if is_granted('ROLE_TESORERIA_CONSULTA') %}
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-question-circle"></i>
+										Consultas <i class="icon-arrow"></i>
+									</a>
+									<ul class="sub-menu">
+										<li>
+											<a href="{#{ path('tesoreria_fondo_saldosIniciales') }#}">
+												<i class="fa fa-play"></i>
+												Saldos iniciales
+											</a>
+										</li>
+										<li>
+											<a href="{#{ path('tesoreria_fondo_balanceDeSaldos') }#}">
+												<i class="fa fa-play"></i>
+												Balance saldos
+											</a>
+										</li>
+										<li>
+											<a href="{#{ path('tesoreria_movimiento_analiticoPersonal') }#}">
+												<i class="fa fa-play"></i>
+												Analítico personal
+											</a>
+										</li>										
+									</ul>
+								</li>
+							{% endif %}
+						</ul>
+					</li>
+				{% endif %}				
+				{% if is_granted('ROLE_RESULTADO') %}
+					<li>
+						<a href="javascript:void(0)"><i class="fa fa-trophy"></i> <span class="title"> Resultado</span><i class="icon-arrow"></i> </a>
+						<ul class="sub-menu">
+							{% if is_granted('ROLE_RESULTADO_DASHBOARD') %}
+								<li class="" style="background-color: #1e2129 !important;">
+									<a href="{#{ path('dashboard_resultado') }#}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
+								</li>			
+							{% endif %}
+							{% if is_granted('ROLE_RESULTADO_LIST') %}
+								<li>
+									<a href="{#{ path('resultados') }#}">
+										<i class="fa fa-bullseye"></i>
+										Listado Eventos
+									</a>
+								</li>
+							{% endif %}
+							{% if is_granted('ROLE_CRONOGRAMA_LIST') %}
+								<li>
+									<a href="{#{ path('cronograma_general_list')}}">
+										<i class="fa fa-calendar"></i>
+										<span class="title"> Cronogramas </span>
+									</a>
+								</li>
+							{% endif %}
+							{% if is_granted('ROLE_RESULTADO_CONSULTA') %}
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-question-circle"></i>
+										Consultas <i class="icon-arrow"></i>
+									</a>
+									<ul class="sub-menu">
+										<li>
+											<a href="{#{ path('resultados_informeFinalistas') }#}">
+												<i class="fa fa-play"></i>
+												Listado Finalistas
+											</a>								
+										</li>
+									</ul>
+								</li>
+							{% endif %}
+						</ul>
+					</li>
+				{% endif %}
+			</ul>
+			<!-- end: MAIN NAVIGATION MENU -->
+		</div>
+		<!-- end: SIDEBAR -->
+	</div>
+	<div class="slide-tools">
+		<div class="col-xs-6 text-left no-padding">
+			<span class="label label-default" style="padding: 7px !important">
+				<i class="fa fa-dot-circle-o fa-lg"></i> {{ app.user.perfil }}
+			</span>
+			{#<a class="btn btn-sm" href="#1">
+				<i class="fa fa-dot-circle-o text-green"></i> <span class="text-red">{{app.user.perfil}}</span>
+			</a>#}
+		</div>
+		<div class="col-xs-6 text-right no-padding">
+			
+			<a class="btn btn-sm log-out text-right" href="{{ path('_logout') }}">
+				<i class="fa fa-power-off"></i> Cerrar sesión
+			</a>
+		</div>
+	</div>
+</nav>
+<!-- end: PAGESLIDE LEFT -->

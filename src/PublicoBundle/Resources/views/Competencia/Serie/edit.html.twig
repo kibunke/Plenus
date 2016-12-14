@@ -1,0 +1,38 @@
+<div>
+    <div class="row">
+        {% if competencia.series | length %}
+            <div class="tabbable tabs-left">
+                <ul id="tab_series" class="nav nav-tabs">
+                    {% for serie in competencia.series %}                
+                        <li class="{% if loop.index == 1%}active{% endif %}">
+                            <a href="#tab_serie_{{ serie.id }}" data-toggle="tab">
+                                <i class="pink fa fa-table"></i> {{ serie }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+                    {% for serie in competencia.series %}                
+                        <div class="tab-pane fade{% if loop.index == 1%} in active{% endif %}" id="tab_serie_{{ serie.id }}" >
+                            <h2 style="margin-top: 0;" class="pull-left">
+                                <i class="fa fa-edit"></i>
+                                Detalle <span class="text-bold">{{ serie }}</span>                            
+                            </h2>
+                            <div>
+                                {% include 'PublicoBundle:Competencia:Serie/serie.html.twig' with { 'serie' : serie } %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-block alert-danger fade in">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                <p>
+                    Esta <strong>Competencia</strong> aún no tiene informacion disponible.<br>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>

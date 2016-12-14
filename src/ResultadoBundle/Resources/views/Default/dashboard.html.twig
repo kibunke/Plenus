@@ -1,0 +1,236 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><span class="fa fa-dashboard"></span> Dashboard <small> módulo de Resutlados.</small></h1>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>
+                <li >
+                    Resultados
+                </li>                
+                <li class="active">
+                    Dashboard
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <style>
+        .percent{
+            display: inline-block;
+            line-height: 100px;
+            z-index: 2;
+            margin-left: 33px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+    <div class="row">        
+        {% if is_granted('ROLE_RESULTADO_DASHBOARD') %}
+            <div class="col-sm-12">
+                <div class="row">
+                    <div id="infEventos" class="col-md-7 col-lg-4">
+                        {{ render(controller('ResultadoBundle:Default:dashboardInfEventos')) }}
+                    </div>
+                    <div id="infPartidos" class="col-md-7 col-lg-4">
+                        {{ render(controller('ResultadoBundle:Default:dashboardInfPartidos')) }}
+                    </div>
+                    <div id="infPlazas" class="col-md-7 col-lg-4">
+                        {{ render(controller('ResultadoBundle:Default:dashboardInfPlazas')) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="infMedallero" class="col-md-7 col-lg-4">
+                        {{ render(controller('ResultadoBundle:Default:dashboardInfMedallero')) }}
+                    </div>
+                    <div id="medallero" class="col-md-12 col-lg-8">
+                        {{ render(controller('ResultadoBundle:Default:dashboardMedallero')) }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/highcharts.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/heatmap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/treemap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/drilldown.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/themes/grid-light.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/jquery.sparkline/jquery.sparkline.js') }}"></script>
+    
+    <script src="{{ asset('bundles/common/plugins/easy-pie-chart/dist/jquery.easypiechart.min.js') }}"></script>
+    <script>
+        (function ($) {
+            var _optionBloq = {
+                            overlayCSS: {
+                                backgroundColor: '#fff'
+                            },
+                            message: '<i class="fa fa-spinner fa-spin"></i>',
+                            css: {
+                                border: 'none',
+                                color: '#333',
+                                background: 'none',
+                                padding: '0px'
+                            }
+                        }            
+            var eventosSinEquipo=[
+                {#% for item in eventos_sin_equipos %}
+                    {"id":{{item.id}},"disciplina":"{{ item.disciplina }}","nombre":"{{ item.nombreCompleto }}"},
+                {% endfor %#}
+            ];
+            var eventosSinDefinir=[
+                {#% for item in eventos_no_definidos %}
+                    {"id":{{item.id}},"disciplina":"{{ item.disciplina }}","nombre":"{{ item.nombreCompleto }}"},
+                {% endfor %#}
+            ];
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            $.Dashboard = $.Dashboard || {};
+            $.Dashboard.admin = function() {}
+            $.Dashboard.admin.init = function() {
+                setInterval(function(){
+                    $.Dashboard.infEventos.refresh();
+                    $.Dashboard.infPlazas.refresh();
+                },900000);
+                setInterval(function(){
+                    $.Dashboard.infPartidos.refresh();
+                    $.Dashboard.infMedallero.refresh();
+                },100000);
+                setInterval(function(){
+                    $.Dashboard.medallero.refresh();
+                },500000);                
+                $.Dashboard.admin.initGraf();
+            }
+            $.Dashboard.admin.initGraf = function() {
+                var easyDefaultsOptions = {
+                    animate: 1000,
+                    lineWidth: 8,
+                    size: 100,
+                    onStep: function(from, to, percent) {
+                        $(this.el).find('.percent').text(Math.round(percent));
+                    }
+                };
+                $('.easy-pie-chart-admin .appear').each(function() {
+                    var configEasy = $.extend({}, easyDefaultsOptions, $(this).data("plugin-options"));
+                    if($(this).is(':appeared') || isMobile) {
+                        $(this).easyPieChart(configEasy);
+                    } else {
+                        $(this).appear();
+                        $(this).on("appear", function(event, $all_appeared_elements) {
+                            $(this).easyPieChart(configEasy);
+                        });
+                    }
+                });            
+            }
+            $.Dashboard.showEventosSinEquipos = function() {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html("Eventos sin Equipos");
+                table="<div class='row'><div class='col-sm-12'><table id='tablaAux' class='table'><tr><th>#</th><th>Disciplina</th><th>Evento</th><th></th></tr>";
+                $.map(eventosSinEquipo,function(val,index){
+                    table+="<tr><td>"+val.id+"</td><td>"+val.disciplina+"</td><td>"+val.nombre+"</td><td></td></tr>";
+                })
+                table+="</table></div></div>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();
+                $.Dashboard.initTable();
+            }
+            $.Dashboard.showEventosSinDefinir = function() {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html("Eventos sin Definir");
+                table="<div class='row'><div class='col-sm-12' style='height: auto'><table id='tablaAux' class='table'><tr><th>#</th><th>Disciplina</th><th>Evento</th><th></th></tr>";
+                $.map(eventosSinDefinir,function(val,index){
+                    table+="<tr><td>"+val.id+"</td><td>"+val.disciplina+"</td><td>"+val.nombre+"</td><td></td></tr>";
+                })
+                table+="</table></div></div>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();
+                $.Dashboard.initTable();
+            }
+            $.Dashboard.initTable = function() {
+                setTimeout(function(){
+                    $("#tablaAux").dataTable( {
+                        "language": {
+                            "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                        },                
+                        "columnDefs": [ {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        } ],
+                        "order": [[ 1, 'asc' ]]   
+                    });
+                },2800);
+            }
+            $.Dashboard.infPartidos = function(){}
+            $.Dashboard.infPartidos.refresh = function() {
+                $("#infPartidos .panel").block(_optionBloq);
+                $("#infPartidos").load('{{ path("dashboard_resultado_infPartidos")}}',function(){$("#infPartidos .panel").unblock();$.Dashboard.admin.initGraf()})
+            }
+            $.Dashboard.infEventos = function(){}
+            $.Dashboard.infEventos.refresh = function() {
+                $("#infEventos .panel").block(_optionBloq);
+                $("#infEventos").load('{{ path("dashboard_resultado_infEventos")}}',function(){$("#infEventos .panel").unblock();$.Dashboard.admin.initGraf()})
+            }
+            $.Dashboard.infPlazas = function(){}
+            $.Dashboard.infPlazas.refresh = function() {
+                $("#infPlazas .panel").block(_optionBloq);
+                $("#infPlazas").load('{{ path("dashboard_resultado_infPlazas")}}',function(){$("#infPlazas .panel").unblock();$.Dashboard.admin.initGraf()})
+            }
+            $.Dashboard.infPlazas.showEventosSinPlaza = function() {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html("Eventos sin Equipos");
+                table="<div class='row'><div class='col-sm-12'><table id='tablaAux' class='table'><thead><tr><th>#</th><th>Disciplina</th><th>Evento</th><th></th></tr></thead><tbody>";
+                $.map($.Dashboard.eventosPlazasSinAsignar,function(val,index){
+                    table+='<tr><td>'+val.id+'</td><td>'+val.disciplina+'</td><td>'+val.nombre+'</td><td><a href="'+val.path+'" target="_blank" class="btn btn-xs btn-green" title="Ver"><i class="fa fa-arrow-right"></i></a></td></tr>';
+                })
+                table+="</tbody></table></div></div>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();
+                $.Dashboard.initTable();
+            }            
+            $.Dashboard.infMedallero = function(){}
+            $.Dashboard.infMedallero.refresh = function() {
+                $("#infMedallero .panel").block(_optionBloq);
+                $("#infMedallero").load('{{ path("dashboard_resultado_infMedallero")}}',function(){$("#infMedallero .panel").unblock();$.Dashboard.admin.initGraf()})
+            }
+            $.Dashboard.infMedallero.showEventosSinPlazaMedallero = function() {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html("Eventos sin Equipos");
+                table="<div class='row'><div class='col-sm-12'><table id='tablaAux' class='table'><thead><tr><th>#</th><th>Disciplina</th><th>Evento</th><th></th></tr></thead><tbody>";
+                $.map($.Dashboard.eventosPlazasMedalleroSinAsignar,function(val,index){
+                    table+='<tr><td>'+val.id+'</td><td>'+val.disciplina+'</td><td>'+val.nombre+'</td><td><a href="'+val.path+'" target="_blank" class="btn btn-xs btn-green" title="Ver"><i class="fa fa-arrow-right"></i></a></td></tr>';
+                })
+                table+="</tbody></table></div></div>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();
+                $.Dashboard.initTable();
+            }            
+            $.Dashboard.medallero = function(){}
+            $.Dashboard.medallero.refresh = function() {
+                $("#medallero .panel").block(_optionBloq);
+                $("#medallero").load('{{ path("dashboard_resultado_medallero")}}',function(){$("#medallero .panel").unblock();$.Dashboard.admin.initGraf()})
+            }
+            
+        })(jQuery);
+        $(document).ready(function(){$.Dashboard.admin.init();});
+    </script>
+{% endblock %}

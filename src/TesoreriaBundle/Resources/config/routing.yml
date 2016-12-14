@@ -1,0 +1,3 @@
+tesoreria_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: TesoreriaBundle:Default:index }

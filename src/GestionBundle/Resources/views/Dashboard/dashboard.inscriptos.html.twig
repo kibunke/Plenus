@@ -1,0 +1,328 @@
+<div class="col-md-12 col-lg-8">
+    <div class="panel panel-red">
+        <div class="panel-heading">
+            <h4 class="panel-title">Total <span class="text-bold"> de inscriptos</span></h4>
+            <div class="panel-tools">
+                <div class="dropdown">
+                    <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                        <li>
+                            <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                        </li>
+                        <li>
+                            <a class="panel-refresh" href="#">
+                                <i class="fa fa-refresh"></i> <span>Refresh</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-config" href="#panel-config" data-toggle="modal">
+                                <i class="fa fa-wrench"></i> <span>Configurations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-expand" href="#">
+                                <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn btn-xs btn-link panel-close" href="#">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-9">
+                <div id="totalInscriptos" class="pull-left" style="width:50%;height: 240px"></div>
+                <div id="totalInscriptos2" class="pull-left" style="width:50%;height: 240px"></div>
+            </div>
+            <div class="col-sm-3" style="padding-right: 0;margin-right: 0;">
+                <div class="space20 padding-5 border-bottom border-light text-center" onclick="$.Dashboard.showMunicipiosInactivos()" title="Click para ver detalle" style="cursor: pointer">
+                    <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                        <span class="cpu number appear" data-percent="{{ ((135-municipiosInactivos | length)*100)/ 135  }}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <span class="text-light">{{ 135 - municipiosInactivos | length }} Mun. c/ inscriptos</span>
+                </div>
+                <div class="space20 padding-5 border-bottom border-light text-center">
+                    <div class="sparkline-6 space10">
+                        <span></span>
+                    </div>                            
+                    <div class="clearfix"></div>
+                    <span class="text-light">Progreso de carga</span>
+                </div>
+                <!--<div class="space20 padding-5 border-bottom border-light">
+                    <h4 class="pull-left no-margin space5">127.52K $</h4>
+                    <span class="text-dark pull-right">12:30</span>
+                    <div class="clearfix"></div>
+                    <span class="text-light">London HQ Account</span>
+                </div>-->
+            </div>
+        </div>
+        <div class="panel-footer partition-white">
+            <div class="clearfix padding-5 space5">
+                <div class="col-xs-4 text-center no-padding">
+                    <div class="border-right border-dark">
+                        <span class="text-bold block text-extra-large">
+                            <i class="fa fa-male"></i> {{ totalInscriptos['mas'] }}
+                        </span>
+                        <span class="text-light">Masculinos</span>                                
+                    </div>
+                </div>
+                <div class="col-xs-4 text-center no-padding" style="font-weight: bold;">
+                    <div class="border-right border-dark">
+                        <span class="text-bold block text-extra-large">
+                            <i class="fa fa-female"></i> {{ totalInscriptos['fem'] }}
+                        </span>
+                        <span class="text-light">Femeninos</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 text-center no-padding">
+                    <span class="text-bold block text-extra-large">
+                        <i class="fa fa-asterisk"></i> {{totalInscriptos['Cultura (Juveniles)']+totalInscriptos['Cultura (Adultos Mayores)']+totalInscriptos['Deportes (Juveniles)']+totalInscriptos['Deportes (Adultos Mayores)']}}
+                    </span>
+                    <span class="text-light">Total inscriptos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function ($) {
+        var municipiosInactivos=[
+            {% for item in municipiosInactivos %}
+                {"id":{{item.id}},"nombre":"{{ item .nombre }}"},
+            {% endfor %}
+        ];      
+        // no se sobreescribe el namespace, si ya existe
+        var table;
+        $.Dashboard = $.Dashboard || {};
+        $.Dashboard.inscripcion = function(){}
+        $.Dashboard.inscripcion.init = function(){
+            $(".sparkline-6 span").sparkline([ {{ progesoInscripcion['cantidades'] | raw }} ], {
+                type: "line",
+                lineColor: '#ffffff',
+                width: "80%",
+                height: "70",
+                fillColor: "",
+                spotRadius: 4,
+                lineWidth: 2,
+                resize: true,
+                spotColor: '#ffffff',
+                minSpotColor: '#ffffff',
+                maxSpotColor: '#ffffff',
+                highlightSpotColor: '#bf005f',
+                highlightLineColor: '#ffffff',
+                tooltipFormat: '<span style="color: {{ '{{color}}' }}">&#9679;</span> {{'{{offset:names}}: {{y:val}}'}}',
+                tooltipValueLookups: {
+                    names: { {{ progesoInscripcion['dias'] | raw }} }
+                }
+            });        
+            var easyDefaultsOptions = {
+                animate: 1000,
+                lineWidth: 3,
+                size: 70,
+                onStep: function(from, to, percent) {
+                    $(this.el).find('.percent').text(Math.round(percent));
+                }
+            };
+            $('.easy-pie-chart-inscriptos .appear').each(function() {
+                var configEasy = $.extend({}, easyDefaultsOptions, $(this).data("plugin-options"));
+                if($(this).is(':appeared') || isMobile) {
+                    $(this).easyPieChart(configEasy);
+                } else {
+                    $(this).appear();
+                    $(this).on("appear", function(event, $all_appeared_elements) {
+                        $(this).easyPieChart(configEasy);
+                    });
+                }
+        
+            });        
+            
+            
+            Highcharts.setOptions({
+            lang: {
+                    drillUpText: '< Volver'
+                }
+            });
+            $('#totalInscriptos').highcharts({
+                credits:{'enabled':false},
+                contrastTextColor: '#F0F0F3',
+                chart: {
+                    type: 'pie',
+                    backgroundColor:'transparent'
+                },
+                title: {
+                    text: '',
+                    style: {'display':'none'}
+                },
+                subtitle: {
+                    text: ''
+                },           
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }                
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    style: {
+                       color: '#F0F0F0'
+                    },
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> de {{totalInscriptos['Cultura (Juveniles)']+totalInscriptos['Cultura (Adultos Mayores)']+totalInscriptos['Deportes (Juveniles)']+totalInscriptos['Deportes (Adultos Mayores)']}}<br/>'
+                },
+                series: [{
+                    name: 'Inscriptos',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Deportes',
+                        y: {{totalInscriptos['Deportes (Juveniles)']+totalInscriptos['Deportes (Adultos Mayores)']}},
+                        drilldown: 'deportes'
+                    }, {
+                        name: 'Cultura',
+                        y: {{totalInscriptos['Cultura (Juveniles)']+totalInscriptos['Cultura (Adultos Mayores)']}},
+                        drilldown: 'cultura'
+                    }]
+                }],
+                legend: {
+                      itemStyle: {
+                         color: '#E0E0E3'
+                      },
+                      itemHoverStyle: {
+                         color: '#FFF'
+                      },
+                      itemHiddenStyle: {
+                         color: '#606063'
+                      },
+                      labelFormat:'{name}<br>{y}',
+                   },
+                drilldown: {
+                    drillUpButton: {
+                        relativeTo: 'spacingBox',
+                        position: {
+                            y: 0,
+                            x: 0
+                        },
+                    },
+                    series: [{
+                        id: 'deportes',
+                        name: 'Deportes',
+                        data: [
+                            ['Adul. May.', {{totalInscriptos['Deportes (Adultos Mayores)']}}],
+                            ['Juv.', {{totalInscriptos['Deportes (Juveniles)']}}]
+                        ]
+                    }, {
+                        id: 'cultura',
+                        name: 'Cultura',
+                        data: [
+                            ['Adul. May.', {{totalInscriptos['Cultura (Adultos Mayores)']}}],
+                            ['Juv', {{totalInscriptos['Cultura (Juveniles)']}}]
+                        ]
+                    }]
+                }
+            });
+            $('#totalInscriptos2').highcharts({
+                credits:{'enabled':false},
+                contrastTextColor: '#F0F0F3',
+                chart: {
+                    type: 'pie',
+                    backgroundColor:'transparent'
+                },
+                title: {
+                    text: '',
+                    style: {'display':'none'}
+                },
+                subtitle: {
+                    text: ''
+                },           
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }                
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    style: {
+                       color: '#F0F0F0'
+                    },
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> de {{totalInscriptos['Cultura (Juveniles)']+totalInscriptos['Cultura (Adultos Mayores)']+totalInscriptos['Deportes (Juveniles)']+totalInscriptos['Deportes (Adultos Mayores)']}}<br/>'
+                },
+                series: [{
+                    name: 'Inscriptos',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Juveniles',
+                        y: {{totalInscriptos['Deportes (Juveniles)']+totalInscriptos['Cultura (Juveniles)']}},
+                        drilldown: 'juveniles'
+                    }, {
+                        name: 'Adul. May.',
+                        y: {{totalInscriptos['Deportes (Adultos Mayores)']+totalInscriptos['Cultura (Adultos Mayores)']}},
+                        drilldown: 'adultos'
+                    }]
+                }],
+                legend: {
+                      itemStyle: {
+                         color: '#E0E0E3'
+                      },
+                      itemHoverStyle: {
+                         color: '#FFF'
+                      },
+                      itemHiddenStyle: {
+                         color: '#606063'
+                      },
+                      labelFormat:'{name}<br>{y}',
+                   },
+                drilldown: {
+                    drillUpButton: {
+                        relativeTo: 'spacingBox',
+                        position: {
+                            y: 0,
+                            x: 0
+                        },
+                    },                
+                    series: [{
+                        id: 'juveniles',
+                        name: 'Juveniles',
+                        data: [
+                            ['Cultura', {{totalInscriptos['Cultura (Juveniles)']}}],
+                            ['Deportes', {{totalInscriptos['Deportes (Juveniles)']}}]
+                        ]
+                    }, {
+                        id: 'adultos',
+                        name: 'Adultos Mayores',
+                        data: [
+                            ['Cultura', {{totalInscriptos['Cultura (Adultos Mayores)']}}],
+                            ['Deportes', {{totalInscriptos['Deportes (Adultos Mayores)']}}]
+                        ]
+                    }]
+                }
+            });            
+        }
+        $.Dashboard.showMunicipiosInactivos = function() {
+            $('#panel-config .modal-footer').hide();
+            $('#panel-config .modal-title').html("Municipios sin inscriptos");
+            table="<table class='table'><tr><th>#</th><th>Nombre</th></tr>";
+            $.map(municipiosInactivos,function(val,index){
+                table+="<tr><td>"+val.id+"</td><td>"+val.nombre+"</td></tr>";
+            })
+            table+="</table>";
+            $('#panel-config .modal-body').html(table);
+            $('#panel-config').modal();                
+        }            
+    })(jQuery);
+    $(document).ready(function(){$.Dashboard.inscripcion.init();});
+</script>

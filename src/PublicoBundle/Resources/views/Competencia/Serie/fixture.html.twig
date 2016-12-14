@@ -1,0 +1,42 @@
+{% if evento.cronogramas | length == 0 %}
+    <div class="alert alert-block alert-danger fade in">
+        <button data-dismiss="alert" class="close" type="button">×</button>
+        <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+        <p>
+            Este <strong>evento</strong> aún no tiene cronogramas definidos.<br>
+        </p>
+    </div>
+{% else %}
+    <div>
+        <div class="row">
+            <div class="col-sm-12">  
+                <h4 class="panel-title">Cronograma <span class="text-bold">{{ evento }}</span></h4>
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-transparent-grey">
+                        <i class="fa fa-print"></i>
+                    </a>
+                </div>                        
+                <br>
+                <br>
+                <table id="cronogramaTable" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="center">#</th>
+                            <th class="center">Fecha</th>
+                            <th class="center">Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cronograma in evento.cronogramas %}
+                            <tr>
+                                <td class="center">{{ loop.index }}</td>
+                                <td class="center">{{ cronograma.getRaw | raw }}</td>
+                                <td>{{ cronograma.descripcion }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}

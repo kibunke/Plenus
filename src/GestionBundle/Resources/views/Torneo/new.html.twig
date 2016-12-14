@@ -1,0 +1,91 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1>Nuevo Torneo <small>complete el formulario para dar de alta un nuevo torneo</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('torneo') }}">
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                
+                <li>
+                    <a href="{{ path('homepage_gestion') }}">
+                        Gestion
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('torneo') }}">
+                        Torneos
+                    </a>
+                </li>
+                <li class="active">
+                    Nueva
+                </li>                
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+<div class="panel-heading">
+        <h4 class="panel-title">Nuevo <span class="text-bold">torneo</span></h4>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    {#
+                    <li>
+                        <a class="panel-config" href="#panel-config" data-toggle="modal">
+                            <i class="fa fa-wrench"></i> <span>Configurations</span>
+                        </a>
+                    </li>#}
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">    
+        {{ form(form) }}
+    </div>
+{% endblock %}
+{% block otherJavascripts %}
+{% endblock %}

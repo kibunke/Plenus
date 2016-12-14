@@ -1,0 +1,200 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><span class="fa fa-dashboard"></span> Dashboard <small>Un repaso estadistico de los JUEGOS.</small></h1>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>
+                <li class="active">
+                    Dashboard
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        {% if is_granted('ROLE_DASHBOARD_INSCRIPCION') %}
+            {{ render(controller('GestionBundle:Dashboard:dashboardInscriptos')) }}
+        {% endif %}        
+        
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="col-lg-4 col-sm-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-blue">
+                            <div class="panel-body padding-20 text-center" onclick="$.Dashboard.showUsuariosLogueados()" title="Click para ver detalle" style="cursor: pointer">
+                                <h5 class="text-white semi-bold no-margin p-b-5">Usuarios <span class="text-bold"> on-line</span></h5>
+                                <div class="space10" style="margin-top: 5px;">
+                                    <h3 class="text-white no-margin"><i class="fa fa-users"></i> {{ usersOnline | length }}</h3>
+                                </div>
+                                <div class="sparkline-4 space10">
+                                    <span><canvas width="88" height="70" style="display: inline-block; width: 88px; height: 70px; vertical-align: top;"></canvas></span>
+                                </div>
+                                <span class="text-light"><i class="fa fa-calendar"></i> Ultimos 7 días</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-green">
+                            <div class="panel-body padding-20 text-center">
+                                <div class="space10">
+                                    <h5 class="text-white semi-bold no-margin p-b-5">Cargados <span class="text-bold"> Hoy</span></h5>
+                                    <h3 class="text-white no-margin" style="margin-top: 5px !important;"><span class="text-small"></span>1,250</h3>
+                                </div>
+                                <div class="sparkline-5 space10">
+                                    <span></span>
+                                </div>
+                                <span class="text-light"><i class="fa fa-calendar"></i> Ultimos 7 días</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">                    
+                    <div class="col-sm-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="easy-pie-chart easy-pie-chart-admin">
+                                    <span class="cpu number appear" data-percent="{{ (memUsed[1] *100)/ memUsed[0] }}" data-plugin-options='{"barColor": "#35aa47"}'><span class="percent"></span></span>
+                                    <div class="label-chart">
+                                        <h5 class="no-margin"><i class="fa fa-server"></i> RAM consumida</h5>
+                                    </div>
+                                </div>
+                                <div class="small-text text-center space15">
+                                    <span class="block">Recomendado</span><span class="label label-danger vertical-align-bottom">< 80%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel">
+                            <div class="panel-body" onclick="$.Dashboard.showUsersInactived()" title="Click para ver detalle" style="cursor: pointer">
+                                <div class="easy-pie-chart easy-pie-chart-admin">
+                                    <span class="cpu number appear" data-percent="{{ ((users | length - usersInactived | length)*100)/ users | length  }}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                                    <div class="label-chart">
+                                        <h5 class="no-margin"><i class="fa fa-users"></i> Usuarios Activos</h5>
+                                    </div>
+                                    </div>
+                                    <div class="small-text text-center space15">
+                                        <span class="block">Sobre el total</span><span class="label label-danger vertical-align-bottom">{{ users | length - usersInactived | length  }} de {{ users | length  }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% if is_granted('ROLE_DASHBOARD_FINALISTAS') %}
+            {{ render(controller('GestionBundle:Dashboard:dashboardFinalistas')) }}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/highcharts.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/heatmap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/treemap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/drilldown.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/themes/grid-light.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/jquery.sparkline/jquery.sparkline.js') }}"></script>
+    
+    <script src="{{ asset('bundles/common/plugins/easy-pie-chart/dist/jquery.easypiechart.min.js') }}"></script>
+    <script>
+        (function ($) {
+            var usersOnline=[
+                {% for item in usersOnline %}
+                    {"id":{{item.id}},"usuario":"{{ item.usuario }}","nombre":"{{ item.nombreCompleto }}","ultimaOperacion":"{{ item.ultimaOperacion | date("d/m/Y - g:ia")}}"},
+                {% endfor %}
+            ];
+            var usersInactived=[
+                {% for item in usersInactived %}
+                    {"id":{{item.id}},"usuario":"{{ item.usuario }}","nombre":"{{ item.nombreCompleto }}","ultimaOperacion":"{{ item.ultimaOperacion | date("d/m/Y - g:ia")}}"},
+                {% endfor %}
+            ];            
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            $.Dashboard = $.Dashboard || {};
+            $.Dashboard.admin = function() {}
+            $.Dashboard.admin.init = function() {
+                var easyDefaultsOptions = {
+                    animate: 1000,
+                    lineWidth: 3,
+                    size: 70,
+                    onStep: function(from, to, percent) {
+                        $(this.el).find('.percent').text(Math.round(percent));
+                    }
+                };
+                $('.easy-pie-chart-admin .appear').each(function() {
+                    var configEasy = $.extend({}, easyDefaultsOptions, $(this).data("plugin-options"));
+                    if($(this).is(':appeared') || isMobile) {
+                        $(this).easyPieChart(configEasy);
+                    } else {
+                        $(this).appear();
+                        $(this).on("appear", function(event, $all_appeared_elements) {
+                            $(this).easyPieChart(configEasy);
+                        });
+                    }
+            
+                });                 
+                $(".sparkline-4 span").sparkline([ {{ usersStats['cantidades'] | raw }} ], {
+                    type: "line",
+                    lineColor: '#ffffff',
+                    width: "80%",
+                    height: "70",
+                    fillColor: "",
+                    spotRadius: 4,
+                    lineWidth: 2,
+                    resize: true,
+                    spotColor: '#ffffff',
+                    minSpotColor: '#ffffff',
+                    maxSpotColor: '#ffffff',
+                    highlightSpotColor: '#bf005f',
+                    highlightLineColor: '#ffffff',
+                    tooltipFormat: '<span style="color: {{ '{{color}}' }}">&#9679;</span> {{'{{offset:names}}: {{y:val}}'}}',
+                    tooltipValueLookups: {
+                        names: { {{ usersStats['dias'] | raw }} }
+                    }
+                });                
+            }
+            $.Dashboard.showUsuariosLogueados = function() {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-title').html("Usuarios on-line");
+                table="<table class='table'><tr><th>#</th><th>User</th><th>Apellido,Nombre</th><th>Ultima Actividad</th></tr>";
+                $.map(usersOnline,function(val,index){
+                    table+="<tr><td>"+val.id+"</td><td>"+val.usuario+"</td><td>"+val.nombre+"</td><td>"+val.ultimaOperacion+"</td></tr>";
+                })
+                table+="</table>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();                
+            }
+            $.Dashboard.showUsersInactived = function() {
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-title').html("Usuarios inactivos");
+                table="<table class='table'><tr><th>#</th><th>User</th><th>Apellido,Nombre</th><th>Ultima Actividad</th></tr>";
+                $.map(usersInactived,function(val,index){
+                    table+="<tr><td>"+val.id+"</td><td>"+val.usuario+"</td><td>"+val.nombre+"</td><td>"+val.ultimaOperacion+"</td></tr>";
+                })
+                table+="</table>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();                
+            }            
+        })(jQuery);
+        $(document).ready(function(){$.Dashboard.admin.init();});      
+    </script>
+{% endblock %}
+

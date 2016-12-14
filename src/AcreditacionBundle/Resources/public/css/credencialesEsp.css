@@ -1,0 +1,151 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23/09/2016, 20:41:26
+    Author     : kibunke
+*/
+
+.datosIzq{
+    border-right: solid 1px #88bbc8;
+}
+
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary{
+    background: #428bca none repeat scroll 0 0 !important;
+    color: #f9f9f9;
+    margin-top: 0px;    
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default{
+    background: #fe6c86 none repeat scroll 0 0 !important;
+    color: #f9f9f9;
+}
+
+#credencialEspecial .radio label, #credencialEspecial  .checkbox label{
+    padding: 0px;
+}
+
+.panel-body{
+    padding: 15px;
+}
+
+#credencialEspecial table th{
+    background-color: #5F8295;
+    color: white;
+    padding: 1px;
+}
+
+#credencialEspecial table td{
+    padding: 1px;
+}
+
+#credencialEspecial label{
+    text-align: left;
+    color: black;
+    padding: 0px;
+}
+
+div.datosDer > div, div.datosIzq > div{
+    margin-bottom: 20px;
+}
+
+a.thumbnail{
+    background-color: black;
+    border: 4px solid rgb(95, 130, 149);
+
+}
+.bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-handle-on, .bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-handle-off, .bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-label{
+    padding: 2px;
+}
+
+#contenedorAvatar{
+    background-color: black;
+    width: 250px;
+    height: 250px;
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+#personal_avatar{
+    width: 100%;
+    height: 100%;
+}
+#fotoCapturador{
+    height: 350px;
+    width: 380px;
+}
+
+#capturadorModal .modal-body{
+    height: 400px;
+}
+
+.modal-dialog{
+    width: 412px;
+}
+.photobooth ul li{
+    right: 35px;
+}
+.photobooth ul{
+    list-style:none;
+}
+label.staticLabel{
+    background-color: #e6fee6;
+}
+p.form-control-static{
+    color: black;
+}
+.panel-heading{
+    padding-left: 20px;
+}
+#credencialesEspTable img{
+    margin: 0px;
+    width: 50px;
+}
+
+#credencialesEspTable div.media div.media-body{
+    vertical-align: middle
+}
+.panel-white .table, .partition-white .table{
+    font-size: 12px;
+}
+.header1{
+    width: 5% !important;
+}
+.header2{
+    width: 25% !important;
+}
+.header3{
+    width: 15% !important;
+}
+.header4{
+    width: 15% !important;
+}
+.header5{
+    width: 15% !important;
+}
+.header6{
+    width: 15% !important;
+}
+.header7{
+    width: 10% !important;
+}
+
+table.table-hover > tbody > tr.seleccionado, table.table-hover > tbody > tr.seleccionado td{
+    background-color: #cafdde !important;
+}
+#credencialesEspTable thead tr th{
+    background-color: #5f8295;
+    border: 1px solid #dfe1e5;
+    color: #f9f9f9;
+}
+#credencialesExport .modal-lg{
+    height: 90%;
+    width: 90%;
+}
+
+#credencialesObject{
+    height: 75vh;
+    width: 100%;
+}

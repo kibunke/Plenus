@@ -1,0 +1,61 @@
+#tesoreria_EP_detalle > div:last-child, #tesoreria_PE_detalle > div:last-child{
+    margin-bottom: 10px;
+}
+#s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoProvincia, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoPartido, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_empleadoPublico{
+    padding: 0px;
+}
+#s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoProvincia a, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoPartido a, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_empleadoPublico a{
+    height: 100%;
+}
+#s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoPartido > a, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoProvincia > a, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_empleadoPublico > a{
+    background-image: none;
+    border: none;
+    border-radius: 0px;
+}
+#s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoPartido > a span b, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoProvincia > a span b, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_empleadoPublico > a span b{
+    background-image: none !important;
+    border-radius: 0px;
+}
+#s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoPartido > a span.select2-arrow, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoProvincia > a span.select2-arrow, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_empleadoPublico > a span.select2-arrow{
+    border-radius: 0px !important;
+    width: 12px;
+}
+#s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoPartido > a span.select2-chosen, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_pagoProvincia > a span.select2-chosen, #s2id_juegosba_acreditacionbundle_personaljuegos_datosTesoreria_empleadoPublico > a span.select2-chosen{
+    color: black;
+}
+#acreditacion_pagoEspecifico_monto{
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0px;
+    padding-top: 10px;
+}
+#acreditacion_pagoEspecifico_monto span:last-child{
+    text-decoration: line-through;
+    font-variant-position: super;        
+}
+#acreditacion-body label{
+    text-align: left;
+    color: black;
+    padding: 0px;
+}
+#tesoreria_EP_detalle, #tesoreria_PE_detalle{
+    border-left: solid 1px #88bbc8;
+}
+.tesoreria_detalle_flecha{
+    text-align: left;
+    font-size: 30px;
+    padding-top: 30px;  
+}
+.select2-drop-active{
+    border: none;
+}
+.select2-results .select2-highlighted{
+    background: rgb(95, 130, 149) none repeat scroll 0 0;
+}
+
+label.staticLabel{
+    background-color: #e6fee6;
+}
+p.form-control-static{
+    color: black;
+}

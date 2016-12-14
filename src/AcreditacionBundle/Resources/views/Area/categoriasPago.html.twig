@@ -1,0 +1,17 @@
+<table  class="table table-condensed table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center col-md-7" title="Categoría de pago" >Categoría</th>
+            <th class="text-center col-md-5"><i class="fa fa-users text-blue" title="Acreditados" aria-hidden="true"></i></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for categoria in categorias %}
+            <tr>
+                <td class="text-center"><strong class="text-extra-large">{{ categoria.nombre }}</strong></td>
+                <td class="text-center "><strong class="text-extra-large">{{ categoria.acreditados | upper}} / </strong>{{ categoria.cupoMax | upper}}</td>
+            </tr>
+        {% endfor %}
+    </tbody> 
+</table>
+

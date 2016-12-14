@@ -1,0 +1,99 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Pais
+ *
+ * @ORM\Table(name="plenus_admin.Pais")
+ * @ORM\Entity
+ */
+class Pais
+{
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=50)
+     */
+    private $nombre;
+
+     /**
+     * @ORM\OneToMany(targetEntity="Provincia", mappedBy="pais", cascade={"persist"})
+     */
+    private $provincias;
+
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */
+    private $updatedBy;
+
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean")
+     */
+    protected $isActive;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->provincias = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->setActive(true);
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * __toString
+     */    
+    public function __toString(){
+        return $this->getNombre();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

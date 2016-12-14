@@ -1,0 +1,52 @@
+<?php
+
+namespace UsuarioBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * UsuarioBundle\Entity\LogUsuario
+ * 
+ * @ORM\Entity(repositoryClass="UsuarioBundle\Entity\Repository\LogUsuarioRepository")
+ */
+class LogUsuario extends \CommonBundle\Entity\Log
+{
+    /**
+     * __construct
+     */    
+    public function __construct($user,$ip,$actividad='login')
+    {
+        $this->usuario = $user;
+        parent::__construct($user,$ip,$actividad);
+    }
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="logs")
+     * @ORM\JoinColumn(name="usuario", referencedColumnName="id")
+     */       
+    private $usuario;
+    
+    /**
+     * Set usuario
+     *
+     * @param \UsuarioBundle\Entity\Usuario $usuario
+     *
+     * @return Log
+     */
+    public function setUsuario(\UsuarioBundle\Entity\Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return \UsuarioBundle\Entity\Usuario
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }    
+}

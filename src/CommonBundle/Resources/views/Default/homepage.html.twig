@@ -1,0 +1,261 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}{% endblock %}
+{% block contenidoBreadcrumb %}<br>{% endblock %}
+{% block contenidoData %}
+   <div class="panel-body">
+        <div class="jumbotron" style="background-repeat: no-repeat;background-position: bottom right;background-image: url({{ asset('bundles/common/images/fondo_1.png') }});background-size: auto 80%;">
+               <h1 style="text-shadow: 3px 1px 9px #fff;color: rgb(244, 124, 55);font-weight: bold;">Bienvenido a Plenus</h1>
+               <p class="lead">
+                    El nuevo software integral de LOS JUEGOS
+               </p>
+               <!--<p>
+                   <a role="button" href="#" class="btn btn-lg btn-success">
+                       Sign up today
+                   </a>
+               </p>-->
+        </div>
+        <div class="col-md-6">
+            <p>
+               Bienvenido a <strong>Plenus</strong>, el nuevo software integral de LOS JUEGOS mediante el cual se registrará toda la información necesaria para la gestión y toma de decisiones referida al programa mas importante de la secretaría.
+            </p>
+            <p>
+                La puesta en marcha de esta nueva versión tiene como objetivo cumplir con el compromiso constante de modernizar los sistemas de información mediante los que se pretende gestionar eficientemente los recursos humanos de todas las áreas involucradas en el desarrollo de LOS JUEGOS.
+            </p>
+            <p>
+                A continuación se describen brevemente los distintos sub-sistemás.
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><i class="fa fa-pencil-square-o"></i> Inscripción</h4>
+                    <p>
+                        Con una interfaz ágil y cómoda posibilita a los coordinadores administrar la información que se desprende de la inscripción de participantes a la etapa local.
+                    </p>
+                    <h4><i class="fa fa-random"></i> Regionales</h4>
+                    <p>
+                        Permite la registración de ganadores de la etapa regional e inter regional.
+                    </p>
+                    <h4><i class="fa fa-spinner"></i> Sorteo</h4>
+                    <p>
+                        Gracias a este subsistema, resultará simple y vistoso registrar los resultados del sorteo de zonas y orden de participación para la etapa provincial.
+                    </p>                    
+
+                </div>
+                <div class="col-md-6">
+                    <h4><i class="fa fa-users"></i> Acreditación</h4>
+                    <p>
+                        De manera rápida admite la carga del personal convocado a la final provincial por parte del responsable del área para su posterior tratamiento operativo y contable.
+                    </p>
+                    <h4><i class="fa fa-calendar"></i> Cronogramas y Fixtures</h4>
+                    <p>
+                        Se permitirá intuitivamente registrar el cronograma de todas las disciplinas.
+                    </p>
+                    <h4><i class="fa fa-trophy"></i> Resultados</h4>
+                    <p>
+                        Es el núcleo del sistema, el cual permite de manera fiable saber en qué estado se encuentra cada evento durante la final provincial.
+                    </p>
+                </div>
+            </div>
+            <!--<div class="row">
+                <div class="col-md-6 text-center">
+                    <img class="img-circle" data-src="holder.js/140x140" alt="140x140" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjcwIiB5PSI3MCIgc3R5bGU9ImZpbGw6I2FhYTtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjE0MHgxNDA8L3RleHQ+PC9zdmc+" style="width: 140px; height: 140px;">
+                    <h2>Heading</h2>
+                    <p>
+                        Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.
+                    </p>
+                    <p>
+                        <a class="btn btn-default" href="#" role="button">
+                            View details »
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img class="img-circle" data-src="holder.js/140x140" alt="140x140" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjcwIiB5PSI3MCIgc3R5bGU9ImZpbGw6I2FhYTtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjE0MHgxNDA8L3RleHQ+PC9zdmc+" style="width: 140px; height: 140px;">
+                    <h2>Heading</h2>
+                    <p>
+                        Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.
+                    </p>
+                    <p>
+                        <a class="btn btn-default" href="#" role="button">
+                            View details »
+                        </a>
+                    </p>
+                </div>
+            </div>-->
+        </div>
+        <div class="col-md-6">
+            <!--<div class="row space20">
+                <div class="col-md-4">
+                    <h2>Heading</h2>
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                    <p>
+                        <a role="button" href="#" class="btn btn-primary">
+                            View details »
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Heading</h2>
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                    <p>
+                        <a role="button" href="#" class="btn btn-primary">
+                            View details »
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Heading</h2>
+                    <p>
+                        Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                    </p>
+                    <p>
+                        <a role="button" href="#" class="btn btn-primary">
+                            View details »
+                        </a>
+                    </p>
+                </div>
+            </div>-->
+            <blockquote>
+                {% if ( numFrase1==1 ) %}
+                    <p>
+                       <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                       No preguntes que pueden hacer tus compañeros por ti. Pregunta que puedes hacer tu por tus compañeros.<br>
+                       <small>Earvin 'Magic' Johnson (Basquetbolista)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Siempre hay que tratar de ser el mejor, pero nunca creerse el mejor.<br>
+                        <small>Juan Manuel Fangio (Piloto de automovilismo)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Ningún jugador es tan bueno como todos juntos.<br>
+                        <small>Alfredo Di Stefano (Futbolsita)</small>
+                    </p>
+                {% endif %}
+                {% if ( numFrase1==2 ) %}
+                    <p>
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        El trabajo duro lo ha hecho fácil. Ese es mi secreto. Esa es la razón por la que gano.<br>
+                        <small>Nadia Comaneci (Gimnasta)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        No se fracasa hasta que no se deja de intentar.<br>
+                        <small>Florence Griffith Joyner (Atleta)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Un mal plan, es mejor que no tener ningún plan.<br>
+                        <small>Frank Marshall (Ajedrecista)</small>
+                    </p>
+                {% endif %}
+                {% if ( numFrase1==3 ) %}
+                    <p>
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Un equipo es como un buen reloj: si se pierde una pieza todavía es bonito, pero ya no funciona igual.<br>
+                        <small>Ruud Gullit (Futbolista)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        La herramienta más educativa que yo he tenido ha sido el deporte. Allí he aprendido a aceptar la derrota, que otro es mejor, a levantarme después de no haber hecho bien las cosas, esforzarme para hacerlo mejor...<br>
+                        <small>Pep Guardiola (Técnico de futbol)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Cuanto más difícil es la victoria, mayor es la felicidad de ganar.<br>
+                        <small>Pelé (Futbolista)</small>
+                    </p>                    
+                {% endif %}
+                {% if ( numFrase1==4 ) %}
+                    <p>
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Tienes que esperar cosas de ti mismo antes de poder hacerlas.<br>
+                        <small>Michael Jordan (Basquetbolista)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Si no tienes confianza, siempre encontrarás una forma de no ganar.<br>
+                        <small>Carl Lewis (Atleta)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        No puedes poner un límite a nada. Cuanto más sueñas, más lejos llegas.<br>
+                        <small>Michael Phelps (Nadador)</small>
+                    </p>
+                {% endif %}
+                {% if ( numFrase1==5 ) %}
+                    <p>
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Odié cada minuto de entrenamiento, pero dije, “no abandones”. Sufre ahora y vive el resto de tu vida como un campeón.<br>
+                        <small>Muhammad Ali (Boxeador)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Es difícil superar a una persona que nunca se rinde.<br>
+                        <small>Babe Ruth (Beisbolista)</small>
+                    </p>
+                    <p style="margin-top: 25px;">
+                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                        Los campeones no están hechos en el gimnasio. Los campeones están hechos de algo que tienen en su interior, un deseo, un sueño, una visión.<br>
+                        <small>Muhammad Ali (Boxeador)</small>
+                    </p>
+                {% endif %}                
+            </blockquote>
+            <table class="table table-striped" style="font-size: 13px">
+                <thead>
+                    <tr>
+                        <th>Año</th>
+                        <th>1ro</th>
+                        <th>2do</th>
+                        <th>3ro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2015</td>
+                        <td>Quilmes</td>
+                        <td>La Matanza</td>
+                        <td>La Plata</td>
+                    </tr>                    
+                    <tr>
+                        <td>2014</td>
+                        <td>Quilmes</td>
+                        <td>La Matanza</td>
+                        <td>Florencio Varela</td>
+                    </tr>
+                    <tr>
+                        <td>2013</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>2012</td>
+                        <td>Lomas de Zamora</td>
+                        <td>Almirante Brown</td>
+                        <td>La Matanza</td>
+                    </tr>
+                    <tr>
+                        <td>2011</td>
+                        <td>La Matanza</td>
+                        <td>Quilmes</td>
+                        <td>Lomas de Zamora</td>
+                    </tr>
+                    <tr>
+                        <td>2010</td>
+                        <td>La Matanza</td>
+                        <td>Lomas de Zamora</td>
+                        <td>Esteban Echeveria</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}{% endblock %}
+{% block otherJavascripts %}{% endblock %}

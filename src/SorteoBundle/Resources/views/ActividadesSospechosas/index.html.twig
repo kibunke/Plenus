@@ -1,0 +1,286 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Actividades Sospechosas <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    {#% if is_granted('ROLE_INSCRIPCION_NEW') %}
+                        <li class="dropdown">
+                            <a  href="#1" onclick="$.Default.inscripto.newModal('{{ path('inscripto_new') }}')">
+                                <i class="fa fa-user"></i> NUEVO
+                            </a>
+                        </li>
+                    {% endif %#}
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    Sorteo
+                </li>
+                <li class="active">
+                    Actividades Sospechosas
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <h4 class="panel-title">Tabla <span class="text-bold">de eventos con finalistas.</span></h4>
+        <div class="panel-tools">
+            {{ include('CommonBundle::dropdownTables.html.twig') }}
+        </div>
+        <div class="row">
+            {{ form_start(formFiltro) }}
+                <div class="col-sm-12">
+                    <div class="col-sm-3 center">
+                        {{ form_widget(formFiltro.dniDpl) }}
+                        {{ form_label(formFiltro.dniDpl) }}
+                        <br>
+                        <span class="badge badge-success{% if dniDpl | length %} badge-danger {%endif %} wobble animated" style="padding: 5px 30px">{{ dniDpl | length }}</span>
+                    </div>
+                    <div class="col-sm-3 center">
+                        {{ form_widget(formFiltro.dniMay99M) }}
+                        {{ form_label(formFiltro.dniMay99M) }}
+                        <br>
+                        <span class="badge badge-success{% if dniMay99M | length %} badge-danger {%endif %} wobble animated" style="padding: 5px 30px">{{ dniMay99M | length }}</span>
+                    </div>
+                    <div class="col-sm-3 center">
+                        {{ form_widget(formFiltro.dniMen1M) }}
+                        {{ form_label(formFiltro.dniMen1M) }}
+                        <br>
+                        <span class="badge badge-success{% if dniMen1M | length %} badge-danger {%endif %} wobble animated" style="padding: 5px 30px">{{ dniMen1M | length }}</span>
+                    </div>
+                    <div class="col-sm-3 center">
+                        {{ form_widget(formFiltro.nombreDpl) }}
+                        {{ form_label(formFiltro.nombreDpl) }}
+                        <br>
+                        <span class="badge badge-success{% if nomDpl | length %} badge-danger {%endif %} wobble animated" style="padding: 5px 30px">{{ nomDpl | length }}</span>
+                    </div>
+                </div>
+                <div class="col-sm-12" style="padding-top: 15px">
+                    <button class="btn btn-default btn-block" type="submit">
+                        <span class="fa fa-search"></span>
+                        Buscar
+                    </button>
+                </div>
+            {{ form_end(formFiltro) }}
+        </div>
+    </div>
+    <style>
+        #irregularidadesTable .cambio1{
+            background: #f0aa7b;
+        }
+        #irregularidadesTable .cambio2{
+            background: #a0db8e
+        }        
+    </style>
+    <div class="panel-body" style="margin-top: 15px; ">
+        <table id="irregularidadesTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Irregularidad</th>
+                    <th>Descripción</th>
+                    <th>Evento/s</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set aplAux = '' %}
+                {% set style = 'cambio1' %}
+                {% for item in nomDpl %}
+                    {% if aplAux != item.getNombreCompleto | upper %}
+                        {% set aplAux = item.getNombreCompleto | upper  %}
+                        {% if style == 'cambio2' %}
+                            {% set style = 'cambio1' %}
+                        {% else %}
+                            {% set style = 'cambio2' %}
+                        {% endif %}
+                    {% endif %}
+                    <tr class="{{style}}">
+                        <td><span class="fa fa-ellipsis-v"></span></td>
+                        <td title="Nombre Duplicado">Nom Duplicado</td>
+                        <td>{{ item.getNombreCompletoRaw | raw }}</td>
+                        <td>
+                            {% for eq in item.equipos %}
+                                <div class="col-sm-8">
+                                    {{ eq.evento.getNombreCompletoRaw | raw }}
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                        {% if is_granted('ROLE_SORTEO_CONSULTA') %}
+                                            <a href="{{ path('ganadores_evento_show', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if is_granted('ROLE_SORTEO_CARGA') %}
+                                            <a href="{{ path('ganadores_evento', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                                <i class="fa fa-arrow-right"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% for item in dniMay99M %}
+                    {% if style == 'cambio1' %}
+                        {% set style = 'cambio2' %}
+                    {% else %}
+                        {% set style = 'cambio1' %}
+                    {% endif %}
+                    <tr class="{{style}}">
+                        <td><span class="fa fa-ellipsis-v"></span></td>
+                        <td title="DNI mayor a 99 millones">DNI mayor a 99M</td>
+                        <td>{{ item.getNombreCompletoRaw | raw }}</td>
+                        <td>
+                            {% for eq in item.equipos %}
+                                <div class="col-sm-8">
+                                    {{ eq.evento.getNombreCompletoRaw | raw }}
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                        {% if is_granted('ROLE_SORTEO_CONSULTA') %}
+                                            <a href="{{ path('ganadores_evento_show', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if is_granted('ROLE_SORTEO_CARGA') %}
+                                            <a href="{{ path('ganadores_evento', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                                <i class="fa fa-arrow-right"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% for item in dniMen1M %}
+                    {% if style == 'cambio1' %}
+                        {% set style = 'cambio2' %}
+                    {% else %}
+                        {% set style = 'cambio1' %}
+                    {% endif %}
+                    <tr class="{{style}}">
+                        <td><span class="fa fa-ellipsis-v"></span></td>
+                        <td title="DNI menor a 1 millon">DNI menor a 1M</td>
+                        <td>{{ item.getNombreCompletoRaw | raw }}</td>
+                        <td>
+                            {% for eq in item.equipos %}
+                                <div class="col-sm-8">
+                                    {{ eq.evento.getNombreCompletoRaw | raw }}
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                        {% if is_granted('ROLE_SORTEO_CONSULTA') %}
+                                            <a href="{{ path('ganadores_evento_show', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if is_granted('ROLE_SORTEO_CARGA') %}
+                                            <a href="{{ path('ganadores_evento', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                                <i class="fa fa-arrow-right"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}                 
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            $.Default = $.Default || {};
+            $.Default.init = function() {
+                table=$('#irregularidadesTable').dataTable( {
+                    "language": {
+                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                    },
+                    "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]],
+                    // set the initial value
+                    "iDisplayLength" : 25,
+                    "columnDefs": [ {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": [3]
+                    } ],
+                    "order": [[ 1, 'desc' ]]            
+                });                
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();$.TableExport.init()});
+        
+        (function ($) {
+            var exportTable = "#inscripcionTable";
+            var ignoreColumn = 5;
+            // no se sobreescribe el namespace, si ya existe
+            $.TableExport = $.TableExport || {};
+            $.TableExport.init = function() {
+				$(".export-excel").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'excel',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+				$(".export-doc").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'doc',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+				$(".export-csv").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'csv',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+				$(".export-txt").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'txt',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+            }
+        })(jQuery);
+    </script>
+{% endblock %}

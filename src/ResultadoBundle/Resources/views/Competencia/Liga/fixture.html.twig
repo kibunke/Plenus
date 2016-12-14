@@ -1,0 +1,121 @@
+<div id="reload-parcial-fixture" data-update="{{ path('cronograma_reload', { 'id': evento.id }) }}">
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="panel-title">Cronograma <span class="text-bold">{{ evento }}</span></h4>
+            <div class="panel-tools">
+                <div class="dropdown pull-right">
+                    <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey" aria-expanded="false">
+                        <i class="fa fa-print"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-light pull-right" role="menu" style="display: none;">
+                        <li>
+                            <a class="panel-refresh" href="#" onclick="$.TableExport.print('{{ path('cronograma_partido_print', {"evento": evento.id })}}')">
+                                <i class="fa fa-file-o"></i> <span>Vertical A4</span>
+                            </a>
+                        </li>                        
+                        <li>
+                            <a class="panel-refresh" href="#" onclick="$.TableExport.print('{{ path('cronograma_partido_troquelado_print', {"evento": evento.id })}}')">
+                                <i class="fa fa-file-o fa-flip-vertical"></i> <span>Horizontal troquelado</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <table id="cronogramaTableGral" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">#</th>
+                        <th class="center">Fecha</th>
+                        <th class="center">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cronograma in evento.cronogramas %}
+                        <tr class="{% if (loop.index>2) %} hidden_tr" style="display: none"{% else %}"{% endif %}>
+                            <td class="center">{{ loop.index }}</td>
+                            <td class="center">{{ cronograma.getRaw | raw }}</td>
+                            <td>{{ cronograma.descripcion }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% if (evento.cronogramas | length > 2) %}
+                        <tr onclick="$('.hidden_tr, .hidden_a').toggle();">
+                            <td colspan="3" class="center">
+                                <a class="hidden_a" href="#1"><spant class="fa fa-arrow-down"></spant> Ver más <spant class="fa fa-arrow-down"></spant></a>
+                                <a class="hidden_a" style="display: none" href="#1"><spant class="fa fa-arrow-up"></spant> Ver menos <spant class="fa fa-arrow-up"></spant></a>
+                            </td>
+                        </tr>                        
+                    {% endif %}
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <table id="cronogramaTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">#</th>
+                        <th class="center">Detalle</th>
+                        <th class="text-right">Equipo</th>
+                        <th style="width: 40px"></th>
+                        <th class="center">vs</th>
+                        <th style="width: 40px"></th>
+                        <th class="text-left">Equipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for partido in evento.getPartidos() %}
+                        <tr>
+                            <td class="center">
+                                <small>{{ partido.nombre }}</small>
+                            </td>
+                            <td class="center">
+                                <small>{{ partido.getNivelTexto() }}</small>
+                            </td>
+                            <td class="text-right">
+                                {% if (partido.plaza1) %}
+                                    {{ partido.plaza1.getNombreCompetenciaRaw | raw }}
+                                {% endif %}
+                            </td>
+                            <td class="center">{{ partido.resultadoLocal }}</td>
+                            <td class="center" style="cursor: pointer;" onclick="$.Evento.liga.zona.partido.cronograma('{{ path('cronograma_partido_edit', { 'id': partido.cronograma.id }) }}')" title="Click para editar el Cronograma">
+                                {% if (partido.cronograma) %}
+                                    {{ partido.cronograma.getRaw | raw }}
+                                {% endif %}
+                                {% if (partido.tanteador is defined) %}{{ partido.tanteador }}{% endif %}
+                            </td>
+                            <td class="center">{{ partido.resultadoVisitante }}</td>
+                            <td class="text-left">
+                                {% if (partido.plaza2) %}
+                                    {{ partido.plaza2.getNombreCompetenciaRaw | raw }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    (function ($) {
+        var exportTable = "#cronogramaTable";
+        $.TableExport = $.TableExport || {};
+        $.TableExport.init = function() {        
+            table=$(exportTable).dataTable( {
+                "language": {
+                    "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                },                
+                "columnDefs": [ {
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": [3,4,5]
+                } ],
+                "order": [[ 0, 'asc' ]],
+                "pageLength" : 50,
+            });
+        }
+        $.TableExport.print = function(url) {
+            window.location = url;
+        }         
+    })(jQuery);
+    $(document).ready(function(){$.TableExport.init()});
+</script>

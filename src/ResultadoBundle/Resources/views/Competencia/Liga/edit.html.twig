@@ -1,0 +1,278 @@
+<div>
+    <div class="row" id="reload-total-{{ competencia.id }}" data-update="{{ path('competenciaLiga_reload', { 'id': competencia.id }) }}">
+        {% if competencia.zonas | length %}
+            <div class="tabbable tabs-left">
+                <ul id="tab_zonas" class="nav nav-tabs">
+                    {% for zona in competencia.zonas %}                
+                        <li class="{% if loop.index == 1%}active{% endif %}">
+                            <a href="#tab_zona_{{ zona.id }}" data-toggle="tab">
+                                <i class="pink fa fa-table"></i> {{ zona }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    <li class="">
+                        <a href="#1" onclick="$.Evento.liga.zona.add('{{ path('zona_new', { 'id': competencia.id }) }}')" data-toggle="tab">
+                            <i class="pink fa fa-plus"></i> Nueva
+                        </a>
+                    </li>            
+                </ul>
+                <div class="tab-content">
+                    {% for zona in competencia.zonas %}                
+                        <div class="tab-pane fade{% if loop.index == 1%} in active{% endif %}" id="tab_zona_{{ zona.id }}" >
+                            <div class="dropdown pull-right">
+                                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <li>
+                                        <a class="panel-refresh habilitar_edicion" href="#" onclick="$.Evento.etapa.competencia.habilitarEdicion('tabla-zona-{{ zona.id }}')">
+                                            <i class="fa fa-edit"></i> <span>Habilitar edición</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="panel-refresh" href="#" onclick="$.Evento.liga.zona.remove('{{ path('zona_delete', { 'id': zona.id }) }}')">
+                                            <i class="fa fa-trash"></i> <span>Eliminar Zona</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="panel-refresh" href="#" onclick="$.Evento.etapa.remove('{{ path('competenciaLiga_delete', { 'id': competencia.id }) }}')">
+                                            <i class="fa fa-trash"></i> <span>Resetear Etapa</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if is_granted('ROLE_ZONA_EDIT') %}
+                                        <li>
+                                            <a href="#1" onclick="$.Evento.liga.zona.edit('{{ path('zona_edit', { 'id': zona.id }) }}')">
+                                                <i class="fa fa-edit"></i> <span>Editar Zona</span>
+                                            </a>
+                                        </li>                                        
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <h2 style="margin-top: 0;" class="pull-left">
+                                <i class="fa fa-edit"></i>
+                                Detalle <span class="text-bold">{{ zona }}</span>                            
+                            </h2>
+                            <div>
+                                {% include 'ResultadoBundle:Competencia:Liga/zona.html.twig' with { 'zona' : zona } %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-block alert-danger fade in">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                <p>
+                    Esta <strong>Liga</strong> aún no tiene zonas definidas.<br>
+                    <li>Si usted cuenta con los <strong>permisos</strong> necesarios para crear zonas verá a continuación dichas opciones.</li>
+                    <li>En caso contrario contacte a un usuario con más privilegios.</li>
+                </p>
+                <p>
+                    {% if is_granted('ROLE_COMPETENCIA_NEW') %}
+                        <a href="#1" onclick="$.Evento.liga.zona.add('{{ path('zona_new', { 'id': competencia.id }) }}')" class="btn btn-green">
+                            <span class="fa fa-edit"></span> Crear una Zona en la Liga
+                        </a>
+                    {% endif %}
+                    {#% if is_granted('ROLE_COMPETENCIA_DELETE') %}
+                        <a href="#1" onclick="$.Evento.etapa.remove('{{ path('resultado_etapa_reset', { 'id': competencia.etapa.id }) }}')" class="btn btn-red">
+                            <span class="fa fa-edit"></span> Resetear competencia
+                        </a>
+                    {% endif %#}                      
+                    <a href="{{ path('resultados') }}" class="btn btn-light-grey">
+                        <span class="fa fa-arrow-left"></span> Cancelar y volver.
+                    </a>                  
+                </p>
+            </div>
+        {% endif %}
+    </div>
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datepicker/css/datepicker.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/css/datetimepicker.css' ) }}" />
+    
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script>
+        (function ($) {
+            var _modoEdicion = false;
+            var _optionBloq = {
+                            overlayCSS: {
+                                backgroundColor: '#fff'
+                            },
+                            message: '<i class="fa fa-spinner fa-spin"></i>',
+                            css: {
+                                border: 'none',
+                                color: '#333',
+                                background: 'none',
+                                padding: '0px'
+                            }
+                        }
+            // no se sobreescribe el namespace, si ya existe
+            $.Evento = $.Evento || {};
+            $.Evento.liga = function() {}
+            $.Evento.liga.zona = function() {}
+            $.Evento.liga.zona.add = function(url) {
+                if (!_modoEdicion){
+                    $('#okButton').button('reset');
+                    $('#panel-config .modal-footer').show();
+                    $('#panel-config .modal-title').html("Nueva Zona");
+                    $('#panel-config .modal-body').html("");
+                    $('#panel-config .modal-body').load(url,function(){
+                        $('#panel-config form').submit(function(){
+                            $.Evento.etapa.competencia.request($('#panel-config form'));
+                            return false;
+                        });
+                    });
+                    $('#panel-config').modal();
+                }else{ alert("Salga del modo edición para realizar esta tarea!")}
+            }
+            $.Evento.liga.zona.edit = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Editar Zona");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $('#panel-config form').submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'));
+                        return false;
+                    });
+                });
+                $('#panel-config').modal();                
+            }
+            $.Evento.liga.zona.remove = function(url) {
+                jQuery.get(url, function(data){
+                    swal({
+                        title: "Seguro quiere eliminar la zona con todos sus datos ?",
+                        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Si, eliminar!",
+                        cancelButtonText: "No, cancelar!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                        html: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#deleteFormAux form').submit(function(){
+                                $.Evento.etapa.competencia.request($(this));
+                                return false;
+                            });
+                            $('#deleteFormAux form').submit();
+                        }
+                    });
+                });
+            }
+            
+            $.Evento.liga.zona.partido = function() {}
+            $.Evento.liga.zona.partido.add = function(url) {
+                if (!_modoEdicion){
+                    $('#okButton').button('reset');
+                    $('#panel-config .modal-footer').show();
+                    $('#panel-config .modal-title').html("Nuevo Partido");
+                    $('#panel-config .modal-body').html("");
+                    $('#panel-config .modal-body').load(url,function(){
+                        $('#panel-config form').submit(function(){
+                            $.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                            return false;
+                        });
+                    });
+                    $('#panel-config').modal();
+                }else{ alert("Salga del modo edición para realizar esta tarea!")}
+            }
+            $.Evento.liga.zona.partido.edit = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Editar Partido");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $('#panel-config form').submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        return false;
+                    });
+                });
+                $('#panel-config').modal();                
+            }
+            $.Evento.liga.zona.partido.resultado = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Resultado del Partido");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $('#panel-config form').submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        return false;
+                    });
+                });
+                $('#panel-config').modal();                
+            }
+            $.Evento.liga.zona.partido.resultado.reset = function(url) {
+                jQuery.get(url, function(data){
+                    swal({
+                        title: "Seguro quiere resetear el resultado del partido ?",
+                        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Si, resetear!",
+                        cancelButtonText: "No, cancelar!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                        html: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#deleteFormAux form').submit(function(){
+                                $.Evento.etapa.competencia.request($(this),'zona');
+                                return false;
+                            });
+                            $('#deleteFormAux form').submit();
+                        }
+                    });
+                });
+            }
+            $.Evento.liga.zona.partido.cronograma = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Cronograma del Partido");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $('#panel-config form').submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
+                        return false;
+                    });
+                });
+                $('#panel-config').modal();                
+            }    
+            $.Evento.liga.zona.partido.remove = function(url) {
+                jQuery.get(url, function(data){
+                    swal({
+                        title: "Seguro quiere eliminar el partido con todos sus datos ?",
+                        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Si, eliminar!",
+                        cancelButtonText: "No, cancelar!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                        html: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#deleteFormAux form').submit(function(){
+                                $.Evento.etapa.competencia.request($(this),'zona');
+                                return false;
+                            });
+                            $('#deleteFormAux form').submit();
+                        }
+                    });
+                });
+            }        
+        })(jQuery);
+    </script>
+</div>

@@ -1,0 +1,127 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Dimensiones <small>Todo lo referido a Áreas, Funciones y parámetros de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('acreditacion_parameters')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                
+                <li>
+                    <a href="#1">
+                        Acreditación
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('acreditacion_parameters') }}">
+                        Parámetros
+                    </a>
+                </li>
+                <li class="active">
+                    Función
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Ver<span class="text-bold"> Función del Personal</span></h4>
+                    <div class="panel-tools">
+                        <div class="dropdown">
+                            <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                                <i class="fa fa-cog"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                                <li>
+                                    <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                                </li>
+                                <li>
+                                    <a class="panel-refresh" href="#">
+                                        <i class="fa fa-refresh"></i> <span>Refresh</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="panel-config" href="#panel-config" data-toggle="modal">
+                                        <i class="fa fa-wrench"></i> <span>Configurations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="panel-expand" href="#">
+                                        <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a class="btn btn-xs btn-link panel-close" href="#">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(form, {'attr':{'novalidate':'novalidate' } }) }}
+                    {{ form_errors(form)}}
+                    {{ global_form_errors(form) }}
+                    <div id="area_parametros" class="form-group">
+                        <legend>
+                            <h5><i class="fa fa-pencil-square-o"></i> DATOS DE  LA FUNCIÓN</h5>
+                        </legend>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"><strong><em>Nombre:</em></strong></label>
+                                <div class="col-md-10">
+                                    <p class="form-control-static text-extra-large">{{ entity.getNombre() | capitalize}} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label "><strong><em>Descripción:</em></strong></label>
+                                <div class="col-md-10">
+                                    <p class="form-control-static  text-extra-large">{{ entity.getDescripcion() | capitalize}} </p>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="hidden">
+                        {{ form_rest(form) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>        
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/layout.css' ) }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/acreditacion/css/area.css') }}">
+{% endblock %}

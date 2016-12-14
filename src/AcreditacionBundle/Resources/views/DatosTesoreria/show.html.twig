@@ -1,0 +1,97 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% block acreditacion_tab_tesoreria %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS DE TESORERIA</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Empleado Provincial:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosTesoreria().getEmpleadoPublico() | upper }}  </p>
+            </div>
+        </div>
+        <div class="form-group tesoreria_detalle_flecha tesoreria_EP col-md-1" {% if (entity.getDatosTesoreria().getEmpleadoPublico()  == 'NO') %} style="display: none"{% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="tesoreria_EP_detalle" class="form-group col-md-5 tesoreria_EP" {% if (entity.getDatosTesoreria().getEmpleadoPublico()  == 'NO') %}style="display: none"{% endif %}>
+            <div class="form-group col-md-12 tesoreria_input">
+                <label class="col-md-12 staticLabel">
+                    <strong><em>Legajo:</em></strong>
+                </label>
+                <div class="col-md-12 text-center">
+                    <p class="form-control-static text-extra-large">{{ entity.getDatosTesoreria().getLegajo()  }}  </p>
+                </div>
+                <label class="col-md-12 staticLabel">
+                    <strong>
+                        <em>CBU - <img style="height: 25px;" src=" {{asset('bundles/acreditacion/images/bplogo2.jpg') }}" alt="Foto de Acreditación"/> </em>
+                    </strong>
+                </label>
+                <div class="col-md-12 text-center">
+                    <p class="form-control-static text-extra-large">{{ entity.getDatosTesoreria().getCbu()  }}  </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Categoría:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosTesoreria().getCategoriaPago() }}  </p>
+            </div>
+        </div>
+        <div id="tesoreria_flecha_pe" class="form-group col-md-1 tesoreria_detalle_flecha tesoreria_PE" {% if not ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined)) %}style="display: none"{% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="tesoreria_PE_detalle" class="form-group tesoreria_PE col-md-5" {% if not ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined)) %}style="display: none"{% endif %}>
+            <div class="form-group col-md-12 tesoreria_input">
+                <label class="col-md-12 staticLabel">
+                    <strong><em>Monto:</em></strong>
+                </label>
+                <div class="col-md-12 text-center">
+                    <p class="form-control-static text-extra-large">
+                        <small>$AR</small>
+                        {% if ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined) and (entity.getDatosTesoreria().getCategoriaPago().getNombre() != '6')) %}
+                            {{ entity.getDatosTesoreria().getCategoriaPago().getMonto() | number_format(0, ',', '.') }}  
+                        {% else %}
+                            {{ entity.getDatosTesoreria().getPagoEspecifico() | number_format(0, ',', '.') }}  
+                        {% endif %}
+                        <span  class="areaCents"><small>00</small></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="form-group col-md-6">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Provincia - Pago:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosTesoreria().getPagoProvincia() | upper }}  </p>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Partido - Pago:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosTesoreria().getPagoPartido() | upper }}  </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/common/plugins/select2/select2.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosTesoreria.css') }}">
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,1143 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-8 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-usd"></i> Administración de Movimientos <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>            
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>
+                <li class="active">
+                    Tesorería
+                </li>
+                <li class="active">
+                    Movimientos
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-sm-8">            
+            {% include 'TesoreriaBundle:Movimiento:tablas.slider.html.twig' with {'areas': areas} %}
+        </div>
+        {#
+        <div class="col-sm-4">
+            <div class="panel">
+                <div class="panel-heading">
+                    <i class="clip-bars"></i>
+                    <h4 class="panel-title">Balance <span class="text-bold">real-time</span></h4>
+                </div>
+                <div class="panel-body">
+                    <h3 id="progress_total_text" class="inline"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3> Total disponible
+                    <div class="progress progress-xs transparent-black no-radius">
+                        <div id="progress_total_bar" class="progress-bar progress-bar-success partition-green animate-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"></div>
+                    </div>
+                    <div class="row space10">
+                        <div class="col-sm-4">
+                            <h4 id="progress_reservado_text"><i class="fa fa-spinner fa-pulse fa-fw"></i></h4>
+                            <div class="progress progress-xs transparent-black no-margin no-radius">
+                                <div id="progress_reservado_bar" class="progress-bar progress-bar-success partition-red animate-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"></div>
+                            </div>
+                            Reservado
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 id="progress_utilizado_text"><i class="fa fa-spinner fa-pulse fa-fw"></i></h4>
+                            <div class="progress progress-xs transparent-black no-margin no-radius">
+                                <div id="progress_utilizado_bar" class="progress-bar progress-bar-success partition-blue animate-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"></div>
+                            </div>                            
+                            Utilizado
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 id="progress_fondos_text"><i class="fa fa-spinner fa-pulse fa-fw"></i></h4>
+                            <div class="progress progress-xs transparent-black no-margin no-radius">
+                                <div id="progress_fondos_bar" class="progress-bar progress-bar-success partition-yellow animate-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"></div>
+                            </div>                            
+                            Fondos
+                        </div>
+                    </div>
+                    <div class="row space10">
+                        <div class="col-sm-4 text-center">
+                            <div class="rate">
+                                <i class="fa fa-caret-up text-green"></i><span id="personal_value_pagado" class="value"><i class="fa fa-spinner fa-pulse fa-fw" style="padding: 0px 5px;"></i></span><span class="percentage">%</span>
+                            </div>
+                            Pagado
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <div class="rate">
+                                <i class="fa fa-caret-up text-green"></i><span id="personal_value_reservado" class="value"><i class="fa fa-spinner fa-pulse fa-fw" style="padding: 0px 5px;"></i></span><span class="percentage">%</span>
+                            </div>
+                            Reservado
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <div class="rate">
+                                <i class="fa fa-caret-down text-red"></i><span id="personal_value_sinAsignar" class="value"><i class="fa fa-spinner fa-pulse fa-fw" style="padding: 0px 5px;"></i></span><span class="percentage">%</span>
+                            </div>
+                            Sin asignar
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id='chart2' class='chart half with-transitions' style="height: 100px;width: 100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>#}
+        <div class="col-sm-4">
+            <div id="panel-personal" class="panel panel-white">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title">
+                        Fondo <small>+ acciones</small>
+                    </h4>
+                </div>
+                <div class="panel-body no-padding">
+                    {% include 'TesoreriaBundle:Movimiento:fondo.slider.html.twig' with {'fondos': fondos} %}
+                    <div class="tabbable no-margin no-padding partition-dark">
+                        <ul class="nav nav-tabs" id="myTab">
+                            <li class="active">
+                                <a data-toggle="tab" href="#acciones_tab">
+                                    Acciones
+                                </a>
+                            </li>
+                            <li class="text-red">
+                                <a data-toggle="tab" href="#areas_tab">
+                                    Areas
+                                </a>
+                            </li>
+                            <li class="text-red">
+                                <a data-toggle="tab" href="#categorias_tab">
+                                    Categorias
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content partition-white">
+                            <div id="acciones_tab" class="tab-pane padding-bottom-5 active">
+                                <div class="panel-scroll height-230">
+                                    <table class="table table-hover">
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="areas_tab" class="tab-pane padding-bottom-5">
+                                <div class="panel-scroll height-230">
+                                    <table class="table table-hover">
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="categorias_tab" class="tab-pane padding-bottom-5">
+                                <div class="panel-scroll height-230">
+                                    <table class="table table-hover">
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="movimiento-action-bt" class="btn-group btn-group-justified" role="group" aria-label="Justified button group" style="margin-bottom: -5px;">
+                                <a href="#" class="btn btn-info reservar" role="button"><span class="badge">0</span> <i class="fa fa-forward"></i></a>
+                                <a href="#" class="btn btn-success pagar" role="button"><span class="badge">0</span> <i class="fa fa-fast-forward"></i></a>
+                                <a href="#" class="btn btn-danger deshacerPago" role="button"><span class="badge">0</span> <i class="fa fa-fast-backward"></i></a>
+                                <a href="#" class="btn btn-warning deshacerReserva" role="button"><span class="badge">0</span> <i class="fa fa-backward"></i></a>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- start: SUBVIEW EXAMPLE FOR THIS PAGE ONLY -->
+    <a id="sub_go" href="#example-subview-1" class="hidden show-sv"></a>
+    <div id="example-subview-1" class="no-display">
+        <div class="col-md-10 col-md-offset-1 ajax-cont"></div>
+    </div>    
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/highcharts.js' )}}"></script>
+    
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/heatmap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/treemap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/drilldown.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/themes/grid-light.js') }}"></script>    
+    <script>
+        (function ($) {
+            var _tablePersonas,
+                _tableAreas,
+                _jfondos,
+                _aCategorias = [],
+                _aAreas = [],
+                _aAcciones = [],//personas agregadas al vuelo
+                _pathGetArea = "{{ path("tesoreria_get_personas_area_json", {'area' : '__XX__'}) }}",
+                _jDefaultBlock = {
+                    overlayCSS: {
+                        backgroundColor: '#fff'
+                    },
+                    message: '<i class="fa fa-spinner fa-spin"></i>',
+                    css: {
+                        border: 'none',
+                        color: '#333',
+                        background: 'none'
+                    }
+                }
+            // no se sobreescribe el namespace, si ya existe
+            $.Movimiento = $.Movimiento || {};
+            $.Movimiento.init = function() {
+                //$.Movimiento.chartDraw();
+                $('.sb-toggle-left').trigger('click');
+                var offset = $("#panel-personal").offset();
+                var topPadding = 15;
+                $(window).scroll(function() {
+                    if ($(window).scrollTop() > offset.top-40 && $(window).width()>770) {
+                        $("#panel-personal").css({'position':'fixed','top':40});
+                    } else {
+                        $("#panel-personal").css({'position':'relative','top':0});
+                    };
+                });
+
+                $.Movimiento.fondo.update();
+                $.Movimiento.area.loadTable();
+                _tablePersonas = $('#personalTable').dataTable( {
+                    //"sDom":"tip",
+                    //"dom":'<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+                    "dom":'<"top"<"col-sm-12"p><"clear">>rt<"bottom"ip<"clear">>',
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path("tesoreria_movimiento_list_datatable") }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "avatar" },
+                        { "data": "persona.nombre" },
+                        { "data": "persona.dni" },
+                        { "data": "persona.area.nombre" },
+                        { "data": "persona.remuneracion" },
+                        { "data": "persona" },
+                        { "data": "persona" },
+                        { "data": "persona" }
+                    ],
+                    "bLengthChange" : true,
+                    "responsive": true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 15,
+                    "columnDefs": [
+                            {
+                                "targets": 0,
+                                "searchable": false,
+                                "orderable": false,                                
+                                "data": false,
+                                "render":   function ( data, type, full, meta ) {
+                                                //return '<img class="img-circle"  style="width: 45px;" src="data:image/jpg;base64,'+data+'" alt="Foto de Acreditación"/>'
+                                                return '<i class="fa fa-user fa-lg"></i>'
+                                            }
+                            },{
+                                "targets": 1,
+                                "data": false,
+                                "render":   function ( data, type, full, meta ) {
+                                                data = data.split(',');
+                                                return '<strong>'+data[0]+'</strong><br><small>'+data[1]+'</small>';
+                                            }
+                            },{
+                                "targets": 4,
+                                "data": false,
+                                "render":   function ( data, type, full, meta ) {
+                                                return data;
+                                                //return $.Main.moneyFormat(data);
+                                            }
+                            },{
+                                "targets": 5,
+                                //"searchable": false,
+                                //"orderable": false,                                
+                                "data": true,
+                                "render":   function ( data, type, full, meta ) {
+                                                html = '-'
+                                                if (data.movimientos.length) {
+                                                    html = '<span title="'+data.movimientos[0].fondo.nombre+'"> '+data.movimientos[0].fondo.abrev+'</span>';
+                                                }
+                                                return html;
+                                            }
+                            },{
+                                "targets": 6,
+                                "data": false,
+                                "render":   function ( data, type, full, meta ) {
+                                                html =  '<i class="fa fa-lg '+data.estado.icon+'" aria-hidden="true" title="'+data.estado.nombre+'"></i>'+
+                                                        '<span class="sr-only">'+data.estado.icon+'</span>';
+                                                if (data.movimientos.length) {
+                                                    html += '<span class="sr-only"> Fondo: '+data.movimientos[0].fondo.nombre+'</span>';
+                                                }
+                                                return html;
+                                            }
+                            },{
+                                "targets": 7,
+                                "data": false,
+                                "searchable": false,
+                                "orderable": false,
+                                "render":   function ( data, type, full, meta ) {
+                                                html = '<div class="visible-md visible-lg hidden-sm hidden-xs row_actions">';
+                                                switch (data.estado.nombre) {
+                                                    case "Completado":
+                                                            html += '<a onclick="$.Movimiento.deshacerPago(this)" title="Deshacer pago" class="btn btn-danger btn-xs select_personal_add"><i class="fa fa-fast-backward"></i></a>'
+                                                            html += '<a onclick="$.Movimiento.print(this)" title="Imprimir Recibo" class="btn btn-primary btn-xs" style="margin-left:5px"><i class="fa fa-print"></i></a>'
+                                                        break;
+                                                    case "Reservado":
+                                                            html += '<a onclick="$.Movimiento.deshacerReserva(this)" title="Deshacer reserva" class="btn btn-warning btn-xs"><i class="fa fa-backward"></i></a>'
+                                                            html += '<a onclick="$.Movimiento.pagar(this)" title="Pagar" class="btn btn-success btn-xs" style="margin-left:5px"><i class="fa fa-fast-forward"></i></a>'
+                                                        break;
+                                                    default:
+                                                        html += '<a onclick="$.Movimiento.reservar(this)" title="Reservar" class="btn btn-info btn-xs select_personal_add"><i class="fa fa-forward"></i></a>'
+                                                }
+                                                return  html + '</div>';
+                                            }
+                            },
+                    ],
+                    "createdRow": function ( row, data, index ) {
+                        $(row).children().last().addClass("center");
+                        result  = $.grep(_aAcciones, function(e){ return e.id == data.persona.id });
+                        if (result.length > 0) {
+                            switch (result[0].action) {
+                                case "reservar":
+                                        $(row).addClass('info');
+                                    break;
+                                case "pagar":
+                                        $(row).addClass('success');
+                                    break;
+                                case "deshacerReserva":
+                                        $(row).addClass('warning');
+                                    break;
+                                case "deshacerPago":
+                                        $(row).addClass('danger');
+                                    break;
+                            }   
+                        }
+                        $(row).data('json',data.persona);
+                    },
+                    "drawCallback": function( oSettings ) {
+                        setTimeout(function(){
+                            $('#panel-personal-list').unblock();
+                        },250);
+                    },
+                    "initComplete": function( oSettings ) {
+                        $('#table_search_input').on('keyup', function(){
+                            $('#panel-personal-list').block(_jDefaultBlock);
+                            op = $('#search_option').data('op');
+                            if (op == "soloActivo") {
+                                fondo = $.Movimiento.fondo.getActive(true);
+                                _tablePersonas.api().search(fondo.id+","+$('#table_search_input').val()).draw();
+                            }else{
+                                _tablePersonas.api().search($('#table_search_input').val()).draw();
+                            }
+                        })
+                    }
+                });
+                
+                $('#search_option li').on('click', function(){
+                    $('#search_option').data('op', $(this).data('op'));
+                    $('#search_option button b').html($(this).text());
+                    $('#table_search_input').trigger('keyup')
+                })
+                $('#table_page_length ').on('change', function(){
+                    $('#panel-personal-list').block(_jDefaultBlock);
+                    _tablePersonas.api().page.len($(this).val()).draw();
+                })
+
+                $('.moneyParser').each(function(){
+                    $(this).html($.Main.moneyFormat(parseFloat($(this).text())));
+                })
+                $('#movimiento-action-bt .reservar').on('click',function(){
+                    $.Movimiento.fondo.asignar();
+                })
+                $('#movimiento-action-bt .pagar').on('click',function(){
+                    $.Movimiento.fondo.pagar();
+                })
+                $('#movimiento-action-bt .deshacerPago').on('click',function(){
+                    $.Movimiento.fondo.despagar();
+                })
+                $('#movimiento-action-bt .deshacerReserva').on('click',function(){
+                    $.Movimiento.fondo.desasignar();
+                })
+                $('#carousel-fondos-generic').on('slide.bs.carousel', function (e) {
+                    result  = $.grep(_aAcciones, function(e){ return e.action != 'reservar'; });
+                    if (result.length > 0) {
+                        e.preventDefault();
+                        swal({
+                            title: "Atención",
+                            text: "Hay acciones pendientes que están asociadas a este fondo. Desea quitar las acciones para cambiar de fondo ?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Si, quitarlas!",
+                            cancelButtonText: "No, esperar!",
+                            closeOnConfirm: true
+                        }, function(){
+                            _aAcciones  = $.grep(_aAcciones, function(e){ return e.action == 'reservar'; });
+                            toastr['success']("Se quitaron la acciones pendiente ligadas al fondo.","Atención")
+                            $('#carousel-fondos-generic .control-'+e.direction).trigger('click');
+                        });
+                    }
+                })
+                $('#carousel-fondos-generic').on('slid.bs.carousel', function () {
+                    $('#table_search_input').trigger('keyup');
+                    $.Movimiento.refreshPanel();
+                })
+            }
+
+            $.Movimiento.balance = {}
+            $.Movimiento.fondo = {}
+            $.Movimiento.area = {}
+            $.Movimiento.fondo.remove = function(persona){
+                _aAcciones  = $.grep(_aAcciones, function(e){ return e.id != persona.id; });
+                $.Movimiento.refreshPanel();
+            }
+            $.Movimiento.fondo.exist = function(persona){
+                fondo = $.Movimiento.fondo.getActive(true);
+                result  = $.grep(fondo.movimientos.data.movimientos, function(e){ return e.destinatario == persona.id; });
+                return result.length;
+            }
+            $.Movimiento.area.print = function(idArea){
+                location.href = "{{ path('tesoreria_recibo_print_area', {"area":'__X__'}) }}".replace("__X__",idArea);
+            }                        
+            $.Movimiento.area.limpiarAcciones = function(ele){
+                idArea = $(ele).data('id');
+                auxLength = _aAcciones.length;
+                _aAcciones  = $.grep(_aAcciones, function(e){ return e.area.id != idArea; });
+                auxLength = auxLength - _aAcciones.length;
+                if (auxLength > 0 ) {
+                    toastr['success']("Se quitaron "+ auxLength +" personas.","Bien!");
+                }
+                $.Movimiento.refreshPanel();
+            }
+            $.Movimiento.area.loadTable = function(){
+                $('#panel-area-list').block(_jDefaultBlock);
+                $('#cont_table').load('{{ path('tesoreria_movimiento_list_areas') }}',function(){
+                    _tableAreas=$('#areaTable').dataTable( {
+                        //"sDom":"tip",
+                        "dom":'<"top"fl<"col-sm-12"p><"clear">>rt<"bottom"ip<"clear">>',
+                        "language" : {
+                            "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                        },
+                        "bLengthChange" : true,
+                        "responsive": true,
+                        "bFilter" : true,
+                        "order": [[ 1, 'asc' ]],
+                        "pageLength" : 15,
+                        "columnDefs": [
+                                {
+                                     "searchable": false,
+                                     "orderable": false,
+                                     "targets": [0]
+                                }
+                        ],
+                        "createdRow": function ( row, data, index ) {
+                        },
+                        "drawCallback": function( oSettings ) {
+                            setTimeout(function(){
+                                $('#panel-area-list').unblock();
+                            },250);
+                        },
+                        "initComplete": function( oSettings ) {
+                        }
+                    });
+                    $('#panel-area-list').unblock();
+                });
+            }            
+            $.Movimiento.area.informe = function(vecPersonas){
+                if (vecPersonas.agregado.length == 0 && vecPersonas.ignorarPorAccPendiente.length == 0 && vecPersonas.ignorarPorFondoAsignado.length == 0) {
+                    toastr['warning']("No hay personas sobre las cuales aplicar esta acción en el Area.","Cuidado!");
+                }else{
+                    if (vecPersonas.agregado.length > 0)
+                        toastr['success']("Ahora "+ vecPersonas.agregado.length +" personas más tiene acciones pendientes.","Bien!");
+                    if (vecPersonas.ignorarPorAccPendiente.length > 0)
+                        toastr['warning']("Hay "+ vecPersonas.ignorarPorAccPendiente.length +" persona/s que tienen acciones pendientes.","Cuidado!");
+                    if (vecPersonas.ignorarPorFondoAsignado.length > 0)
+                        toastr['warning']("Hay "+ vecPersonas.ignorarPorFondoAsignado.length +" persona/s que tienen acciones en otro fondo.","Cuidado!");                        
+                }
+            }
+            
+            $.Movimiento.area.preFiltrar = function(elem,estadoActual,proximoEstado){
+                var vec = { "agregado" : [],
+                            "ignorarPorAccPendiente" : [],
+                            "ignorarPorFondoAsignado": []
+                        },
+                    idArea = $(elem).parents('tr').data('json');
+                $.get(_pathGetArea.replace('__XX__',idArea))
+                    .done(function(data) {
+                        if (data.success) {
+                            $.map(data.data, function(json){
+                                if (json.estado.nombre == estadoActual) {
+                                    if ((estadoActual == '' && !$.Movimiento.fondo.exist(json)) || (estadoActual != '' && $.Movimiento.fondo.exist(json))) {
+                                        result  = $.grep(_aAcciones, function(e){ return e.id == json.id; });
+                                        if (result.length == 0) {
+                                            vec.agregado.push(json);
+                                            json.action = proximoEstado;
+                                            _aAcciones.push(json);
+                                        }else{
+                                            vec.ignorarPorAccPendiente.push(json);
+                                        }
+                                    }else{
+                                        vec.ignorarPorFondoAsignado.push(json);
+                                    }
+                                }                                
+                            })
+                            $.Movimiento.area.informe(vec);
+                            $.Movimiento.refreshPanel();
+                        }
+                    })
+                    .fail(function() {
+                        toastr['warning']('Ocurió un erro al cargar la información del personal.', 'Cuidado');
+                });
+            }
+            $.Movimiento.area.reservar = function(elem){
+                vecPersonas = $.Movimiento.area.preFiltrar(elem,'','reservar');
+            }
+            $.Movimiento.area.pagar = function(elem){
+                vecPersonas = $.Movimiento.area.preFiltrar(elem,'Reservado','pagar');
+            }
+            $.Movimiento.area.deshacerPago = function(elem){
+                vecPersonas = $.Movimiento.area.preFiltrar(elem, 'Completado','deshacerPago');
+            }
+            $.Movimiento.area.deshacerReserva = function(elem){
+                vecPersonas = $.Movimiento.area.preFiltrar(elem, 'Reservado','deshacerReserva');
+            }
+            $.Movimiento.reservar = function(elem){
+                var json = $(elem).parents('tr').data('json');
+                if (json.estado.nombre == '') {
+                    result  = $.grep(_aAcciones, function(e){ return e.id == json.id; });
+                    if (result.length == 0) {
+                        json.action = "reservar";
+                        _aAcciones.push(json);
+                        $(elem).parents('tr').removeClass('danger warning info success').addClass('info');
+                    } else {
+                        if (json.action == "reservar") {
+                            swal({
+                                title: "Atención",
+                                text: "La persona tiene acciones pendientes (reservar), quiere quitar la acción ?",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonText: "Si, quitarla!",
+                                cancelButtonText: "No, dejarla!",
+                                closeOnConfirm: true
+                            }, function(){
+                                $.Movimiento.fondo.remove(json);
+                                $(elem).parents('tr').removeClass('info warning success danger');
+                                toastr['success']("Se quitó la acción pendiente del listado.","Atención")
+                                return;
+                            });
+                        }else{
+                            toastr['error']("Ups! esto no debería haber ocurrido.","Error")
+                        }
+                    }
+                }else{
+                    toastr['warning']("Hay una inconsistencia en los datos, recargue la pagina para corregir.","Atención")
+                }
+                $.Movimiento.refreshPanel();
+            }
+            $.Movimiento.pagar = function(elem){
+                var json = $(elem).parents('tr').data('json');
+                if (json.estado.nombre == 'Reservado') {
+                    if ($.Movimiento.fondo.exist(json)) {
+                        result  = $.grep(_aAcciones, function(e){ return e.id == json.id; });
+                        if (result.length == 0) {
+                            json.action = "pagar";
+                            _aAcciones.push(json);
+                            $(elem).parents('tr').removeClass('danger warning info success').addClass('success');
+                        }else {
+                            if (json.action == "pagar") {
+                                swal({
+                                    title: "Atención",
+                                    text: "La persona tiene acciones pendientes (pagar), quiere quitar la acción ?",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Si, quitarla!",
+                                    cancelButtonText: "No, dejarla!",
+                                    closeOnConfirm: true
+                                }, function(){
+                                    $.Movimiento.fondo.remove(json);
+                                    $(elem).parents('tr').removeClass('info warning success danger');
+                                    toastr['success']("Se quitó la acción pendiente del listado.","Atención")
+                                });
+                            }else{
+                                swal({
+                                    title: "Atención",
+                                    text: "La persona tiene acciones pendientes (deshacer reserva), quiere reemplazar la acción ?",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Si, reemplazar!",
+                                    cancelButtonText: "No, dejarla!",
+                                    closeOnConfirm: true
+                                }, function(){
+                                    $.Movimiento.fondo.remove(json);
+                                    toastr['success']("Se reemplazo la acción pendiente en el listado.","Atención")
+                                    $.Movimiento.pagar(elem);
+                                });                                
+                            }
+                            return;
+                        }
+                    }else{
+                        toastr['warning']("Esta persona tiene una reserva en otro fondo.","Atención")
+                    }
+                }else{
+                    toastr['warning']("Hay una inconsistencia en los datos, recargue la pagina para corregir.","Atención")
+                }
+                $.Movimiento.refreshPanel();
+            }
+            $.Movimiento.deshacerPago = function(elem){
+                var json = $(elem).parents('tr').data('json');
+                if (json.estado.nombre == 'Completado') {
+                    if ($.Movimiento.fondo.exist(json)) {
+                        result  = $.grep(_aAcciones, function(e){ return e.id == json.id; });
+                        if (result.length == 0) {
+                            json.action = "deshacerPago";
+                            _aAcciones.push(json);
+                            $(elem).parents('tr').removeClass('danger warning info success').addClass('danger');
+                        }else {
+                            if (json.action == "deshacerPago") {
+                                swal({
+                                    title: "Atención",
+                                    text: "La persona tiene acciones pendientes (deshacer pago), quiere quitar la acción ?",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Si, quitarla!",
+                                    cancelButtonText: "No, dejarla!",
+                                    closeOnConfirm: true
+                                }, function(){
+                                    $.Movimiento.fondo.remove(json);
+                                    $(elem).parents('tr').removeClass('info warning success danger');
+                                    toastr['success']("Se quitó la acción pendiente del listado.","Atención")
+                                    return;
+                                });
+                            }else{
+                                toastr['error']("Ups! esto no debería haber ocurrido.","Error")
+                            }
+                        }
+                    }else{
+                        toastr['warning']("Esta persona no registra pagos en este fondo.","Atención")
+                    }
+                }else{
+                    toastr['warning']("Hay una inconsistencia en los datos, recargue la pagina para corregir.","Atención")
+                }
+                $.Movimiento.refreshPanel();
+            }
+            $.Movimiento.deshacerReserva = function(elem){
+                var json = $(elem).parents('tr').data('json');
+                if (json.estado.nombre == 'Reservado') {
+                    if ($.Movimiento.fondo.exist(json)) {
+                        result  = $.grep(_aAcciones, function(e){ return e.id == json.id; });
+                        if (result.length == 0) {
+                            json.action="deshacerReserva";
+                            _aAcciones.push(json);
+                            $(elem).parents('tr').removeClass('danger warning info success').addClass('warning');
+                        }else {
+                            if (json.action == "deshacerReserva") {
+                                swal({
+                                    title: "Atención",
+                                    text: "La persona tiene acciones pendientes (deshacer reserva), quiere quitar la acción ?",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Si, quitarla!",
+                                    cancelButtonText: "No, dejarla!",
+                                    closeOnConfirm: true
+                                }, function(){
+                                    $.Movimiento.fondo.remove(json);
+                                    $(elem).parents('tr').removeClass('info warning success danger');
+                                    toastr['success']("Se quitó la acción pendiente del listado.","Atención")
+                                });
+                            }else{
+                                swal({
+                                    title: "Atención",
+                                    text: "La persona tiene acciones pendientes (pagar), quiere reemplazar la acción ?",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Si, reemplazar!",
+                                    cancelButtonText: "No, dejarla!",
+                                    closeOnConfirm: true
+                                }, function(){
+                                    $.Movimiento.fondo.remove(json);
+                                    toastr['success']("Se reemplazo la acción pendiente en el listado.","Atención")
+                                    $.Movimiento.deshacerReserva(elem);
+                                });
+                            }
+                            return;
+                        }
+                    }else{
+                        toastr['warning']("Esta persona no registra reservas en este fondo.","Atención")
+                    }
+                }else{
+                    toastr['warning']("Hay una inconsistencia en los datos, recargue la pagina para corregir.","Atención")
+                }
+                $.Movimiento.refreshPanel();
+            }
+
+            $.Movimiento.quitarAccion = function(elem){
+                id = $(elem).data('id');
+                result  = $.grep(_aAcciones, function(e){ return e.id != id; });
+                if (result.length == _aAcciones.length) {
+                    toastr['warning']("Algo no está bien, la persona no se encontró en el listado.","Atención")
+                }else{
+                    _aAcciones = result;
+                    toastr['success']("La persona fue quitada con exito.","Bien!")
+                    $.Movimiento.refreshPanel();
+                }
+            }
+            
+            $.Movimiento.balance.load = function(){
+                //$.map(_tablePersonas.fnGetData(), function(elem){
+                //    if (elem[4].indexOf('fa-frown-o')>0) {//sin asignar
+                //        data.personal.sinAsignar ++;
+                //    }else if (elem[4].indexOf('fa-meh-o')>0) {//reservado
+                //        data.personal.reservado ++;
+                //    }else{//pagado
+                //        data.personal.pagado ++;
+                //    }
+                //
+                //})
+                //
+                //data.personal.pSinAsignar = Math.round((data.personal.sinAsignar * 100) / data.personal.total);
+                //data.personal.pReservado = Math.round((data.personal.reservado * 100) / data.personal.total);
+                //data.personal.pPagado = Math.round((data.personal.pagado * 100) / data.personal.total);
+                //$('#personal_value_pagado').html(data.personal.pPagado);//pagado
+                //$('#personal_value_sinAsignar').html(data.personal.pSinAsignar);//sin asignar
+                //$('#personal_value_reservado').html(data.personal.pReservado);//reservado
+                //
+                //$('#progress_total_text').html('<i class="fa fa-usd"></i>'+ $.Main.moneyFormat(data.fondos.disponible));
+                //$('#progress_total_bar').css("width",Math.round((data.fondos.disponible*100)/data.fondos.monto)+"%");
+                //$('#progress_reservado_text').html(Math.round((data.fondos.reservado*100)/data.fondos.monto)+"%");
+                //$('#progress_reservado_bar').css("width",Math.round((data.fondos.reservado*100)/data.fondos.monto+"%"));
+                //
+                //$('#progress_utilizado_text').html(Math.round((data.fondos.utilizado*100)/data.fondos.monto)+"%");
+                //$('#progress_utilizado_bar').css("width",Math.round((data.fondos.utilizado*100)/data.fondos.monto)+"%");
+                //
+                //$('#progress_fondos_text').html(_jfondos.length);
+                //$('#progress_fondos_bar').css("width",Math.round((data.fondos.fondosDisponibles*100)/_jfondos.length)+"%");
+                //$.Fondo.personal.reload();
+            }
+
+            $.Movimiento.fondo.update = function() {
+                $('#panel-personal').block(_jDefaultBlock);
+                $.get('{{ path("tesoreria_fondo_json") }}')
+                    .done(function(data) {
+                        if (data.success) {
+                            _jfondos = data.data;
+                            if (_jfondos.fondos.length > 0) {
+                                $.Movimiento.balance.load();
+                                 $.Movimiento.refreshPanel();
+                            }else{
+                                toastr['warning']('Aún no hay cargado ningún FONDO.', 'Atención!');        
+                            }
+                        }
+                    })
+                    .fail(function() {
+                        toastr['warning']('Ocurió un erro al cargar la información de los fondos.', 'Cuidado');
+                });
+                //setTimeout(function(){$.Movimiento.fondo.update()},120000);
+            }
+            
+            $.Movimiento.fondo.initTable = function() {
+                setTimeout(function(){
+                    $("#tablaAux").dataTable( {
+                        "language": {
+                            "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                        },                
+                        "columnDefs": [ {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        } ],
+                        "order": [[ 1, 'asc' ]]   
+                    });
+                },2800);
+            }
+            
+            $.Movimiento.fondo.showInforme = function(data){
+                //console.log(data);
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html("Detalle de acciones");
+                table='<div class="row"><div class="col-sm-12"><table id="tablaAux" class="table"><thead><tr><th>#</th><th>Persona</th><th>Acción</th><th>Resultado</th></tr></thead><tbody>';
+                $.map(data.error,function(per){
+                    table+='<tr class="error"><td>'+per.id+'</td><td>'+per.nombre+'</td><td>'+per.action+'</td><td>ERROR INTERNO</td></tr>';
+                });
+                $.map(data.warning,function(per){
+                    table+='<tr class="warning"><td>'+per.id+'</td><td>'+per.nombre+'</td><td>'+per.action+'</td><td>SIN DINERO DISPONIBLE</td></tr>';
+                });
+                $.map(data.success,function(per){
+                    table+='<tr class="success"><td>'+per.id+'</td><td>'+per.nombre+'</td><td>'+per.action+'</td><td>COMPLETADA</td></tr>';
+                });
+                table+="</tbody></table></div></div>";
+                $('#panel-config .modal-body').html(table);
+                $('#panel-config').modal();
+                $.Movimiento.fondo.initTable();
+            }
+            $.Movimiento.fondo.showError = function(){
+                sweetAlert({
+                    title: "Error!",
+                    text: "Error de red. Vuelva a intentarlo más tarde.",
+                    type: "error",
+                    html: true
+                });
+            }            
+            $.Movimiento.fondo.showResult = function(data){
+                $.map(data.success, function(per){
+                    _aAcciones = $.grep(_aAcciones, function(e){ return e.id != per.id; });
+                })
+                //$.Movimiento.refreshPanel();
+                $.Movimiento.fondo.update();
+                //$('#personalTable_filter input').trigger('change');
+                //console.log(_tablePersonas);
+                $('#panel-personal-list').block(_jDefaultBlock);
+                $.Movimiento.area.loadTable();
+                _tablePersonas.api().ajax.reload(null, false);
+                if (data.warning.length == 0 && data.error.length == 0) {
+                    sweetAlert({
+                        title: "Bien!",
+                        text: 'Todas las acciones se completaron con exito!',
+                        type: "success",
+                        html: true
+                    });
+                }else{
+                    swal({
+                        title: "Cuidado!",
+                        text: 'Algunas acciones no pudieron completarse. Quiere ver el detalle ?',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, quiero!",
+                        cancelButtonText: "No, desestimar!",
+                        closeOnConfirm: true
+                    }, function(){
+                        $.Movimiento.fondo.showInforme(data);
+                    });
+                }
+            }
+            
+            $.Movimiento.fondo.asignar = function(){
+                fondo = $.Movimiento.fondo.getActive(true);
+                result  = $.grep(_aAcciones, function(e){ return e.action == 'reservar'; });
+                if (result.length > 0) {
+                    $.post("{{ path('tesoreria_movimiento_asignar') }}", {"personas":JSON.stringify(result),"fondo":fondo})
+                        .done(function(data) {
+                            if (data.success) {
+                                $.Movimiento.fondo.showResult(data);
+                            }
+                    }).fail(function() {
+                        $.Movimiento.fondo.showError();
+                    })
+                }else{
+                    toastr['warning']('No hay acciones pendientes','Atención');
+                }
+            }
+            $.Movimiento.fondo.pagar = function(){
+                fondo = $.Movimiento.fondo.getActive(true);
+                result  = $.grep(_aAcciones, function(e){ return e.action == 'pagar'; });
+                if (result.length > 0) {
+                    $.post("{{ path('tesoreria_movimiento_pagar') }}", {"personas":JSON.stringify(result),"fondo":fondo})
+                        .done(function(data) {
+                            if (data.success) {
+                                $.Movimiento.fondo.showResult(data);
+                            }
+                    }).fail(function() {
+                        $.Movimiento.fondo.showError();
+                    })
+                }else{
+                    toastr['warning']('No hay acciones pendientes','Atención');
+                }
+            }
+            $.Movimiento.fondo.desasignar = function(){
+                fondo = $.Movimiento.fondo.getActive(true);
+                result  = $.grep(_aAcciones, function(e){ return e.action == 'deshacerReserva'; });
+                if (result.length > 0) {
+                    $.post("{{ path('tesoreria_movimiento_desasignar') }}", {"personas":JSON.stringify(result),"fondo":fondo})
+                        .done(function(data) {
+                            if (data.success) {
+                                $.Movimiento.fondo.showResult(data);
+                            }
+                    }).fail(function() {
+                        $.Movimiento.fondo.showError();
+                    })
+                }else{
+                    toastr['warning']('No hay acciones pendientes','Atención');
+                }
+            }
+            $.Movimiento.fondo.despagar = function(){
+                fondo = $.Movimiento.fondo.getActive(true);
+                result  = $.grep(_aAcciones, function(e){ return e.action == 'deshacerPago'; });
+                if (result.length > 0) {
+                    $.post("{{ path('tesoreria_movimiento_despagar') }}", {"personas":JSON.stringify(result),"fondo":fondo})
+                        .done(function(data) {
+                            if (data.success) {
+                                $.Movimiento.fondo.showResult(data);
+                            }
+                    }).fail(function() {
+                        $.Movimiento.fondo.showError();
+                    })
+                }else{
+                    toastr['warning']('No hay acciones pendientes','Atención');
+                }
+            }
+
+            $.Movimiento.print = function(elem){
+                var json = $(elem).parents('tr').data('json');
+                ultMov = json.movimientos[json.movimientos.length - 1];
+                if (ultMov.recibo) {
+                    console.log(json)
+                    location.href = "{{ path('tesoreria_recibo_print', {"id":'__X__'}) }}".replace("__X__",ultMov.recibo);
+                }
+            }
+            
+            $.Movimiento.fondo.getActive = function(json = false){
+                id = $('#carousel-fondos-generic .active').first().data('id');
+                fondo = $.grep(_jfondos.fondos, function(e){ return e.id == id; })[0];
+                if (json) {
+                    return fondo;
+                }
+                return $('#fondo_'+id);                
+            }
+            $.Movimiento.checkArrays = function(persona,action){
+                var auxCat = $.grep(_aCategorias, function(e){ return e.id == persona.categoria.id; });
+                if (auxCat.length == 0) {
+                    auxCat[0] = persona.categoria;
+                    auxCat[0].cantidad = 0;
+                    auxCat[0].cantidadNP = 0;
+                    auxCat[0].total = 0;
+                    _aCategorias.push(auxCat[0]);
+                }
+                auxArea = $.grep(_aAreas, function(e){ return e.id == persona.area.id; });
+                if (auxArea.length == 0) {
+                    auxArea[0] = persona.area;
+                    auxArea[0].cantidad = 0;
+                    auxArea[0].cantidadNP = 0;
+                    auxArea[0].total = 0;
+                    _aAreas.push(auxArea[0])
+                }
+                //auxArea[0].total += persona.remuneracion;
+                auxArea[0].total += action.op * persona.remuneracion
+                auxArea[0].cantidad ++;
+                auxArea[0].cantidadNP += (persona.estado.nombre != "" ? 0 : 1);
+                //auxCat[0].total += persona.remuneracion;
+                auxCat[0].total += action.op * persona.remuneracion
+                auxCat[0].cantidad ++;
+                auxCat[0].cantidadNP += (persona.estado.nombre != "" ? 0 : 1);
+            }
+            $.Movimiento.refreshPanel = function(){
+                $('#panel-personal').block(_jDefaultBlock);
+                var fondo = $.Movimiento.fondo.getActive(true),
+                    //resto = fondo.montoDisponible,
+                    actions = {
+                        "pagar" : { "count" : 0, "total": 0, "style" : "success", "op" : -1, "icon" : "fa-fast-forward" },
+                        "reservar" : { "count" : 0, "total": 0, "style" : "info", "op" : -1, "icon" : "fa-forward" },
+                        "deshacerPago" : { "count" : 0, "total": 0, "style" : "danger", "op" : 1, "icon" : "fa-fast-backward" },
+                        "deshacerReserva" : { "count" : 0, "total": 0, "style" : "warning", "op" : 1, "icon" : "fa-backward" }
+                    },
+                    templateRow ='<tr class="__class"><td class="center">__col1</td><td><span class="text-small block text-light">__col2_1</span><span class="text-largee">__col2_2</span></td><td class="center">__col3</td><td class="center">__col4</td></tr>';
+                $('#acciones_tab tbody, #areas_tab tbody, #categorias_tab tbody').html('');
+                _aCategorias = [];
+                _aAreas = [];
+                //$.map(fondo.movimientos.data.destinatarios.concat(_aAcciones), function(persona){
+                $.map(_aAcciones, function(persona){
+                    actions[persona.action].total += persona.remuneracion;
+                    actions[persona.action].count ++;
+                    
+                    $.Movimiento.checkArrays(persona,actions[persona.action]);
+                    
+                    $('#acciones_tab tbody').prepend(
+                        templateRow.replace('__class',actions[persona.action].style)
+                                .replace('__col1','<i class="fa '+ actions[persona.action].icon +' fa-lg"></i>')
+                                .replace('__col2_1', persona.area.nombre)
+                                .replace('__col2_2', persona.nombre)
+                                .replace('__col3', $.Main.moneyFormat(actions[persona.action].op * persona.remuneracion))
+                                .replace('__col4','<a onclick="$.Movimiento.quitarAccion(this)" data-id="'+persona.id+'" title="Quitar accion" class="btn btn-danger btn-xs"><i class="fa fa-remove"></i></a>')
+                    );
+                });
+                $.map(_aCategorias, function(categoria){
+                    $('#categorias_tab tbody').append(
+                        templateRow.replace('__col1','<i class="fa fa-users fa-lg"></i>')
+                                .replace('__col2_1','Categoria '+ categoria.nombre)
+                                .replace('__col2_2',$.Main.moneyFormat(categoria.monto))
+                                .replace('__col3',categoria.cantidad)
+                                .replace('__col4',$.Main.moneyFormat(categoria.total))
+                    );
+                })
+                $.map(_aAreas, function(area){
+                    $('#areas_tab tbody').append(
+                        templateRow.replace('__col1','<i class="fa fa-users fa-lg"></i>')
+                                .replace('__col2_1','Area ')
+                                .replace('__col2_2',area.nombre)
+                                .replace('__col3',area.cantidad+'<br><small>'+$.Main.moneyFormat(area.total)+'</small>')
+                                .replace('__col4','<a onclick="$.Movimiento.area.limpiarAcciones(this)" data-id="'+area.id+'" title="Quitar accion" class="btn btn-danger btn-xs"><i class="fa fa-remove"></i></a>')
+                                //.replace('__col4','')
+                    );
+                    //$.Movimiento.area.limpiarAcciones
+                })
+                $fondo = $.Movimiento.fondo.getActive();
+                auxClass = 'hidden';
+                disponible = fondo.montoDisponible - actions['reservar'].total + actions['deshacerReserva'].total,
+                reservado = fondo.montoReservado + actions['reservar'].total - actions['deshacerReserva'].total + actions['deshacerPago'].total - actions['pagar'].total
+                utilizado = fondo.montoUtilizado + actions['pagar'].total - actions['deshacerPago'].total
+                if (disponible > fondo.montoDisponible) {
+                    auxClass = 'fa-caret-up text-green';
+                    $fondo.find('.progress_work_total_text').removeClass('val_stimated_down').addClass('val_stimated_up');
+                }else if(disponible < fondo.montoDisponible){
+                    $fondo.find('.progress_work_total_text').removeClass('val_stimated_up').addClass('val_stimated_down');
+                    auxClass = 'fa-caret-down text-red';
+                }else{
+                    $fondo.find('.progress_work_total_text').removeClass('val_stimated_up val_stimated_down');
+                }
+                //console.log(fondo.montoDisponible);
+                $('#movimiento-action-bt .reservar .badge').html(actions.reservar.count);
+                $('#movimiento-action-bt .pagar .badge').html(actions.pagar.count);
+                $('#movimiento-action-bt .deshacerReserva .badge').html(actions.deshacerReserva.count);
+                $('#movimiento-action-bt .deshacerPago .badge').html(actions.deshacerPago.count);
+                $fondo.find('.fondo-montoDisponible span').html(disponible);
+                $fondo.find('.fondo-montoReservado span').html(reservado);
+                $fondo.find('.fondo-montoUtilizado span').html(utilizado);
+                $fondo.find('.progress_work_total_bar').css("max-width",Math.round((fondo.montoDisponible*100)/fondo.monto)+"%");
+                $fondo.find('.progress_work_total_bar').css("width",Math.round((disponible*100)/fondo.monto)+"%");
+                $fondo.find('.progress_work_total_bar_stimated').css("width",Math.round(((fondo.montoDisponible-disponible)*100)/fondo.monto)+"%");
+                $fondo.find('.progress_work_total_bar_stimated_plus').css("width",Math.round(((disponible-fondo.montoDisponible)*100)/fondo.monto)+"%");
+                
+                $fondo.find('.progress_work_total_text').html('<i class="fa fa-xs '+ auxClass +'"></i>' +Math.round(((disponible)*100)/fondo.monto)+'%');
+                $fondo.find('.progress_work_total_text').append('<span class="block text-small text-left">' + $.Main.moneyFormat(disponible) + '</span>');
+                
+                setTimeout(function(){
+                    $('#panel-personal').unblock();
+                },250)                
+            }
+            $.Movimiento.chartDraw = function(){
+                //data = {
+                //        "data" : [],
+                //        "monto":0,
+                //        "reservado":0,
+                //        "utilizado":0,
+                //        "disponible":0
+                //    };
+                //$('.panel-fondo').each(function(){
+                //    $fondo = $(this);
+                //    data.monto += $fondo.data('monto');
+                //    data.reservado += $fondo.data('montoreservado');
+                //    data.utilizado += $fondo.data('montoutilizado');
+                //    data.disponible += $fondo.data('monto')-$fondo.data('montoreservado')-$fondo.data('montoutilizado');
+                //    data.data.push({
+                //        name: $fondo.data('name'),
+                //        data: [$fondo.data('monto')]
+                //    });
+                //});
+                //$('#panel-total').html(data.monto);
+                //$('#panel-disponible').html(data.disponible);
+                //$('#panel-reservado').html(data.reservado);
+                //$('#panel-utilizado').html(data.utilizado);
+                data = [{}];
+           //data.push({]);
+           //             name: "gola",
+           //             data: [20]
+           //         });
+                $('#chart2').highcharts({
+                    credits:{'enabled':false},
+                    iteratorFlag:0,
+                    chart: {
+                        type: 'column',
+                        spacingBottom: 5,
+                        spacingTop: 0,
+                        spacingLeft: 0,
+                        spacingRight: 0,                        
+                        events : {
+                            load : function () {
+                                // set up the updating of the chart each second
+                                var series = this.series[0];
+                                var chart = this;
+                                setInterval(function () {
+                                    
+                                    var current = _jfondos[chart.userOptions.iteratorFlag];
+                                    var pUsado = (current.montoDisponible * 100 ) / current.monto;
+                                    
+                                    shift = series.data.length > 8;
+                                    series.addPoint([current.nombre,100-pUsado], true, shift);
+                                    chart.userOptions.iteratorFlag ++;
+                                    if (_jfondos.length-1 < chart.userOptions.iteratorFlag) {
+                                        chart.userOptions.iteratorFlag = 0;
+                                    }                                    
+                                }, 2000);
+                            }
+                        }
+                    },
+                    title: {
+                        text: '',
+                        style: {'display':'none'}
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        crosshair: true,
+                        visible:false,
+                        gridLineColor: 'transparent',
+                        labels: {
+                            enabled: false
+                        },
+                    },
+                    yAxis: {
+                        labels: {
+                            enabled: false
+                        },
+                        gridLineColor: 'transparent',
+                        visible:false,
+                        min: 0,
+                        max: 100,
+                        title: {
+                            text: '',
+                            style: {'display':'none'}
+                        },
+                        tickInterval: 150,
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                        '<td style="padding:0"><b>$ {point.y:.1f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            color:"#8B91A0",
+                            pointPadding: 0,
+                            borderWidth: 0,
+                            groupPadding: .02
+                        }
+                    },
+                    series: data
+                });
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Movimiento.init();});
+    </script>
+{% endblock %}

@@ -1,0 +1,407 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-money"></i> Administración de Fondos <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>            
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>
+                <li class="active">
+                    Tesorería
+                </li>
+                <li class="active">
+                    Fondos
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <style>
+        .panel-add:hover{
+            background: #f69b74;
+            color: white;
+            cursor: pointer;
+        }
+    </style>    
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Balance de <span class="text-bold"> Fondos</span></h4>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-4">
+                        <div id="container_x1" style="height: 153px"></div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div id="container_" style="height: 153px"></div>
+                    </div>
+                </div>
+                <div class="panel-footer partition-white">
+                    <div class="row padding-5 space5">
+                        <div class="col-xs-3 text-center no-padding">
+                            <div class="border-right border-dark">
+                                <span id="panel-total" class="text-bold block text-extra-large">0</span>
+                                <span class="text-light">Total</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 text-center no-padding">
+                            <div class="border-right border-dark">
+                                <span id="panel-disponible" class="text-bold block text-extra-large">0</span>
+                                <span class="text-light">Disponible</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 text-center no-padding">
+                            <div class="border-right border-dark">
+                                <span id="panel-reservado" class="text-bold block text-extra-large">0</span>
+                                <span class="text-light">Reservado</span>
+                            </div>
+                        </div>                        
+                        <div class="col-xs-3 text-center no-padding">
+                            <span id="panel-utilizado" class="text-bold block text-extra-large">0</span>
+                            <span class="text-light">Pagado</span>
+                        </div>
+                        
+                    </div>
+                </div>                
+            </div>
+        </div>
+        {% for fondo in fondos %}
+            <div class="col-md-4 panel-fondo" data-id="{{ fondo.id }}" data-name="{{ fondo.nombre }}" data-monto="{{ fondo.monto }}" data-montoreservado="{{ fondo.getMontoReservado() }}" data-montoutilizado="{{ fondo.getMontoUtilizado() }}">
+                <div class="panel panel-red">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title col-sm-10 no-padding">{{ fondo.nombre }}</h4>
+                        <div class="panel-tools">
+                            <a class="btn btn-xs btn-link" href="{{ path('tesoreria_fondo_printRecibo', {'id':fondo.id}) }}">
+                                <i class="fa fa-print"></i>
+                            </a>                            
+                            <a class="btn btn-xs btn-link" href="#1" onclick="$.Fondo.subview.loadForm('{{ path('tesoreria_fondo_edit', {'id':fondo.id}) }}');">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn btn-xs btn-link" href="#1" onclick="$.Fondo.deleteModal('{{ path('tesoreria_fondo_delete', {'id':fondo.id}) }}');">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="container_{{ fondo.id }}" style="height: 155px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer partition-white">
+                        <div class="row padding-5 space5">
+                            <div class="col-xs-4 text-center no-padding">
+                                <div class="border-right border-dark">
+                                    <span class="text-bold block text-extra-large money-text">{{ fondo.getMontoDisponible() }}</span>
+                                    <span class="text-light">Disponible</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-center no-padding">
+                                <div class="border-right border-dark">
+                                    <span class="text-bold block text-extra-large money-text">{{ fondo.getMontoReservado() }}</span>
+                                    <span class="text-light">Reservado</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-center no-padding">
+                                <span class="text-bold block text-extra-large money-text">{{ fondo.getMontoUtilizado() }}</span>
+                                <span class="text-light">Pagado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-4">
+            <div class="panel panel-white panel-add">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Nuevo <span class="text-bold"> Fondo</span></h4>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12 text-center" style="height: 233px">
+                        <i class="fa fa-plus fa-5x" style="padding: 60px"></i>
+                    </div>        
+                </div>
+            </div>
+        </div>        
+    </div>
+    <!-- start: SUBVIEW EXAMPLE FOR THIS PAGE ONLY -->
+    <a id="sub_go" href="#example-subview-1" class="hidden show-sv"></a>
+    <div id="example-subview-1" class="no-display">
+        <div class="col-md-10 col-md-offset-1 ajax-cont"></div>
+    </div>    
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/highcharts.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/heatmap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/treemap.js' )}}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/drilldown.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/themes/grid-light.js') }}"></script>
+	
+    <!--<script src="//cdn.ckeditor.com/4.5.11/standard/ckeditor.js"></script>-->
+    <script src="{{ asset('bundles/common/plugins/ckeditor/ckeditor.js') }}"></script>
+    <!--<script src="//cdn.ckeditor.com/4.5.11/full/ckeditor.js"></script>-->
+    
+
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            $.Fondo = $.Fondo || {};
+            $.Fondo.init = function() {
+                $.Fondo.chartDraw();
+                $('.panel-add').on('click', function(){
+                    $.Fondo.subview.loadForm('{{ path('tesoreria_fondo_new') }}');
+                })
+                $('.money-text').each(function(){
+                    $(this).html($.Main.moneyFormat(parseFloat($(this).text())));
+                });
+            }
+            $.Fondo.subview = function() {}
+            $.Fondo.subview.loadForm = function(url) {
+                $('#example-subview-1 .ajax-cont').html("");
+                jQuery.get(url, function(data){
+                    if (data.error) {
+                        toastr['warning'](data.msj, 'Cuidado');
+                    }else{
+                        $("#sub_go").trigger("click");
+                        $('#example-subview-1 .ajax-cont').html(data);
+                    }
+                })
+            }
+            $.Fondo.save = function(btn){
+                var ok=true;
+                $('#example-subview-1 [required="required"]').each(function(){
+                    if (typeof $(this).val()=='undefinded' || $(this).val()=='' || $(this).val()==null)
+                    {
+                        $(this).parents('.form-group').addClass('has-error');
+                        $(this).focus();
+                        ok=false;
+                    }
+                })
+                if (ok) {
+                    $(btn).attr("disabled","true");
+                    /* Realiza la peticon */
+                    $form=$("#example-subview-1 form");
+                    jQuery.post($form.attr('action'), $form.serialize(), function(data){
+                        if (data.success){
+                            location.reload();
+                        }else{
+                            $(btn).removeAttr("disabled");
+                            toastr['warning'](data.msj, 'Cuidado');
+                        }
+                    });
+                }else{
+                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado');
+                } 
+            }
+            $.Fondo.deleteModal = function(url){
+                jQuery.get(url, function(data){
+                    if (data.error) {
+                        toastr['warning'](data.msj, 'Cuidado');
+                    }else{
+                        swal({
+                            title: "Seguro quiere eliminar este Fondo?",
+                            text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Si, eliminar!",
+                            cancelButtonText: "No, cancelar!",
+                            closeOnConfirm: false,
+                            closeOnCancel: true,
+                            html: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $('#deleteFormAux form').submit();
+                                swal("Excelente!", "El Fondo fue borrado.", "success");
+                            }
+                        });
+                    }
+                });
+            }
+            $.Fondo.chartDraw = function(){
+                data = {
+                        "data" : [],
+                        "monto":0,
+                        "reservado":0,
+                        "utilizado":0,
+                        "disponible":0
+                    };
+                $('.panel-fondo').each(function(){
+                    $fondo = $(this);
+                    data.monto += $fondo.data('monto');
+                    data.reservado += $fondo.data('montoreservado');
+                    data.utilizado += $fondo.data('montoutilizado');
+                    data.disponible += $fondo.data('monto')-$fondo.data('montoreservado')-$fondo.data('montoutilizado');
+                    data.data.push({
+                        name: $fondo.data('name'),
+                        data: [$fondo.data('monto')]
+                    });
+                });
+                $('#panel-total').html($.Main.moneyFormat(parseFloat(data.monto)));
+                $('#panel-disponible').html($.Main.moneyFormat(parseFloat(data.disponible)));
+                $('#panel-reservado').html($.Main.moneyFormat(parseFloat(data.reservado)));
+                $('#panel-utilizado').html($.Main.moneyFormat(parseFloat(data.utilizado)));
+                $('#container_').highcharts({
+                    credits:{'enabled':false},
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '',
+                        style: {'display':'none'}
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        categories: [
+                            ''
+                        ],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        
+                        min: 0,
+                        title: {
+                            text: '',
+                            style: {'display':'none'}
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                        '<td style="padding:0"><b>$ {point.y:.1f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: data.data
+                });
+                $('#container_x1').highcharts({
+                        credits:{'enabled':false},                
+                        chart: {
+                            type: 'pie',
+                            backgroundColor:'transparent'
+                        },
+                        title: {
+                            text: '',
+                            style: {'display':'none'}
+                        },
+                        tooltip: {
+                            pointFormat: '<b>{point.percentage:.1f}%</b><br>{point.y} de ' + data.monto
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: false
+                            }
+                        },
+                        series: [{
+                            name: 'Estado',
+                            colorByPoint: true,
+                            data: [{
+                                name: 'Disponible',
+                                y: data.disponible
+                            }, {
+                                name: 'Reservado',
+                                y: data.reservado,
+                                sliced: true,
+                                selected: true
+                            }, {
+                                name: 'Pagado',
+                                y: data.utilizado
+                            }]
+                        }]
+                    });                
+                {% for fondo in fondos %}
+                    $('#container_{{ fondo.id }}').highcharts({
+                        credits:{'enabled':false},                
+                        chart: {
+                            type: 'pie',
+                            backgroundColor:'transparent'
+                        },
+                        title: {
+                            text: '',
+                            style: {'display':'none'}
+                        },
+                        tooltip: {
+                            pointFormat: '<b>{point.percentage:.1f}%</b><br>{point.y} de {{fondo.monto}}'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: false
+                            }
+                        },
+                        series: [{
+                            name: 'Estado',
+                            colorByPoint: true,
+                            data: [{
+                                name: 'Disponible',
+                                y: {{ fondo.getMontoDisponible() }}
+                            }, {
+                                name: 'Reservado',
+                                y: {{ fondo.getMontoReservado() }},
+                                sliced: true,
+                                selected: true
+                            }, {
+                                name: 'Pagado',
+                                y: {{ fondo.getMontoUtilizado() }}
+                            }]
+                        }]
+                    });
+                {% endfor %}
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Fondo.init();});
+    </script>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-md-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Dimensiones <small>Todo lo referido a Áreas, Funciones y Parámetros de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+                            <span class="messages-count badge badge-default hide">3</span> <i class="fa fa-cogs" aria-hidden="true"></i> NUEVA
+                        </a>
+                        <ul class="dropdown-menu dropdown-light dropdown-messages">
+                            <li>
+                                <div class="drop-down-wrapper ps-container">
+                                    <ul>
+                                        <li class="unread">
+                                            <a  href="{{ path('funcionjuegos_new') }}">
+                                                <i class="fa fa-cog" aria-hidden="true"></i> <strong>FUNCION</strong> del personal
+                                            </a>
+                                        </li>
+                                        <li class="unread">
+                                            <a  href="{{ path('area_new') }}">
+                                                <i class="fa fa-cog" aria-hidden="true"></i> <strong>ÁREA</strong> de trabajo
+                                            </a>
+                                        </li>
+                                        <li class="unread">
+                                            <a  href="{{ path('categoriapago_new') }}">
+                                                <i class="fa fa-cog" aria-hidden="true"></i> <strong>CATEGORÍA</strong> de pago
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>                    
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                
+                <li>
+                    Acreditación
+                </li>
+                <li class="active">
+                    Parámetros
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-md-6">
+            {% render controller("AcreditacionBundle:FuncionJuegos:index") %}
+        </div>        
+        <div class="col-md-6">
+            {% render controller("AcreditacionBundle:Area:index") %}
+        </div>
+    </div>
+    <div class="row">
+        <div id="parametrosContent" class="col-md-6">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Fechas de<span class="text-bold"> Acreditación</span></h4>
+                    <div class="panel-tools">
+                        <div class="dropdown">
+                            <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                                <i class="fa fa-cog"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                                <li>
+                                    <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                                </li>
+                                <li>
+                                    <a class="panel-refresh" href="#">
+                                        <i class="fa fa-refresh"></i> <span>Refresh</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="panel-config" href="#panel-config" data-toggle="modal">
+                                        <i class="fa fa-wrench"></i> <span>Configurations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="panel-expand" href="#">
+                                        <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a class="btn btn-xs btn-link panel-close" href="#">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(parametros, {'attr':{'novalidate':'novalidate' } }) }}
+                    {{ form_errors(parametros)}}
+                    {{ global_form_errors(parametros) }}
+                    <div class="row">
+                        <div id="acreditacion_fechas" class="form-group col-md-12">
+                            <div class="form-group col-md-12">
+                                {{ form_label(parametros.rangoFechaTrabajo) }}
+                                <div class="input-group margin-bottom-sm text-center col-md-12" >
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        {{ form_widget(parametros.rangoFechaTrabajo) }}
+                                </div>
+                                {{ form_errors(parametros.rangoFechaTrabajo)}}
+                            </div>
+                            <div class="form-group col-md-12">
+                                {{ form_label(parametros.fechaLimiteAcreditacion) }}
+                                <div class="input-group margin-bottom-sm text-center col-md-12" >
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        {{ form_widget(parametros.fechaLimiteAcreditacion) }}
+                                </div>
+                                {{ form_errors(parametros.fechaLimiteAcreditacion)}}
+                            </div>
+                        </div>
+                    </div>
+                    <legend id="separadorBotonera" class="botonera"></legend>
+                    <div class="row">
+                        <div class="form-group col-md-12 text-right">
+                            {{ form_widget(parametros.submit) }}
+                        </div>
+                    </div>
+                    <div class="hidden">
+                        {{ form_rest(parametros) }}
+                    </div>
+                    {{ form_end(parametros) }}
+                    {{ form_widget(parametros)}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            {% render controller("TesoreriaBundle:CategoriaPago:index") %}
+        </div>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/acreditacion.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>  
+    <script src="{{ asset('bundles/acreditacion/js/acreditacion.js') }}"></script>
+    <script src="{{ asset('bundles/tesoreria/js/categoriaPago.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/funcionJuegos.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/area.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $.Acreditacion.init("{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}");
+            $.CategoriaPago.init("{{ path('categoriapago_delete') }}");
+            $.FuncionJuegos.init("{{ path('funcionjuegos_delete') }}");
+            $.Area.init("{{ path('area_delete') }}");
+        });
+    </script>
+{% endblock %}    

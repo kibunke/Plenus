@@ -1,0 +1,305 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Participantes <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>            
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <li class="dropdown">
+                        <a  href="{{ path('resultados_informeFinalistas') }}">
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('resultados') }}">
+                        Resultados
+                    </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading border-light">
+        <h4 class="panel-title">Información <span class="text-bold">del Participante</span></h4>
+        <ul class="panel-heading-tabs border-light">
+            <li>
+                <div class="pull-right" style="font-size: 20px" title="ID del Participante">
+                    <i class="fa fa-key text-yellow"></i><span class="text-bold"> {{ participante.id }} </span>
+                </div>                
+            </li>
+            <li>
+                <div class="pull-right" style="font-size: 20px" title="Cantidad equipos que integra">
+                    <i class="fa fa-users text-green"></i><span class="text-bold"> {{ participante.getEquipos | length }} </span>
+                </div>
+            </li>
+            <li>
+                <div class="pull-right" style="font-size: 20px" title="Cantidad medalla ganaras">
+                    <i class="fa fa-asterisk text-red"></i><span class="text-bold"> {{ participante.getMedallero | length }} </span>
+                </div>
+            </li>            <li>
+                <div class="pull-right" style="font-size: 20px" title="Cantidad de municipio que representa">
+                    <i class="fa fa-building-o text-blue"></i><span class="text-bold"> {{ participante.getMunicipios | length }} </span>
+                </div>
+            </li>            
+            <li class="panel-tools">
+                {{ include('CommonBundle::dropdownTables.html.twig') }}
+            </li>            
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-5 col-md-4">
+                <div class="user-left">
+                    <div class="center">
+                        <h4>{{ participante.getNombreCompleto }}</h4>
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="user-image">
+                                <div class="fileupload-new thumbnail">
+                                    <img src="{{ asset('bundles/common/images/anonymous.jpg') }}" alt="Avartar anonimo" style="height:140px">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="social-icons block">
+                            <ul>
+                                <li data-placement="top" data-original-title="Twitter" class="social-twitter tooltips">
+                                    <a href="#1" target="_blank">
+                                        Twitter
+                                    </a>
+                                </li>
+                                <li data-placement="top" data-original-title="Facebook" class="social-facebook tooltips">
+                                    <a href="#1" target="_blank">
+                                        Facebook
+                                    </a>
+                                </li>
+                                <li data-placement="top" data-original-title="Google" class="social-google tooltips">
+                                    <a href="#1" target="_blank">
+                                        Google+
+                                    </a>
+                                </li>
+                                <li data-placement="top" data-original-title="LinkedIn" class="social-linkedin tooltips">
+                                    <a href="#1" target="_blank">
+                                        LinkedIn
+                                    </a>
+                                </li>
+                                <li data-placement="top" data-original-title="Github" class="social-github tooltips">
+                                    <a href="#1" target="_blank">
+                                        Github
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <hr>
+                    </div>
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th colspan="3">Información de Contacto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#<tr>
+                                <td>url</td>
+                                <td>
+                                    <a href="#">www.example.com</a>
+                                </td>
+                                <td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+                            </tr>
+                            #}
+                            <tr>
+                                <td>Email:</td>
+                                <td>
+                                    {#<a href="">peter@example.com</a>#}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Telefono:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Skye</td>
+                                <td>
+                                    <a href="#1"></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th colspan="3">Información General</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rol</td>
+                                <td>{{ participante.rol }}</td>
+                            </tr>
+                            <tr>
+                                <td>DNI</td>
+                                <td>{{ participante.documentoNro }}</td>
+                            </tr>
+                            <tr>
+                                <td>F. Nacimiento</td>
+                                <td>
+                                    {% if (participante.fechaNacimiento) %}
+                                        {{ participante.fechaNacimiento | date('d/m/Y')}}
+                                    {% else %}
+                                        --/--/----
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Municipio</td>
+                                <td>{{ participante.equipos[0].municipio }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th colspan="3">Information de Inscripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Por</td>
+                                <td>{{ participante.createdBy }}</td>
+                            </tr>
+                            <tr>
+                                <td>Fecha</td>
+                                <td>{{ participante.createdAt | date('d/m/y') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-7 col-md-8">
+                <p class="">
+                    A continuación se presenta información y estadisticas del participante con el objetivo de realizar un seguimiento detallado de su desempeño a lo largo de su participación en la distintas ediciones de los JuegosBA.
+                </p>
+                <div class="row space20">
+                    <div class="col-sm-6">
+                        <div class="panel panel-default panel-white core-box">
+                            <div class="panel-body no-padding">
+                                <div class="partition-green padding-20 text-center core-icon" style="width: 25% !important;">
+                                    <i class="fa fa-bar-chart-o fa-2x icon-big"></i>
+                                </div>
+                                <div class="padding-20 core-content" style="margin-left: 25%">
+                                    <h3 class="title block no-margin">Historial de Participación</h3>
+                                    <span class="subtitle"> Participo en la edición 2015. </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-default panel-white core-box">
+                            <div class="panel-body no-padding">
+                                <div class="partition-red padding-20 text-center core-icon" style="width: 25% !important;">
+                                    <i class="fa fa-asterisk fa-2x icon-big"></i>
+                                </div>
+                                <div class="padding-20 core-content" style="margin-left: 25%">
+                                    <h3 class="title block no-margin">Historial de Medallas</h3>
+                                    <span class="subtitle"> Obtubo {{ participante.getMedallero | length }} Medalla{% if participante.getMedallero | length > 1%}s{%endif%} </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-white space20">
+                    <div class="panel-heading">
+                        <i class="clip-menu"></i>
+                        <h3>Eventos en que participó</h3>
+                    </div>
+                    <div class="panel-body ps-container" style="max-height: 300px">
+                        <ul class="activities">
+                            {% for equipo in participante.equipos %}
+                                <li>
+                                    <a class="activity" href="{{ path('resultado_evento_edit', {'id' : equipo.evento.id }) }}">
+                                        {% if (equipo.hasMedalla()) %}
+                                            <div class="fa-stack fa-2x pull-left">
+                                                <i class="fa fa-trophy fa-lg text-red"></i>
+                                            </div>
+                                        {% else %}
+                                            <div class="fa-stack fa-2x pull-left">
+                                                <i class="fa fa-bookmark-o fa-lg text-yellow"></i>
+                                            </div>
+                                        {% endif %}                                        
+
+                                        
+                                        
+                                        <div class="desc" class="pull-left">
+                                            {{ equipo.evento.getNombreCompletoRaw | raw }}
+                                        </div>
+                                        <div class="time">
+                                            <i class="fa fa-ellipsis-v"></i>
+                                            <strong>
+                                                {{ equipo.getMejorResultado() }}
+                                            </strong>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel panel-white space20">
+                    <div class="panel-heading">
+                        <i class="clip-menu"></i>
+                        <h3>Equipos que integró</h3>
+                    </div>
+                    <div class="panel-body ps-container" style="max-height: 300px">
+                        <ul class="activities">
+                            {% for equipo in participante.equipos %}
+                                <li>
+                                    <a class="activity" href="{{ path('ganadores_evento_show', { 'id': equipo.evento.id }) }}">
+                                        <div class="fa-stack fa-2x pull-left" style="margin-top: -5px;">
+                                            <i class="fa fa-users fa-lg text-green"></i>
+                                        </div>
+                                        <div class="desc" class="pull-left">
+                                            {{ equipo.getNombreCompletoRaw | raw }}
+                                        </div>
+                                        <div class="time">
+                                            <i class="fa fa-users"></i>
+                                            <strong>
+                                                {{ equipo.participantes | length }} Integrantes
+                                            </strong>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

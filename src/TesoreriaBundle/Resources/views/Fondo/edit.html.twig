@@ -1,0 +1,42 @@
+<div class="row">
+    <h3>
+		<i class="fa fa-edit"></i> Edición Fondo
+	</h3>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+    </div>
+	<div class="col-sm-12">
+		<p class="bg-info padding-15">
+			Utilice las siguientes etiquetas para completar el texto automaticamente<br>
+			<b style="padding-left: 15px"># </b>[FECHA] -> FECHA del recibo<br>
+			<b style="padding-left: 15px"># </b>[MONTO] -> Monto del recibo<br>
+			<b style="padding-left: 15px"># </b>[MONTOENLETRAS] -> Monto en texto del recibo<br>			
+			<b style="padding-left: 15px"># </b>[NOMBRES] -> Nombres de la persona<br>
+			<b style="padding-left: 15px"># </b>[APELLIDOS] -> Apellidos de la persona<br>
+			<b style="padding-left: 15px"># </b>[TIPODNI] -> Tipo de DNI de la persona<br>
+			<b style="padding-left: 15px"># </b>[DNI] -> Número de DNI de la persona<br>
+		</p>
+	</div>
+    <div class="col-sm-2">
+        <a class="btn btn-green pull-right" onclick="$.Fondo.save(this)" href="#1" style="margin-top: 20px">
+            <i class="fa fa-calendar"></i> Guardar
+        </a>
+    </div>
+</div>
+<script>
+	setTimeout(function(){
+		editor = CKEDITOR.replace( 'juegosba_tesoreriabundle_fondo_modeloRecibo', {
+			//// Remove the redundant buttons from toolbar groups defined above.
+			removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Copy,Cut,Paste,PasteText,PasteFromWord,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Subscript,Superscript,RemoveFormat,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Image,Flash,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,TextColor,BGColor,ShowBlocks,Maximize,About,Styles,Font'
+		} );      		
+		editor.on( 'instanceReady', function( evt ) {
+			evt.editor.on( 'change',function(){
+					$('#juegosba_tesoreriabundle_fondo_modeloRecibo').html(evt.editor.getData())
+				}
+			);	
+		});
+	},1000);
+</script>

@@ -1,0 +1,18 @@
+<table class="table table-striped table-hover plazas_show" >
+    <thead>
+        <tr>
+            <th class="text-center" style="width: 60px">#</th>
+            <th class="text-center" style="width: 60px"></th>
+            <th>Plazas</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plaza in competencia.plazas %}
+            <tr data-plaza="{{ plaza.id }}">
+                <td class="text-center"><span class="fa fa-ellipsis-v hidden edit-show">&nbsp;&nbsp;</span><span class="td-orden">{{ loop.index }}</span></td>
+                <td class="text-center"><span class="fa fa-user"></span></td>
+                <td>{{ plaza.getNombreCompetenciaRaw | raw }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

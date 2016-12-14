@@ -1,0 +1,99 @@
+<?php
+
+namespace GestionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * GestionBundle\Entity\ConfiguracionGlobal
+ *
+ * @ORM\Table(name="ConfiguracionGlobal")
+ * @ORM\Entity
+ */
+class ConfiguracionGlobal
+{    
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+  
+    /**
+     * @var boolean $isNewAccountActive
+     *
+     * @ORM\Column(name="isNewAccountActive", type="boolean")
+     */
+    protected $isNewAccountActive;  
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+    
+    /**
+     * @var SeguridadBundle\Entity\Usuario $createdBy
+     * 
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
+     * 
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */   
+    private $updatedBy;
+
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean")
+     */
+    protected $isActive;
+    
+    /**
+     * Constructor
+     */    
+    public function __construct()
+    {
+        $this->id = 1;
+        $this->createdAt = new \DateTime();
+        $this->isActive = true;
+    }
+    
+    /**
+     * __toString
+     */    
+    function __toString()
+    {
+        return "ConfigGlobal";
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

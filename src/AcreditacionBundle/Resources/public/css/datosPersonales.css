@@ -1,0 +1,29 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11/08/2016, 15:23:51
+    Author     : kibunke
+*/
+
+.datosIzq{
+    border-right:  1px solid #88bbc8;
+}
+
+#acreditacion_step label{
+    text-align: left;
+    color: black;
+    padding: 0px;
+}
+
+div.datosDer > div, div.datosIzq > div{
+    margin-bottom: 20px;
+}
+label.staticLabel{
+    background-color: #e6fee6;
+}
+p.form-control-static{
+    color: black;
+}

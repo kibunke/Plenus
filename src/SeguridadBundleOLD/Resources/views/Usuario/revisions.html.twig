@@ -1,0 +1,52 @@
+{% extends "SeguridadBundle:PlantillaBase:revisions.html.twig" %}
+
+{% set onclickVolver = {'onclick':'location.href= "'~ path('usuario_filter')~'"' } %}
+{% set pathRevertir = 'usuario_revision_revertir' %}
+{% block datosRevision %}
+ <tr>
+   <th>Persona:</th>
+   <td>
+    {% if revision.getData['personaFisica'] is defined %}
+      <a href="#" onclick="showDatoAsociado('{{ path('personafisica_show', { id: revision.getData["personaFisica"]["id"]}) }}','Datos de la Persona')">
+	Ver Persona
+      </a>
+    {% else %}  
+       Sin Cambios
+    {% endif %}
+   </td>
+ </tr>	    
+ <tr>
+   <th>Usuario:</th>
+   <td>
+    {% if revision.getData['usuario'] is defined %}
+      {{revision.getData['usuario']}}
+    {% else %}  
+       Sin Cambios
+    {% endif %}
+   </td>
+ </tr>
+ <tr>
+   <th>Activo:</th>
+   <td>
+    {% if revision.getData['activo'] is defined %}
+      {% if revision.getData['activo'] %}
+       <img src="{{ asset('bundles/juzgado/images/famfamfam/accept.png')}}" alt="Activo" title="Activo"/> 
+      {% else %}
+       <img src="{{ asset('bundles/juzgado/images/famfamfam/exclamation.png')}}" alt="Inactivo" title="Inactivo"/> 
+      {% endif %}
+    {% else %}  
+       Sin Cambios
+    {% endif %}
+   </td>
+ </tr>
+   <tr>
+   <th>Último Ingreso:</th>
+   <td>
+    {% if revision.getData['ultimoLogin'] is defined and revision.getData['ultimoLogin'] %}
+       {{revision.getData['ultimoLogin']|date('d/m/Y [H:i:s]')}}
+    {% else %}  
+       Sin Cambios
+    {% endif %}
+   </td>
+ </tr>
+{% endblock %}

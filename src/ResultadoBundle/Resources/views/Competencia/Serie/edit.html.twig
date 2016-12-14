@@ -1,0 +1,229 @@
+<div>
+    <div class="row" id="reload-total-{{ competencia.id }}" data-update="{{ path('competenciaSerie_reload', { 'id': competencia.id }) }}">
+        {% if competencia.series | length %}
+            <div class="tabbable tabs-left">
+                <ul id="tab_series" class="nav nav-tabs">
+                    {% for serie in competencia.series %}                
+                        <li class="{% if loop.index == 1%}active{% endif %}">
+                            <a href="#tab_serie_{{ serie.id }}" data-toggle="tab">
+                                <i class="pink fa fa-table"></i> {{ serie }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    <li class="">
+                        <a href="#1" onclick="$.Evento.competenciaSerie.serie.add('{{ path('serie_new', { 'id': competencia.id }) }}')" data-toggle="tab">
+                            <i class="pink fa fa-plus"></i> Nueva
+                        </a>
+                    </li>            
+                </ul>
+                <div class="tab-content">
+                    {% for serie in competencia.series %}                
+                        <div class="tab-pane fade{% if loop.index == 1%} in active{% endif %}" id="tab_serie_{{ serie.id }}" >
+                            <div class="dropdown pull-right">
+                                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                                    {% if is_granted('ROLE_SERIE_EDIT') %}
+                                    <li>
+                                        <a href="#1" onclick="$.Evento.competenciaSerie.serie.edit('{{ path('serie_edit', { 'id': serie.id }) }}')">
+                                            <i class="fa fa-edit"></i> <span>Editar Serie</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <li>
+                                        <a class="panel-refresh habilitar_edicion" href="#" onclick="$.Evento.etapa.competencia.habilitarEdicion('tabla-serie-{{ serie.id }}')">
+                                            <i class="fa fa-edit"></i> <span>Habilitar edición</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="panel-refresh" href="#" onclick="$.Evento.competenciaSerie.serie.remove('{{ path('serie_delete', { 'id': serie.id }) }}')">
+                                            <i class="fa fa-trash"></i> <span>Eliminar Serie</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="panel-refresh" href="#" onclick="$.Evento.etapa.remove('{{ path('competenciaSerie_delete', { 'id': competencia.id }) }}')">
+                                            <i class="fa fa-trash"></i> <span>Resetear Etapa</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <h2 style="margin-top: 0;" class="pull-left">
+                                <i class="fa fa-edit"></i>
+                                Detalle <span class="text-bold">{{ serie }}</span>                            
+                            </h2>
+                            <div>
+                                {% include 'ResultadoBundle:Competencia:Serie/serie.html.twig' with { 'serie' : serie } %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-block alert-danger fade in">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                <p>
+                    Esta <strong>Competencia</strong> aún no tiene series definidas.<br>
+                    <li>Si usted cuenta con los <strong>permisos</strong> necesarios para crear series verá a continuación dichas opciones.</li>
+                    <li>En caso contrario contacte a un usuario con más privilegios.</li>
+                </p>
+                <p>
+                    {% if is_granted('ROLE_COMPETENCIA_NEW') %}
+                        <a href="#1" onclick="$.Evento.competenciaSerie.serie.add('{{ path('serie_new', { 'id': competencia.id }) }}')" class="btn btn-green">
+                            <span class="fa fa-edit"></span> Crear una Serie en la Competencia
+                        </a>
+                    {% endif %}
+                    {#% if is_granted('ROLE_COMPETENCIA_DELETE') %}
+                        <a href="#1" onclick="$.Evento.etapa.remove('{{ path('resultado_etapa_reset', { 'id': competencia.etapa.id }) }}')" class="btn btn-red">
+                            <span class="fa fa-edit"></span> Resetear competencia
+                        </a>
+                    {% endif %#}                      
+                    <a href="{{ path('resultados') }}" class="btn btn-light-grey">
+                        <span class="fa fa-arrow-left"></span> Cancelar y volver.
+                    </a>                  
+                </p>
+            </div>
+        {% endif %}
+    </div>
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datepicker/css/datepicker.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/css/datetimepicker.css' ) }}" />
+    
+    <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/mask/mask.min.js') }}"></script>
+    <script>
+        (function ($) {
+            var _modoEdicion = false;
+            var _optionBloq = {
+                            overlayCSS: {
+                                backgroundColor: '#fff'
+                            },
+                            message: '<i class="fa fa-spinner fa-spin"></i>',
+                            css: {
+                                border: 'none',
+                                color: '#333',
+                                background: 'none',
+                                padding: '0px'
+                            }
+                        }
+            // no se sobreescribe el namespace, si ya existe
+            $.Evento = $.Evento || {};
+            $.Evento.competenciaSerie = function() {}
+            $.Evento.competenciaSerie.serie = function() {}
+            $.Evento.competenciaSerie.serie.add = function(url) {
+                if (!_modoEdicion){
+                    $('#okButton').button('reset');
+                    $('#panel-config .modal-footer').show();
+                    $('#panel-config .modal-title').html("Nueva Serie");
+                    $('#panel-config .modal-body').html("");
+                    $('#panel-config .modal-body').load(url,function(){
+                        $('#panel-config form').submit(function(){
+                            $.Evento.etapa.competencia.request($('#panel-config form'));
+                            return false;
+                        });
+                    });
+                    $('#panel-config').modal();
+                }else{ alert("Salga del modo edición para realizar esta tarea!")}
+            }
+            $.Evento.competenciaSerie.serie.edit = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Editar Serie");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $('#panel-config form').submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'));
+                        return false;
+                    });
+                });
+                $('#panel-config').modal();                
+            }
+            $.Evento.competenciaSerie.serie.remove = function(url) {
+                jQuery.get(url, function(data){
+                    swal({
+                        title: "Seguro quiere eliminar la serie con todos sus datos ?",
+                        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Si, eliminar!",
+                        cancelButtonText: "No, cancelar!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                        html: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#deleteFormAux form').submit(function(){
+                                $.Evento.etapa.competencia.request($(this));
+                                return false;
+                            });
+                            $('#deleteFormAux form').submit();
+                        }
+                    });
+                });
+            }
+            $.Evento.competenciaSerie.serie.marca = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Editar Marca Serie");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $form = $('#panel-config form');
+                    $form.submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'));
+                        return false;
+                    });
+                    $.mask.definitions['5'] = "[0-5]";
+                    $.mask.definitions['9'] = "[0-9]";
+                    $("#juegosba_resultadobundle_plaza_marca").mask(String($form.data('mascara')),{placeholder:$form.data('placaholder')});
+                    setTimeout(function(){$("#juegosba_resultadobundle_plaza_marca").focus();},500)
+                });
+                $('#panel-config').modal();                  
+            }
+            $.Evento.competenciaSerie.serie.marca.reset = function(url) {
+                //jQuery.get(url, function(data){
+                //    swal({
+                //        title: "Seguro quiere resetear la marca del participante ?",
+                //        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                //        type: "warning",
+                //        showCancelButton: true,
+                //        confirmButtonColor: "#DD6B55",
+                //        confirmButtonText: "Si, resetear!",
+                //        cancelButtonText: "No, cancelar!",
+                //        closeOnConfirm: true,
+                //        closeOnCancel: true,
+                //        html: true
+                //    },
+                //    function (isConfirm) {
+                //        if (isConfirm) {
+                //            $('#deleteFormAux form').submit(function(){
+                //                $.Evento.etapa.competencia.request($(this),'zona');
+                //                return false;
+                //            });
+                //            $('#deleteFormAux form').submit();
+                //        }
+                //    });
+                //});
+                //^([0-9]{2}:[0-9]{2}:[0-9]{3})$
+            }
+            //$.Evento.competenciaSerie.serie.cronograma = function(url) {
+            //    $('#okButton').button('reset');
+            //    $('#panel-config .modal-footer').show();
+            //    $('#panel-config .modal-title').html("Cronograma del Partido");
+            //    $('#panel-config .modal-body').html("");
+            //    $('#panel-config .modal-body').load(url,function(){
+            //        $('#panel-config form').submit(function(){
+            //            $.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+            //            return false;
+            //        });
+            //    });
+            //    $('#panel-config').modal();                
+            //}      
+        })(jQuery);
+    </script>
+</div>

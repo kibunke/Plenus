@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-sm-12 update-table">    
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+    </div>
+</div>
+<style>
+    .datetimepicker{
+        z-index: 99999 !important;
+    }
+</style>
+<script>
+    $(document).ready(function(){
+        var dp;
+        $.fn.datetimepicker.dates['es'] = {
+            days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+            daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+            daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"],
+            months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+            monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+            today: "Hoy",
+            meridiem: '',
+            clear: "Borrar",
+            weekStart: 1,
+            format: "dd/mm/yyyy"
+        };
+        dp = $('#juegosba_resultadobundle_cronograma_fecha').datetimepicker({
+            sideBySide: true,
+            useStrict:true,
+            format: 'dd/mm/yyyy hh:ii',
+            startDate: new Date({{ startDate }}),
+            endDate: new Date({{ endDate }}),
+            language: 'es'
+        });
+        dp.change(function(){
+            $(".datetimepicker").hide();
+        })
+    })
+</script>

@@ -1,0 +1,34 @@
+<div class="row">
+    <h3>
+		<i class="fa fa-edit"></i> Nueva Entidad
+	</h3>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+		<input type="file" id="auxFile"/>
+    </div>
+    <div class="col-sm-2">
+        <a class="btn btn-green pull-right" onclick="$.Entidad.save(this)" href="#1" style="margin-top: 20px">
+            <i class="fa fa-calendar"></i> Guardar
+        </a>
+    </div>
+</div>
+<script>
+	$('#auxFile').on('change',function(){
+		var input = this;
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+	
+			reader.onload = function (e) {
+				//console.log(e.target.result)
+				//console.log(e.target.result.split(',')[1])
+				$('#juegosba_tesoreriabundle_entidad_logo').val(e.target.result.split(',')[1]);
+				//pic.base64file()
+			}
+	
+			reader.readAsDataURL(input.files[0]);
+		}		
+	});
+</script>

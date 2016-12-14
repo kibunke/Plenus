@@ -1,0 +1,261 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig'  %}
+{% form_theme form.cuposCategoriasPago 'AcreditacionBundle:Fields:categoriaFields.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Dimensiones <small>Todo lo referido a Áreas, Funciones y parámetros de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('acreditacion_parameters')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                
+                <li>
+                    <a href="#1">
+                        Acreditación
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('acreditacion_parameters') }}">
+                        Parámetros
+                    </a>
+                </li>
+                <li class="active">
+                    Área
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h4 class="panel-title">Nueva<span class="text-bold"> Área de Trabajo</span></h4>
+            <div class="panel-tools">
+                <div class="dropdown">
+                    <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                        <li>
+                            <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                        </li>
+                        <li>
+                            <a class="panel-refresh" href="#">
+                                <i class="fa fa-refresh"></i> <span>Refresh</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-config" href="#panel-config" data-toggle="modal">
+                                <i class="fa fa-wrench"></i> <span>Configurations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-expand" href="#">
+                                <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn btn-xs btn-link panel-close" href="#">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            {{ form_start(form, {'attr':{'novalidate':'novalidate' } }) }}
+            {{ form_errors(form)}}
+            {{ global_form_errors(form) }}
+            <div id="area_parametros" class="form-group">
+                <legend>
+                    <h5><i class="fa fa-pencil-square-o"></i> DATOS DEL ÁREA</h5>
+                </legend>
+                <div class="row">
+                    <div class="form-group">
+                        {{ form_label(form.nombre) }}
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-keyboard-o"></i></span>
+                                {{ form_widget(form.nombre) }}
+                        </div>
+                        {{ form_errors(form.nombre)}}
+                    </div>    
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        {{ form_label(form.descripcion) }}
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-keyboard-o"></i></span>
+                                {{ form_widget(form.descripcion) }}
+                        </div>
+                        {{ form_errors(form.descripcion)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group selectArea">
+                        {{ form_label(form.funcionesPermitidas) }}
+                        <div class="input-group margin-bottom-sm ">
+                            <span class="input-group-addon"><i class="fa fa-shield"></i></span>
+                                {{ form_widget(form.funcionesPermitidas) }}
+                        </div>
+                        {{ form_errors(form.funcionesPermitidas)}}
+                    </div>        
+                </div>
+                <div class="row">
+                    <div class="form-group selectArea">
+                        {{ form_label(form.usuariosResponsables) }}
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-user-plus"></i></span>
+                                {{ form_widget(form.usuariosResponsables) }}
+                        </div>
+                        {{ form_errors(form.usuariosResponsables)}}
+                    </div>
+                </div>
+                <br>
+                <legend>
+                    <h5><i class="fa fa-cogs"></i> PARÁMETROS DE ACREDITACION DEL ÁREA</h5>
+                </legend>
+                <div class="row">
+                    <div id="areaTableContent" class="col-md-8 col-md-offset-2">
+                        <table class="table  table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center areaTablaHeader" colspan="2" ><i class="fa fa-shield"></i>  CÚPOS MÁXIMOS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-md-7 text-center"><i class="fa fa-money" aria-hidden="true"></i>  PRESUPUESTO DEL ÁREA</td>
+                                    <td class="text-bold text-center">
+                                        <div id="acreditacion_pagoEspecifico_input" class="input-group input-group-sm col-md-12">
+                                            <span class="input-group-addon">$<small>AR</small></span>
+                                            {{ form_widget(form.cupoMaxPresupuesto,{'attr':{'class':'money text-extra-large' } } ) }}
+                                            <span class="input-group-addon">.00</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-7 text-center"><i class="fa fa-users" aria-hidden="true"></i>  ACREDITACIÓN DEL PERSONAL</td>
+                                    <td class="text-bold text-center acreditacionCupoContainer">
+                                        <div class="row">
+                                            <div class="col-md-3 areaCuposButtonMinus text-red">
+                                                <i class="fa fa-minus-square" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form_widget(form.cupoMaxPersonal,{'attr':{'class':'areaContador aCupos text-extra-large' } }) }}
+                                            </div>
+                                            <div class="col-md-3 areaCuposButtonPlus text-green">
+                                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-7 text-center"><i class="fa fa-bed" aria-hidden="true"></i>  HOSPEDAJE</td>
+                                    <td class="text-bold text-center">
+                                        <div class="row">
+                                            <div class="col-md-3 areaCuposButtonMinus text-red">
+                                                <i class="fa fa-minus-square" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form_widget(form.cupoMaxHoteleria,{'attr':{'class':'areaContador htCupos text-extra-large' } }) }}
+                                            </div>
+                                            <div class="col-md-3 areaCuposButtonPlus text-green">
+                                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-7 text-center"><i class="fa fa-bus" aria-hidden="true"></i>  TRANSPORTE</td>
+                                    <td class="text-bold text-center">
+                                        <div class="row">
+                                            <div class="col-md-3 areaCuposButtonMinus text-red">
+                                                <i class="fa fa-minus-square" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form_widget(form.cupoMaxTransporte,{'attr':{'class':'areaContador htCupos text-extra-large' } }) }}
+                                            </div>
+                                            <div class="col-md-3 areaCuposButtonPlus text-green">
+                                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% for cupo in form.cuposCategoriasPago %}
+                                    <tr>
+                                        <td class="col-md-7 text-center"> <i class="fa fa-certificate" aria-hidden="true"></i>  CATEGORIA DE PAGO <strong> {{form_widget(cupo.categoria)}}</strong></td>
+                                        <td class="text-bold text-center">
+                                            <div class="row">
+                                                <div class="col-md-3 areaCuposButtonMinus text-red">
+                                                    <i class="fa fa-minus-square" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_widget(cupo.cupoMax,{'attr':{'class':'areaContador cpCupos text-extra-large' } }) }}
+                                                </div>
+                                                <div class="col-md-3 areaCuposButtonPlus text-green">
+                                                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="row">
+                    <div class="form-group pull-right text-right col-md-3">
+                        {{form_widget(form.submit, { 'attr': {'class': 'btn-primary btn'} })}}
+                    </div>
+                </div>
+            </div>
+            <div class="hiddens">
+                {{ form_rest(form) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/common/plugins/select2/select2.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/acreditacion/css/area.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/layout.css' ) }}" />
+{% endblock %}
+{% block otherJavascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/common/plugins/select2/select2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/acreditacion/js/jQuery-Mask-Plugin-master/src/jquery.mask.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/acreditacion/js/area.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $.Area.init("{{ path('area_delete') }}");
+            $.Area.initMask();
+            $('#juegosba_acreditacionbundle_area_funcionesPermitidas').select2();
+            $('#juegosba_acreditacionbundle_area_usuariosResponsables').select2();
+        });
+    </script>
+{% endblock %}   

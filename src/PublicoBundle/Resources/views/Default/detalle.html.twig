@@ -1,0 +1,94 @@
+{% extends 'PublicoBundle::layout.html.twig' %}
+
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 style="color: #000;text-align: center;font-weight: bold;">
+                Final Provincial 2016
+                <a href="{{ path('publico_index') }}" class="btn-info btn pull-right"><span class="fa fa-home"></span> Volver</a>
+            </h2>
+        </div>
+    </div>
+    {#
+    <div class="row">
+        <div class="col-sm-4" style="overflow: hidden;">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Filtro <span class="text-bold">Municipio + Fecha</span>
+                        <span class="badge badge-danger pull-right" title="Eventos filtrados">
+                            <span class="fa fa-filter"></span>
+                            <span id="eventos_filtrados"></span>
+                        </span>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    {{ form(formMunicipio) }}
+                    <div id="tree" class="tree-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" style="overflow: hidden;">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Filtro <span class="text-bold">Municipio + Fecha</span>
+                        <span class="badge badge-danger pull-right" title="Eventos filtrados">
+                            <span class="fa fa-filter"></span>
+                            <span id="eventos_filtrados"></span>
+                        </span>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    {{ form(formEvento) }}
+                    <div id="tree" class="tree-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" style="overflow: hidden;">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Filtro <span class="text-bold">N° Evento</span>
+                        <span class="badge badge-danger pull-right" title="Eventos filtrados">
+                            <span class="fa fa-filter"></span>
+                            <span id="eventos_filtrados"></span>
+                        </span>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(formNroEvento) }}
+                    {{ form_row(formNroEvento.Evento) }}
+                        <div style="visibility: hidden">
+                            {{ form_row(formNroEvento.EventoAux) }}
+                        </div>
+                    {{ form_end(formNroEvento) }}
+                    <div id="tree" class="tree-demo"></div>
+                </div>
+            </div>
+        </div>         
+    </div>
+    #}
+    <div class="row">
+        <div class="col-md-12">
+            <div id="blockContenidoData" class="panel panel-white">    
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title">Evento : <strong> {{ evento }}</strong></h4>
+                </div>    
+                <div class="panel-body">      
+                    {% if evento.etapas | length  %}
+                        {{ include('PublicoBundle:Default:detalle.definido.html.twig') }}
+                    {% else %}
+                        <div class="alert alert-block alert-danger fade in">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                            <p>
+                                Por el momento no hay datos del evento disponibles.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>                
+{% endblock %}

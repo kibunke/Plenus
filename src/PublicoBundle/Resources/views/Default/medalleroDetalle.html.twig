@@ -1,0 +1,82 @@
+{% extends 'PublicoBundle::layout.html.twig' %}
+
+{% block contenido %}
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="{{ path('publico_index') }}" style="color: inherit;cursor: pointer">
+                <h2 style="color: #000;text-align: center;font-weight: bold;">Final Provincial 2016</h2>
+            </a>
+        </div>
+        <div class="col-sm-12">
+            <div class="col-sm-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title">Listado de medallas de<span class="text-bold"> {{ municipios[pos]["nombre"] }}</span></h4>
+                        <ul class="panel-heading-tabs border-light">
+                            <li>
+                                <div class="pull-right" style="font-size: 20px" title="Posición">
+                                    <i class="fa fa-trophy text-red"></i><span class="text-bold"> {{ pos +1 }} </span>
+                                </div>
+                            </li>            
+                            <li>
+                                <div class="pull-right" style="font-size: 20px" title="Oro">
+                                    <img style="height: 20px;" src="{{ asset('bundles/resultado/images/medallas/oro_thumb.png') }}"><span class="text-bold"> {{ municipios[pos]["medallero"][0] }} </span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="pull-right" style="font-size: 20px" title="Plata">
+                                    <img style="height: 20px;" src="{{ asset('bundles/resultado/images/medallas/plata_thumb.png') }}"></i><span class="text-bold"> {{ municipios[pos]["medallero"][1] }} </span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="pull-right" style="font-size: 20px" title="Bronce">
+                                    <img style="height: 20px;" src="{{ asset('bundles/resultado/images/medallas/bronce_thumb.png') }}"><span class="text-bold"> {{ municipios[pos]["medallero"][2] }} </span>
+                                </div>
+                            </li>      
+                        </ul>                        
+                    </div>
+                    <div class="panel-body no-padding">
+                        <div class="tabbable no-margin no-padding partition-dark">
+                            <div class="tab-content partition-white">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="center"></th>
+                                            <th>Medalla</th>
+                                            <th>Evento</th>
+                                            <th>Otras Medallas del evento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for plaza in plazas %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td><img src="{{ asset(plaza.getMedalla) }}"></td>
+                                                <td>
+                                                    <a href="{{ path('publico_detalle_evento', {'evento' : plaza.equipo.evento.id }) }}" style="color: inherit;cursor: pointer">
+                                                        {{ plaza.equipo.evento.getNombreCompletoRaw | raw }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {% for pl in plaza.equipo.evento.getPlazasMedallero if pl.id != plaza.id %}
+                                                        {% if (pl.equipo) %}
+                                                            <p>
+                                                                <a href="{{ path('publicoMedallero_detalle', {'id' : pl.equipo.municipio.id }) }}" style="color: inherit;cursor: pointer;margin: 5px;">
+                                                                    <img style="height: 20px;" src="{{ asset(pl.getMedalla) }}">  {{ pl.equipo.municipio.nombre }}
+                                                                </a>
+                                                            </p>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% block acreditacion_tab_personal %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS DE IDENTIFICACION</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <div class=" col-md-6 datosIzq form-group">
+        <div class="form-group">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Apellido:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosPersonales().getApellido() | capitalize }}  </p>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Nombre:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosPersonales().getNombre() | capitalize }}  </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Documento:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large"><strong>{{ entity.getDatosPersonales().getDocumentoTipo() | upper }}: </strong> {{ entity.getDatosPersonales().getDocumentoNro() }}  </p>
+            </div>
+        </div>
+    </div>
+    <div class=" col-md-6 datosDer form-group">
+        <div class="form-group">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Fecha de Nacimiento:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosPersonales().getFechaNacimiento() | date('d/m/Y') }} </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Email:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosPersonales().getEmail() | lower }} </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Género:</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">
+                    {% if entity.getDatosPersonales().getSexo() == 'f' %}
+                        Femenino
+                    {% else %}
+                        Masculino
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosPersonales.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}
+{% endblock %}

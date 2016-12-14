@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html lang="es">
+    <head>
+		<title>Juegos Bonaerenses {{ "now"|date("Y") }}</title>
+		<!-- start: META -->
+		<meta charset="utf-8" />
+		<!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="Web Oficial de los Juegos Bonaerenses, Subsecretaría de Deportes de La Provincia de Buenos Aires" />
+		<meta name="author" content="WitApp.com.ar"/>		
+
+        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"> 
+
+		{% block stylesheetsCore %}
+			<link rel="stylesheet" href="{{ asset('assets/css/bundled.min.css') }}">
+		{% endblock %}
+
+        {% block otherStylesheets %}{% endblock %}
+    </head>
+	{% block bodyTag %}
+    <body>
+	{% endblock %}
+		<div class="main-wrapper">
+			{% block topBar %}
+				{% include 'CommonBundle::topBar.html.twig' %}
+			{% endblock %}
+			{% block leftBar %}
+				{% include 'CommonBundle::leftBar.html.twig' %}
+			{% endblock %}	
+			{% block contenidoModal %}
+				{% include 'CommonBundle::modal.html.twig' with { 'idModal': 'panel-config' } %}
+			{% endblock %}
+			{#% block menu %}
+				{% include 'CommonBundle::menu.html.twig'%}            
+			{% endblock %#}
+			{% block contenido %}
+				<!-- start: MAIN CONTAINER -->							
+				<div class="main-container inner">
+					<!-- start: PAGE -->
+					<div class="main-content">
+						<div class="container">
+							<!-- start: PAGE HEADER -->
+							<!-- start: TOOLBAR -->
+							{% block contenidoToolbar %}{% endblock %}
+							<!-- end: TOOLBAR -->
+							<!-- end: PAGE HEADER -->
+							<!-- start: BREADCRUMB -->
+							{% block contenidoBreadcrumb %}
+								<div class="row">
+									<div class="col-md-12">
+										<ol class="breadcrumb">
+											<li>
+												<a href="#">
+													Dashboard
+												</a>
+											</li>
+											<li class="active">
+												Blank Page
+											</li>
+										</ol>
+									</div>
+								</div>
+							{% endblock %}
+							<!-- end: BREADCRUMB -->
+							<!-- start: PAGE CONTENT -->
+							<div id="blockContenidoContent">
+								{% block contenidoContent %}
+									<div class="row">
+										<div class="col-md-12">
+											<div id="blockContenidoData" class="panel panel-white">
+												{% block contenidoData %}{% endblock %}
+											</div>
+										</div>
+									</div>
+								{% endblock %}
+							</div>
+						</div>
+						<!-- end: PAGE CONTENT-->
+						<div class="subviews">
+							<div class="subviews-container"></div>
+						</div>                
+					</div>
+					<!-- end: PAGE -->
+				</div>
+				<!-- end: MAIN CONTAINER -->
+			{% endblock %}
+		</div>
+        
+		{% block javaScript %}
+			<script src="{{ asset('assets/js/bundled.min.js') }}" type="text/javascript" charset="utf8"></script>
+		{% endblock %}
+		{% block otherAutomaticJavascripts %}{% endblock %}
+		<!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		{% block otherJavascripts %}{% endblock %}
+		{% block otherAjaxJavascripts %}{% endblock %}		
+		{% block flashMessages %}
+			{% include 'CommonBundle::flash.messages.html.twig'%}
+		{% endblock %}
+		{% block footer %}
+			<!-- start: FOOTER -->
+			<footer class="inner">
+				<div class="footer-inner">
+					<div class="pull-left">
+						{{ "now"|date("Y") }} © Departamento de Informática, Subsecretaría de Deportes de la Provincia de Buenos Aires. <span class="text-blue">By <a href="http://www.witapp.com.ar" target="_blank">WitApp.com.ar</a></span>
+					</div>
+					<div class="pull-right">
+						<span class="go-top"><i class="fa fa-chevron-up"></i></span>
+					</div>
+				</div>
+			</footer>
+			<!-- end: FOOTER -->
+		{% endblock %}
+		<script>
+			$(document).ready(function(){
+				$.Main.init();
+			});
+		</script>
+    </body>  
+</html>

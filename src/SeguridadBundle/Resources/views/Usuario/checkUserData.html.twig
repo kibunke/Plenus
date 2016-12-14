@@ -1,0 +1,36 @@
+{% extends "SeguridadBundle::layout.html.twig" %}
+
+{% block othersCSS %}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="main-login col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+            <!-- start: LOGIN BOX -->
+            <div class="box-login" style="display: block !important;">
+                <h3>Esto debe chequear los datos del usuario</h3>
+                <p>
+                    Lo tengo que hacer !
+                </p>
+                <!-- start: COPYRIGHT -->
+                <div class="copyright">
+                    {{ "now"|date("Y") }} &copy; Departamento de informática, Sub-secretaría de Deportes de la Provincia de Buenos Aires.
+                </div>
+                <!-- end: COPYRIGHT -->
+            </div>
+            <!-- end: LOGIN BOX -->
+        </div>
+    </div>
+{% endblock %}
+{% block othersJavaScript %}
+    <script>
+        (()=> {
+            "use strict";
+            window.User = window.User || {}; //global variable, the root of our namespace
+            //main function to initiate template pages
+            User.init = (error)=> {
+                $('#currentPassword').focus();
+            }      
+        })();
+        $().ready(()=>{User.init()});
+    </script>    
+{% endblock %}
+{% block footerAll %}{% endblock %}

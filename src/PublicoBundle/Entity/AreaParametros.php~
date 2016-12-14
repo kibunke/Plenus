@@ -1,0 +1,362 @@
+<?php
+
+namespace JuegosBA\AcreditacionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * JuegosBA\AcreditacionBundle\Entity\AreaParametros
+ * @ORM\Table(name="services_juegosba_final.AreaParametros")
+ * @ORM\Entity(repositoryClass="JuegosBA\AcreditacionBundle\Entity\Repository\AreaParametrosRepository")
+ */
+class AreaParametros {
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var integer $cupoMaxHoteleria
+     * 
+     * @ORM\Column(name="cupoMaxHoteleria", type="integer")
+     */
+    private $cupoMaxHoteleria;
+
+    /**
+     * @var integer $cupoMaxHoteleriaGestion
+     * 
+     * @ORM\Column(name="cupoMaxHoteleriaGestion", type="integer")
+     */
+    private $cupoMaxHoteleriaGestion;
+    
+    /**
+     * @var integer $cupoMaxPersonal
+     * 
+     * @ORM\Column(name="cupoMaxPersonal", type="integer")
+     */
+    private $cupoMaxPersonal;
+    
+    /**
+     * @var integer $cupoMaxPersonalGestion
+     * 
+     * @ORM\Column(name="cupoMaxPersonalGestion", type="integer")
+     */
+    private $cupoMaxPersonalGestion;
+    
+    /**
+     * @var integer $cupoMaxTransporte
+     * 
+     * @ORM\Column(name="cupoMaxTransporte", type="integer")
+     */
+    private $cupoMaxTransporte;
+    
+    /**
+     * @var integer $cupoMaxTransporteGestion
+     * 
+     * @ORM\Column(name="cupoMaxTransporteGestion", type="integer")
+     */
+    private $cupoMaxTransporteGestion;
+    
+    /**
+     * @var integer $cupoMaxCat0
+     * 
+     * @ORM\Column(name="cupoMaxCat0", type="integer")
+     */
+    private $cupoMaxCat0;
+    
+    /**
+     * @var integer $cupoMaxCat1
+     * 
+     * @ORM\Column(name="cupoMaxCat1", type="integer")
+     */
+    private $cupoMaxCat1;
+    
+    /**
+     * @var integer $cupoMaxCat2
+     * 
+     * @ORM\Column(name="cupoMaxCat2", type="integer")
+     */
+    private $cupoMaxCat2;
+    
+    /**
+     * @var integer $cupoMaxCat3
+     * 
+     * @ORM\Column(name="cupoMaxCat3", type="integer")
+     */
+    private $cupoMaxCat3;
+    
+    /**
+     * @var integer $cupoMaxCat4
+     * 
+     * @ORM\Column(name="cupoMaxCat4", type="integer")
+     */
+    private $cupoMaxCat4;
+    
+    /**
+     * @var integer $cupoMaxCat5
+     * 
+     * @ORM\Column(name="cupoMaxCat5", type="integer")
+     */
+    private $cupoMaxCat5;
+    
+    /**
+     * @var integer $cupoMaxCat6
+     * 
+     * @ORM\Column(name="cupoMaxCat6", type="integer")
+     */
+    private $cupoMaxCat6;
+    
+    /**
+     * @var integer $cupoMaxCatGestion0
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion0", type="integer")
+     */
+    private $cupoMaxCatGestion0;
+    
+    /**
+     * @var integer $cupoMaxCatGestion1
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion1", type="integer")
+     */
+    private $cupoMaxCatGestion1;
+    
+    /**
+     * @var integer $cupoMaxCatGestion2
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion2", type="integer")
+     */
+    private $cupoMaxCatGestion2;
+    
+    /**
+     * @var integer $cupoMaxCatGestion3
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion3", type="integer")
+     */
+    private $cupoMaxCatGestion3;
+    
+    /**
+     * @var integer $cupoMaxCatGestion4
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion4", type="integer")
+     */
+    private $cupoMaxCatGestion4;
+    
+    /**
+     * @var integer $cupoMaxCatGestion5
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion5", type="integer")
+     */
+    private $cupoMaxCatGestion5;
+    
+    /**
+     * @var integer $cupoMaxCatGestion6
+     * 
+     * @ORM\Column(name="cupoMaxCatGestion6", type="integer")
+     */
+    private $cupoMaxCatGestion6;
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    private $createdAt;
+    
+    /**
+     * @var JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * 
+     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * 
+     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */   
+    private $updatedBy;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set cupoMaxPersonal
+     *
+     * @param integer $cupoMaxPersonal
+     * @return AreaParametros
+     */
+    public function setCupoMaxPersonal($cupoMaxPersonal)
+    {
+        $this->cupoMaxPersonal = $cupoMaxPersonal;
+
+        return $this;
+    }
+
+    /**
+     * Get cupoMaxPersonal
+     *
+     * @return integer 
+     */
+    public function getCupoMaxPersonal()
+    {
+        return $this->cupoMaxPersonal;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return AreaParametros
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return AreaParametros
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @return AreaParametros
+     */
+    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set updatedBy
+     *
+     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @return AreaParametros
+     */
+    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedBy
+     *
+     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * Set cupoMaxPersonalGestion
+     *
+     * @param integer $cupoMaxPersonalGestion
+     * @return AreaParametros
+     */
+    public function setCupoMaxPersonalGestion($cupoMaxPersonalGestion)
+    {
+        $this->cupoMaxPersonalGestion = $cupoMaxPersonalGestion;
+
+        return $this;
+    }
+
+    /**
+     * Get cupoMaxPersonalGestion
+     *
+     * @return integer 
+     */
+    public function getCupoMaxPersonalGestion()
+    {
+        return $this->cupoMaxPersonalGestion;
+    }
+
+    /**
+     * Set cupoMaxHoteleria
+     *
+     * @param integer $cupoMaxHoteleria
+     * @return AreaParametros
+     */
+    public function setCupoMaxHoteleria($cupoMaxHoteleria)
+    {
+        $this->cupoMaxHoteleria = $cupoMaxHoteleria;
+    
+        return $this;
+    }
+
+    /**
+     * Get cupoMaxHoteleria
+     *
+     * @return integer 
+     */
+    public function getCupoMaxHoteleria()
+    {
+        return $this->cupoMaxHoteleria;
+    }
+}

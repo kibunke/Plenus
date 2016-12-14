@@ -1,0 +1,275 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * County
+ *
+ * @ORM\Table(name="plenus_admin.County")
+ * @ORM\Entity
+ */
+class County
+{
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=50)
+     */
+    private $name;
+
+     /**
+     * @ORM\ManyToOne(targetEntity="State", inversedBy="counties")
+     * @ORM\JoinColumn(name="state_id", referencedColumnName="id")
+     */
+    private $state;
+
+     /**
+     * @ORM\OneToMany(targetEntity="City", mappedBy="county", cascade={"persist"})
+     */
+    private $cities;
+
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updateBy", referencedColumnName="id")
+     */
+    private $updateBy;
+
+    /**
+     * Constructor
+     */       
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->cities = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * __toString
+     */ 
+    public function __toString(){
+        return $this->getName();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return County
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return County
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return County
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set state
+     *
+     * @param \CommonBundle\Entity\State $state
+     *
+     * @return County
+     */
+    public function setState(\CommonBundle\Entity\State $state = null)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return \CommonBundle\Entity\State
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Add city
+     *
+     * @param \CommonBundle\Entity\City $city
+     *
+     * @return County
+     */
+    public function addCity(\CommonBundle\Entity\City $city)
+    {
+        $this->cities[] = $city;
+
+        return $this;
+    }
+
+    /**
+     * Remove city
+     *
+     * @param \CommonBundle\Entity\City $city
+     */
+    public function removeCity(\CommonBundle\Entity\City $city)
+    {
+        $this->cities->removeElement($city);
+    }
+
+    /**
+     * Get cities
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCities()
+    {
+        return $this->cities;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \UserControlBundle\Entity\User $createdBy
+     *
+     * @return County
+     */
+    public function setCreatedBy(\UserControlBundle\Entity\User $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \UserControlBundle\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set updateBy
+     *
+     * @param \UserControlBundle\Entity\User $updateBy
+     *
+     * @return County
+     */
+    public function setUpdateBy(\UserControlBundle\Entity\User $updateBy = null)
+    {
+        $this->updateBy = $updateBy;
+
+        return $this;
+    }
+
+    /**
+     * Get updateBy
+     *
+     * @return \UserControlBundle\Entity\User
+     */
+    public function getUpdateBy()
+    {
+        return $this->updateBy;
+    }
+}

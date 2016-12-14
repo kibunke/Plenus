@@ -1,0 +1,177 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Vista de impresión <small></small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    {% if is_granted('ROLE_SORTEO_SHOW') %}
+                        <li class="dropdown">
+                            <a  href="{{ path('sorteo_carga') }}" >
+                                <i class="fa fa-arrow-left"></i> VOLVER
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{{ path('finalistas_evento_print', {'id': evento.id }) }}" onclick="/*$.Default.print()*/">
+                                <i class="fa fa-print"></i> IMPRIMIR
+                            </a>
+                        </li>                        
+                    {% endif %}
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('sorteo_carga') }}">
+                        Sorteo
+                    </a>
+                </li>
+                <li class="active">
+                    Vista de impresión
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <style>
+        #finalistasTable th{
+            text-align: center;
+            background: #ccc;
+        }        
+    </style>
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            Tabla de <span class="text-bold">Finalistas.</span>           
+        </h4>
+        <div class="panel-tools">
+            {{ include('CommonBundle::dropdownTables.html.twig') }}
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="finalistasTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th colspan="4">{{ evento }}</th>
+                </tr>
+                <tr>
+                    <th>Región</th>
+                    <th>Equipo</th>
+                    <th title="Observaciones">Obs</th>
+                    <th>Participantes</th>
+                </tr>               
+            </thead>
+            <tbody>
+                {% for equipo in evento.equipos %}
+                    <tr>
+                        <td class="center">{{ equipo.municipio.getCruceRegionalRaw | raw }}</td>
+                        <td>{{ equipo.getNombreCompletoRaw | raw }}</td>
+                        <td>{{ equipo.descripcion }}</td>
+                        <td>
+                            {% for participante in equipo.participantes %}
+                                <li>
+                                    {{ participante.apellido }}, {{ participante.nombre }}  {{ participante.documentoNro }}<small> ({{ participante.rol }})</small>
+                                </li>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>    
+{% endblock %}
+{% block otherStylesheets %}
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            $.Default = $.Default || {};
+            $.Default.init = function() {
+                table=$('#finalistasTable').dataTable( {
+                    "language": {
+                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                    },
+                    "columnDefs": [ {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": [2,3]
+                    } ],
+                    "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]], // change per page values here
+                    "order": [[ 0, 'asc' ]]            
+                });                  
+            }
+            $.Default.print = function() {
+                w=window.open();
+                w.document.write($('head').html());
+                w.document.write("<body style='background-color:#fff'>");
+                w.document.write($('#finalistasTable').parent().html());
+                w.document.write("</body>");
+                w.print();
+                w.close();
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();$.TableExport.init()});
+        
+        (function ($) {
+            var exportTable = "#finalistasTable";
+            var ignoreColumn;
+            // no se sobreescribe el namespace, si ya existe
+            $.TableExport = $.TableExport || {};
+            $.TableExport.init = function() {
+				$(".export-excel").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'excel',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+				$(".export-doc").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'doc',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+				$(".export-csv").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'csv',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});
+				$(".export-txt").on("click", function(e) {
+					e.preventDefault();
+					$(exportTable).tableExport({
+						type: 'txt',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+				});            
+            }
+        })(jQuery);
+    </script>
+{% endblock %}

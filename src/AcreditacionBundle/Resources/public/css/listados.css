@@ -1,0 +1,60 @@
+#listadoTable thead tr  th{
+    background-color: #5f8295;
+    color: #f9f9f9;
+    overflow: no-display;
+    border: 1px solid #dfe1e5;
+}
+#listadoTable .header5p{
+    width: 5% !important;
+}
+#listadoTable .header15p{
+    width: 15% !important;
+}
+#listadoTable .header20p{
+    width: 20% !important;
+}
+#listadoTable .header35p{
+    width: 35% !important;
+}
+#listadoTable .header10p{
+    width: 10% !important;
+}
+#listadoTable .header25p{
+    width: 25% !important;
+}
+#listadoTable .header40p{
+    width: 40% !important;
+}
+#acreditadosNombreFila > div{
+    padding: 0px;
+    margin: 0px;
+}
+.panel-white .table, .partition-white .table{
+    font-size: 12px;
+}
+
+#avatarContainer{
+    width: 10% ;
+}
+#avatarContainer img{
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px;
+}
+
+#acreditacionTable td.colNombre > div:last-child{
+    padding-top: 2%;
+    padding-left: 10px;
+    padding-right: 0px;
+}
+
+#listadoTable img.imgAll{
+    width: 30px;
+}
+#listadoTable div.media div.media-body{
+    vertical-align: middle;
+}
+#listadoTable img{
+    width: 50px;
+    margin: 0px;
+}

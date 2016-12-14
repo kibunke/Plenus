@@ -1,0 +1,236 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% if accion == 'NUEVO'%}
+    {% form_theme form.datosAcreditativoVal 'AcreditacionBundle:Fields:next.html.twig' %}
+    {% form_theme form.backDatosPersonales 'AcreditacionBundle:Fields:back.html.twig' %}
+    {% form_theme form.datosPersonalesVal 'AcreditacionBundle:Fields:next.html.twig'  %}
+    {% form_theme form.datosAcreditativoVal 'AcreditacionBundle:Fields:next.html.twig' %}
+    {% form_theme form.backDatosPersonales 'AcreditacionBundle:Fields:back.html.twig' %}
+    {% form_theme form.backDatosTesoreria 'AcreditacionBundle:Fields:back.html.twig' %}
+    {% form_theme form.datosTesoreriaVal 'AcreditacionBundle:Fields:next.html.twig' %}
+    {% form_theme form.backDatosAcreditativo 'AcreditacionBundle:Fields:back.html.twig' %}
+{% endif %}
+
+{% form_theme form.submit 'AcreditacionBundle:Fields:submit.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-md-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-users"></i> Acreditacion<small>Administración del personal de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{% if (urlback == '') %} {{ path('acreditacion_listado_area') }} {% else %} {{urlback}} {% endif %}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                    {% if (((accion == 'VER') or (accion == 'EDITAR')) and (is_granted("ROLE_ACREDITACION_SHOW"))) %}
+                        <li class="dropdown">
+                            <a  onclick="acreditacionExport();" href="#" >
+                                <i class="fa fa-file-text" aria-hidden="true"></i>  CREDENCIAL
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('acreditacion_listado_area') }}">
+                        Acreditados
+                    </a>
+                </li>
+                <li class="active">
+                    {{ accion |capitalize }}
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        {% block navegacion %}
+
+            <ul id="acreditacionNav" class="nav nav-tabs nav-justified {% if(hasError) %}hasError{% endif %}">
+                {% block acreditacion_tab_personal %}
+                    <li role="presentation">
+
+                        {% if accion == 'EDITAR' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_edit', {'step':'dpersonales' , 'id': entity.getId()}) }}');"  >
+                                <h4 class="panel-title">DATOS DE IDENTIFICACION</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'VER' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_show', {'step':'dpersonales' , 'id': entity.getId()}) }}');"  >
+                                <h4 class="panel-title">DATOS DE IDENTIFICACION</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'NUEVO' %}
+                            <a href="#" class="acreditacion-nolink">
+                                <h4 class="panel-title">DATOS DE IDENTIFICACION</h4>
+                            </a>
+                        {% endif %}
+
+
+                    {% endblock %}
+                    {% block acreditacion_tab_acreditacion %}
+                    <li role="presentation">
+                        {% if accion == 'EDITAR' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_edit', {'step':'dacreditacion' , 'id': entity.getId()}) }}');">
+                                <h4 class="panel-title">DATOS DE ACREDITACION</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'VER' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_show', {'step':'dacreditacion' , 'id': entity.getId()}) }}');" >
+                                <h4 class="panel-title">DATOS DE ACREDITACION</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'NUEVO' %}
+                            <a href="#" class="acreditacion-nolink">
+                                <h4 class="panel-title">DATOS DE ACREDITACION</h4>
+                            </a>
+                        {% endif %}
+
+                    {% endblock %}
+                    {% block acreditacion_tab_tesoreria %}
+                    <li role="presentation">
+                        {% if accion == 'EDITAR' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_edit', {'step':'dtesoreria' , 'id': entity.getId()}) }}');" >
+                                <h4 class="panel-title">DATOS DE TESORERIA</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'VER' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_show', {'step':'dtesoreria' , 'id': entity.getId()}) }}');"  >
+                                <h4 class="panel-title">DATOS DE TESORERIA</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'NUEVO' %}
+                            <a href="#" class="acreditacion-nolink">
+                                <h4 class="panel-title">DATOS DE TESORERIA</h4>
+                            </a>
+                        {% endif %}
+
+                    {% endblock %}
+                    {% block acreditacion_tab_operativo %}
+                    <li role="presentation">
+
+
+                        {% if accion == 'EDITAR' %}
+                            <a href="#"onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_edit', {'step':'doperativo' , 'id': entity.getId()}) }}');" >
+                                <h4 class="panel-title">DATOS OPERATIVOS</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'VER' %}
+                            <a href="#" onclick="$.Default.loading();
+                                    window.location.replace('{{ path('personaljuegos_show', {'step':'doperativo' , 'id': entity.getId()}) }}');"  >
+                                <h4 class="panel-title">DATOS OPERATIVOS</h4>
+                            </a>
+                        {% endif %}
+                        {% if accion == 'NUEVO' %}
+                            <a href="#" class="acreditacion-nolink">
+                                <h4 class="panel-title">DATOS OPERATIVOS</h4>
+                            </a>
+                        {% endif %}
+
+                    {% endblock %}
+            </ul>
+
+        {% endblock %}
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="acreditacion-body" class="col-md-12 {% if(hasError) %}hasError{% endif %}">    
+            {{ form_start(form, {'attr':{'novalidate':'novalidate' } }) }}
+            {{ form_errors(form)}}
+            {{ global_form_errors(form) }}
+            <div id="acreditacion_step" class="form-group">
+                {% block acreditacion_contenido %}
+                {% endblock %}
+            </div>
+            <div class="hidden">
+                {{ form_rest(form) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div id="acreditacionExport" class="modal fade " tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title"><i class="fa fa-file-text" aria-hidden="true"></i>  CREDENCIAL</h5>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/layout.css' ) }}" />
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/layout.js' )}}"></script>
+    <script type="text/javascript">
+                                function acreditacionExport() {
+                                    $("#acreditacionExport div.modal-body").html('<object id="acreditacionObject" data="{{ path('acreditacion_imprimir', {'data': [entity.id] |json_encode() } )}}" type="application/pdf" ></object>');
+                                    $("#acreditacionExport").modal();
+                                }
+                                $(document).ready(function () {
+                                    $.Default.init();
+                                });
+    </script>
+{% endblock %}

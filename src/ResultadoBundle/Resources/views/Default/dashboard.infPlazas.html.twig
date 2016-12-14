@@ -1,0 +1,93 @@
+<div class="panel panel-blue">
+    <div class="panel-heading border-light">
+        <h4 class="panel-title">Informe <span class="text-bold">Plazas</span></h4>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-white">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Refresh </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-config" href="#panel-config" data-toggle="modal">
+                            <i class="fa fa-wrench"></i> <span>Configurations</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a class="btn btn-xs btn-link panel-close" href="#">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-5" style="padding-top: 55px;">
+                <div class="easy-pie-chart easy-pie-chart-admin">
+                    <span class="cpu number appear" data-percent="{{ (plazasAsignadas | length *100)/ plazasSinMedallero | length }}" data-plugin-options='{"barColor": "#35aa47"}'><span class="percent"></span></span>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="space20 padding-5 border-bottom border-light">
+                    <h4 class="pull-left no-margin space5">0</h4>
+                    <div class="clearfix"></div>
+                    <span class="text-light">a</span>
+                </div>
+                <div class="space20 padding-5 border-bottom border-light">
+                    <h4 class="pull-left no-margin space5">{{ eventos_plazas_sin_definir | length }} Eventos</h4>
+                    <div class="clearfix"></div>
+                    <span class="text-light">tiene plazas libres</span>
+                </div>
+                <div class="space20 padding-5 border-bottom border-light">
+                    <h4 class="pull-left no-margin space5">{{ disciplinas_plazas_sin_definir | length }} Disciplinas</h4>
+                    <div class="clearfix"></div>
+                    <span class="text-light">tiene plazas libres</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer partition-white">
+        <div class="clearfix padding-5 space5">
+            <div class="col-xs-4 text-center no-padding">
+                <div class="border-right border-dark">
+                    <span class="text-bold block text-extra-large">{{ plazasSinMedallero | length }}</span>
+                    <span class="text-light">Total</span>
+                </div>
+            </div>
+            <div class="col-xs-4 text-center no-padding">
+                <div class="border-right border-dark">
+                    <span class="text-bold block text-extra-large">{{ plazasAsignadas | length }}</span>
+                    <span class="text-light">Asignadas</span>
+                </div>
+            </div>
+            <div class="col-xs-4 text-center no-padding" style="cursor: pointer;" onclick="$.Dashboard.infPlazas.showEventosSinPlaza()">
+                <span class="text-bold block text-extra-large">{{ plazasSinAsignar | length }}</span>
+                <span class="text-light">Restan</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function ($) {
+        // no se sobreescribe el namespace, si ya existe
+        $.Dashboard = $.Dashboard || {};            
+        $.Dashboard.eventosPlazasSinAsignar=[
+            {% for item in eventos_plazas_sin_definir %}
+                {"id":{{item.id}},"disciplina":"{{ item.disciplina }}","nombre":"{{ item.nombreCompleto }}", "path":"{{ path('resultado_evento_edit', {'id' : item.id }) }}"},
+            {% endfor %}
+        ];
+
+    })(jQuery);
+</script>

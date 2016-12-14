@@ -1,0 +1,25 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\CompetenciaEliminacionDirectaTantos
+ *
+ * @ORM\Entity()
+ *
+ */
+class CompetenciaEliminacionDirectaTantos extends CompetenciaEliminacionDirecta
+{
+    /** 
+     * Get newPartido
+     *
+     * @return \JuegosBA\ResultadoBundle\Entity\Partido
+     */
+    public function newPartido($user = null)
+    {
+        return new PartidoTantos($user);
+    }  
+}

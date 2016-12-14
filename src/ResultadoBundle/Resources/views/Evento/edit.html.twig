@@ -1,0 +1,365 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-edit"></i> Editando </h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>            
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <li class="dropdown">
+                        <a  href="{{ path('resultados') }}">
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('resultados') }}">
+                        Resultados
+                    </a>
+                </li>
+                <li class="active">
+                    Evento : {{ evento }}
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading border-light">
+        <h4 class="panel-title">Evento : <strong> {{ evento }}</strong></h4>
+        <ul class="panel-heading-tabs border-light">
+            <li>
+                <div class="pull-right" style="font-size: 20px" title="ID del evento">
+                    <i class="fa fa-key text-yellow"></i><span class="text-bold"> {{ evento.id }} </span>
+                </div>
+            </li>
+            {#
+            <li>
+                <div class="pull-right" style="font-size: 20px" title="Inscriptos en el evento">
+                    <i class="fa fa-users text-red"></i><span class="text-bold"> {{ evento.inscriptos | length }} </span>
+                </div>
+            </li>
+            #}
+            <li class="stats" data-update="{{ path('resultado_evento_stats_ganadores', {'id':evento.id}) }}">
+                <div class="pull-right" style="font-size: 20px" title="Ganadores de regional asignados">
+                    <a href="{{ path('ganadores_evento', { 'id': evento.id }) }}">
+                        <i class="fa fa-users text-red"></i><span class="text-bold change-value"> {{ evento.getStatsEquipos() }}</span>
+                    </a>
+                </div>
+            </li>
+            <li class="stats" data-update="{{ path('resultado_evento_stats_plazas', {'id':evento.id}) }}">
+                <div class="pull-right" style="font-size: 20px" title="Total de plazas asignadas">
+                    <i class="fa fa-users text-azure"></i><span class="text-bold change-value"> {{ evento.getStatsPlazas() }}</span>
+                </div>
+            </li>            
+            <li class="stats" data-update="{{ path('resultado_evento_stats_avance', {'id':evento.id}) }}">
+                <div class="rate" title="% completado del evento">
+                    <span class="value change-value">{{ evento.getState() }}</span><span class="percentage">%</span>
+                </div>
+            </li>
+            <li class="panel-tools">
+                {{ include('CommonBundle::dropdownTables.html.twig') }}
+            </li>
+        </ul>
+    </div>    
+    <div class="panel-body">      
+        {% if evento.etapas | length  %}
+            {{ include('ResultadoBundle:Evento:edit.definido.html.twig') }}
+        {% else %}
+            <div class="alert alert-block alert-danger fade in">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                <p>
+                    Este <strong>evento</strong> no tiene etapas de competencias definidas.<br>
+                    <li>Si usted cuenta con los <strong>permisos</strong> necesarios para crear etapas de competencia verá a continuación dichas opciones.</li>
+                    <li>En caso contrario contacte a un usuario con más privilegios.</li>
+                </p>
+                <p>
+                    {% if is_granted('ROLE_ETAPA_NEW') %}
+                        <a href="#example-subview-1" onclick="$.Evento.etapa.add('{{ path('resultado_etapa_new', { 'id': evento.id }) }}')" class="btn btn-green tooltips show-sv" data-placement="top" data-original-title="Crear" data-startFrom="right">
+                            <span class="fa fa-edit"></span> Crear etapa de competencia
+                        </a>
+                        <a href="#example-subview-1" onclick="$.Evento.etapa.add('{{ path('resultado_competencia_template', { 'id': evento.id }) }}')" class="btn btn-orange tooltips show-sv" data-placement="top" data-original-title="Crear" data-startFrom="right">
+                            <span class="fa fa-edit"></span> Ver Templates disponibles
+                        </a>                        
+                    {% endif %}
+                    <a href="{{ path('resultados') }}" class="btn btn-light-grey">
+                        <span class="fa fa-arrow-left"></span> Cancelar y volver.
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+        <!-- start: SUBVIEW EXAMPLE FOR THIS PAGE ONLY -->
+        <div id="example-subview-1" class="no-display">
+            <div class="col-md-10 col-md-offset-1 ajax-cont"></div>
+        </div>        
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+    <style>
+        .dragging li.ui-state-hover {
+            min-width: 240px;
+            background-color:  red;
+        }
+        .dragging .ui-state-hover a {
+            color:green !important;
+            font-weight: bold;
+        }
+        .ui-sortable-helper {
+            visibility: hidden;
+        }
+        .ui-sortable-placeholder td {
+            border-bottom: 2px solid red;
+        }  
+    </style>
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>    
+    <script>
+        (function ($) {
+            var _modoEdicion = false;
+            var _optionBloq = {
+                            overlayCSS: {
+                                backgroundColor: '#fff'
+                            },
+                            message: '<i class="fa fa-spinner fa-spin"></i>',
+                            css: {
+                                border: 'none',
+                                color: '#333',
+                                background: 'none',
+                                padding: '0px'
+                            }
+                        }
+            // no se sobreescribe el namespace, si ya existe
+            $.Evento = $.Evento || {};
+            $.Evento.init = function() {
+                $('.nav-tabs li').on('click',function(){
+                    if (_modoEdicion){
+                        alert("Salga del modo edición para realizar esta tarea!")
+                        return false;                        
+                    }
+                })
+                $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+                $('.sb-toggle-left').trigger('click');
+                $('#okButton').on('click',function(){
+                    $('#panel-config form').submit();
+                });       
+            }
+            $.Evento.etapa = function() {}
+            $.Evento.etapa.add = function(url) {
+                $('#example-subview-1 .ajax-cont').load(url);
+            }
+            $.Evento.etapa.remove = function(url) {
+                jQuery.get(url, function(data){
+                    swal({
+                        title: "Seguro quiere eliminar la etapa y todo sus datos ?",
+                        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Si, eliminar!",
+                        cancelButtonText: "No, cancelar!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                        html: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#deleteFormAux form').submit(function(){
+                                $.Evento.etapa.competencia.request($(this));
+                                return false;
+                            });
+                            $('#deleteFormAux form').submit();
+                        }
+                    });
+                });                
+            }            
+            $.Evento.etapa.competencia = function() {}
+            $.Evento.etapa.competencia.habilitarEdicion = function(id) {
+                _modoEdicion = true;
+                $nodo = $('#'+id);
+                $('.edit-show').removeClass('hidden');
+                $nodo.css('border','1px solid red');
+                $nodo.find('a').addClass('hidden');
+                $nodo.find('tbody').sortable({
+                    stop: function( event, ui ) {
+                        var orden = 1;
+                        $nodo.find("tbody>tr").each(function(){
+                            $td=$(this).find('.td-orden');
+                            text = $td.text();
+                            if (text.indexOf("-")>0) {
+                                text = text.split(' - ');
+                                $td.html('<strong>' + orden + '</strong><small> - ' + text[1] + '</small>');
+                            }else{
+                                console.log(text);
+                                $td.html('<strong>' + orden + '</strong><small> - ' + text + '</small>');
+                            }
+                            orden++;
+                        });
+                    }
+                });                
+            }
+            $.Evento.etapa.competencia.terminarEdicion = function(id,reset) {
+                reset = reset || false;
+                $nodo = $('#'+id);
+                orden = [];
+                $nodo.find("tbody .td-orden").each(function(){
+                    $(this).find('small').remove();
+                    orden.push($(this).parents('tr').data('plaza'));
+                });
+                url = $nodo.data('update');
+                $.post( url, {'ids':orden.toString(),'isReset':reset},function( data ) {
+                    if (data.success) {
+                        swal("Excelente!", data.msj, "success");
+                        _modoEdicion = false;
+                        $('.edit-show').addClass('hidden');
+                        $nodo.find('a').removeClass('hidden');
+                        $nodo.css('border','');
+                        $nodo.find('tbody').sortable('destroy');
+                        $nodo.find('.habilitar_edicion').removeClass('hidden');
+                        if(data.reload){
+                            location.reload();
+                        }
+                    }else{
+                        swal("Cuidado! Imposible guardar", data.msj, "error");
+                    }
+                });            
+            }
+            $.Evento.etapa.competencia.request = function($form) {
+                var $node = $('#'+$form.data('idreload'))
+                
+                if (!$node) {
+                    alert("Ocurrio un error en la actualización");
+                    location.reload();
+                }
+                var updateUrl = $node.data('update');
+                var $panel = $node.parents(".panel");
+                console.log(updateUrl);
+                //$panel.push();
+                var $btn = $('#okButton').button('loading')
+                jQuery.post($form.attr('action'), $form.serialize(), function(data){
+                    if(data.reload){
+                        //alert("reload");
+                        location.reload();
+                    }else if (data.success){
+                        $('#panel-config').modal('hide');
+                        toastr['success'](data.msj, 'Excelente!');
+                        $panel.block(_optionBloq);
+                        $('.stats').block(_optionBloq);
+                        $parent = $node.parent();
+                        $node.remove();
+                        //console.log($parent);
+                        //console.log($form.data('update'));
+                        $parent.load(updateUrl,function(){$panel.unblock();});
+                        //stats-ganadores,
+                        $('.stats').each(function(){
+                            $node = $(this);
+                            (function($node){ 
+                                $.get($node.data('update'),function(data){
+                                    /*
+                                     * si existe la clase 'change-value' reemplaza ahí
+                                     * sino reemplaza todo el nodo
+                                    */
+                                    if ($node.find('.change-value').length) {
+                                        $node.find('.change-value').html(" "+data);
+                                    }else{
+                                        $node.html(" "+data);
+                                    }
+                                    $node.unblock();
+                                }) 
+                            })($node);
+                        })                   
+                    }else{
+                        if (data.msj){
+                            toastr['warning'](data.msj, 'Cuidado');
+                        }else{
+                            toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado');
+                            $("#panel-config .modal-body").html(data);
+                        }
+                    }
+                    $btn.button('reset');
+                });
+            }
+            $.Evento.etapa.competencia.plaza = function() {}
+            $.Evento.etapa.competencia.plaza.show = function(url) {}
+            $.Evento.etapa.competencia.plaza.add = function(url) {
+                if (!_modoEdicion){
+                    $('#okButton').button('reset');
+                    $('#panel-config .modal-footer').show();
+                    $('#panel-config .modal-title').html("Nueva Plaza");
+                    $('#panel-config .modal-body').html("");
+                    $('#panel-config .modal-body').load(url,function(){
+                        $('#panel-config form').submit(function(){
+                            $.Evento.etapa.competencia.request($('#panel-config form'));
+                            return false;
+                        });
+                    });
+                    $('#panel-config').modal();
+                }else{ alert("Salga del modo edición para realizar esta tarea!")}
+            }
+            $.Evento.etapa.competencia.plaza.edit = function(url) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Editar Plaza");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                    $('#panel-config form').submit(function(){
+                        $.Evento.etapa.competencia.request($('#panel-config form'));
+                        return false;
+                    });
+                });
+                $('#panel-config').modal();                
+            }
+            $.Evento.etapa.competencia.plaza.remove = function(url) {
+                jQuery.get(url, function(data){
+                    swal({
+                        title: "Seguro quiere eliminar la plaza ?",
+                        text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Si, eliminar!",
+                        cancelButtonText: "No, cancelar!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                        html: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#deleteFormAux form').submit(function(){
+                                $.Evento.etapa.competencia.request($(this));
+                                return false;
+                            });
+                            $('#deleteFormAux form').submit();
+                        }
+                    });
+                });                
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Evento.init();});
+    </script>
+{% endblock %}

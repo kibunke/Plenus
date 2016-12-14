@@ -1,0 +1,680 @@
+<?php
+
+namespace JuegosBA\AcreditacionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use JuegosBA\CommonBundle\Entity\Partido;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * JuegosBA\AcreditacionBundle\Entity\DatosOperativo
+ * @ORM\Table(name="services_juegosba_final.DatosOperativo")
+ * @ORM\Entity(repositoryClass="JuegosBA\AcreditacionBundle\Entity\Repository\DatosOperativoRepository")
+ */
+class DatosOperativo {
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var datetime $fechaIniTrabajo
+     *
+     * @ORM\Column(name="fechaIniTrabajo", type="date")
+     * @Assert\NotNull(groups={"operativo"})
+     * @Assert\Date(groups={"operativo"})
+     */
+    private $fechaIniTrabajo;
+    
+    /**
+     * @var datetime $fechaFinTrabajo
+     *
+     * @ORM\Column(name="fechaFinTrabajo", type="date")
+     * @Assert\NotNull(groups={"operativo"})
+     * @Assert\Date(groups={"operativo"})
+     */
+    private $fechaFinTrabajo;
+    
+    /**
+     * @var boolean $necesitaTransporte
+     * 
+     * @ORM\Column(name="necesitaTransporte", type="boolean", options={"default":0})
+     * @Assert\NotNull(groups={"operativo"})
+     */
+    private $necesitaTransporte;
+    
+    /**
+     * @var datetime $fechaIdaTransporte
+     *
+     * @ORM\Column(name="fechaIdaTransporte", type="date", nullable=true)
+     */
+    private $fechaIdaTransporte;
+    
+    /**
+     * @var  Partido $idaOrigen
+     * 
+     * @ORM\ManyToOne(targetEntity="JuegosBA\CommonBundle\Entity\Partido")
+     * @ORM\JoinColumn(name="idaOrigen", referencedColumnName="id", nullable=true)
+     */
+    private $idaOrigen;
+    
+    /**
+     * @var datetime $fechaRegresoTransporte
+     *
+     * @ORM\Column(name="fechaRegresoTransporte", type="date", nullable=true)
+     */
+    private $fechaRegresoTransporte;
+        
+    /**
+     * @var  Partido $regresoDestino
+     * 
+     * @ORM\ManyToOne(targetEntity="JuegosBA\CommonBundle\Entity\Partido")
+     * @ORM\JoinColumn(name="regresoDestino", referencedColumnName="id", nullable=true)
+     */
+    private $regresoDestino;
+    
+    /**
+     * @var boolean $necesitaHospedaje
+     * 
+     * @ORM\Column(name="necesitaHospedaje", type="boolean", options={"default":0})
+     * @Assert\NotNull(groups={"operativo"})
+     */
+    private $necesitaHospedaje;
+    
+    /**
+     * @var datetime $fechaIngresoHospedaje
+     *
+     * @ORM\Column(name="fechaIngresoHospedaje", type="date", nullable=true)
+     */
+    private $fechaIngresoHospedaje;
+    
+    /**
+     * @var datetime $fechaEgresoHospedaje
+     *
+     * @ORM\Column(name="fechaEgresoHospedaje", type="date", nullable=true)
+     */
+    private $fechaEgresoHospedaje;
+    
+    /**
+     * @var boolean $certificado140908
+     * 
+     * @ORM\Column(name="certificado140908", type="boolean", options={"default":0})
+     * @Assert\NotNull(groups={"operativo"})
+     */
+    private $certificado140908;
+    
+    /**
+     * @var boolean $certificadoEscuelaPrivada
+     * 
+     * @ORM\Column(name="certificadoEscuelaPrivada", type="boolean", options={"default":0})
+     * @Assert\NotNull(groups={"operativo"})
+     */
+    private $certificadoEscuelaPrivada;
+    
+    /**
+     * @var boolean $certificadoLaboral
+     * 
+     * @ORM\Column(name="certificadoLaboral", type="boolean", options={"default":0})
+     * @Assert\NotNull(groups={"operativo"})
+     */
+    private $certificadoLaboral;
+    
+    /**
+     * @var boolean $esPersonalGestion
+     * 
+     * @ORM\Column(name="esPersonalGestion", type="boolean", options={"default":0})
+     */
+    private $esPersonalGestion;
+    
+    /**
+     * @var string $talleIndumentaria
+     * 
+     * @ORM\Column(name="talleIndumentaria", type="string", length=10, nullable=true)
+     */
+    private $talleIndumentaria;
+    
+    /**
+     * @var boolean $vianda
+     * 
+     * @ORM\Column(name="vianda", type="boolean", options={"default":0})
+     * @Assert\NotNull(groups={"operativo"})
+     */
+    private $vianda;
+
+    /**
+     * @var PersonalJuegos $personalJuegos
+     * 
+     * @ORM\OneToOne(targetEntity="PersonalJuegos", inversedBy="datosOperativo")
+     * @ORM\JoinColumn(name="personalJuegos", referencedColumnName="id" )
+     **/
+    private $personalJuegos;
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    private $createdAt;
+    
+    /**
+     * @var JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * 
+     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * 
+     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */   
+    private $updatedBy;
+    
+   
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set fechaIniTrabajo
+     *
+     * @param \DateTime $fechaIniTrabajo
+     * @return DatosOperativo
+     */
+    public function setFechaIniTrabajo($fechaIniTrabajo)
+    {
+        $this->fechaIniTrabajo = $fechaIniTrabajo;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaIniTrabajo
+     *
+     * @return \DateTime 
+     */
+    public function getFechaIniTrabajo()
+    {
+        return $this->fechaIniTrabajo;
+    }
+
+    /**
+     * Set fechaFinTrabajo
+     *
+     * @param \DateTime $fechaFinTrabajo
+     * @return DatosOperativo
+     */
+    public function setFechaFinTrabajo($fechaFinTrabajo)
+    {
+        $this->fechaFinTrabajo = $fechaFinTrabajo;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaFinTrabajo
+     *
+     * @return \DateTime 
+     */
+    public function getFechaFinTrabajo()
+    {
+        return $this->fechaFinTrabajo;
+    }
+
+    /**
+     * Set necesitaTransporte
+     *
+     * @param boolean $necesitaTransporte
+     * @return DatosOperativo
+     */
+    public function setNecesitaTransporte($necesitaTransporte)
+    {
+        $this->necesitaTransporte = $necesitaTransporte;
+
+        return $this;
+    }
+
+    /**
+     * Get necesitaTransporte
+     *
+     * @return boolean 
+     */
+    public function getNecesitaTransporte()
+    {
+        return $this->necesitaTransporte;
+    }
+
+    /**
+     * Set fechaIdaTransporte
+     *
+     * @param \DateTime $fechaIdaTransporte
+     * @return DatosOperativo
+     */
+    public function setFechaIdaTransporte($fechaIdaTransporte)
+    {
+        $this->fechaIdaTransporte = $fechaIdaTransporte;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaIdaTransporte
+     *
+     * @return \DateTime 
+     */
+    public function getFechaIdaTransporte()
+    {
+        return $this->fechaIdaTransporte;
+    }
+
+    /**
+     * Set fechaRegresoTransporte
+     *
+     * @param \DateTime $fechaRegresoTransporte
+     * @return DatosOperativo
+     */
+    public function setFechaRegresoTransporte($fechaRegresoTransporte)
+    {
+        $this->fechaRegresoTransporte = $fechaRegresoTransporte;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaRegresoTransporte
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegresoTransporte()
+    {
+        return $this->fechaRegresoTransporte;
+    }
+
+    /**
+     * Set necesitaHospedaje
+     *
+     * @param boolean $necesitaHospedaje
+     * @return DatosOperativo
+     */
+    public function setNecesitaHospedaje($necesitaHospedaje)
+    {
+        $this->necesitaHospedaje = $necesitaHospedaje;
+
+        return $this;
+    }
+
+    /**
+     * Get necesitaHospedaje
+     *
+     * @return boolean 
+     */
+    public function getNecesitaHospedaje()
+    {
+        return $this->necesitaHospedaje;
+    }
+
+    /**
+     * Set fechaIngresoHospedaje
+     *
+     * @param \DateTime $fechaIngresoHospedaje
+     * @return DatosOperativo
+     */
+    public function setFechaIngresoHospedaje($fechaIngresoHospedaje)
+    {
+        $this->fechaIngresoHospedaje = $fechaIngresoHospedaje;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaIngresoHospedaje
+     *
+     * @return \DateTime 
+     */
+    public function getFechaIngresoHospedaje()
+    {
+        return $this->fechaIngresoHospedaje;
+    }
+
+    /**
+     * Set fechaEgresoHospedaje
+     *
+     * @param \DateTime $fechaEgresoHospedaje
+     * @return DatosOperativo
+     */
+    public function setFechaEgresoHospedaje($fechaEgresoHospedaje)
+    {
+        $this->fechaEgresoHospedaje = $fechaEgresoHospedaje;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaEgresoHospedaje
+     *
+     * @return \DateTime 
+     */
+    public function getFechaEgresoHospedaje()
+    {
+        return $this->fechaEgresoHospedaje;
+    }
+
+    /**
+     * Set certificado140908
+     *
+     * @param boolean $certificado140908
+     * @return DatosOperativo
+     */
+    public function setCertificado140908($certificado140908)
+    {
+        $this->certificado140908 = $certificado140908;
+
+        return $this;
+    }
+
+    /**
+     * Get certificado140908
+     *
+     * @return boolean 
+     */
+    public function getCertificado140908()
+    {
+        return $this->certificado140908;
+    }
+
+    /**
+     * Set certificadoEscuelaPrivada
+     *
+     * @param boolean $certificadoEscuelaPrivada
+     * @return DatosOperativo
+     */
+    public function setCertificadoEscuelaPrivada($certificadoEscuelaPrivada)
+    {
+        $this->certificadoEscuelaPrivada = $certificadoEscuelaPrivada;
+
+        return $this;
+    }
+
+    /**
+     * Get certificadoEscuelaPrivada
+     *
+     * @return boolean 
+     */
+    public function getCertificadoEscuelaPrivada()
+    {
+        return $this->certificadoEscuelaPrivada;
+    }
+
+    /**
+     * Set certificadoLaboral
+     *
+     * @param boolean $certificadoLaboral
+     * @return DatosOperativo
+     */
+    public function setCertificadoLaboral($certificadoLaboral)
+    {
+        $this->certificadoLaboral = $certificadoLaboral;
+
+        return $this;
+    }
+
+    /**
+     * Get certificadoLaboral
+     *
+     * @return boolean 
+     */
+    public function getCertificadoLaboral()
+    {
+        return $this->certificadoLaboral;
+    }
+
+    /**
+     * Set esPersonalGestion
+     *
+     * @param boolean $esPersonalGestion
+     * @return DatosOperativo
+     */
+    public function setEsPersonalGestion($esPersonalGestion)
+    {
+        $this->esPersonalGestion = $esPersonalGestion;
+
+        return $this;
+    }
+
+    /**
+     * Get esPersonalGestion
+     *
+     * @return boolean 
+     */
+    public function getEsPersonalGestion()
+    {
+        return $this->esPersonalGestion;
+    }
+
+    /**
+     * Set talleIndumentaria
+     *
+     * @param string $talleIndumentaria
+     * @return DatosOperativo
+     */
+    public function setTalleIndumentaria($talleIndumentaria)
+    {
+        $this->talleIndumentaria = $talleIndumentaria;
+
+        return $this;
+    }
+
+    /**
+     * Get talleIndumentaria
+     *
+     * @return string 
+     */
+    public function getTalleIndumentaria()
+    {
+        return $this->talleIndumentaria;
+    }
+
+    /**
+     * Set vianda
+     *
+     * @param boolean $vianda
+     * @return DatosOperativo
+     */
+    public function setVianda($vianda)
+    {
+        $this->vianda = $vianda;
+
+        return $this;
+    }
+
+    /**
+     * Get vianda
+     *
+     * @return boolean 
+     */
+    public function getVianda()
+    {
+        return $this->vianda;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return DatosOperativo
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return DatosOperativo
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set idaOrigen
+     *
+     * @param \JuegosBA\CommonBundle\Entity\Partido $idaOrigen
+     * @return DatosOperativo
+     */
+    public function setIdaOrigen(\JuegosBA\CommonBundle\Entity\Partido $idaOrigen = null)
+    {
+        $this->idaOrigen = $idaOrigen;
+
+        return $this;
+    }
+
+    /**
+     * Get idaOrigen
+     *
+     * @return \JuegosBA\CommonBundle\Entity\Partido 
+     */
+    public function getIdaOrigen()
+    {
+        return $this->idaOrigen;
+    }
+
+    /**
+     * Set regresoDestino
+     *
+     * @param \JuegosBA\CommonBundle\Entity\Partido $regresoDestino
+     * @return DatosOperativo
+     */
+    public function setRegresoDestino(\JuegosBA\CommonBundle\Entity\Partido $regresoDestino = null)
+    {
+        $this->regresoDestino = $regresoDestino;
+
+        return $this;
+    }
+
+    /**
+     * Get regresoDestino
+     *
+     * @return \JuegosBA\CommonBundle\Entity\Partido 
+     */
+    public function getRegresoDestino()
+    {
+        return $this->regresoDestino;
+    }
+
+    /**
+     * Set personalJuegos
+     *
+     * @param \JuegosBA\AcreditacionBundle\Entity\PersonalJuegos $personalJuegos
+     * @return DatosOperativo
+     */
+    public function setPersonalJuegos(\JuegosBA\AcreditacionBundle\Entity\PersonalJuegos $personalJuegos = null)
+    {
+        $this->personalJuegos = $personalJuegos;
+
+        return $this;
+    }
+
+    /**
+     * Get personalJuegos
+     *
+     * @return \JuegosBA\AcreditacionBundle\Entity\PersonalJuegos 
+     */
+    public function getPersonalJuegos()
+    {
+        return $this->personalJuegos;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @return DatosOperativo
+     */
+    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set updatedBy
+     *
+     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @return DatosOperativo
+     */
+    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedBy
+     *
+     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+}

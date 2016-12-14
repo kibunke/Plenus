@@ -1,0 +1,13 @@
+parameters:
+    juegosba_usuario.activity_listener.class: SeguridadBundle\EventListener\ActivityListener
+    juegosba_usuario.logout_listener.class: SeguridadBundle\EventListener\LogoutListener
+
+services:
+    juegosba_usuario.activity_listener:
+        class: %juegosba_usuario.activity_listener.class%
+        arguments: [@security.context,@doctrine.orm.entity_manager]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+    juegosba_usuario.logout_listener:
+        class:  %juegosba_usuario.logout_listener.class%
+        arguments:  [@security.context,@doctrine.orm.entity_manager,@router]

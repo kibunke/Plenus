@@ -1,0 +1,310 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * CommonBundle\Entity\Gender
+ * 
+ * @ORM\Table(name="plenus_admin.Gender")
+ * @ORM\Entity()
+ */
+
+class Gender
+{  
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=20, nullable=true)
+     * @Assert\NotBlank(
+     *      message="gender missing!"
+     * )
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $name;
+    
+    /**
+     * @var text $avatar
+     * @ORM\Column(name="logo", type="text")
+     **/
+    private $avatar;
+
+    /**
+     * @var string $color
+     *
+     * @ORM\Column(name="color", type="string", length=20, nullable=true)
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $color;
+    
+    /**
+     * @var string $icon
+     *
+     * @ORM\Column(name="icon", type="string", length=20, nullable=true)
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $icon;    
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */       
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */   
+    private $updatedBy;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+    
+    /**
+     * __toString
+     */     
+    public function __toString() {
+        return $this->name;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Gender
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set avatar
+     *
+     * @param string $avatar
+     *
+     * @return Gender
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * Get avatar
+     *
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     *
+     * @return Gender
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Set icon
+     *
+     * @param string $icon
+     *
+     * @return Gender
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * Get icon
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Gender
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Gender
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \UserControlBundle\Entity\User $createdBy
+     *
+     * @return Gender
+     */
+    public function setCreatedBy(\UserControlBundle\Entity\User $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \UserControlBundle\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set updatedBy
+     *
+     * @param \UserControlBundle\Entity\User $updatedBy
+     *
+     * @return Gender
+     */
+    public function setUpdatedBy(\UserControlBundle\Entity\User $updatedBy = null)
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedBy
+     *
+     * @return \UserControlBundle\Entity\User
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+}

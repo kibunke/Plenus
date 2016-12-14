@@ -1,0 +1,80 @@
+<div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="panel-title">Cronograma <span class="text-bold">{{ evento }}</span></h4>
+            <div class="panel-tools">
+            </div>
+            <table id="cronogramaTableGral" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">#</th>
+                        <th class="center">Fecha</th>
+                        <th class="center">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cronograma in evento.cronogramas %}
+                        <tr class="{% if (loop.index>2) %} hidden_tr" style="display: none"{% else %}"{% endif %}>
+                            <td class="center">{{ loop.index }}</td>
+                            <td class="center">{{ cronograma.getRaw | raw }}</td>
+                            <td>{{ cronograma.descripcion }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% if (evento.cronogramas | length > 2) %}
+                        <tr onclick="$('.hidden_tr, .hidden_a').toggle();">
+                            <td colspan="3" class="center">
+                                <a class="hidden_a" href="#1"><spant class="fa fa-arrow-down"></spant> Ver más <spant class="fa fa-arrow-down"></spant></a>
+                                <a class="hidden_a" style="display: none" href="#1"><spant class="fa fa-arrow-up"></spant> Ver menos <spant class="fa fa-arrow-up"></spant></a>
+                            </td>
+                        </tr>                        
+                    {% endif %}
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <table id="cronogramaTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">#</th>
+                        <th class="center">Detalle</th>
+                        <th class="text-right">Equipo</th>
+                        <th style="width: 40px"></th>
+                        <th class="center">vs</th>
+                        <th style="width: 40px"></th>
+                        <th class="text-left">Equipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for partido in evento.getPartidos() %}
+                        <tr>
+                            <td class="center">
+                                <small>{{ partido.nombre }}</small>
+                            </td>
+                            <td class="center">
+                                <small>{{ partido.getNivelTexto() }}</small>
+                            </td>
+                            <td class="text-right">
+                                {% if (partido.plaza1) %}
+                                    {{ partido.plaza1.getNombreCompetenciaRaw | raw }}
+                                {% endif %}
+                            </td>
+                            <td class="center">{{ partido.resultadoLocal }}</td>
+                            <td class="center">
+                                {% if (partido.cronograma) %}
+                                    {{ partido.cronograma.getRaw | raw }}
+                                {% endif %}
+                                {% if (partido.tanteador is defined) %}{{ partido.tanteador }}{% endif %}
+                            </td>
+                            <td class="center">{{ partido.resultadoVisitante }}</td>
+                            <td class="text-left">
+                                {% if (partido.plaza2) %}
+                                    {{ partido.plaza2.getNombreCompetenciaRaw | raw }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

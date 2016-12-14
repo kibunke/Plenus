@@ -1,0 +1,151 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Dimensiones <small>Todo lo referido a Áreas, Funciones y parámetros de los Juegos BA</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('acreditacion_parameters')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>  
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                
+                <li>
+                    <a href="#1">
+                        Acreditación
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('acreditacion_parameters') }}">
+                        Parámetros
+                    </a>
+                </li>
+                <li class="active">
+                    Área
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h4 class="panel-title">Nueva<span class="text-bold"> Categoría de Pago</span></h4>
+            <div class="panel-tools">
+                <div class="dropdown">
+                    <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                        <li>
+                            <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                        </li>
+                        <li>
+                            <a class="panel-refresh" href="#">
+                                <i class="fa fa-refresh"></i> <span>Refresh</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-config" href="#panel-config" data-toggle="modal">
+                                <i class="fa fa-wrench"></i> <span>Configurations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-expand" href="#">
+                                <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn btn-xs btn-link panel-close" href="#">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            {{ form_start(form, {'attr':{'novalidate':'novalidate' } }) }}
+            {{ form_errors(form)}}
+            {{ global_form_errors(form) }}
+            <div id="area_parametros" class="form-group">
+                <legend>
+                    <h5><i class="fa fa-pencil-square-o"></i> DATOS DE LA CATEGORÍA</h5>
+                </legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.nombre) }}
+                        <div class="input-group margin-bottom-sm col-md-10">
+                            <span class="input-group-addon"><i class="fa fa-keyboard-o"></i></span>
+                                {{ form_widget(form.nombre) }}
+                        </div>
+                        {{ form_errors(form.nombre)}}
+                    </div>    
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.descripcion) }}
+                        <div class="input-group margin-bottom-sm col-md-10">
+                            <span class="input-group-addon"><i class="fa fa-keyboard-o"></i></span>
+                                {{ form_widget(form.descripcion) }}
+                        </div>
+                        {{ form_errors(form.descripcion)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.monto) }}
+                        <div class="input-group margin-bottom-sm col-md-10">
+                            <span class="input-group-addon">$</span>
+                            {{ form_widget(form.monto, {'attr': {'class': 'text-center'} }) }}
+                            <span class="input-group-addon">.00</span>                                
+                        </div>
+                        {{ form_errors(form.monto)}}
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="row">
+                    <div class="form-group col-md-12 text-right">
+                        {{form_widget(form.submit, { 'attr': {'class': 'btn-primary btn'} }) }}
+                    </div>
+                </div>
+            </div>
+            <div class="hidden">
+                {{ form_rest(form) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/acreditacion/css/area.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/layout.css' ) }}" />
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/tesoreria/js/categoriaPago.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $.CategoriaPago.init("{{ path('categoriapago_delete') }}");
+        });
+    </script>
+{% endblock %} 

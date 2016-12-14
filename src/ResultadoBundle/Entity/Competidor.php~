@@ -1,0 +1,48 @@
+<?php
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\Competidor
+ * @ORM\Table(name="services_juegosba_final.Competidor")
+ * @ORM\Entity()
+ */
+class  Competidor
+{
+   /**
+    * @var integer $id
+    *
+    * @ORM\Column(name="id", type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
+   private $id;
+
+   /**
+    * @var string $nombre
+    *
+    * @ORM\Column(name="nombre", type="string", length=100)
+    */
+   protected $nombre;
+
+   /**
+    * @var integer $orden
+    *
+    * @ORM\Column(name="orden", type="integer")
+    */
+   protected $orden;
+   
+    /**
+    * @var string $descripcion
+    *
+    * @ORM\Column(name="descripcion", type="text", nullable=true)
+    */
+   private $descripcion;
+   
+   /**
+    * @ORM\OneToOne(targetEntity="Equipo", inversedBy="competidor")
+    * @ORM\JoinColumn(name="equipo", referencedColumnName="id")
+    */       
+   private $equipo;    
+}

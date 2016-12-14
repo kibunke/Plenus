@@ -1,0 +1,87 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% block acreditacion_tab_personal %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS DE IDENTIFICACION</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <div class=" col-md-6 datosIzq form-group">
+        {{ form_label(form.datosPersonales.apellido ,null, {'label_attr': {'class': 'col-md-12 text-left'} })  }} 
+        <div class="input-group ">
+            <span class="input-group-addon ">
+                <i class="fa fa-pencil-square-o"></i>
+            </span>
+            {{ form_widget(form.datosPersonales.apellido)}}
+        </div>
+        {{ form_label(form.datosPersonales.nombre, null, {'label_attr': {'class': 'col-md-12 text-left'} })  }} 
+        <div class="input-group ">
+            <span class="input-group-addon">
+                <i class="fa fa-pencil-square-o"></i>
+            </span>
+            {{ form_widget(form.datosPersonales.nombre) }}
+        </div>
+        <label class="control-label col-md-12 required">Documento</label>
+        <div class="input-group col-md-5 pull-left">
+            <span class="input-group-addon">
+                <i class="fa fa-hand-o-right"></i>
+            </span>
+            {{ form_widget(form.datosPersonales.documentoTipo , {'attr': {'class': 'text-center'} }) }}
+        </div>
+        <div class="input-group col-md-6 col-md-offset-6">
+            <div class="input-group-addon ">#</div>
+            {{ form_widget(form.datosPersonales.documentoNro, {'attr': {'class': 'text-center'} }) }}
+        </div>
+    </div>
+    <div class=" col-md-6 datosDer form-group">
+        {{ form_label(form.datosPersonales.fechaNacimiento ,null, {'label_attr': {'class': 'col-md-12'} })  }} 
+        <div class="input-group text-center">
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            {{ form_widget(form.datosPersonales.fechaNacimiento,{'attr': {'class': 'dpersonalFecha text-center'} } ) }}
+        </div>
+        {{ form_label(form.datosPersonales.email ,null, {'label_attr': {'class': 'col-md-12'} })  }} 
+        <div class="input-group  ">
+            <span class="input-group-addon">@</span>
+            {{ form_widget(form.datosPersonales.email) }}
+        </div>
+        {{ form_label(form.datosPersonales.sexo ,null, {'label_attr': {'class': 'col-md-12'} })  }} 
+        <div class="input-group  ">
+            <span class="input-group-addon">
+                <i class="fa fa-venus-mars" aria-hidden="true"></i>
+            </span>
+            {{ form_widget(form.datosPersonales.sexo, {'attr': {'class': 'text-center'} }) }}
+        </div>
+    </div>
+    <div id="acreditacion-contenedorBotones" class="form-group col-md-12">
+        <div id="acreditacion_back" class="form-group col-md-5 text-left">
+        </div>
+        <div id="acreditacion_save" class="form-group col-md-2 text-center">
+        </div>
+        <div id="acreditacion_next" class="form-group col-md-5 text-right">
+            {% if accion == 'NUEVO'%}
+                {{ form_widget(form.datosPersonalesVal) }}
+            {% else %}
+                {{ form_widget(form.submit) }}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosPersonales.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/acreditacion/js/jQuery-Mask-Plugin-master/src/jquery.mask.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/datosPersonales.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $.DatosPersonales.init();
+        });
+    </script>
+{% endblock %}

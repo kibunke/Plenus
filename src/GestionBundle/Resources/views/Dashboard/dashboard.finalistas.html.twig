@@ -1,0 +1,231 @@
+<div class="col-md-12">
+    <div class="panel panel-blue">
+        <div class="panel-heading">
+            <h4 class="panel-title">Dashboard <span class="text-bold"> de finalistas</span></h4>
+            <div class="panel-tools">
+                <div class="dropdown">
+                    <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                        <li>
+                            <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                        </li>
+                        <li>
+                            <a class="panel-refresh" href="#">
+                                <i class="fa fa-refresh"></i> <span>Refresh</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-config" href="#panel-config" data-toggle="modal">
+                                <i class="fa fa-wrench"></i> <span>Configurations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="panel-expand" href="#">
+                                <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn btn-xs btn-link panel-close" href="#">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-4">
+                <div id="distribucionPlazas" class="pull-left" style="height: 250px;width: 100%"></div>
+            </div>
+            <div class="col-sm-8">
+                <div class="col-sm-4">
+                    <div class="space20 padding-5 border-bottom border-light text-center" onclick=" " title="Click para ver detalle" style="cursor: pointer">
+                        <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                            <span class="cpu number appear" data-percent="{% if plazas.Disponibles.Deportes.Especiales > 0 %} {{ (plazas.Finalistas.Deportes.Especiales * 100)/plazas.Disponibles.Deportes.Especiales }} {% endif %}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <span class="text-light">Deportes (Especiales)<br>{{ plazas.Finalistas.Deportes.Especiales }} / {{ plazas.Disponibles.Deportes.Especiales }} Plazas</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="space20 padding-5 border-bottom border-light text-center" onclick=" " title="Click para ver detalle" style="cursor: pointer">
+                        <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                            <span class="cpu number appear" data-percent="{% if plazas.Disponibles.Deportes.Juveniles > 0 %} {{ (plazas.Finalistas.Deportes.Juveniles * 100)/plazas.Disponibles.Deportes.Juveniles }} {% endif %}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <span class="text-light">Deportes (Juveniles)<br>{{ plazas.Finalistas.Deportes.Juveniles }} / {{ plazas.Disponibles.Deportes.Juveniles }} Plazas</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="space20 padding-5 border-bottom border-light text-center" onclick=" " title="Click para ver detalle" style="cursor: pointer">
+                        <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                            <span class="cpu number appear" data-percent="{% if plazas.Disponibles.Deportes.AdultosMayores > 0 %} {{ (plazas.Finalistas.Deportes.AdultosMayores * 100)/plazas.Disponibles.Deportes.AdultosMayores }} {% endif %}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <span class="text-light">Deportes (Adultos Mayores)<br>{{ plazas.Finalistas.Deportes.AdultosMayores }} / {{ plazas.Disponibles.Deportes.AdultosMayores }} Plazas</span>
+                    </div>
+                    <div style="position: absolute;right:-35%;top:20%">
+                        <div style="transform: rotate(90deg);transform-origin: left top 0;"><strong><small>Total:</small> {{ plazas.Disponibles.Deportes.AdultosMayores + plazas.Disponibles.Deportes.Juveniles + plazas.Disponibles.Deportes.Especiales }}</strong></div>
+                    </div>                    
+                </div>
+                
+                
+                <div class="col-sm-4">
+                    <div class="space20 padding-5 text-center" onclick=" " title="Click para ver detalle" style="cursor: pointer">
+                        <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                            <span class="cpu number appear" data-percent="{% if plazas.Disponibles.Cultura.Especiales > 0 %} {{ (plazas.Finalistas.Cultura.Especiales * 100)/plazas.Disponibles.Cultura.Especiales }} {% endif %}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <span class="text-light">Cultura (Especiales)<br>{{ plazas.Finalistas.Cultura.Especiales }} / {{ plazas.Disponibles.Cultura.Especiales }} Plazas</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="space20 padding-5 text-center" onclick=" " title="Click para ver detalle" style="cursor: pointer">
+                        <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                            <span class="cpu number appear" data-percent="{% if plazas.Disponibles.Cultura.Juveniles > 0 %} {{ (plazas.Finalistas.Cultura.Juveniles * 100)/plazas.Disponibles.Cultura.Juveniles }} {% endif %}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <span class="text-light">Cultura (Juveniles)<br>{{ plazas.Finalistas.Cultura.Juveniles }} / {{ plazas.Disponibles.Cultura.Juveniles }} Plazas</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="space20 padding-5 text-center" onclick=" " title="Click para ver detalle" style="cursor: pointer">
+                        <div class="easy-pie-chart easy-pie-chart-inscriptos">
+                            <span class="cpu number appear" data-percent="{% if plazas.Disponibles.Cultura.AdultosMayores > 0 %} {{ (plazas.Finalistas.Cultura.AdultosMayores * 100)/plazas.Disponibles.Cultura.AdultosMayores }} {% endif %}" data-plugin-options='{"barColor": "#ff0000"}'> <span class="percent"></span> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <span class="text-light">Cultura (Adultos Mayores)<br>{{ plazas.Finalistas.Cultura.AdultosMayores }} / {{ plazas.Disponibles.Cultura.AdultosMayores }} Plazas</span>
+                    </div>
+                    <div style="position: absolute;right:-35%;top:20%">
+                        <div style="transform: rotate(90deg);transform-origin: left top 0;"><strong><small>Total:</small> {{ plazas.Disponibles.Cultura.AdultosMayores + plazas.Disponibles.Cultura.Juveniles + plazas.Disponibles.Cultura.Especiales }}</strong></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-footer partition-white">
+            <div class="clearfix padding-5 space5">
+                <div class="col-xs-4 text-center no-padding">
+                    <div class="border-right border-dark">
+                        <span class="text-bold block text-extra-large">
+                            <i class="fa fa-asterisk"></i> {{ plazas.Disponibles.Total }}
+                        </span>
+                        <span class="text-light">Plazas Totales</span>                                
+                    </div>
+                </div>
+                <div class="col-xs-4 text-center no-padding" style="font-weight: bold;">
+                    <div class="border-right border-dark">
+                        <span class="text-bold block text-extra-large">
+                            <i class="fa fa-check"></i> {{ plazas.Finalistas.Total }}
+                        </span>
+                        <span class="text-light">Plazas Cubiertas</span>
+                    </div>
+                </div>
+                <div class="col-xs-4 text-center no-padding">
+                    <span class="text-bold block text-extra-large">
+                        <i class="fa fa-times"></i> {{ plazas.Disponibles.Total - plazas.Finalistas.Total }}
+                    </span>
+                    <span class="text-light">Plazas sin Cubrir</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function ($) {
+        // no se sobreescribe el namespace, si ya existe
+        var table;
+        $.Dashboard = $.Dashboard || {};
+        $.Dashboard.finalistas = function(){}
+        $.Dashboard.finalistas.init = function(){      
+            var easyDefaultsOptions = {
+                animate: 1000,
+                lineWidth: 5,
+                size: 70,
+                onStep: function(from, to, percent) {
+                    $(this.el).find('.percent').text(Math.round(percent));
+                }
+            };
+            $('.easy-pie-chart-finalistas .appear').each(function() {
+                var configEasy = $.extend({}, easyDefaultsOptions, $(this).data("plugin-options"));
+                if($(this).is(':appeared') || isMobile) {
+                    $(this).easyPieChart(configEasy);
+                } else {
+                    $(this).appear();
+                    $(this).on("appear", function(event, $all_appeared_elements) {
+                        $(this).easyPieChart(configEasy);
+                    });
+                }
+            
+            });
+            
+            $('#distribucionPlazas').highcharts({
+                credits:{'enabled':false},
+                contrastTextColor: '#F0F0F3',
+                chart: {
+                    type: 'pie',
+                    backgroundColor:'transparent'
+                },
+                title: {
+                    text: 'Distribución de Plazas',
+                    style: {'display':'none'}
+                },
+                subtitle: {
+                    text: ''
+                },           
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }                
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    style: {
+                       color: '#F0F0F0'
+                    },
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> %<br/>'
+                },
+                series: [{
+                    name: 'Distribución de Plazas',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Juveniles (Especiales)',
+                        y: {{ (((plazas.Disponibles.Deportes.Especiales + plazas.Disponibles.Cultura.Especiales) * 100)/plazas.Disponibles.Total) | round(2, 'floor') }},
+                        ref: {{ plazas.Disponibles.Deportes.Especiales + plazas.Disponibles.Cultura.Especiales }}
+                    }, {
+                        name: 'Juveniles',
+                        y: {{ (((plazas.Disponibles.Deportes.Juveniles + plazas.Disponibles.Cultura.Juveniles) * 100)/plazas.Disponibles.Total) | round(2, 'floor') }},
+                        ref: {{ plazas.Disponibles.Deportes.Juveniles + plazas.Disponibles.Cultura.Juveniles }}
+                    }, {
+                        name: 'Adultos Mayores',
+                        y: {{ (((plazas.Disponibles.Deportes.AdultosMayores + plazas.Disponibles.Cultura.AdultosMayores) * 100)/plazas.Disponibles.Total) | round(2, 'floor') }},
+                        ref: {{ plazas.Disponibles.Deportes.AdultosMayores + plazas.Disponibles.Cultura.AdultosMayores }}
+                    }]
+                }],
+                legend: {
+                    enabled : true,
+                    margin :0,
+                    itemDistance: 50,
+                      itemStyle: {
+                         color: '#E0E0E3',
+                      },
+                      itemHoverStyle: {
+                         color: '#FFF'
+                      },
+                      itemHiddenStyle: {
+                         color: '#606063'
+                      },
+                      labelFormat:'{name}: {y} % ({ref})',
+                }
+            });            
+            
+        }   
+    })(jQuery);
+    $(document).ready(function(){$.Dashboard.finalistas.init();});
+</script>

@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-sm-12 update-table">    
+        {{ form_start(form) }}
+            <div class="col-sm-5 has-error">
+                {{ form_widget(form.resultadoLocal) }}
+                <label style="float: right;text-align: right;margin-right: 15px;">{{ entity.plaza1.getNombreCompetenciaRaw | raw }}</label>
+            </div>
+            <div class="col-sm-1">
+                <br><strong>.vs.</strong>
+            </div>
+            <div class="col-sm-5 has-error">
+                {{ form_widget(form.resultadoVisitante) }}
+                <label style="float: left;margin-left: 15px;">{{ entity.plaza2.getNombreCompetenciaRaw | raw }}</label>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>

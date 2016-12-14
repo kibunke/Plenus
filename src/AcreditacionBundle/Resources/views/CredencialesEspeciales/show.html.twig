@@ -1,0 +1,235 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-md-8 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-credit-card"></i> Credenciales Especiales<small>Todo lo referido a las acreditaciones especiales de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('acreditacion_credenciales_especiales')  }}">
+                            <i class="fa fa-arrow-left"></i> VOLVER 
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a  onclick="acreditacionExport();" href="#" >
+                            <i class="fa fa-file-text" aria-hidden="true"></i>  CREDENCIAL
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('acreditacion_credenciales_especiales') }}">
+                        Credenciales Especiales
+                    </a>
+                </li>
+                <li class="active">
+                    Ver
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <div class="col-md-6">
+            <h4 class="panel-title">Ver<span class="text-bold"> Credencial Especial</span></h4>
+        </div>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12">    
+            {{ form_start(form, {'attr':{'novalidate':'novalidate' } }) }}
+            {{ form_errors(form)}}
+            {{ global_form_errors(form) }}
+            <div id="credencialEspecial" class="form-group">
+                <div class="form-group col-md-8 datosIzq">
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Apellido:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <p class="form-control-static text-extra-large">{{ entity.getApellido() | capitalize }}  </p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Nombre:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <p class="form-control-static text-extra-large">{{ entity.getNombre() | capitalize }}  </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Documento:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <p class="form-control-static text-extra-large"><strong>{{ entity.getDocumentoTipo() | upper }}: </strong> {{ entity.getDocumentoNro() }}  </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Área:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <p class="form-control-static text-extra-large">{{ entity.getArea().getNombre() | capitalize }}  </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Función:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <p class="form-control-static text-extra-large">{{ entity.getFuncion().getNombre() | capitalize }}  </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Letra:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <p class="form-control-static text-extra-large">{{ entity.getLetraIdentificacion() | upper }}  </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12 staticLabel">
+                            <strong><em>Accesos:</em></strong>
+                        </label>
+                        <div class="col-md-12 text-center">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center col-md-2" ><small>SECTOR 1</small></th>
+                                        <th class="text-center col-md-2" ><small>SECTOR 2</small></th>
+                                        <th class="text-center col-md-2" ><small>SECTOR 3</small></th>
+                                        <th class="text-center col-md-2" ><small>SECTOR 4</small></th>
+                                        <th class="text-center col-md-2" ><small>SECTOR 5</small></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">
+                                            {% if (entity.getAccesoSector1()) %}
+                                                <strong>SI</strong>
+                                            {% else %}
+                                                <strong>NO</strong>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if (entity.getAccesoSector2()) %}
+                                                <strong>SI</strong>
+                                            {% else %}
+                                                <strong>NO</strong>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if (entity.getAccesoSector3()) %}
+                                                <strong>SI</strong>
+                                            {% else %}
+                                                <strong>NO</strong>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if (entity.getAccesoSector4()) %}
+                                                <strong>SI</strong>
+                                            {% else %}
+                                                <strong>NO</strong>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if (entity.getAccesoSector5()) %}
+                                                <strong>SI</strong>
+                                            {% else %}
+                                                <strong>NO</strong>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 datosDer text-center">
+                    <a id="contenedorAvatar" class="thumbnail">
+                        <img id="personal_avatar" src="data:image/jpg;base64,{{ entity.avatar.archivo() }}" alt="Foto de Acreditación"/>
+                    </a>
+                </div>
+            </div>
+            <div class="hidden">
+                {{ form_rest(form) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div id="credencialesExport" class="modal fade " tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title"><i class="fa fa-file-text" aria-hidden="true"></i>  CREDENCIALES</h5>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/layout.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/credencialesEsp.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}  
+    <script type="text/javascript">
+        function acreditacionExport() {
+            $("#credencialesExport div.modal-body").html('<object id="acreditacionObject" data="{{ path('acreditacion_credenciales_especiales_imprimir', {'data': [entity.id] |json_encode() } )}}" type="application/pdf" ></object>');
+            $("#credencialesExport").modal();
+        }
+    </script>
+{% endblock %}  

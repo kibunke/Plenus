@@ -1,0 +1,307 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\Cronograma
+ *
+ * @ORM\Entity(repositoryClass="JuegosBA\ResultadoBundle\Entity\Repository\CronogramaRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *                          "cronograma"                = "Cronograma",
+ *                          "cronogramaPartido"         = "CronogramaPartido"
+ *                      })
+ */
+class Cronograma
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+     /**
+     * @var string $descripcion
+     *
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
+     */
+    private $descripcion;
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Escenario", inversedBy="cronogramas")
+     * @ORM\JoinColumn(name="escenario", referencedColumnName="id")
+     */       
+    private $escenario;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Evento", mappedBy="cronogramas")
+     **/
+    private $eventos;
+
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    private $createdAt;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */       
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */   
+    private $updatedBy;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->createdBy = $user;
+        $this->createdAt = new \DateTime();
+    }
+    
+    /**
+     * Get raw
+     *
+     * @return string 
+     */
+    public function getRaw()
+    {
+        if ($this->getFecha()){
+            $f1 = $this->fecha->format('d/m');
+            $f2 = $this->fecha->format('H:i');
+        }else{
+            $f1 = $f2 = "";
+        }
+        return  "<div>
+                    <strong><small>".
+                        $f1.
+                    " </small>".
+                        $f2.
+                    "</strong><br>
+                    <small>".
+                        $this->getEscenario().                        
+                    "</small>
+                </div>"
+        ;
+    }
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     * @return Cronograma
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string 
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return Cronograma
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime 
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set escenario
+     *
+     * @param \JuegosBA\ResultadoBundle\Entity\Escenario $escenario
+     * @return Cronograma
+     */
+    public function setEscenario(\JuegosBA\ResultadoBundle\Entity\Escenario $escenario)
+    {
+        $this->escenario = $escenario;
+
+        return $this;
+    }
+
+    /**
+     * Get escenario
+     *
+     * @return Cronograma 
+     */
+    public function getEscenario()
+    {
+        return $this->escenario;
+    }
+    
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Cronograma
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Cronograma
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @return Cronograma
+     */
+    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set updatedBy
+     *
+     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @return Cronograma
+     */
+    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedBy
+     *
+     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+    
+    /**
+     * Get idReload
+     *
+     * @return integer
+     */
+    public function getIdReload()
+    {
+        return $this->getEvento()->getId();
+    }
+    
+    /**
+     * Can Delete
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return true;
+    }    
+}

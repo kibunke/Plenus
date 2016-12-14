@@ -1,0 +1,47 @@
+<div class="row">
+    <h3><i class="fa fa-edit"></i> Nueva Etapa de Competencia</h3>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+				<h4 class="panel-title">Competencia <span class="text-bold">con Clasificación + Final</span></h4>
+			</div>
+            <div class="panel-body">
+                <p>
+                    Las competencia que poseen más de una etapa, son aquellas que realizan una pre-clasificación.
+                </p>
+                <p>
+                    Sin importar el tipo competencia utilizado en las etapa (series,ligas,eliminación directa,etc), los participantes realizan una clasificación y los mejores según criterio pasan a la etapa siguiente, la final, de donde se desprende el oro, plata y bonce.
+                </p>
+				<br>
+				{{ form_start(formEtapaClasificacion) }}
+					<button type="submit" class="btn btn-default btn-block">
+						<i class="fa fa-plus"></i> Competencia con Clasificación + Final
+					</button>
+				{{ form_end(formEtapaClasificacion) }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-pink">
+            <div class="panel-heading">
+                <h4 class="panel-title">Competencia <span class="text-bold"> con Final directa</span></h4>
+            </div>
+            <div class="panel-body">
+                <p>
+                    Este tipo de competencia <strong>solo poseen una etapa</strong> donde se define el ganador. No se realiza pre-calificación.
+                </p>
+                <p>
+                    Sin importar el tipo competencia utilizado en la única etapa (series,ligas,eliminación directa,etc), de los participantes involucrados, según criterio se desprende los ganadores de las medallas oro, plata y bonce.
+                </p>
+				<br>
+				{{ form_start(formEtapaFinal) }}
+					<button type="submit" class="btn btn-default btn-block">
+						<i class="fa fa-plus"></i> Competencia con Final directa
+					</button>
+				{{ form_end(formEtapaFinal) }}
+            </div>
+        </div>
+    </div>    
+</div>

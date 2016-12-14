@@ -1,0 +1,3 @@
+{% if evento.etapas[0].competencia %}
+    {% include 'PublicoBundle:'~evento.etapas[0].competencia.getFolder()~':fixture.html.twig' with { 'evento' : evento } %}
+{% endif %}

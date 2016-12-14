@@ -1,0 +1,192 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% form_theme form 'AcreditacionBundle:Fields:checkbox.html.twig' %}
+
+{% block acreditacion_tab_operativo %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS OPERATIVOS</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <legend></legend>
+    <div class="row">
+        <div class="form-group col-md-2">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Transporte</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">
+                    {% if entity.getDatosOperativo().getNecesitaTransporte() %}
+                        <strong>SI</strong>
+                    {% else %}
+                        <strong>NO</strong>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="form-group col-md-1 operativo_detalle_flecha operativo_NT" {% if not(entity.getDatosOperativo().getNecesitaTransporte()) %} style="display: none" {% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="operativo_NT_detalle" class="form-group col-md-9 text-center operativo_NT" {% if not(entity.getDatosOperativo().getNecesitaTransporte()) %} style="display: none" {% endif %}>
+            <div class="form-group col-sm-12">
+                <label class="col-md-12 staticLabel">
+                    <strong><em>Ida / Vuelta</em></strong>
+                </label>
+                <div class="col-md-12 text-center">
+                    <p class="form-control-static text-extra-large">{{ entity.getDatosOperativo().getFechaIdaTransporte() | date('d/m/Y') }} -  {{ entity.getDatosOperativo().getFechaRegresoTransporte() | date('d/m/Y') }} </p>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <div class="form-group col-sm-6">
+                    <label class="col-md-12 staticLabel">
+                        <strong><em>Ida: Origen</em></strong>
+                    </label>
+                    <div class="col-md-12 text-center">
+                        <p class="form-control-static text-extra-large">{{ entity.getDatosOperativo().getIdaOrigen() | upper }} </p>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="col-md-12 staticLabel">
+                        <strong><em>Regreso: Destino</em></strong>
+                    </label>
+                    <div class="col-md-12 text-center">
+                        <p class="form-control-static text-extra-large">{{ entity.getDatosOperativo().getRegresoDestino() | upper }} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <legend></legend>
+    <div class="row">
+        <div class="form-group col-md-2">
+            <label class="col-md-12 staticLabel">
+                <strong><em>Hospedaje</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">
+                    {% if entity.getDatosOperativo().getNecesitaHospedaje() %}
+                        <strong>SI</strong>
+                    {% else %}
+                        <strong>NO</strong>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="form-group col-md-1 operativo_detalle_flecha operativo_NH" {% if not(entity.getDatosOperativo().getNecesitaHospedaje()) %} style="display: none" {% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="operativo_NO_detalle" class="form-group col-md-9 text-center operativo_NH" {% if not(entity.getDatosOperativo().getNecesitaHospedaje()) %} style="display: none" {% endif %}>
+            <label class="col-md-12 staticLabel">
+                <strong><em>Check In / Check Out</em></strong>
+            </label>
+            <div class="col-md-12 text-center">
+                <p class="form-control-static text-extra-large">{{ entity.getDatosOperativo().getFechaIngresoHospedaje() | date('d/m/Y') }} -  {{ entity.getDatosOperativo().getFechaEgresoHospedaje() | date('d/m/Y') }} </p>
+            </div>
+        </div>
+    </div>
+
+    <legend></legend>
+    <label class="col-md-12 staticLabel">
+        <strong>
+            <em>Otros</em>
+        </strong>
+    </label>
+    <div id="operativo_otros" class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table id="doperativoTable" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center col-md-8" >DESCRIPCIÓN</th>
+                        <th class="text-center col-md-4">VALOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span>  CERTIFICADO RESOLUCIÓN NRO 1409/08 DGyE</td>
+                        <td class="text-center">
+                            {% if (entity.getDatosOperativo().getCertificado140908()) %}
+                                <strong>SI</strong>
+                            {% else %}
+                                <strong>NO</strong>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span>  CERTIFICADO ESTABLECIMIENTO PRIVADO</td>
+                        <td class="text-center">
+                            {% if (entity.getDatosOperativo().getCertificadoEstablecimientoPrivado()) %}
+                                <strong>SI</strong>
+                            {% else %}
+                                <strong>NO</strong>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span>  CERTIFICADO LABORAL</td>
+                        <td class="text-center">
+                            {% if (entity.getDatosOperativo().getCertificadoLaboral()) %}
+                                <strong>SI</strong>
+                            {% else %}
+                                <strong>NO</strong>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-cutlery"></span>  CONTABILIZAR VIANDA</td>
+                        <td class="text-center">
+                            {% if (entity.getDatosOperativo().getVianda()) %}
+                                <strong>SI</strong>
+                            {% else %}
+                                <strong>NO</strong>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-tags"></span>  TALLE (INDUMENTARIA)</td>
+                        <td class="text-center">
+                            <strong>
+                                {% if entity.getDatosOperativo().getTalleIndumentaria() == '' %}
+                                    --
+                                {% else %}
+                                    {{entity.getDatosOperativo().getTalleIndumentaria() | upper}}
+                                {% endif %}
+                            </strong>                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-user"></span>  PERSONAL DE LA GESTIÓN</td>
+                        <td class="text-center">
+                            {% if (entity.getDatosOperativo().getEsPersonalGestion()) %}
+                                <strong>SI</strong>
+                            {% else %}
+                                <strong>NO</strong>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if (is_granted('ROLE_ADMIN')) %}
+                        <tr>
+                            <td><span class="glyphicon glyphicon-flag"></span>  PERSONAL ACTIVO</td>
+                            <td class="text-center">
+                                {% if (entity.getActivo()) %}
+                                    <strong>SI</strong>
+                                {% else %}
+                                    <strong>NO</strong>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock%}
+
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosOperativo.css') }}">
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}
+{% endblock %}

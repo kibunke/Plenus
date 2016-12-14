@@ -1,0 +1,16 @@
+<?php
+
+namespace JuegosBA\InscripcionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\InscripcionBundle\Entity\Municipio
+ * @ORM\Entity()
+ */
+
+class Municipio extends Origen
+{
+    
+}

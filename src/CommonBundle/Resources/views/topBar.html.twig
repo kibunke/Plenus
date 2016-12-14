@@ -1,0 +1,43 @@
+<!-- start: TOPBAR -->
+<header class="topbar navbar navbar-inverse navbar-fixed-top inner">
+    <!-- start: TOPBAR CONTAINER -->
+    <div class="container">       
+        <div class="navbar-header">
+            <a  class="sb-toggle-left hidden-md hidden-lg" href="#main-navbar">
+                <i class="fa fa-bars"></i>
+            </a>            
+            <!-- start: LOGO -->            
+            <a class="navbar-brand" href="{{ path('homepage' )}}" style="height: 36px;margin-top: -7px;">
+                <img style="height: 36px;" src="{{ asset('bundles/common/images/logos/logosolojuegos.png') }}" alt="Logo Juegos BA"/>
+            </a>
+            <!-- end: LOGO -->
+        </div>
+        <div class="topbar-tools">
+            <!-- start: TOP NAVIGATION MENU -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown current-user">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <img class="img-circle pull-left" style="margin: 1px 5px;max-width: 35px;" src="{{ app.user.avatar }}" alt="Avatar">
+                        <span class="username hidden-xs  pull-left">{{ app.user.getUsername }}</span>
+                        <span class="caret"></span></a>                        
+                    </a>
+                    <ul class="dropdown-menu dropdown-dark" role="menu">
+                        <li><a href="{{ path('_changePassword') }}"><span class="fa fa-lock" aria-hidden="true"></span> Cambiar contraseña</a></li>
+                        <li><a href="{{ path('_logout') }}"><i class="fa fa-power-off" aria-hidden="true"></i></span> Cerrar sesión</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{ app.user.perfil }}</a></li>
+                    </ul>
+                </li>
+                <!-- end: USER DROPDOWN -->
+                <li class="right-menu-toggle">
+                    <a href="#" class="sb-toggle-right">
+                        <i class="fa fa-globe toggle-icon"></i> <i class="fa fa-caret-right"></i> <span class="notifications-count badge badge-default hide"> 3</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- end: TOP NAVIGATION MENU -->
+        </div>
+    </div>
+    <!-- end: TOPBAR CONTAINER -->
+</header>
+<!-- end: TOPBAR -->

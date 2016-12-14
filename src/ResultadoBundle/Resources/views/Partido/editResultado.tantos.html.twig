@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-sm-12 update-table">    
+        {{ form_start(form) }}
+            <div class="col-sm-3" style="padding: 0">
+                <label style="float: right;text-align: right;margin-right: 15px;">{{ entity.plaza1.getNombreCompetenciaRaw | raw }}</label>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group has-error">
+                  <div class="input-group-addon" id="sets_local">{{ entity.resultadoLocal }}</div>
+                  {{ form_widget(form.tanteador) }}
+                  <div class="input-group-addon" id="sets_visitante">{{ entity.resultadoVisitante }}</div>
+                </div>                
+                
+                <small>EJ: 25/09,14/25,25/20</small>
+            </div>
+            <div class="col-sm-3" style="padding: 0">
+                <label style="float: left;margin-left: 15px;">{{ entity.plaza2.getNombreCompetenciaRaw | raw }}</label>
+            </div>
+            <div class="hidden">
+                {{ form_rest(form) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('#panel-config').on('hidden.bs.modal', function (e) {
+                $("#okButton").removeAttr("disabled");
+            })            
+            $("#okButton").attr("disabled",true)
+            $("#juegosba_resultadobundle_partido_tantos_tanteador").on('keyup',function(){
+                var local=0;
+                var tantosLocal=0;
+                var tantosVisitante=0;
+                var visitante=0;
+                var error = false;
+                $node = $(this);
+                val = this.value.split(",");
+                
+                if (val.length>0) {
+                    $.map(val,function(item){
+                        aux=item.split("/");
+                        //console.log(aux.length);
+                        if (aux.length==2) {
+                            if (isNaN(parseInt(aux[0])) || isNaN(parseInt(aux[1]))) {
+                                $node.css("background-color","#ce4844 !important");
+                                error = true;
+                            }else{
+                                $node.css("background-color","");
+                                tantosLocal = tantosLocal + parseInt(aux[0]);
+                                tantosVisitante = tantosVisitante + parseInt(aux[1]);
+                                if (parseInt(aux[0])>parseInt(aux[1])) {
+                                    local = local + 1;
+                                }else{
+                                    visitante = visitante + 1;
+                                }
+                            }
+                        }else{ error=true;console.log(aux.length);}   
+                    });
+                    $("#sets_local").html(local);
+                    $("#juegosba_resultadobundle_partido_tantos_resultadoLocal").val(local);
+                    $("#juegosba_resultadobundle_partido_tantos_resultadoSecundarioLocal").val(tantosLocal);
+                    $("#sets_visitante").html(visitante);
+                    $("#juegosba_resultadobundle_partido_tantos_resultadoVisitante").val(visitante);
+                    $("#juegosba_resultadobundle_partido_tantos_resultadoSecundarioVisitante").val(tantosVisitante);
+                    if (!error) {
+                        $("#okButton").removeAttr("disabled")
+                    }else{
+                        $("#okButton").attr("disabled",true)
+                    }
+                }
+            })
+        })
+    </script>
+</div>

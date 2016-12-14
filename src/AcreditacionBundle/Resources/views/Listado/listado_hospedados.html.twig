@@ -1,0 +1,171 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Acreditados<small>Acreditación del personal de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('acreditacion_listado_area')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('acreditacion_listado_area') }}">
+                        Acreditados
+                    </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <h4 class="panel-title">Acreditados <span class="text-bold"> con Hospedaje</span></h4>
+
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cloud-download"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a href="#1" class="export-csv">
+                            <i class="fa fa-file-text-o"></i> Guardar como CSV
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-txt">
+                            <i class="fa fa-file-text-o"></i> Guardar como TXT
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-sql">
+                            <i class="fa fa-file-text-o"></i> Guardar como SQL
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-json">
+                            <i class="fa fa-file-text-o"></i> Guardar como JSON
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-excel">
+                            <i class="fa fa-file-text-o"></i> Exportar como Excel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-doc">
+                            <i class="fa fa-file-text-o"></i> Exportar como Word
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="listadoTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center header5p" >Ord</th>
+                    <th class="text-center header40p">Nombre</th>
+                    <th class="text-center header15p">Área</th>
+                    <th class="text-center header10p">Documento Tipo</th>
+                    <th class="text-center header10p">Documento Número</th>
+                    <th class="text-center header10p">Check in</th>
+                    <th class="text-center header10p">Check out</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acreditado in acreditados %}
+                    <tr>
+                        <td class="text-center ">{{ loop.index }}</td>
+                        <td class="colNombre">
+                            <div class="media">
+                                <div class="media-left media-middle">
+                                    <a href="#">
+                                        <img class="media-object thumbnail"  src="data:image/jpg;base64,{{ acreditado.avatar.archivo() }}" alt="Foto de Acreditación"/> 
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <strong>{{ acreditado.getDatosPersonales().getApellido() |upper}}</strong>  {{ acreditado.getDatosPersonales().getNombre() |lower}} 
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">{{ acreditado.getArea().getNombre() | capitalize}}</td>
+                        <td class="text-center">{{ acreditado.getDatosPersonales().getDocumentoTipo() |upper}}</td>
+                        <td class="text-center">{{ acreditado.getDatosPersonales().getDocumentoNro() }}</td>
+                        <td class="text-center" data-order="{{acreditado.getDatosOperativo().getFechaIngresoHospedaje().format('Ymd') }}">{{ acreditado.getDatosOperativo().getFechaIngresoHospedaje().format('d/m/Y') }}</td>
+                        <td class="text-center" data-order="{{acreditado.getDatosOperativo().getFechaEgresoHospedaje().format('Ymd') }}">{{ acreditado.getDatosOperativo().getFechaEgresoHospedaje().format('d/m/Y') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/listados.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
+    <script src="{{ asset('bundles/acreditacion/js/listados.js' )}}"></script>    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.TableExport.init("{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}");
+        });
+    </script>
+{% endblock %}

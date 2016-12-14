@@ -1,0 +1,5 @@
+<div>
+    <div id="reload-parcial-{{competencia.id}}" data-update="{{ path('competenciaOrden_reload', { 'id': competencia.id }) }}">
+        {% include 'ResultadoBundle:Competencia:Orden/plaza.table.html.twig' with { 'competencia' : competencia } %}
+    </div>
+</div>

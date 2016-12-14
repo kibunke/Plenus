@@ -1,0 +1,168 @@
+{% extends 'AcreditacionBundle::layout.html.twig' %}
+
+{% block acreditacion_tab_personal %}
+    {% if(accion == 'NUEVO') %}
+        <li role="presentation">
+            <a class='datosValidados' href="#">
+                <h4 class="panel-title">DATOS DE IDENTIFICACION</h4>
+            </a>
+        </li>
+    {% else %}
+        {{ parent()}}
+    {% endif %}
+{% endblock %}
+
+{% block acreditacion_tab_acreditacion %}
+    {% if(accion == 'NUEVO') %}
+        <li role="presentation">
+            <a class='datosValidados' href="#">
+                <h4 class="panel-title">DATOS DE ACREDITACION</h4>
+            </a>
+        </li>
+    {% else %}
+        {{ parent()}}
+    {% endif %}
+
+{% endblock %}
+
+{% block acreditacion_tab_tesoreria %}
+    <li role="presentation" class="active {% if(hasError) %}hasError{% endif %}"><a href="#"><h4 class="panel-title">DATOS DE TESORERIA</h4></a></li>
+    {% endblock %}
+
+{% block acreditacion_contenido %}
+    <div class="row">
+        <div class="form-group col-md-6">
+            <div class="form-group col-md-12 tesoreria_input">
+                {{ form_label(form.datosTesoreria.empleadoPublico, null, {'label_attr': {'class': 'col-md-12 text-left'} })  }}
+                <div class="input-group margin-bottom-sm col-md-12">
+                    <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                        {{ form_widget(form.datosTesoreria.empleadoPublico) }}
+                </div>
+                {{ form_errors(form.datosTesoreria.empleadoPublico)}}
+            </div>
+        </div>
+        <div class="form-group tesoreria_detalle_flecha tesoreria_EP col-md-1" {% if (entity.getDatosTesoreria().getEmpleadoPublico()  == 'NO') %} style="display: none"{% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="tesoreria_EP_detalle" class="form-group col-md-5 tesoreria_EP" {% if (entity.getDatosTesoreria().getEmpleadoPublico()  == 'NO') %}style="display: none"{% endif %}>
+
+            <div class="form-group col-md-12 tesoreria_input">
+                {{ form_label(form.datosTesoreria.legajo, null, {'label_attr': {'class': 'col-md-12 text-left'} })  }}
+                <div class="input-group margin-bottom-sm col-md-12">
+                    <div class="input-group-addon">#</div>
+                    {% if (entity.getDatosTesoreria().getEmpleadoPublico()  != 'NO') %}
+                        {{ form_widget(form.datosTesoreria.legajo, { 'attr': {'required': 'required', 'class': 'text-center'} }) }}
+                    {% else%}
+                        {{ form_widget(form.datosTesoreria.legajo, {'attr': {'class': 'text-center'} }) }}
+                    {% endif %}
+                </div>
+                {{ form_errors(form.datosTesoreria.legajo)}}
+            </div>
+            <div class="form-group col-md-12 tesoreria_input">
+                <label class="control-label">CBU  - <img style="height: 30px;" src=" {{asset('bundles/acreditacion/images/bplogo.jpg') }}" alt="Foto de Acreditación"/></label>
+                <div class="input-group margin-bottom-sm col-md-12">
+                    <div class="input-group-addon">#</div>
+                    {% if (entity.getDatosTesoreria().getEmpleadoPublico()  != 'NO') %}
+                        {{ form_widget(form.datosTesoreria.cbu, { 'attr': {'required': 'required', 'class': 'text-center'} }) }}
+                    {% else%}
+                        {{ form_widget(form.datosTesoreria.cbu, {'attr': {'class': 'text-center'} }) }}
+                    {% endif %}
+                </div>
+                {{ form_errors(form.datosTesoreria.cbu) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <div class="form-group col-md-12 tesoreria_input">
+                {{ form_label(form.datosTesoreria.categoriaPago) }}
+                <div class="input-group margin-bottom-sm col-md-12">
+                    <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                        {{ form_widget(form.datosTesoreria.categoriaPago, {'attr': {'class': 'text-center'} }) }}
+                </div>
+                {{ form_errors(form.datosTesoreria.categoriaPago)}}
+            </div>
+        </div>
+        <div id="tesoreria_flecha_pe" class="form-group col-md-1 tesoreria_detalle_flecha tesoreria_PE" {% if not ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined)) %}style="display: none"{% endif %}>
+            <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+        <div id="tesoreria_PE_detalle" class="form-group tesoreria_PE col-md-5" {% if not ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined)) %}style="display: none"{% endif %}>
+            <div class="form-group col-md-12 tesoreria_input">
+                {{ form_label(form.datosTesoreria.pagoEspecifico) }}
+                <div id="acreditacion_pagoEspecifico_input" class="input-group col-md-12" {% if ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined) and (entity.getDatosTesoreria().getCategoriaPago().getNombre() != '6')) %}style="display: none"{% endif %}>
+                    <span class="input-group-addon">$</span>
+                    {{ form_widget(form.datosTesoreria.pagoEspecifico, {'attr': {'class': 'text-center'} }) }}
+                    <span class="input-group-addon">.00</span>
+                </div>
+                <div id="acreditacion_pagoEspecifico_monto" class="form-group col-md-12" {% if ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined) and (entity.getDatosTesoreria().getCategoriaPago().getNombre() == '6')) %}style="display: none"{% endif %}>
+                    $AR 
+                    <span class="text-extra-large">
+                        {% if ((entity.getDatosTesoreria().getCategoriaPago().getNombre() is defined)) %}
+                            {{ render(controller('TesoreriaBundle:CategoriaPago:getMonto', { 'id': entity.getDatosTesoreria().getCategoriaPago().getId() })) }}
+                        {% endif %}
+                    </span>
+                    <span>00</span>
+                </div>
+                {{ form_errors(form.datosTesoreria.pagoEspecifico)}}
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="form-group col-md-6">
+            <div class="form-group col-md-12 tesoreria_input">
+                {{ form_label(form.datosTesoreria.pagoProvincia,  null, {'label_attr': {'class': 'col-md-12 text-left'} })   }}
+                <div class="input-group margin-bottom-sm col-md-12">
+                    <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                        {{ form_widget(form.datosTesoreria.pagoProvincia) }}
+                </div>
+                {{ form_errors(form.datosTesoreria.pagoProvincia)}}
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="form-group col-md-12 tesoreria_input">
+                {{ form_label(form.datosTesoreria.pagoPartido,  null, {'label_attr': {'class': 'col-md-12 text-left'} })   }}
+                <div class="input-group margin-bottom-sm col-md-12">
+                    <span class="input-group-addon"><i class="fa fa-hand-o-right"></i></span>
+                        {{ form_widget(form.datosTesoreria.pagoPartido) }}
+                </div>
+                {{ form_errors(form.datosTesoreria.pagoPartido)}}
+            </div>
+        </div>
+    </div>
+    {% if accion != 'VER' %}
+        <div class="row">
+            <div class="form-group col-md-12 text-right">
+                <div id="acreditacion_back" class="form-group col-md-5 text-left">
+                    {% if accion == 'NUEVO'%}
+                        {{ form_widget(form.backDatosAcreditativo) }}
+                    {% endif %}
+                </div>
+                <div id="acreditacion_save" class="form-group col-md-2 text-center">
+                </div>
+                <div id="acreditacion_next" class="form-group col-md-5 text-right">
+                    {% if accion == 'NUEVO'%}
+                        {{ form_widget(form.datosTesoreriaVal) }}
+                    {% else %}
+                        {{ form_widget(form.submit) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block otherStylesheets %}
+    {{ parent() }}
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/common/plugins/select2/select2.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/acreditacion/css/datosTesoreria.css') }}">
+{% endblock %}
+
+{% block otherJavascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/common/plugins/select2/select2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/acreditacion/js/datosTesoreria.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.DatosTesoreria.init("{{ path('categoriapago_getMonto') }}");
+        });
+    </script>
+{% endblock %}

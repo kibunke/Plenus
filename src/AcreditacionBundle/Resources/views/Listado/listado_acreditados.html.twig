@@ -1,0 +1,375 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Listado de Acreditados<small>Acreditación del personal de los Juegos</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('acreditacion_listado_area')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                    {% if (is_granted('ROLE_ACREDITACION_NEW') and (enFechaAcreditacion )) %}
+                        <li class="dropdown">
+                            <a  href="{{ path('personaljuegos_new')  }}">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i> NUEVO 
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ACREDITACION_PRINT') %}
+                        {% set data = [] %}
+                        {% for key, acreditado in acreditados %}
+                            {% set data = data|merge({(key):(acreditado.id)}) %}
+                        {% endfor %}
+                        <li class="dropdown">
+                            <a  href="#" onclick="acreditacionExport();"> 
+                                <i class="fa fa-file-text" aria-hidden="true"></i>  CREDENCIALES
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{{ path('acreditacion_listado_area') }}">
+                        Acreditados
+                    </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        {% if is_granted('ROLE_ADMIN') and (area is not defined)%}
+            <h4 class="panel-title">Acreditados del<span class="text-bold"> Sistema</span></h4>
+        {% else %}
+            <h4 class="panel-title">Acreditados del área de<span class="text-bold"> {{ area.getNombre() | capitalize }}</span></h4>
+        {% endif %}
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cloud-download"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a href="#1" class="export-csv">
+                            <i class="fa fa-file-text-o"></i> Guardar como CSV
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-txt">
+                            <i class="fa fa-file-text-o"></i> Guardar como TXT
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-sql">
+                            <i class="fa fa-file-text-o"></i> Guardar como SQL
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-json">
+                            <i class="fa fa-file-text-o"></i> Guardar como JSON
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-excel">
+                            <i class="fa fa-file-text-o"></i> Exportar como Excel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#1" class="export-doc">
+                            <i class="fa fa-file-text-o"></i> Exportar como Word
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="acreditacionTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center header5p" >
+                        {% if  is_granted('ROLE_ADMIN') %}
+                            <input id="seleccionarTodos" name="seleccionarTodos" type="checkbox" value="">
+                        {% else %}
+                            Ord.
+                        {% endif %}
+                    </th>
+                    <th class="text-center {%  if(area is  defined)  %} header25p {% else %} header15p {% endif %}">Nombre</th>
+                    <th class="text-center {%  if(area is  defined)  %} sr-only {% else %} header10p {% endif %}" >Area</th>
+                    <th class="sr-only">Documento</th>
+                    <th class="sr-only">Fecha de Nacimiento</th>
+                    <th class="sr-only">Sexo</th>
+                    <th class="sr-only">Email</th>
+                    <th class="text-center header15p">Función</th>
+                    <th class="sr-only">Letra de Idetificación</th>
+                    <th class="sr-only">Acceso 1</th>
+                    <th class="sr-only">Acceso 2</th>
+                    <th class="sr-only">Acceso 3</th>
+                    <th class="sr-only">Acceso 4</th>
+                    <th class="sr-only">Acceso 5</th>                    
+                    <th class="text-center  header8p" >Cat. Pago</th>
+                    <th class="sr-only">Monto</th>       
+                    <th class="sr-only">Empleado Provincial</th> 
+                    <th class="sr-only">Nro. Legajo</th>        
+                    <th class="sr-only">CBU</th>       
+                    <th class="sr-only">Provincia Pago</th>       
+                    <th class="sr-only">Partido Pago</th>
+                    <th class="text-center header8p">Transporte</th>
+                    <th class="sr-only">Fecha Ida Transporte</th>
+                    <th class="sr-only">Fecha Vuelta Transporte</th>
+                    <th class="sr-only">Lugar Ida Transporte</th>
+                    <th class="sr-only">Lugar Regreso Transporte</th>
+                    <th class="text-center header8p">Hoteleria</th>
+                    <th class="sr-only">Fecha Ingreso Hospedaje</th>
+                    <th class="sr-only">Fecha Egreso Hospedaje</th>
+                    <th class="sr-only">Certidicado 1409/08</th>
+                    <th class="sr-only">Certificado Establecimiento Privado</th>
+                    <th class="sr-only">Certificado Laboral</th>
+                    <th class="sr-only">Vianda</th>
+                    <th class="sr-only">Talle de Indumentaria</th>
+                    <th class="text-center header8p">Gestión</th>
+                    <th class="text-center header8p">Estado</th>
+                    <th class="text-center header15p">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acreditado in acreditados %}
+                    <tr>
+                        <td class="text-center ">
+                            <div class="checkbox">
+                                {% if  is_granted('ROLE_ADMIN') %}
+                                    <label>
+                                        <input type="checkbox" name="credenciales" value="{{ acreditado.getId() }}">
+                                    </label>
+                                {% else %}
+                                    {{ loop.index }}
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="colNombre">
+                            <div class="media">
+                                <div class="media-left media-middle">
+                                    <a href="#">
+                                        <img class="media-object thumbnail {%  if(area is not defined)  %} imgAll {% endif %}"  src="data:image/jpg;base64,{{ acreditado.avatar.archivo() }}" alt="Foto de Acreditación"/> 
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <strong>{{ acreditado.getDatosPersonales().getApellido() |upper}}</strong>  {{ acreditado.getDatosPersonales().getNombre() |lower}} 
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center {%  if(area is  defined)  %}sr-only{% endif %}">{{ acreditado.getArea().getNombre() }}</td>
+                        <td class="sr-only"> {{ acreditado.getDatosPersonales().getDocumentoTipo() }}  {{ acreditado.getDatosPersonales().getDocumentoNro() }} </td>
+                        <td class="sr-only ">{{ acreditado.getDatosPersonales().getFechaNacimiento() | date('d/m/Y')}}</td>
+                        <td class="sr-only">{{ (acreditado.getDatosPersonales().getSexo() == 'f')?'Femenino':'Masculino'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosPersonales().getEmail() }}</td>
+                        <td class="text-center">{{ acreditado.getFuncion().getNombre() }}</td>
+                        <td class="sr-only">{{ acreditado.getLetraIdentificacion()}}</td>
+                        <td class="sr-only">{{ acreditado.getAccesoSector1()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getAccesoSector2()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getAccesoSector3()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getAccesoSector4()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getAccesoSector5()?'SI':'NO'}}</td>
+                        <td class="text-center text-extra-large">{{ acreditado.getDatosTesoreria().getCategoriaPago().getNombre() }}</td>
+                        <td class="sr-only">{{ acreditado.getDatosTesoreria().getCategoriaPago().getNombre() == '6'?acreditado.getDatosTesoreria().getPagoEspecifico():acreditado.getDatosTesoreria().getCategoriaPago().getMonto() }} </td>
+                        <td class="sr-only">{{ acreditado.getDatosTesoreria().getEmpleadoPublico() }}</td>
+                        <td class="sr-only">{{ acreditado.getDatosTesoreria().getEmpleadoPublico()  == 'SI'?'-':acreditado.getDatosTesoreria().getLegajo() }}</td>
+                        <td class="sr-only">{{ acreditado.getDatosTesoreria().getEmpleadoPublico()  == 'NO'?'-':acreditado.getDatosTesoreria().getCbu() }}</td>
+                        <td class="sr-only">{{ acreditado.getDatosTesoreria().getPagoProvincia().getNombre() }}</td>
+                        <td class="sr-only">{{ acreditado.getDatosTesoreria().getPagoPartido().getNombre() }}</td>
+                        <td class="text-center">{{ acreditado.getDatosOperativo().getNecesitaTransporte()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getNecesitaTransporte()?acreditado.getDatosOperativo().getFechaIdaTransporte() | date('d/m/Y'):'-'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getNecesitaTransporte()?acreditado.getDatosOperativo().getFechaRegresoTransporte() | date('d/m/Y'):'-'}}</td>
+                        <td class="sr-only">{{ (acreditado.getDatosOperativo().getNecesitaTransporte() and (acreditado.getDatosOperativo().idaOrigen()))?acreditado.getDatosOperativo().idaOrigen().nombre():'-'}}</td>
+                        <td class="sr-only">{{ (acreditado.getDatosOperativo().getNecesitaTransporte() and(acreditado.getDatosOperativo().regresoDestino()))?acreditado.getDatosOperativo().regresoDestino().nombre():'-'}}</td>
+                        <td class="text-center">{{ acreditado.getDatosOperativo().getNecesitaHospedaje()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getNecesitaHospedaje()?acreditado.getDatosOperativo().getFechaIngresoHospedaje() | date('d/m/Y'):'-'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getNecesitaHospedaje()?acreditado.getDatosOperativo().getFechaEgresoHospedaje() | date('d/m/Y'):'-'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getCertificado140908()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getCertificadoEstablecimientoPrivado()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getCertificadoLaboral()?'SI':'NO'}}</td>
+                        <td class="sr-only">{{ acreditado.getDatosOperativo().getVianda()?'SI':'NO'}}</td>
+                        <td class="sr-only">
+                            {{ acreditado.getDatosOperativo().getTalleIndumentaria()?acreditado.getDatosOperativo().getTalleIndumentaria():'-' }}
+                        </td>
+                        <td class="text-center">
+                            {{ acreditado.getDatosOperativo().esPersonalGestion()?'SI':'NO'}}
+                        </td>
+                        <td class="text-center">
+                            {% if acreditado.getActivo() %}
+                                <span class="sr-only">SI</span>
+                                <span class="glyphicon glyphicon-ok text-green" aria-hidden="true"></span>
+                            {% else %}
+                                <span class="sr-only">NO</span>
+                                <span class="glyphicon glyphicon-remove text-red" aria-hidden="true"></span>
+                            {% endif %}
+                        </td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="{{ path('personaljuegos_show', {'id':acreditado.getId()}) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver">
+                                    <i class="fa fa-eye"></i> 
+                                </a>
+                                <a href="{{ path('personaljuegos_edit', {'id':acreditado.getId()}) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="#" onclick="$.Acreditados.delete({{acreditado.getId()}});" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar">
+                                    <i class="fa fa-times fa fa-white"></i>
+                                </a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group">
+                                    <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                        <i class="fa fa-cog"></i> <span class="caret"></span>
+                                    </a>
+                                    <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="{{ path('personaljuegos_show', {'id':acreditado.getId()}) }}">
+                                                <i class="fa fa-eye"></i> Ver acreditado
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="{{ path('personaljuegos_edit', {'id':acreditado.getId()}) }}">
+                                                <i class="fa fa-edit"></i> Editar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="#" onclick="$.Acreditados.delete({{acreditado.getId()}});">
+                                                <i class="fa fa-times"></i> Eliminar
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="acreditacionExport" class="modal fade " tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title"><i class="fa fa-file-text" aria-hidden="true"></i>  CREDENCIALES</h5>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+{% endblock %}
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/acreditacion/css/acreditados.css' ) }}" />
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>    
+    <script src="{{ asset('bundles/acreditacion/js/acreditados.js' )}}"></script>    
+    <script type="text/javascript">
+        {% if  is_granted('ROLE_ADMIN') %}
+            $(document).ready(function () {
+                $("#acreditacionTable tbody div.checkbox input:checkbox").on("change", function () {
+                    if ($(this).is(':checked')) {
+                        $(this).parents('tr').addClass('seleccionado');
+                    } else {
+                        $(this).parents('tr').removeClass('seleccionado');
+                    }
+                });
+                $("#seleccionarTodos").on('change', function () {
+                    if ($('#seleccionarTodos').is(':checked')) {
+                        $("#acreditacionTable tbody :checkbox").each(function (index, el) {
+                            $(el).prop('checked', true);
+                            $(el).parents('tr').addClass('seleccionado');
+                        });
+                    } else {
+                        $("#acreditacionTable tbody :checkbox").each(function (index, el) {
+                            $(el).prop('checked', false);
+                            $(el).parents('tr').removeClass('seleccionado');
+                        });
+                    }
+                });
+            });
+            function acreditacionExport() {
+                var elementos = [];
+                $("#acreditacionTable tbody :checkbox").each(function () {
+                    if ($(this).is(':checked')) {
+                        elementos.push($(this).val());
+                    }
+                });
+                $("#acreditacionExport div.modal-body").html('<object id="acreditacionObject" data="{{ path("acreditacion_imprimir" ) }}/[' + elementos + ']" type="application/pdf" ></object>');
+               
+                $("#acreditacionExport").modal();
+            }
+        {% else  %}
+            function acreditacionExport() {
+            {% set data = [] %}
+            {% for key, acreditado in acreditados %}
+                {% set data = data|merge({(key):(acreditado.id)}) %}
+            {% endfor %}
+
+                    $("#acreditacionExport div.modal-body").html('<object id="acreditacionObject" data="{{ path("acreditacion_imprimir", {'data': data |json_encode() } ) }}" ></object>');
+                    $("#acreditacionExport").modal();
+                }
+        {% endif %}
+            $(document).ready(function () {
+                $.Acreditados.init("{{ path('personaljuegos_delete') }}");
+                $.TableExport.init("{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}");
+            });
+    </script>
+{% endblock %}

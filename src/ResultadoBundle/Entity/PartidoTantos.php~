@@ -1,0 +1,297 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use JuegosBA\ResultadoBundle\Form\PartidoTantosType;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\PartidoTantos
+ *
+ * @ORM\Entity()
+ *
+ */
+class PartidoTantos extends Partido
+{ 
+    /**
+     * @var integer $resultadoLocal
+     *
+     * @ORM\Column(name="resultadoLocal", type="integer")
+     */
+    private $resultadoLocal;
+    
+    /**
+     * @var integer $resultadoVisitante
+     *
+     * @ORM\Column(name="resultadoVisitante", type="integer")
+     */
+    private $resultadoVisitante;
+    
+    /**
+     * @var integer $resultadoSecundarioLocal
+     *
+     * @ORM\Column(name="resultadoSecundarioLocal", type="integer")
+     */
+    private $resultadoSecundarioLocal;
+    
+    /**
+     * @var integer $resultadoSecundarioVisitante
+     *
+     * @ORM\Column(name="resultadoSecundarioVisitante", type="integer")
+     */
+    private $resultadoSecundarioVisitante;
+    
+    /**
+     * @var integer $tanteador
+     *
+     * @ORM\Column(name="tanteador", type="string")
+     */
+    private $tanteador;    
+
+    /**
+     * resetResultado
+     *
+     * @return boolean
+     */
+    public function resetResultado()
+    {
+        $this->setTanteador(NULL);
+        parent::resetResultado();
+    }
+    
+    /** 
+     * Get template
+     *
+     * @return class
+     */
+    public function getTemplate()
+    {
+        return "editResultado.tantos.html.twig";
+    }
+    
+    /** 
+     * Get formtype
+     *
+     * @return class
+     */
+    public function getFormType()
+    {
+        return new PartidoTantosType();
+    }
+    
+    /** 
+     * Get puntos
+     *
+     * @return array
+     */
+    public function soyLocal($plaza)
+    {
+        if ($plaza == $this->getPlaza1())
+            return true;
+        return false;
+    }
+    
+    /** 
+     * Get jugado
+     *
+     * @return boolean
+     */
+    public function jugado()
+    {
+        if ($this->getResultadoLocal())
+            return true;
+        return false;
+    }    
+    
+    /** 
+     * Get empato
+     *
+     * @return boolean
+     */
+    public function empato($plaza)
+    {    
+        if ( ($this->getResultadoLocal() == $this->getResultadoVisitante()) && ! $this->getResultadoSecundarioLocal())
+            return true;
+        return false;
+    }
+    
+    /** 
+     * Get gano
+     *
+     * @return boolean
+     */
+    public function gano($plaza)
+    {
+        if ($this->soyLocal($plaza)){
+            if ( $this->getResultadoLocal() > $this->getResultadoVisitante() || (
+                    $this->getResultadoLocal() == $this->getResultadoVisitante() &&
+                    $this->getResultadoSecundarioLocal() > $this->getResultadoSecundarioVisitante()
+                    )
+                )
+                return true;
+        }else{
+            if ( $this->getResultadoLocal() < $this->getResultadoVisitante() || (
+                    $this->getResultadoLocal() == $this->getResultadoVisitante() &&
+                    $this->getResultadoSecundarioLocal() < $this->getResultadoSecundarioVisitante()
+                    )
+                )
+                return true;
+        }
+        return false;
+    }
+    
+    /** 
+     * Get puntos
+     *
+     * @return array
+     */
+    public function calculate($row,$plaza)
+    {
+        if ($this->jugado())
+        {
+            $parametros = json_decode($this->getZona()->getLiga()->getParametros());
+            $row[1]++;//PG
+            //Sumar puntos y PG,PE,PP
+            if ($this->empato($plaza)){
+                $row[0] = $row[0] + $parametros->PE;//Pts
+                $row[3]++;//PE
+            }else if ($this->gano($plaza)){
+                $row[0] = $row[0] + $parametros->PG;//Pts
+                $row[2]++;//PG
+            }else{
+                $row[0] = $row[0] + $parametros->PP;//Pts
+                $row[4]++;//PP
+            }
+            if ($this->soyLocal($plaza)){
+                $row[5]+=$this->getResultadoLocal();
+                $row[6]+=$this->getResultadoVisitante();
+                $row[8]+=$this->getResultadoSecundarioLocal();
+                $row[9]+=$this->getResultadoSecundarioVisitante();                
+            }else{
+                $row[5]+=$this->getResultadoVisitante();
+                $row[6]+=$this->getResultadoLocal();
+                $row[8]+=$this->getResultadoSecundarioVisitante();
+                $row[9]+=$this->getResultadoSecundarioLocal();
+            }
+            $row[7] = $row[5] - $row[6];
+            $row[10] = $row[8] - $row[9];
+        }
+        return $row;
+    }    
+
+    /**
+     * Set resultadoLocal
+     *
+     * @param integer $resultadoLocal
+     * @return PartidoTantos
+     */
+    public function setResultadoLocal($resultadoLocal)
+    {
+        $this->resultadoLocal = $resultadoLocal;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoLocal
+     *
+     * @return integer 
+     */
+    public function getResultadoLocal()
+    {
+        return $this->resultadoLocal;
+    }
+
+    /**
+     * Set resultadoVisitante
+     *
+     * @param integer $resultadoVisitante
+     * @return PartidoTantos
+     */
+    public function setResultadoVisitante($resultadoVisitante)
+    {
+        $this->resultadoVisitante = $resultadoVisitante;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoVisitante
+     *
+     * @return integer 
+     */
+    public function getResultadoVisitante()
+    {
+        return $this->resultadoVisitante;
+    }
+
+    /**
+     * Set resultadoSecundarioLocal
+     *
+     * @param integer $resultadoSecundarioLocal
+     * @return PartidoTantos
+     */
+    public function setResultadoSecundarioLocal($resultadoSecundarioLocal)
+    {
+        $this->resultadoSecundarioLocal = $resultadoSecundarioLocal;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoSecundarioLocal
+     *
+     * @return integer 
+     */
+    public function getResultadoSecundarioLocal()
+    {
+        return $this->resultadoSecundarioLocal;
+    }
+
+    /**
+     * Set resultadoSecundarioVisitante
+     *
+     * @param integer $resultadoSecundarioVisitante
+     * @return PartidoTantos
+     */
+    public function setResultadoSecundarioVisitante($resultadoSecundarioVisitante)
+    {
+        $this->resultadoSecundarioVisitante = $resultadoSecundarioVisitante;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoSecundarioVisitante
+     *
+     * @return integer 
+     */
+    public function getResultadoSecundarioVisitante()
+    {
+        return $this->resultadoSecundarioVisitante;
+    }
+
+    /**
+     * Set tanteador
+     *
+     * @param string $tanteador
+     * @return PartidoTantos
+     */
+    public function setTanteador($tanteador)
+    {
+        $this->tanteador = $tanteador;
+
+        return $this;
+    }
+
+    /**
+     * Get tanteador
+     *
+     * @return string 
+     */
+    public function getTanteador()
+    {
+        return $this->tanteador;
+    }
+}

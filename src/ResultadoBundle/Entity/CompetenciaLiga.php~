@@ -1,0 +1,92 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\CompetenciaLiga
+ *
+ * @ORM\Entity()
+ *
+ */
+class CompetenciaLiga extends Competencia
+{
+    /**
+     * @ORM\OneToMany(targetEntity="Zona", mappedBy="liga")
+     */
+    private $zonas;
+    
+    /**
+     * Get folder
+     *
+     * @return string
+     */
+    public function getFolder()
+    {
+        return "Competencia\Liga";
+    }
+    
+    /**
+     * Add zona
+     *
+     * @param \JuegosBA\ResultadoBundle\Entity\Zona $zona
+     * @return Competencia
+     */
+    public function addZona(\JuegosBA\ResultadoBundle\Entity\Zona $zona)
+    {
+        $this->zonas[] = $zona;
+        $zona->setLiga($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove plaza
+     *
+     * @param \JuegosBA\ResultadoBundle\Entity\Zona $zona
+     */
+    public function removeZona(\JuegosBA\ResultadoBundle\Entity\Zona $zona)
+    {
+        $this->zonas->removeElement($zona);
+    }
+
+    /** 
+     * Get zonas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getZonas()
+    {
+        return $this->zonas;
+    }
+    
+    /**
+     * Get state
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        $percent = 0;
+        $zonas = $this->getZonas();
+        foreach ($zonas as $zona){
+            $percent += $zona->getState();
+        }
+        if ($percent)
+            $percent = $percent/count($zonas);
+        
+        return round($percent,1);
+    }
+    
+    /**
+     * Get idReload
+     *
+     * @return integer
+     */
+    public function getIdReload($plaza)
+    {
+        return $plaza->getZona()->getId();
+    }     
+}

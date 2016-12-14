@@ -1,0 +1,48 @@
+<div class="tabbable">
+    <ul id="myTab" class="nav nav-tabs">
+        {% for etapa in evento.etapas %}
+            <li class="{% if loop.index == 1 %} active {% endif %}">
+                <a href="#myTab_{{ etapa.id }}" data-toggle="tab" aria-expanded="false">
+                    <i class="green {{ etapa.getIcon }}"></i>
+                    {{ etapa.nombre }}
+                </a>
+            </li>
+        {% endfor %}
+            <li class="">
+                <a href="#myTab_fixtures" data-toggle="tab" aria-expanded="false">
+                    <i class="green fa fa-calendar-o"></i>
+                    Fixture Completo
+                </a>
+            </li>        
+    </ul>
+    <div class="tab-content">
+        {% for etapa in evento.etapas %}
+            <div class="tab-pane fade {% if loop.index == 1 %} in active {% endif %}" id="myTab_{{ etapa.id }}">
+                {% if etapa.competencia %}
+                    {% include 'PublicoBundle:'~etapa.competencia.getFolder()~':edit.html.twig' with { 'competencia' : etapa.competencia } %}
+                {% else %}
+                    <div class="alert alert-block alert-danger fade in">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                        <p>
+                            Esta <strong>etapa</strong> no tiene una información disponible aún.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="tab-pane fade" id="myTab_fixtures">
+            {% if evento.etapas %}
+                {% include 'PublicoBundle:Competencia:fixture.html.twig' with { 'evento' : evento } %}
+            {% else %}
+                <div class="alert alert-block alert-danger fade in">
+                    <button data-dismiss="alert" class="close" type="button">×</button>
+                    <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                    <p>
+                        Este <strong>evento</strong> no tiene información disponible aún.<br>
+                    </p>
+                </div>
+            {% endif %}
+        </div>        
+    </div>
+</div>

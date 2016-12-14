@@ -1,0 +1,126 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Partido
+ *
+ * @ORM\Table(name="plenus_admin.Partido")
+ * @ORM\Entity
+ */
+class Partido
+{
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=50)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="seccionElectoral", type="string", length=10)
+     */
+    private $seccionElectoral;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="regionDeportiva", type="string", length=10)
+     */
+    private $regionDeportiva;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cruceRegional", type="string", length=10)
+     */
+    private $cruceRegional;
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="Provincia", inversedBy="partidos")
+     * @ORM\JoinColumn(name="idProvincia", referencedColumnName="id")
+     */
+    private $provincia;
+
+     /**
+     * @ORM\OneToMany(targetEntity="Localidad", mappedBy="partido", cascade={"persist"})
+     */
+    private $localidades;
+
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */
+    private $updatedBy;
+
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean")
+     */
+    protected $isActive;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->localidades = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->setActive(true);
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * __toString
+     */    
+    public function __toString(){
+        return $this->getNombre();
+    }
+    
+    /**
+     * Get cruceRegionalRaw
+     *
+     * @return string
+     */
+    public function getCruceRegionalRaw()
+    {
+        return "<small>".str_replace($this->regionDeportiva, "</small><strong>".$this->regionDeportiva."</strong><small>",  $this->cruceRegional)."</small>";
+    }        
+}

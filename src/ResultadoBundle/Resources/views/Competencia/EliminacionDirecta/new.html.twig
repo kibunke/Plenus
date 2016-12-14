@@ -1,0 +1,103 @@
+<div id="row_1" class="col-sm-12">
+	<h3><i class="fa fa-edit"></i> Asignar Template</h3>
+    <div class="col-md-3">
+        <div class="panel panel-orange">
+            <div class="panel-heading">
+				<h4 class="panel-title"><span class="text-bold"> Crear desde </span>8vos</h4>
+			</div>
+            <div class="panel-body">
+                <p>
+                    Las competencia que poseen más de una etapa, son aquellas que realizan una pre-clasificación.
+                </p>
+                <p>
+                    Sin importar el tipo competencia utilizado en las etapa (series,ligas,eliminación directa,etc), los participantes realizan una clasificación y los mejores según criterio pasan a la etapa siguiente, la final, de donde se desprende el oro, plata y bonce.
+                </p>
+				<br>
+				{{ form_start(form8vos) }}
+					<div style="background-color:  white">
+						{{ form_row(form8vos.tercero) }}
+						<div class="hidden">{{ form_rest(form8vos) }}</div>
+					</div>
+					<button type="submit" class="btn btn-default btn-block">
+						<i class="fa fa-plus"></i> Crear Instancia
+					</button>
+				{{ form_end(form8vos) }}
+            </div>
+        </div>
+    </div>
+	<div class="col-md-3">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+				<h4 class="panel-title"><span class="text-bold"> Crear desde </span>4tos</h4>
+			</div>
+            <div class="panel-body">
+                <p>
+                    Las competencia que poseen más de una etapa, son aquellas que realizan una pre-clasificación.
+                </p>
+                <p>
+                    Sin importar el tipo competencia utilizado en las etapa (series,ligas,eliminación directa,etc), los participantes realizan una clasificación y los mejores según criterio pasan a la etapa siguiente, la final, de donde se desprende el oro, plata y bonce.
+                </p>
+				<br>
+				{{ form_start(form4tos) }}
+					<div style="background-color:  white">
+						{{ form_row(form4tos.tercero) }}
+						<div class="hidden">{{ form_rest(form4tos) }}</div>						
+					</div>
+					<button type="submit" class="btn btn-default btn-block">
+						<i class="fa fa-plus"></i> Crear Instancia
+					</button>
+				{{ form_end(form4tos) }}
+            </div>
+        </div>
+    </div>
+	<div class="col-md-3">
+        <div class="panel panel-blue">
+            <div class="panel-heading">
+				<h4 class="panel-title"><span class="text-bold"> Crear desde </span>Semifinal</h4>
+			</div>
+            <div class="panel-body">
+                <p>
+                    Las competencia que poseen más de una etapa, son aquellas que realizan una pre-clasificación.
+                </p>
+                <p>
+                    Sin importar el tipo competencia utilizado en las etapa (series,ligas,eliminación directa,etc), los participantes realizan una clasificación y los mejores según criterio pasan a la etapa siguiente, la final, de donde se desprende el oro, plata y bonce.
+                </p>
+				<br>
+				{{ form_start(formSemi) }}
+					<div style="background-color:  white">
+						{{ form_row(formSemi.tercero) }}
+						<div class="hidden">{{ form_rest(formSemi) }}</div>												
+					</div>
+					<button type="submit" class="btn btn-default btn-block">
+						<i class="fa fa-plus"></i> Crear Instancia
+					</button>
+				{{ form_end(formSemi) }}
+            </div>
+        </div>
+    </div>
+	<div class="col-md-3">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+				<h4 class="panel-title"><span class="text-bold"> Crear solo </span>Final</h4>
+			</div>
+            <div class="panel-body">
+                <p>
+                    Las competencia que poseen más de una etapa, son aquellas que realizan una pre-clasificación.
+                </p>
+                <p>
+                    Sin importar el tipo competencia utilizado en las etapa (series,ligas,eliminación directa,etc), los participantes realizan una clasificación y los mejores según criterio pasan a la etapa siguiente, la final, de donde se desprende el oro, plata y bonce.
+                </p>
+				<br>
+				{{ form_start(formFinal) }}
+					<div style="background-color:  white">
+						{{ form_row(formFinal.tercero) }}
+						<div class="hidden">{{ form_rest(formFinal) }}</div>																		
+					</div>
+					<button type="submit" class="btn btn-default btn-block">
+						<i class="fa fa-plus"></i> Crear Instancia
+					</button>
+				{{ form_end(formFinal) }}
+            </div>
+        </div>
+    </div>	
+</div>

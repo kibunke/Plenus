@@ -1,0 +1,235 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * City
+ *
+ * @ORM\Table(name="plenus_admin.City")
+ * @ORM\Entity
+ */
+class City
+{
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=50)
+     */
+    private $name;
+
+     /**
+     * @ORM\ManyToOne(targetEntity="County", inversedBy="cities")
+     * @ORM\JoinColumn(name="county_id", referencedColumnName="id")
+     */
+    private $county;
+
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updateBy", referencedColumnName="id")
+     */
+    private $updateBy;
+
+    /**
+     * Constructor
+     */       
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * __toString
+     */     
+    public function __toString(){
+        return $this->getName();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return City
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return City
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return City
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set county
+     *
+     * @param \CommonBundle\Entity\County $county
+     *
+     * @return City
+     */
+    public function setCounty(\CommonBundle\Entity\County $county = null)
+    {
+        $this->county = $county;
+
+        return $this;
+    }
+
+    /**
+     * Get county
+     *
+     * @return \CommonBundle\Entity\County
+     */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \UserControlBundle\Entity\User $createdBy
+     *
+     * @return City
+     */
+    public function setCreatedBy(\UserControlBundle\Entity\User $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \UserControlBundle\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set updateBy
+     *
+     * @param \UserControlBundle\Entity\User $updateBy
+     *
+     * @return City
+     */
+    public function setUpdateBy(\UserControlBundle\Entity\User $updateBy = null)
+    {
+        $this->updateBy = $updateBy;
+
+        return $this;
+    }
+
+    /**
+     * Get updateBy
+     *
+     * @return \UserControlBundle\Entity\User
+     */
+    public function getUpdateBy()
+    {
+        return $this->updateBy;
+    }
+}

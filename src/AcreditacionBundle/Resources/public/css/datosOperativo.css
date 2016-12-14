@@ -1,0 +1,106 @@
+.operativo_detalle_flecha{
+    text-align: center;
+    font-size: 30px;
+}
+#operativo_NT_detalle, #operativo_NO_detalle{
+    border-left: solid 1px #88bbc8;
+}
+#acreditacion-body label{
+    text-align: left;
+    color: black;
+    padding: 0px;
+}
+#operativo_NT_detalle{
+    padding: 0px;
+    margin: 0px;
+}
+#operativo_NT_detalle > div:last-child > div{
+    margin: 0px;
+    padding: 0px;
+}
+#operativo_necesitaTrasnporte label, #operativo_necesitaHospedaje label{
+    text-align: center;
+    width: auto;
+}
+#operativo_NO_detalle > div{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+#operativo_NT_detalle > div:last-child > div:first-child{
+    padding-right: 10px;
+}
+#operativo_NT_detalle > div:last-child > div:last-child{
+    padding-left: 10px;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary{
+    background: #88bbc8 none repeat scroll 0 0;
+    color: #fff;
+}
+.daterangepicker.opensright .ranges, .daterangepicker.opensright .calendar{
+    float: none;
+}
+div.daterangepicker > .calendar{
+    float: right !important;
+}
+div.daterangepicker_start_input, div.daterangepicker_end_input{
+    display: none;
+}
+.daterangepicker td.in-range{
+    background-color: #23d1b9;
+    color: white;
+}
+div.show-calendar{
+    background-color: rgb(95,130,149) !important;
+}
+.daterangepicker .calendar-date{
+    font-size: 17px;
+    width: 270px;
+}
+#acreditacion_step input{
+    text-align: center;
+}
+div.checkbox{
+    padding: 0px !important;
+    margin: 0px !important;
+    text-align: center;
+}
+#operativo_necesitaTrasnporte > div > div, #operativo_necesitaHospedaje > div > div, div.operativo_certificado_label{
+    margin-bottom: 0px;
+} 
+#operativo_certificados label, #operativo_otros label{
+    text-align: center !important;
+}
+#operativo_otros > div:last-child label{
+    text-align: left;
+}
+
+div.checkbox > label{
+    padding: 0px;
+}
+#doperativoTable td select{
+    text-align: center;
+}
+#doperativoTable thead tr  th{
+    background-color: #5f8295;
+    color: #f9f9f9;
+    overflow: no-display;
+    border: 1px solid #dfe1e5;
+}
+
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary{
+    background: #428bca none repeat scroll 0 0 !important;
+    color: #f9f9f9;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default{
+    background: #fe6c86 none repeat scroll 0 0 !important;
+    color: #f9f9f9;
+}
+#acreditacion-body h6{
+    color: black;
+}
+label.staticLabel{
+    background-color: #e6fee6;
+}
+p.form-control-static{
+    color: black;
+}

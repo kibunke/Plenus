@@ -1,0 +1,88 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\CompetenciaEliminacionDirecta
+ *
+ * @ORM\Entity()
+ *
+ */
+class CompetenciaEliminacionDirecta extends Competencia
+{    
+    /**
+     * @ORM\OneToMany(targetEntity="Partido", mappedBy="copa", cascade={"all"})
+     */
+    private $partidos;
+    
+    /**
+     * Get folder
+     *
+     * @return CompetenciaEliminacionDirecta
+     */
+    public function aplicarTemplate($user,$desde)
+    {
+        $partido = $this->newPartido($user);
+        $partido->setPlaza1(new Plaza($user,"Equipo1",99,$this));
+        $partido->setPlaza2(new Plaza($user,"Equipo2",99,$this));
+        //$plazaLocal->setNombre("Equipo)
+        $partido->setNombre("Partidito");
+        $partido->setNivel(1);
+        $partido->setOrden(1);
+        $this->addPartido($partido);
+    }    
+
+    /**
+     * Get folder
+     *
+     * @return string
+     */
+    public function getFolder()
+    {
+        return "Competencia/EliminacionDirecta";
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->partidos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add partidos
+     *
+     * @param \JuegosBA\ResultadoBundle\Entity\Partido $partidos
+     * @return CompetenciaEliminacionDirecta
+     */
+    public function addPartido(\JuegosBA\ResultadoBundle\Entity\Partido $partidos)
+    {
+        $this->partidos[] = $partidos;
+        $partidos->setCopa($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove partidos
+     *
+     * @param \JuegosBA\ResultadoBundle\Entity\Partido $partidos
+     */
+    public function removePartido(\JuegosBA\ResultadoBundle\Entity\Partido $partidos)
+    {
+        $this->partidos->removeElement($partidos);
+    }
+
+    /**
+     * Get partidos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPartidos()
+    {
+        return $this->partidos;
+    }     
+}

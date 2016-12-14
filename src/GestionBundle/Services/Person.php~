@@ -1,0 +1,231 @@
+<?php
+
+namespace CommonBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * CommonBundle\Entity\Person
+ *
+ * @ORM\Table(name="Person", uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="unique_index", columns={"typeDNI_id", "dni"})
+ *      }
+ * )
+ * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *                          "person"    = "Person"
+ *                      })
+ *                        "competitor"= "TournamentBundle\Entity\Competitor",
+ *                        "coach"     = "TournamentBundle\Entity\Coach",
+ *                        "companion" = "TournamentBundle\Entity\Companion",
+ *                        "employee"  = "PersonalBundle\Entity\Employee"
+ */
+class Person
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=50)
+     * @Assert\NotBlank(
+     *      message="name missing!"
+     * )
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $name;
+    
+    /**
+     * @var string $lastname
+     *
+     * @ORM\Column(name="lastname", type="string", length=50)
+     * @Assert\NotBlank(
+     *      message="lastname missing!"
+     * )
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $lastname;
+    
+    /**
+     * @var date $birthdate;
+     * 
+     * @ORM\Column(name="birthdate", type="date", nullable=true)
+     * @Assert\NotBlank(
+     *      message="birthdate missing!"
+     * )
+     * @Assert\Date()
+     */
+    private $birthdate;
+    
+    /**
+     * @var integer $dni
+     * 
+     * @ORM\Column(name="dni", type="integer")
+     * @Assert\NotBlank(
+     *      message="dni missing!"
+     * )
+     * @Assert\Type(
+     *      type="integer"
+     * )
+     * @Assert\GreaterThan(
+     *      value = 0
+     * )
+     */
+    private $dni;
+    
+    /**
+     * @var TypeDNI $typeDNI
+     * 
+     * @ORM\ManyToOne(targetEntity="TypeDNI")
+     * @ORM\JoinColumn(name="typeDNI_id", referencedColumnName="id")
+     */
+    private $typeDNI;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Gender")
+     * @ORM\JoinColumn(name="gender_id", referencedColumnName="id")
+     */
+    private $gender;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Email", mappedBy="person", cascade={"persist"})
+     */
+    private $emails;
+
+    /**
+     * @var string $telephone
+     *
+     * @ORM\Column(name="telephone", type="string", length=100, nullable=true)
+     */
+    private $telephone;
+    
+    /**
+     * @var string $cellphone
+     *
+     * @ORM\Column(name="cellphone", type="string", length=100, nullable=true)
+     */
+    private $cellphone;
+    
+    /**
+     * @var string $facebook
+     *
+     * @ORM\Column(name="facebook", type="string", length=30, nullable=true)
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $facebook;     
+
+    /**
+     * @var string $skype
+     *
+     * @ORM\Column(name="skype", type="string", length=30, nullable=true)
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $skype;
+     
+    /**
+     * @var string $twitter
+     *
+     * @ORM\Column(name="twitter", type="string", length=30, nullable=true)
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $twitter;
+     
+    /**
+     * @var string $linkedin
+     *
+     * @ORM\Column(name="linkedin", type="string", length=30, nullable=true)
+     * @Assert\Type(
+     *      type="string"
+     * )
+     */
+    private $linkedin;
+    
+    /**
+     * @var text $avatar
+     * @ORM\Column(name="avatar", type="text")
+     **/
+    private $avatar;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="UserControlBundle\Entity\User", mappedBy="person")
+     */
+    private $user;
+    
+    /**
+     * @var datetime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     * @Assert\Date()
+     */
+    private $createdAt;
+    
+    /**
+     * @var UserControlBundle\Entity\User $createdBy
+     * 
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
+     */
+    private $createdBy;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $updatedAt;
+
+    /**
+     * @var UserControlBundle\Entity\User $updatedBy
+     * 
+     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */   
+    private $updatedBy;
+
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean")
+     */
+    protected $isActive;
+    
+    /**
+     * Constructor
+     */    
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->isActive = true;
+        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * __toString
+     */    
+    function __toString()
+    {
+        return $this->dni;    
+    }
+}

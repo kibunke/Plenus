@@ -1,0 +1,84 @@
+<table id="acreditacionTableExport">
+    <thead>
+        <tr>
+            <th >Ord</th>
+            <th >Nombre</th>
+            <th >Area</th>
+            <th >Documento</th>
+            <th >Fecha de Nacimiento</th>
+            <th >Género</th>
+            <th >Email</th>
+            <th >Función</th>
+            <th >Letra de Identificación</th>
+            <th >Acceso 1</th>
+            <th >Acceso 2</th>
+            <th >Acceso 3</th>
+            <th >Acceso 4</th>
+            <th >Acceso 5</th>                    
+            <th>Cat. Pago</th>
+            <th >Monto</th>       
+            <th >Empleado Provincial</th> 
+            <th >Nro. Legajo</th>       
+            <th >CBU</th>       
+            <th >Provincia Pago</th>       
+            <th >Partido Pago</th>
+            <th >Transporte</th>
+            <th >Fecha Ida Transporte</th>
+            <th >Fecha Vuelta Transporte</th>
+            <th >Lugar Ida Transporte</th>
+            <th >Lugar Regreso Transporte</th>
+            <th >Hospedaje</th>
+            <th >Fecha Ingreso Hospedaje</th>
+            <th >Fecha Egreso Hospedaje</th>
+            <th >Certidicado 1409/08</th>
+            <th >Certificado Establecimiento Privado</th>
+            <th >Certificado Laboral</th>
+            <th >Vianda</th>
+            <th >Talle de Indumentaria</th>
+            <th >Gestión</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for acreditado in acreditados %}
+            <tr>
+                <td >{{ loop.index }}</td>
+                <td> {{ acreditado.getDatosPersonales().getApellido() }}  {{ acreditado.getDatosPersonales().getNombre() }} </td>
+                <td >{{ acreditado.getArea().getNombre() }}</td>
+                <td >{{ acreditado.getDatosPersonales().getDocumentoTipo() }} :</span> {{ acreditado.getDatosPersonales().getDocumentoNro() }}</td>
+                <td >{{ acreditado.getDatosPersonales().getFechaNacimiento().format('d/m/Y')}}</td>
+                <td >{{ (acreditado.getDatosPersonales().getSexo() == 'f')?'Femenino':'Masculino'}}</td>
+                <td >{{ acreditado.getDatosPersonales().getEmail() }}</td>
+                <td> {{ acreditado.getFuncion().getNombre() }}</td>
+                <td >{{ acreditado.getLetraIdentificacion()}}</td>
+                <td >{{ acreditado.getAccesoSector1()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getAccesoSector2()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getAccesoSector3()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getAccesoSector4()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getAccesoSector5()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosTesoreria().getCategoriaPago().getNombre() }}</td>
+                <td >{{ acreditado.getDatosTesoreria().getCategoriaPago().getNombre() == '6'?acreditado.getDatosTesoreria().getPagoEspecifico(): acreditado.getDatosTesoreria().getCategoriaPago().getMonto() }}</td>
+                <td >{{ acreditado.getDatosTesoreria().getEmpleadoPublico() }}</td>
+                <td >{{ acreditado.getDatosTesoreria().getEmpleadoPublico()  == 'NO'?'-':acreditado.getDatosTesoreria().getLegajo() }}</td>
+                <td >{{ acreditado.getDatosTesoreria().getEmpleadoPublico()  == 'NO'?'-':acreditado.getDatosTesoreria().getCbu() }}</td>
+                <td >{{ acreditado.getDatosTesoreria().getPagoProvincia().getNombre() }}</td>
+                <td >{{ acreditado.getDatosTesoreria().getPagoPartido().getNombre() }}</td>
+                <td >{{ acreditado.getDatosOperativo().getNecesitaTransporte()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getNecesitaTransporte()?acreditado.getDatosOperativo().getFechaIdaTransporte().format('d/m/Y'):'-'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getNecesitaTransporte()?acreditado.getDatosOperativo().getFechaRegresoTransporte().format('d/m/Y'):'-'}}</td>
+                <td >{{ (acreditado.getDatosOperativo().getNecesitaTransporte() and (acreditado.getDatosOperativo().idaOrigen()))?acreditado.getDatosOperativo().idaOrigen().nombre():'-'}}</td>
+                <td >{{ (acreditado.getDatosOperativo().getNecesitaTransporte() and(acreditado.getDatosOperativo().regresoDestino()))?acreditado.getDatosOperativo().regresoDestino().nombre():'-'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getNecesitaHospedaje()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getNecesitaHospedaje()?acreditado.getDatosOperativo().getFechaIngresoHospedaje().format('d/m/Y'):'-'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getNecesitaHospedaje()?acreditado.getDatosOperativo().getFechaEgresoHospedaje().format('d/m/Y'):'-'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getCertificado140908()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getCertificadoEstablecimientoPrivado()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getCertificadoLaboral()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getVianda()?'SI':'NO'}}</td>
+                <td >{{ acreditado.getDatosOperativo().getTalleIndumentaria() }}</td>
+                <td >{% if acreditado.datosOperativo.esPersonalGestion() %}SI{% else %}NO{% endif %}</td>
+                <td >{% if acreditado.getActivo() %}SI{% else %}NO{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

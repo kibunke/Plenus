@@ -1,0 +1,66 @@
+<div>
+    <div class="row" >
+        {% if (competencia.partidos | length) %}
+            <div class="col-sm-12">  
+                <h4 class="panel-title">Partidos <span class="text-bold">{{ competencia }}</span></h4>
+                <br>
+                {% for arr in competencia.getPartidosCopa() %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="danger">
+                                <th colspan="7" class="">Partidos : {{ arr[0].getNivelTexto }}</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th class="text-right">Equipo</th>
+                                <th style="width: 40px"></th>
+                                <th class="center">vs</th>
+                                <th style="width: 40px"></th>
+                                <th class="text-left">Equipo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for partido in arr %}
+                            <tr>
+                                <td class="text-right">
+                                    <small>{{ partido.nombre }}</small>
+                                </td>
+                                <td class="text-right">
+                                    {% if (partido.plaza1) %}
+                                        {{ partido.plaza1.getNombreCompetenciaRaw | raw }}
+                                    {% endif %}
+                                </td>
+                                <td class="center">{{ partido.resultadoLocal }}</td>
+                                <td class="center">
+                                    {% if (partido.cronograma) %}
+                                        {{ partido.cronograma.getRaw | raw }}
+                                    {% endif %}
+                                    {% if (partido.tanteador is defined) %}
+                                        {{ partido.tanteador }}
+                                    {% else %}
+                                        {% if (partido.resultadoSecundarioLocal is defined) %}{{ partido.resultadoSecundarioLocal }} - {{ partido.resultadoSecundarioVisitante }}{% endif %}
+                                    {% endif %}                                    
+                                </td>
+                                <td class="center">{{ partido.resultadoVisitante }}</td>
+                                <td class="text-left">
+                                    {% if (partido.plaza2) %}
+                                        {{ partido.plaza2.getNombreCompetenciaRaw | raw }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-block alert-danger fade in">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
+                <p>
+                    Este <strong>evento</strong> no tiene información disponible aún.<br>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>

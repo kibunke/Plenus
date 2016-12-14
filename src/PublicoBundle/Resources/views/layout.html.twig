@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- start: HEAD -->
+    <head>
+	<title>JuegosBA {{ "now"|date("Y") }}</title>
+	<!-- start: META -->
+	<meta charset="utf-8" />
+    <!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="description" content="Web Oficial de los Juegos BA, Secretaría de Deportes de La Provincia de Buenos Aires" />
+	<meta name="author"  content="Departamento de Informática, Secretaría de Deportes de la Provincia de Buenos Aires"/>
+	<!-- end: META -->
+	<!-- start: MAIN CSS -->
+	{% block stylesheets %}
+        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="{{ asset('bundles/common/plugins/font-awesome/css/font-awesome.min.css') }}">
+        
+        <link rel="stylesheet" href="{{ asset('bundles/common/plugins/animate.css/animate.min.css') }}">
+        <!-- end: MAIN CSS -->
+        <!-- start: CSS REQUIRED FOR SUBVIEW CONTENTS -->
+        <link rel="stylesheet" href="{{ asset('bundles/common/plugins/toastr/toastr.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-select/bootstrap-select.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/common/plugins/DataTables/media/css/dataTables.bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/common/css/styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/common/css/styles-responsive.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/common/css/plugins.css') }}">        
+        <!-- end: CSS REQUIRED FOR THIS SUBVIEW CONTENTS-->
+        <link rel="shortcut icon" href="{{ asset('favicon.png') }}" />
+		<style>
+			.panel-tabs, .tabbable {
+				background-color: #ccc !important;
+			}
+			@media print {
+/*				body * {
+					visibility: hidden;
+				}
+				#section-to-print, #section-to-print * {
+					visibility: visible;
+				}
+				#section-to-print {
+					position: absolute;
+					left: 0;
+					top: 0;
+				}*/
+				#cronogramaTable thead {
+					visibility: hidden;
+				}
+				#cronogramaTable_length, #cronogramaTable_filter{
+					display: none;
+				}
+				#section-no-print{
+					display: none;
+				}
+			}
+		</style>
+	{% endblock %}
+	<script src="{{ asset('bundles/common/plugins/jQuery/jquery-2.1.1.min.js') }}"></script>
+	<!-- end: MAIN CSS -->
+	<!-- start: CSS REQUIRED FOR THIS PAGE ONLY -->
+	{% block otherStylesheets %}{% endblock %}
+	<!-- end: CSS REQUIRED FOR THIS PAGE ONLY -->
+    </head>
+    <!-- end: HEAD -->
+    
+    <!-- start: BODY -->
+    {% block bodyTag %}
+	<body>
+    {% endblock %}
+		<div class="main-wrapper" style="background-color: #ccc;">	
+			{% block contenido %}
+				<!-- start: MAIN CONTAINER -->							
+				<div class="main-container inner" style="margin-left: 0;">
+					<!-- start: PAGE -->
+					<div class="main-content">        
+						<div class="container">
+							<!-- start: PAGE CONTENT -->
+							<div id="blockContenidoContent">
+								{% block contenidoContent %}
+									<div class="row">
+										<div class="col-md-12">
+											<div id="blockContenidoData" class="panel panel-white">
+												{% block contenidoData %}{% endblock %}
+											</div>
+										</div>
+									</div>
+								{% endblock %}
+							</div>
+						</div>            
+					</div>
+					<!-- end: PAGE -->
+				</div>
+				<!-- end: MAIN CONTAINER -->                
+			{% endblock %}
+		</div>
+		{% block javascripts %}
+			<script src="{{ asset('bundles/common/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+			<script src="{{ asset('js/bootstrap.js') }}"></script>
+			<script src="{{ asset('bundles/common/plugins/perfect-scrollbar/src/perfect-scrollbar.js') }}"></script>
+			<!-- end: MAIN JAVASCRIPTS -->
+			<!-- start: JAVASCRIPTS REQUIRED FOR SUBVIEW CONTENTS -->
+			<script src="{{ asset('bundles/common/plugins/toastr/toastr.js') }}"></script>
+			<script src="{{ asset('bundles/common/plugins/DataTables/media/js/jquery.dataTables.min.js') }}"></script>
+			<script src="{{ asset('bundles/common/plugins/DataTables/media/js/dataTables.bootstrap.min.js') }}"></script>
+			<!-- end: CORE JAVASCRIPTS  -->
+		{% endblock %}
+		{% block otherAutomaticJavascripts %}{% endblock %}
+		<!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		{% block otherJavascripts %}{% endblock %}
+		{% block otherAjaxJavascripts %}{% endblock %}
+		
+		<!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+		{% block footer %}
+		{% endblock %}
+		</body>
+    <!-- end: BODY -->
+</html>

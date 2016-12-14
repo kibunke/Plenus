@@ -1,0 +1,86 @@
+<?php
+
+namespace JuegosBA\ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * JuegosBA\ResultadoBundle\Entity\CompetenciaLigaTantos
+ *
+ * @ORM\Entity()
+ *
+ */
+class CompetenciaLigaTantos extends CompetenciaLiga
+{
+    /*                   00    01   02   03   04   05   06   07   08   09   10  */
+    private $columns = ["Pts","PJ","PG","PE","PP","SF","SC","DS","TF","TC","DT"];
+    
+    private $row = [0,0,0,0,0,0,0,0,0,0,0];
+    
+   /**
+     * recalcularOrdenNatural
+     *
+     * @return array
+     */
+    public function recalcularOrdenNatural($zona)
+    {
+        $pl = $zona->getPlazas()->toArray();
+        // Obtener una lista de columnas
+        foreach ( $pl as $plaza){
+            $aux = $zona->getDetalleZona($plaza);
+            $pts[] = $aux[0];
+            $ds[] = $aux[7];
+            $sf[] = $aux[5];
+            $se[] = $aux[6];
+            $dt[] = $aux[10];
+            $tf[] = $aux[8];
+            $te[] = $aux[9];
+        }
+        
+        $arr = array_multisort(
+                    $pts, SORT_DESC, SORT_NUMERIC,
+                    $ds, SORT_DESC, SORT_NUMERIC,
+                    $sf, SORT_DESC, SORT_NUMERIC,
+                    $se, SORT_ASC, SORT_NUMERIC,
+                    $dt, SORT_DESC, SORT_NUMERIC,
+                    $tf, SORT_DESC, SORT_NUMERIC,
+                    $te, SORT_ASC, SORT_NUMERIC,                    
+                    $pl, SORT_DESC
+                );
+        foreach ( $pl as $key=>$plaza){
+            $plaza->setOrdenNatural($key);
+        }        
+        return $arr;
+    }
+    
+    /** 
+     * Get columns
+     *
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+    
+    /** 
+     * Get columns
+     *
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
+    
+    /** 
+     * Get newPartido
+     *
+     * @return \JuegosBA\ResultadoBundle\Entity\Partido
+     */
+    public function newPartido($user = null)
+    {
+        return new PartidoTantos($user);
+    }    
+}

@@ -1,0 +1,37 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    always_authenticate_before_granting: true
+    access_denied_url: /error403    
+    # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
+    encoders:
+        #Symfony\Component\Security\Core\User\User: bcrypt
+        SeguridadBundle\Entity\Usuario: bcrypt
+    
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        database_users:
+            entity: { class: SeguridadBundle:Usuario, property: username }
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # secures part of the application
+        secured_area:
+            pattern:    ^/
+            anonymous: true
+            form_login:
+                check_path: _security_check
+                login_path: _login
+                default_target_path: homepage
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: _logout
+                target: _login
+            #anonymous: ~
+    
+    access_control:
+        - { path: /system/, role: ROLE_USER }
