@@ -16,8 +16,9 @@
 #!var/sessions/.gitkeep
 
 # Parameters
-/app/config/parameters.yml
-/app/config/parameters.ini
+#/app/config/parameters.yml
+#/app/config/parameters.ini
+#/app/config/config.yml
 
 # Managed by Composer
 /app/bootstrap.php.cache
