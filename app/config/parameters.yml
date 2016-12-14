@@ -1,0 +1,16 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: plenus_admin
+    database_user: root
+    database_password: 12345
+    
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    
+    secret: 6c1e764ee8b443d4b207c5b985a82fa07c44ec3f
+    
+    mail_from_no_reply: no-responder@plenus.com.ar
