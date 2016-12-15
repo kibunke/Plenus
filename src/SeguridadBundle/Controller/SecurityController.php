@@ -274,7 +274,6 @@ class SecurityController extends Controller
         //            ->add('persona', PersonaType
         //            
         //            ->getForm();
-        //
     }                        
 
     /**
