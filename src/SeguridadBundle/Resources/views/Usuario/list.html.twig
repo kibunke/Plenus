@@ -1,0 +1,256 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1>Listado de Usuarios <small>Todo lo referido a los usuarios del sistema</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{#{ path('usuario_new') }#}">
+                            <i class="fa fa-user"></i> NUEVO
+                        </a>
+                    </li>
+        
+                    <li class="menu-search">
+                        <a href="#">
+                            <i class="fa fa-search"></i> BUSCAR
+                        </a>
+                        <!-- start: SEARCH POPOVER -->
+                        <div class="popover bottom search-box transition-all">
+                            <div class="arrow"></div>
+                            <div class="popover-content">
+                                <!-- start: SEARCH FORM -->
+                                <form class="" id="searchform" action="#">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Buscar">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-main-color btn-squared" type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                                <!-- end: SEARCH FORM -->
+                            </div>
+                        </div>
+                        <!-- end: SEARCH POPOVER -->
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{#{ path('usuario') }#}">
+                        Usuario
+                    </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <h4 class="panel-title">Tabla <span class="text-bold">de usuarios</span></h4>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    {#
+                    <li>
+                        <a class="panel-config" href="#panel-config" data-toggle="modal">
+                            <i class="fa fa-wrench"></i> <span>Configurations</span>
+                        </a>
+                    </li>#}
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <style>
+        .popover-content{
+            overflow: hidden;
+        }
+    </style>
+    <div class="panel-body">
+        <table id="list_users" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="">Usuario</th>
+                    <th class="">Apellido y Nombre</th>
+                    <th>Perfil</th>
+                    <th class="text-center">DNI</th>
+                    <th class="text-center" title="Email registrado"><span class="fa fa-envelope fa-lg"></span></th>
+                    <th class="text-center" title="Usuario Activo"><span class="fa fa-user fa-lg"></span></th>
+                    <th class="text-center" title="Logueado"><i class="fa fa-unlink fa-lg"></i></th>
+                    <th class="text-center" title="Información del usuario"><span class="glyphicon glyphicon-info-sign"></span></th>
+                    <th class="text-center" title="Debe cambiar contraseña al iniciar"><span class="glyphicon glyphicon-lock"></span></th>
+                    <th style="min-width: 95px"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script type="text/javascript">
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var _table;
+
+            $.Default = $.Default || {};
+            $.Default.init = function() {
+                 _table=$('#list_users').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('user_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "id" },
+                        { "data": "ico" },
+                        { "data": "user" },
+                        { "data": "name" },
+                        { "data": "dni" },
+                        { "data": "emails" },
+                        { "data": "active" },
+                        { "data": "info" },
+                        { "data": "pass" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 0, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [1,6,8]
+                        },
+                        {
+                            "targets": 1,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' && data === true ?
+                                                '<span class="fa fa-user-secret" aria-hidden="true"><span class="sr-only">1</span></span>':
+                                                '<span class="fa fa-user" aria-hidden="true"><span class="sr-only">0</span></span>';
+                                        }
+                        },
+                        {
+                            "targets": 5,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            html = "";
+                                            $.map(data, function(email){
+                                                html += email+"</br>";
+                                            })
+                                            return type === 'display' ?
+                                                '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+html+'">'+
+                                                    '<span class="fa fa-envelope-o"></span>'+
+                                                '</button>':
+                                                '<span class="sr-only">0</span>';
+                                        }
+                        },
+                        {
+                            "targets": 6,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' && data === true ?
+                                                '<span class="glyphicon glyphicon-ok-sign text-success"><span class="sr-only">1</span></span>':
+                                                '<span class="glyphicon glyphicon-remove-sign text-danger"><span class="sr-only">0</span></span>';
+                                        }
+                        },
+                        {
+                            "targets": 7,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            created = data.created ? new Date(data.created.date).toLocaleString():"";
+                                            lastop = data.lastop ? new Date(data.lastop.date).toLocaleString():"";
+                                            return type === 'display' ?
+                                                '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="<b>Creado:</b> ' + created + '<br><b>Ult.Operación:</b>' + lastop + '">'+
+                                                    '<span class="glyphicon glyphicon-info-sign"></span>'+
+                                                '</button>':
+                                                '<span class="sr-only">0</span>';
+                                        }
+                        },
+                        {
+                            "targets": 8,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' && data === true ?
+                                                '<span class="glyphicon glyphicon-ok-sign text-success"><span class="sr-only">1</span></span>':
+                                                '<span class="sr-only">0</span>';
+                                        }
+                        },
+                        {
+                            "targets": 9,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' && data.length > 0 ?
+                                                '<a type="button" class="btn btn-info btn-xs" href="'+ data +'"><span class="glyphicon glyphicon-eye-open"></span></a>':
+                                                '<a type="button" class="btn btn-info btn-xs disabled" href="#1"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                                        }
+                        }
+                    ],
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        if ( aData.dni == "0" )
+                            $(nRow).addClass( 'info' );
+                        return nRow;
+                    },
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('[data-toggle="popover"]').popover();
+                        $input = $('#list_users_filter input');
+                        if ($input.val().length>0) {
+                            $('#list_users tbody td').each(function(){
+                                $td=$(this);
+                                if ($td.text().toUpperCase().indexOf($input.val().toUpperCase())>-1) {
+                                    $td.html($td.text().toUpperCase().replace($input.val().toUpperCase(),'<span class="occurrence">'+$input.val().toUpperCase()+'</span>'))
+                                }
+                            });
+                        }
+                        $.Default.charts(table.ajax.json().cantUsers);
+                    }
+                });
+            },
+            $.Default.charts = function(){}
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();});
+    </script>
+{% endblock %}    
