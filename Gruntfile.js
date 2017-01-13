@@ -127,7 +127,13 @@ module.exports = function (grunt) {
                 cwd: 'src/CommonBundle/Resources/public/images/',
                 src: '**',
                 dest: 'web/assets/images/'
-            }
+            },
+            main: {
+                expand: true,
+                cwd: 'src/CommonBundle/Resources/public/js/',
+                src: '**',
+                dest: 'web/assets/common',
+              }
         }
     });
 

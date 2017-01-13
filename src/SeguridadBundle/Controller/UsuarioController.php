@@ -28,6 +28,63 @@ class UsuarioController extends Controller
     {
         return array();
     }
+
+    /**
+     * @Route("/list", name="user_list")
+     * @Template()
+     * @Security("has_role('ROLE_USER_LIST')")
+     */
+    public function listAction(Request $request)
+    {
+        return array();
+    }
+    
+    /**
+     * @Route("/list/datatable", name="user_list_datatable")
+     * @Security("has_role('ROLE_USER_LIST') and has_role('ROLE_ORGANIZADOR')")
+     */
+    public function listDataTableAction(Request $request)
+    {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker')->isGranted('ROLE_USER_LIST_ALL'));
+
+        //$cant = array(
+        //              "activos" => $em->getRepository('SeguridadBundle:Usuario')->countActivos(),
+        //              "inactivos" => $em->getRepository('SeguridadBundle:Usuario')->countInactivos()
+        //            );
+        $data=array(
+            "draw"=> $request->request->get('draw'),
+            "recordsTotal"=> $filter['total'],
+            "recordsFiltered"=> $filter['filtered'],
+            "data"=> array()
+        );
+        
+        foreach ($filter['rows'] as $user){
+            $role = $user->getRoles()[0];
+            $persona = $user->getPersona();
+            $data['data'][] = array(
+                "id" => $user->getId(),
+                "ico" => strpos($role, "ADMIN")>-1? true : false,
+                "user"=> $user->getUsername(),
+                "persona" => array(
+                    "name"=> $persona->getNombre(),
+                    "lastname"=> $persona->getApellido(),
+                    "dni"=> $persona->getDni(),
+                    "email" => $persona->getEmail(),
+                    "telefono" => $persona->getTelefono(),
+                ),
+                "active"=> $user->getIsActive(),
+                "info"=> array(
+                            "created" => $user->getCreatedAt(),
+                            "lastop" => $user->getLastActivity()
+                        ),
+                "pass"=> $user->getChangePassword(),
+                "actions"=> '',//$this->generateUrl('usuario_list_logs', array('user' => $user->getId() ))
+            );
+        }
+        return new JsonResponse($data);
+    }
     
     /**
      * @Route("/change/password", name="_changePassword")

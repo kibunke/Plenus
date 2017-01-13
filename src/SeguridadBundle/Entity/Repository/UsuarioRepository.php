@@ -10,35 +10,67 @@ namespace SeguridadBundle\Entity\Repository;
  */
 class UsuarioRepository extends \Doctrine\ORM\EntityRepository
 {
-    //public function dataTable($request)
-    //{
-    //    $columns = ["id","ico","usuario","apellido","dni","active","info","pass","actions"];
-    //    return array(   "count" => $this->getEntityManager()
-    //                                    ->createQuery(" SELECT COUNT(u)
-    //                                                    FROM SeguridadBundle:Usuario u
-    //                                                    WHERE u.usuario LIKE ?1 OR u.apellido LIKE ?1 OR u.nombre LIKE ?1 OR u.dni LIKE ?1")
-    //                                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
-    //                                    ->getSingleScalarResult(),
-    //                    "users" => $this->getEntityManager()
-    //                                    ->createQuery(" SELECT u
-    //                                                    FROM SeguridadBundle:Usuario u
-    //                                                    WHERE u.usuario LIKE ?1 OR u.apellido LIKE ?1 OR u.nombre LIKE ?1 OR u.dni LIKE ?1
-    //                                                    ORDER BY "."u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
-    //                                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
-    //                                    ->setMaxResults($request->get('length'))
-    //                                    ->setFirstResult($request->get('start'))
-    //                                    ->getResult()
-    //        );
-    //}
-    //
-    //public function count()
-    //{
-    //    return $this->getEntityManager()
-    //                ->createQuery(" SELECT COUNT(u)
-    //                                FROM SeguridadBundle:Usuario u
-    //                                GROUP BY u.activo")
-    //                ->getScalarResult();        
-    //}
+    public function dataTable($request,$user,$canViewAll)
+    {
+        return array(
+                        "total" => $this->getTotalRows($user,$canViewAll),
+                        "filtered" => $this->getFilteredRows($request,$user,$canViewAll),
+                        "rows" => $this->getRows($request,$user,$canViewAll)
+            );
+    }
+    
+    public function getRows($request,$user,$canViewAll)
+    {
+        $columns = ["id","ico","usuario","apellido","dni","active","info","pass","actions"];
+        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
+                
+        if (!$canViewAll){
+            $where = " AND ('m.id = $user->gerPersona()->getMunicipio()->getId())";
+        }
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT u
+                                        FROM SeguridadBundle:Usuario u
+                                        JOIN u.persona p
+                                        JOIN p.municipio m
+                                        WHERE $where
+                                        ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->setMaxResults($request->get('length'))
+                        ->setFirstResult($request->get('start'))
+                        ->getResult();
+    }
+    
+    public function getFilteredRows($request,$user,$canViewAll)
+    {
+        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
+                
+        if (!$canViewAll){
+            $where = " AND ('m.id = $user->gerPersona()->getMunicipio()->getId())";
+        }
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(u)
+                                        FROM SeguridadBundle:Usuario u
+                                        JOIN u.persona p
+                                        JOIN p.municipio m
+                                        WHERE $where ")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->getSingleScalarResult();
+    }
+    
+    public function getTotalRows($user,$canViewAll)
+    {
+        $where = "1 = 1";
+        if (!$canViewAll){
+            $where = " AND ('m.id = $user->gerPersona()->getMunicipio()->getId())";
+        }
+        $query = $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(u)
+                                        FROM SeguridadBundle:Usuario u
+                                        JOIN u.persona p
+                                        JOIN p.municipio m
+                                        WHERE $where ")
+                        ->getSingleScalarResult();
+    }
     //
     //public function countActivos()
     //{
