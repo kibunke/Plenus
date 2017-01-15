@@ -1,0 +1,84 @@
+/* ---------------------------------------------------------------------- */
+/*  404 and 500 error
+/* ---------------------------------------------------------------------- */
+/* line 4, ../sass/partials/_error.scss */
+body.error-full-page {
+  background: #ffffff !important;
+}
+
+/* line 7, ../sass/partials/_error.scss */
+body.error-full-page .page-error {
+  margin-top: 60px;
+}
+
+/* line 10, ../sass/partials/_error.scss */
+.page-error {
+  text-align: center;
+}
+
+/* line 13, ../sass/partials/_error.scss */
+.page-error .error-number {
+  display: block;
+  font-size: 158px;
+  font-weight: 300;
+  letter-spacing: -10px;
+  line-height: 128px;
+  margin-top: 0;
+  text-align: center;
+}
+
+/* line 22, ../sass/partials/_error.scss */
+.page-error .error-details {
+  display: block;
+  padding-top: 0;
+  text-align: center;
+}
+
+/* line 27, ../sass/partials/_error.scss */
+.page-error .error-details .btn-return {
+  margin: 10px 0;
+}
+
+/* line 30, ../sass/partials/_error.scss */
+.page-error .error-details h3 {
+  margin-top: 0;
+}
+
+/* line 33, ../sass/partials/_error.scss */
+body.error-full-page {
+  overflow: hidden;
+}
+
+/* line 36, ../sass/partials/_error.scss */
+.error-full-page img {
+  display: none;
+}
+
+/* line 40, ../sass/partials/_error.scss */
+.error-full-page #canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+/* line 45, ../sass/partials/_error.scss */
+.error-full-page #sound {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  overflow-y: auto;
+  margin-left: 35%;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  opacity: 0.3;
+  margin-top: 5%;
+}
+
+/* line 56, ../sass/partials/_error.scss */
+.error-full-page .video {
+  position: absolute;
+  width: 90%;
+  height: 80%;
+  margin-left: 5%;
+  margin-top: 5%;
+}

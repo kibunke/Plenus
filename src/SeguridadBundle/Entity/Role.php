@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 /**
  * SeguridadBundle\Entity\Role
  * @ORM\Table(name="plenus_admin.Role")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\RoleRepository")
  */
 class Role implements RoleInterface
 {
@@ -76,6 +76,7 @@ class Role implements RoleInterface
     {
         $this->isActive = true;
         $this->createdAt = new \DateTime();
+        $this->name      = 'ROLE_';
     }
     
     /**
