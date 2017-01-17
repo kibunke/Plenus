@@ -41,7 +41,7 @@ class RoleController extends Controller
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('SeguridadBundle:Role')->datatable($request->request);
-
+        
         $data=array(
             "draw"=> $request->request->get('draw'),
             "recordsTotal"=> $filter['total'],
@@ -114,6 +114,36 @@ class RoleController extends Controller
     }
 
     /**
+     * @Route("/{role}/delete", name="role_delete", defaults={"role":"__00__"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("SeguridadBundle:Role:delete.html.twig")
+     */
+    public function deleteAction(Request $request,Role $role)
+    {
+        $nombreOrignal = $role->getName();
+        $form          = $this->createDeleteForm($role);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            $em->remove($role);
+  
+            try{
+                $em->flush();
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Rol eliminado con éxito'));
+            }
+            catch(\Exception $e ){
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'No pudo ser eliminado el Rol'));
+            }
+        }
+        return array(
+            'entity' => $role,
+            'form'   => $form->createView(),
+        );
+    }
+    
+    /**
      * Creates a form to create a Email entity.
      *
      * @param Email $entity The entity
@@ -125,5 +155,21 @@ class RoleController extends Controller
         $form = $this->createForm(RoleType::class, $entity);
     
         return $form;
+    }
+    
+     /**
+     * Creates a form to delete a testing entity.
+     *
+     * @param testing $testing The testing entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Role $role)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('role_delete', array('id' => $role->getId())))
+            ->setMethod('POST')
+            ->getForm()
+        ;
     }
 }

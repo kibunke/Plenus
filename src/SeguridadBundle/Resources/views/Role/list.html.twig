@@ -93,7 +93,8 @@
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
             var _table;
-            var _path_edit_role = "{{path('role_edit')}}";
+            var _path_edit_role   = "{{path('role_edit')}}";
+            var _path_delete_role = "{{path('role_delete')}}";
             $.Roles = $.Roles || {};
             $.Roles.init = function() {
                  _table  = $('#list_roles').DataTable({
@@ -157,12 +158,23 @@
                        {
                         "targets": 4,
                         "data": false,
-                        "className" :'text-center',
+                        "className" :'text-justified',
                         "render":   function ( data, type, row, meta ) {
-                                        url           = "'" + _path_edit_role.replace('__00__',row.id) + "'";
-                                        return type === 'display' && row.id > 0 ?
-                                            '<a href="#2" onclick="$.Roles.editar(' + url + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>':''
-                                            ;
+                                        url_edit  = "'" + _path_edit_role.replace('__00__',row.id) + "'";
+                                        resultado = '';
+                                        if(row.id > 0)
+                                        {
+                                            resultado += '<a href="#2" onclick="$.Roles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
+                                        }
+                                        
+                                        url_delete  = "'" + _path_delete_role.replace('__00__',row.id) + "'";
+                                        
+                                        if(!row.perfiles)
+                                        {
+                                            resultado += '<a href="#2" onclick="$.Roles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+                                        }
+                                        
+                                        return resultado;
                                     }
                        }
                        
@@ -191,6 +203,54 @@
               $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
                 $('#panel-config .modal-title').html("Editar Rol");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                $('#panel-config form').submit(function(event){
+                        event.preventDefault();
+                        $.post(url,
+                               $('#panel-config form').serialize(),
+                               function(data){
+                                  if(data.resultado == 0)
+                                  {
+                                    swal({
+                                    title: "Resultado",
+                                    text: data.mensaje,
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: true
+                                  },
+                                  function(){
+                                    _table.ajax.reload( null, false );
+                                    $('#panel-config').modal('toggle');
+                                  });
+                                    
+                                  }else{
+                                    swal({
+                                    title: "Resultado",
+                                    text: data.mensaje,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: true
+                                        },
+                                        function(){});
+                                      }
+                               }
+                        );
+                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
+                        //return false;
+                    });
+                });
+                $('#panel-config').modal();  
+            },
+            $.Roles.borrar = function(url){
+              $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Eliminar Rol");
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(url,function(){
                 $('#panel-config form').submit(function(event){
