@@ -62,6 +62,19 @@ class Role implements RoleInterface
     private $isActive;
     
     /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime",nullable=true)
+     */
+    private $updatedAt;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumn(name="modifiedBy", referencedColumnName="id",nullable=true)
+     */       
+    private $modifiedBy;
+
+    /**
      * implement Interface
      *
      */        
@@ -170,6 +183,30 @@ class Role implements RoleInterface
     }
 
     /**
+     * Set modifiedAt
+     *
+     * @param \DateTime $modifiedAt
+     *
+     * @return Role
+     */
+    public function setModifiedAt($modifiedAt)
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get modifiedAt
+     *
+     * @return \DateTime
+     */
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+    
+    /**
      * Add profile
      *
      * @param \SeguridadBundle\Entity\Perfil $perfil
@@ -227,6 +264,31 @@ class Role implements RoleInterface
         return $this->createdBy;
     }
 
+    /**
+     * Set modifiedBy
+     *
+     * @param \SeguridadBundle\Entity\Usuario $modifiedBy
+     *
+     * @return Role
+     */
+    public function setModifiedBy(\SeguridadBundle\Entity\Usuario $modifiedBy = null)
+    {
+        $this->modifiedBy = $modifiedBy;
+        $this->modifiedAt = new \DateTime();
+        
+        return $this;
+    }
+
+    /**
+     * Get modifiedBy
+     *
+     * @return \SeguridadBundle\Entity\Usuario
+     */
+    public function getModifiedBy()
+    {
+        return $this->modifiedBy;
+    }
+    
     /**
      * Set isActive
      *

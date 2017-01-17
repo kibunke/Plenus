@@ -53,12 +53,34 @@ class RoleController extends Controller
     }
     
     /**
-     * @Route("/{id}/edit", name="role_edit", defaults={"id":"__00__"})
+     * @Route("/{role}/edit", name="role_edit", defaults={"role":"__00__"})
      * @Security("has_role('ROLE_ADMIN')")
+     * @Template("SeguridadBundle:Role:edit.html.twig")
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request,Role $role)
     {
+        $nombreOrignal = $role->getName();
+        $form          = $this->createCreateForm($role);
+        $form->handleRequest($request);
         
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            $role->setName($nombreOrignal);
+            $role->setModifiedBy($this->getUser());
+  
+            try{
+                $em->flush();
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Rol modificado con éxito'));
+            }
+            catch(\Exception $e ){
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Rol con ese nombre'));
+            }
+        }
+        return array(
+            'entity' => $role,
+            'form'   => $form->createView(),
+        );
     }
     
     /**

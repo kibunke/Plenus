@@ -148,7 +148,8 @@
                         "data": false,
                         "className" :'text-center',
                         "render":   function ( data, type, row, meta ) {
-                                        return type === 'display' && data != row.isActive ?
+                                        console.log(row.id + ' -- ' + row.isActive);
+                                        return type === 'display' && !row.isActive ?
                                             '<i class="fa fa-square-o fa-lg text-success" title="Inactivo"></i>' :
                                             '<i class="fa fa-check-square-o fa-lg text-success" title="Activo"></i>'
                                             ;
@@ -187,7 +188,54 @@
                 });
             },
             $.Roles.charts = function(){},
-            $.Roles.editar = function(url){console.log(url);}
+            $.Roles.editar = function(url){
+              $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Editar Rol");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                $('#panel-config form').submit(function(event){
+                        event.preventDefault();
+                        $.post(url,
+                               $('#panel-config form').serialize(),
+                               function(data){
+                                  if(data.resultado == 0)
+                                  {
+                                    swal({
+                                    title: "Resultado",
+                                    text: data.mensaje,
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: true
+                                  },
+                                  function(){
+                                    _table.ajax.reload( null, false );
+                                    $('#panel-config').modal('toggle');
+                                  });
+                                    
+                                  }else{
+                                    swal({
+                                    title: "Resultado",
+                                    text: data.mensaje,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: true
+                                        },
+                                        function(){});
+                                      }
+                               }
+                        );
+                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
+                        //return false;
+                    });
+                });
+                $('#panel-config').modal();  
+            },
             $.Roles.nuevo = function()
             {
                 $('#okButton').button('reset');
@@ -200,7 +248,6 @@
                         $.post('{{path('role_new')}}',
                                $('#panel-config form').serialize(),
                                function(data){
-                                  console.log(data);
                                   if(data.resultado == 0)
                                   {
                                     swal({
