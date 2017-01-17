@@ -21,11 +21,11 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["id","name","isActive"];
+        $columns = ["id","name","description","isActive"];
         $where = "(u.name LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT u.id,u.name,u.isActive
+                        ->createQuery(" SELECT u.id,u.name,u.description,u.isActive
                                         FROM SeguridadBundle:Role u
                                         WHERE $where
                                         ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])

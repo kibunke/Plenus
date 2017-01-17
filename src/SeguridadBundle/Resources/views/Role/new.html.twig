@@ -1,0 +1,9 @@
+<form id="seguridadbundle_roletypeform" name="seguridadbundle_roletypeform" action="{{path('role_new')}}" class="form-horizontal" method="post" onsubmit="return false;">
+    {{form_widget(form)}}
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button class="btn btn-success pull-right" type="submit" onclick='$.Roles.crear($("#seguridadbundle_roletypeform").serialize())' >Crear</button>
+        </div>
+    </div>
+</form>
+

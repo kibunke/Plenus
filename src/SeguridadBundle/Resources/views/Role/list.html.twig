@@ -13,7 +13,7 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a  href="{#{ path('usuario_new') }#}">
+                        <a  href="#1" onclick="$.Roles.nuevo()">
                             <i class="fa fa-id-card"></i> NUEVO
                         </a>
                     </li>
@@ -50,17 +50,17 @@
                 <ul class="dropdown-menu dropdown-light pull-right" role="menu">
                     <li>
                         <a class="panel-collapse collapses" href="#">
-                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                           <i class="fa fa-angle-up"></i> <span>Minimizar</span>
                         </a>
                     </li>
                     <li>
                         <a class="panel-refresh" href="#">
-                            <i class="fa fa-refresh"></i> <span>Recargar</span>
+                           <i class="fa fa-refresh"></i> <span>Recargar</span>
                         </a>
                     </li>
                     <li>
                         <a class="panel-expand" href="#">
-                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                           <i class="fa fa-expand"></i> <span>Fullscreen</span>
                         </a>
                     </li>
                 </ul>
@@ -78,26 +78,60 @@
                 <tr>
                     <th class="text-center">#</th>
                     <th class="">Nombre</th>
-                    <th class="text-center" title="Role Activo"><span class="fa fa-active fa-lg"></span></th>
+                    <th class="">Descripción</th>
+                    <th class="text-center">Activo</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
+    <div class="modal fade" id="role_new_edit" tabindex="-1" role="dialog" aria-labelledby="myModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-error-content col-sm-12"></div>
+            <div class="modal-footer">
+                <button id="cancelButton" type="button" class="btn btn-default" data-dismiss="modal">Descartar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block otherJavascripts %}
     <script type="text/javascript">
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
             var _table;
-            $.Default = $.Default || {};
-            $.Default.init = function() {
+            var _path_edit_role = "{{path('role_edit')}}";
+            $.Roles = $.Roles || {};
+            $.Roles.init = function() {
                  _table=$('#list_roles').DataTable({
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
                         "url": '{{ path('role_list_datatable') }}',
-                        "type": 'POST'
+                        "type": 'POST',
+                        "error": function (xhr, jqAjaxerror, thrown) {
+                           if ((xhr.status == 403) || (xhr.status == 302)) {
+                               swal({
+                                    title: "Sesión Expirada",
+                                    text: "Debe reiniciar sesión para continuar",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: false
+                                  },
+                                  function(){
+                                    document.location.reload();
+                                  });
+                               }
+                           }
                     },
                     "language" : {
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
@@ -105,6 +139,7 @@
                     "columns": [
                         { "data": "id" },
                         { "data": "name" },
+                        { "data": "description" },
                         { "data": "isActive" }
                     ],
                     "bLengthChange" : true,
@@ -115,8 +150,36 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [0,2]
+                            "targets": [0,3]
                         },
+                        {
+                            "targets": 0,
+                            "data": false,
+                            "className" :'text-center',
+                        },
+                        {
+                        "targets": 3,
+                        "data": false,
+                        "className" :'text-center',
+                        "render":   function ( data, type, row, meta ) {
+                                        return type === 'display' && data != row.isActive ?
+                                            '<i class="fa fa-square-o fa-lg text-success" title="Inactivo"></i>' :
+                                            '<i class="fa fa-check-square-o fa-lg text-success" title="Activo"></i>'
+                                            ;
+                                    }
+                       },
+                       {
+                        "targets": 4,
+                        "data": false,
+                        "className" :'text-center',
+                        "render":   function ( data, type, row, meta ) {
+                                        url           = "'" + _path_edit_role.replace('__00__',row.id) + "'";
+                                        return type === 'display' && row.id > 0 ?
+                                            '<a href="#2" onclick="$.Roles.editar(' + url + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>':''
+                                            ;
+                                    }
+                       }
+                       
                     ],
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
@@ -129,12 +192,38 @@
                                 }
                             });
                         }
-                       // $.Default.charts(_table.ajax.json().cantRoles);
+                       // $.Roles.charts(_table.ajax.json().cantRoles);
                     }
                 });
             },
-            $.Default.charts = function(){}
+            $.Roles.charts = function(){},
+            $.Roles.editar = function(url){console.log(url);}
+            $.Roles.nuevo = function(){
+                modal = $('#role_new_edit');
+                $.get(
+                      '{{ path('role_new') }}',
+                      null,
+                      function(data)
+                      {
+                        $('.modal-title').html('Nuevo Rol');
+                        $('.modal-body').html(data);
+                        modal.modal();
+                      }
+                     );
+                
+            },
+            $.Roles.crear = function(datos){
+                console.log(datos);
+                $.post('{{path('role_new')}}',
+                       datos,
+                       function(data)
+                       {
+                          console.log(data);
+                       });
+                       return false;
+            }
+            
         })(jQuery);
-        $(document).ready(function(){$.Default.init();});
+        $(document).ready(function(){$.Roles.init();});
     </script>
 {% endblock %}    
