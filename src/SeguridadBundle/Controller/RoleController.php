@@ -72,24 +72,26 @@ class RoleController extends Controller
         $form   = $this->createCreateForm($entity);
         $form->handleRequest($request);
         
-        if($request->getMethod() == 'POST')
+        if ($form->isSubmitted() && $form->isValid())
         {
-            if ($form->isSubmitted() && $form->isValid())
-            {
-                $em  = $this->getDoctrine()->getManager();
-                print_r($form->getData());die;
-                return JsonResponse(array('datos cargados con éxito'));
+            $em  = $this->getDoctrine()->getManager();
+            $entity->setCreatedBy($this->getUser());
+            $em->persist($entity);
+            try{
+                $em->flush();
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Rol creado con éxito'));
             }
-            print_r($form->getData());die;
-            return JsonResponse(array('error en los datos del formulario'));
+            catch(\Exception $e ){
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Rol con ese nombre'));
+            }
         }
-        
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
     }
-     /**
+
+    /**
      * Creates a form to create a Email entity.
      *
      * @param Email $entity The entity
