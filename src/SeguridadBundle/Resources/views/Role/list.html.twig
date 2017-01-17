@@ -148,7 +148,6 @@
                         "data": false,
                         "className" :'text-center',
                         "render":   function ( data, type, row, meta ) {
-                                        console.log(row.id + ' -- ' + row.isActive);
                                         return type === 'display' && !row.isActive ?
                                             '<i class="fa fa-square-o fa-lg text-success" title="Inactivo"></i>' :
                                             '<i class="fa fa-check-square-o fa-lg text-success" title="Activo"></i>'
