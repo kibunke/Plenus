@@ -66,26 +66,24 @@ class PerfilController extends Controller
     /**
      * @Route("/{perfil}/edit", name="perfil_edit", defaults={"perfil":"__00__"})
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("SeguridadBundle:Perfil:edit.html.twig")
+     * @Template("SeguridadBundle:Perfil:new.html.twig")
      */
     public function editAction(Request $request,Perfil $perfil)
     {
-        $nombreOrignal = $perfil->getName();
         $form          = $this->createCreateForm($perfil);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid())
         {
             $em  = $this->getDoctrine()->getManager();
-            $perfil->setName($nombreOrignal);
-            $perfil->setModifiedBy($this->getUser());
+            $perfil->setUpdatedBy($this->getUser());
   
             try{
                 $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Rol modificado con éxito'));
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Perfil modificado con éxito'));
             }
             catch(\Exception $e ){
-                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Rol con ese nombre'));
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Perfil con ese nombre'));
             }
         }
         return array(
@@ -111,10 +109,10 @@ class PerfilController extends Controller
             $em->persist($entity);
             try{
                 $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Rol creado con éxito'));
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Perfil creado con éxito'));
             }
             catch(\Exception $e ){
-                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Rol con ese nombre'));
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Perfil con ese nombre'));
             }
         }
         return array(
