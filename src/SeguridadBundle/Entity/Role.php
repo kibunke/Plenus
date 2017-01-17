@@ -239,7 +239,7 @@ class Role implements RoleInterface
     {
         return $this->perfiles;
     }
-
+    
     /**
      * Set createdBy
      *
@@ -311,5 +311,53 @@ class Role implements RoleInterface
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Role
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Add perfile
+     *
+     * @param \SeguridadBundle\Entity\Perfil $perfile
+     *
+     * @return Role
+     */
+    public function addPerfile(\SeguridadBundle\Entity\Perfil $perfile)
+    {
+        $this->perfiles[] = $perfile;
+
+        return $this;
+    }
+
+    /**
+     * Remove perfile
+     *
+     * @param \SeguridadBundle\Entity\Perfil $perfile
+     */
+    public function removePerfile(\SeguridadBundle\Entity\Perfil $perfile)
+    {
+        $this->perfiles->removeElement($perfile);
     }
 }

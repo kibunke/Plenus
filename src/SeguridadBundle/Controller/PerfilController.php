@@ -12,18 +12,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use SeguridadBundle\Form\RoleType;
-use SeguridadBundle\Entity\Role;
+use SeguridadBundle\Form\PerfilType;
+use SeguridadBundle\Entity\Perfil;
 
 /**
- * Role controller.
+ * Perfil controller.
  *
- * @Route("/system/role")
+ * @Route("/system/perfil")
  */
-class RoleController extends Controller
+class PerfilController extends Controller
 {
     /**
-     * @Route("/list", name="role_list")
+     * @Route("/list", name="perfil_list")
      * @Template()
      * @Security("has_role('ROLE_ADMIN')")
      */
@@ -33,41 +33,52 @@ class RoleController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="role_list_datatable")
+     * @Route("/list/datatable", name="perfil_list_datatable")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function listDataTableAction(Request $request)
     {
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('SeguridadBundle:Role')->datatable($request->request);
-        
+        $filter = $em->getRepository('SeguridadBundle:Perfil')->datatable($request->request);
+        $perfiles = [];
+        foreach($filter['rows'] as $perfil)
+        {
+            $perfiles[] = array( 'id'          => $perfil->getId(),
+                                 'name'        => $perfil->getName(),
+                                 'legend'      => $perfil->getLegend(),
+                                 'description' => $perfil->getDescription(),
+                                 'isActive'    => $perfil->getIsActive(),
+                                 'roles'       => $perfil->getRoles()->count(),
+                                 'usuarios'    => $perfil->getUsuarios()->count(),
+                                );
+        }
         $data=array(
             "draw"=> $request->request->get('draw'),
             "recordsTotal"=> $filter['total'],
             "recordsFiltered"=> $filter['filtered'],
-            "data"=> $filter['rows'],
+            "data"=> $perfiles,
         );
         
         return new JsonResponse($data);
     }
     
     /**
-     * @Route("/{role}/edit", name="role_edit", defaults={"role":"__00__"})
+     * @Route("/{perfil}/edit", name="perfil_edit", defaults={"perfil":"__00__"})
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("SeguridadBundle:Role:edit.html.twig")
+     * @Template("SeguridadBundle:Perfil:edit.html.twig")
      */
-    public function editAction(Request $request,Role $role)
+    public function editAction(Request $request,Perfil $perfil)
     {
-        $nombreOrignal = $role->getName();
-        $form          = $this->createCreateForm($role);
+        $nombreOrignal = $perfil->getName();
+        $form          = $this->createCreateForm($perfil);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid())
         {
             $em  = $this->getDoctrine()->getManager();
-            $role->setName($nombreOrignal);
-            $role->setModifiedBy($this->getUser());
+            $perfil->setName($nombreOrignal);
+            $perfil->setModifiedBy($this->getUser());
   
             try{
                 $em->flush();
@@ -78,22 +89,21 @@ class RoleController extends Controller
             }
         }
         return array(
-            'entity' => $role,
+            'entity' => $perfil,
             'form'   => $form->createView(),
         );
     }
     
     /**
-     * @Route("/new", name="role_new")
+     * @Route("/new", name="perfil_new")
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("SeguridadBundle:Role:new.html.twig")
+     * @Template("SeguridadBundle:Perfil:new.html.twig")
      */
     public function newAction(Request $request)
     {
-        $entity = new Role();
+        $entity = new Perfil();
         $form   = $this->createCreateForm($entity);
         $form->handleRequest($request);
-        
         if ($form->isSubmitted() && $form->isValid())
         {
             $em  = $this->getDoctrine()->getManager();
@@ -114,25 +124,24 @@ class RoleController extends Controller
     }
 
     /**
-     * @Route("/{role}/delete", name="role_delete", defaults={"role":"__00__"})
+     * @Route("/{perfil}/delete", name="perfil_delete", defaults={"perfil":"__00__"})
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("SeguridadBundle:Role:delete.html.twig")
+     * @Template("SeguridadBundle:Perfil:delete.html.twig")
      */
-    public function deleteAction(Request $request,Role $role)
+    public function deleteAction(Request $request,Perfil $perfil)
     {
-        $nombreOrignal = $role->getName();
-        $form          = $this->createDeleteForm($role);
+        $form          = $this->createDeleteForm($perfil);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid())
         {
-            if($role->getPerfiles()->count() > 0)
+            if(($perfil->getRoles()->count() > 0)||($perfil->getUsuarios()->count() > 0))
             {
-                return new JsonResponse(array('resultado' => 2, 'mensaje' => 'No pudo ser eliminado el Rol porque tiene Perfiles asignados'));
+                return new JsonResponse(array('resultado' => 2, 'mensaje' => 'No pudo ser eliminado el Perfil porque tiene Roles y/o Usuarios asignados'));
             }
             
             $em  = $this->getDoctrine()->getManager();
-            $em->remove($role);
+            $em->remove($perfil);
   
             try{
                 $em->flush();
@@ -143,7 +152,7 @@ class RoleController extends Controller
             }
         }
         return array(
-            'entity' => $role,
+            'entity' => $perfil,
             'form'   => $form->createView(),
         );
     }
@@ -151,28 +160,28 @@ class RoleController extends Controller
     /**
      * Creates a form to create a Email entity.
      *
-     * @param Role $entity The entity
+     * @param Perfil $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Role $entity)
+    private function createCreateForm(Perfil $entity)
     {
-        $form = $this->createForm(RoleType::class, $entity);
+        $form = $this->createForm(PerfilType::class, $entity);
     
         return $form;
     }
     
     /**
-     * Creates a form to delete a role entity.
+     * Creates a form to delete a perfil entity.
      *
-     * @param $role The role entity
+     * @param $perfil The perfil entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Role $role)
+    private function createDeleteForm(Perfil $perfil)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('role_delete', array('id' => $role->getId())))
+            ->setAction($this->generateUrl('perfil_delete', array('id' => $perfil->getId())))
             ->setMethod('POST')
             ->getForm()
         ;

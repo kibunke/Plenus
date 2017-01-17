@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="plenus_admin.Perfil")
+ * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\PerfilRepository")
  * 
  */
 class Perfil
@@ -48,7 +49,6 @@ class Perfil
     /**
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="perfiles")
      * @ORM\JoinTable(name="plenus_admin.perfil_role")
-     * 
      */
     private $roles;
     
@@ -104,10 +104,10 @@ class Perfil
      */
     public function __construct()
     {
-        $this->isActive = true;
+        $this->isActive  = true;
         $this->createdAt = new \DateTime();
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->usuarios = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles     = new ArrayCollection();
+        $this->usuarios  = new ArrayCollection();
     }
 
     /**

@@ -4,7 +4,7 @@
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
-                <h1>Listado de Roles <small>Todo lo referido a los roles del sistema</small></h1>
+                <h1>Listado de Perfiles <small>Todo lo referido a los perfiles del sistema</small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -13,7 +13,7 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a  href="#1" onclick="$.Roles.nuevo()">
+                        <a  href="#1" onclick="$.Perfiles.nuevo()">
                             <i class="fa fa-id-card"></i> NUEVO
                         </a>
                     </li>
@@ -28,8 +28,8 @@
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li>
-                    <a href="{{ path('role_list') }}">
-                        Roles
+                    <a href="{{ path('perfil_list') }}">
+                        Perfiles
                     </a>
                 </li>
                 <li class="active">
@@ -41,7 +41,7 @@
 {% endblock %}
 {% block contenidoData %}
     <div class="panel-heading">
-        <h4 class="panel-title">Tabla <span class="text-bold">de roles</span></h4>
+        <h4 class="panel-title">Tabla <span class="text-bold">de perfiles</span></h4>
         <div class="panel-tools">
             <div class="dropdown">
                 <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
@@ -73,11 +73,12 @@
         }
     </style>
     <div class="panel-body">
-        <table id="list_roles" class="table table-striped table-hover">
+        <table id="list_perfiles" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th class="text-center">#</th>
                     <th class="">Nombre</th>
+                    <th class="">Leyenda</th>
                     <th class="">Descripción</th>
                     <th class="text-center">Activo</th>
                     <th class="text-center">Acciones</th>
@@ -93,15 +94,15 @@
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
             var _table;
-            var _path_edit_role   = "{{path('role_edit')}}";
-            var _path_delete_role = "{{path('role_delete')}}";
-            $.Roles = $.Roles || {};
-            $.Roles.init = function() {
-                 _table  = $('#list_roles').DataTable({
+            var _path_edit_perfil   = "{{path('perfil_edit')}}";
+            var _path_delete_perfil = "{{path('perfil_delete')}}";
+            $.Perfiles = $.Perfiles || {};
+            $.Perfiles.init = function() {
+                 _table  = $('#list_perfiles').DataTable({
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '{{ path('role_list_datatable') }}',
+                        "url": '{{ path('perfil_list_datatable') }}',
                         "type": 'POST',
                         "error": function (xhr, jqAjaxerror, thrown) {
                            if ((xhr.status == 403) || (xhr.status == 302)) {
@@ -124,10 +125,11 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "id" },
-                        { "data": "name" },
-                        { "data": "description" },
-                        { "data": "isActive" }
+                        { "data":"id" },
+                        { "data":"name" },
+                        { "data":"legend" },
+                        { "data":"description" },
+                        { "data":"isActive" }
                     ],
                     "bLengthChange" : true,
                     "bFilter" : true,
@@ -137,7 +139,7 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [0,3]
+                            "targets": [0,4,5]
                         },
                         {
                             "targets": 0,
@@ -145,7 +147,7 @@
                             "className" :'text-center',
                         },
                         {
-                        "targets": 3,
+                        "targets": 4,
                         "data": false,
                         "className" :'text-center',
                         "render":   function ( data, type, row, meta ) {
@@ -156,22 +158,22 @@
                                     }
                        },
                        {
-                        "targets": 4,
+                        "targets": 5,
                         "data": false,
                         "className" :'text-justified',
                         "render":   function ( data, type, row, meta ) {
-                                        url_edit  = "'" + _path_edit_role.replace('__00__',row.id) + "'";
+                                        url_edit  = "'" + _path_edit_perfil.replace('__00__',row.id) + "'";
                                         resultado = '';
                                         if(row.id > 0)
                                         {
-                                            resultado += '<a href="#2" onclick="$.Roles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
+                                            resultado += '<a href="#2" onclick="$.Perfiles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
                                         }
                                         
-                                        url_delete  = "'" + _path_delete_role.replace('__00__',row.id) + "'";
+                                        url_delete  = "'" + _path_delete_perfil.replace('__00__',row.id) + "'";
                                         
-                                        if(!row.perfiles)
+                                        if(!row.roles && !row.usuarios)
                                         {
-                                            resultado += '<a href="#2" onclick="$.Roles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+                                            resultado += '<a href="#2" onclick="$.Perfiles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
                                         }
                                         
                                         return resultado;
@@ -181,16 +183,16 @@
                     ],
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
-                        $input = $('#list_roles_filter input');
+                        $input = $('#list_perfiles_filter input');
                         if ($input.val().length>0) {
-                            $('#list_roles tbody td').each(function(){
+                            $('#list_perfiles tbody td').each(function(){
                                 $td=$(this);
                                 if ($td.text().toUpperCase().indexOf($input.val().toUpperCase())>-1) {
                                     $td.html($td.text().toUpperCase().replace($input.val().toUpperCase(),'<span class="occurrence">'+$input.val().toUpperCase()+'</span>'))
                                 }
                             });
                         }
-                       // $.Roles.charts(_table.ajax.json().cantRoles);
+                       // $.Perfiles.charts(_table.ajax.json().cantPerfiles);
                     }
                 });
                 //Comportamiento del boton 'Listo' del modal -> manda el formulario del modal-
@@ -198,11 +200,11 @@
                     $('#panel-config form').submit();
                 });
             },
-            $.Roles.charts = function(){},
-            $.Roles.editar = function(url){
+            $.Perfiles.charts = function(){},
+            $.Perfiles.editar = function(url){
               $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Editar Rol");
+                $('#panel-config .modal-title').html("Editar Perfil");
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(url,function(){
                 $('#panel-config form').submit(function(event){
@@ -247,10 +249,10 @@
                 });
                 $('#panel-config').modal();  
             },
-            $.Roles.borrar = function(url){
+            $.Perfiles.borrar = function(url){
               $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Eliminar Rol");
+                $('#panel-config .modal-title').html("Eliminar Perfil");
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(url,function(){
                 $('#panel-config form').submit(function(event){
@@ -295,16 +297,16 @@
                 });
                 $('#panel-config').modal();  
             },
-            $.Roles.nuevo = function()
+            $.Perfiles.nuevo = function()
             {
                 $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Nuevo Rol");
+                $('#panel-config .modal-title').html("Nuevo Perfil");
                 $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load("{{ path('role_new') }}",function(){
+                $('#panel-config .modal-body').load("{{ path('perfil_new') }}",function(){
                 $('#panel-config form').submit(function(event){
                         event.preventDefault();
-                        $.post('{{path('role_new')}}',
+                        $.post('{{path('perfil_new')}}',
                                $('#panel-config form').serialize(),
                                function(data){
                                   if(data.resultado == 0)
@@ -345,6 +347,6 @@
                 $('#panel-config').modal();
             }
         })(jQuery);
-        $(document).ready(function(){$.Roles.init();});
+        $(document).ready(function(){$.Perfiles.init();});
     </script>
 {% endblock %}    

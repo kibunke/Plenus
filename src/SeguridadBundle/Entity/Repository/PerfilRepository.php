@@ -3,9 +3,9 @@
 namespace SeguridadBundle\Entity\Repository;
 
 /**
- * RoleRepository
+ * PerfilRepository
  */
-class RoleRepository extends \Doctrine\ORM\EntityRepository
+class PerfilRepository extends \Doctrine\ORM\EntityRepository
 {
     public function dataTable($request)
     {
@@ -18,27 +18,27 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["id","name","description","isActive","perfiles"];
-        $where = "(u.name LIKE ?1)";
+        $columns = ["p.id","p.legend","p.description","p.isActive"];
+        $where = "(p.legend LIKE ?1) OR (p.name LIKE ?1) OR (p.description LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT u.id,u.name,u.description,u.isActive, p.id as perfiles
-                                        FROM SeguridadBundle:Role u LEFT JOIN u.perfiles p
+                        ->createQuery(" SELECT p
+                                        FROM SeguridadBundle:Perfil p
                                         WHERE $where
-                                        ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir']) 
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
                         ->setFirstResult($request->get('start'))
-                        ->getArrayResult();
+                        ->getResult();
     }
     
     public function getFilteredRows($request)
     {
-        $where = "(u.name LIKE ?1)";
+        $where = "(p.legend LIKE ?1) OR (p.name LIKE ?1) OR (p.description LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(u)
-                                        FROM SeguridadBundle:Role u
+                        ->createQuery(" SELECT COUNT(p)
+                                        FROM SeguridadBundle:Perfil p
                                         WHERE $where ")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
@@ -48,7 +48,7 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(u)
-                                        FROM SeguridadBundle:Role u
+                                        FROM SeguridadBundle:Perfil u
                                        ")
                         ->getSingleScalarResult();
     }
