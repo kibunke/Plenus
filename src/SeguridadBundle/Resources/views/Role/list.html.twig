@@ -86,8 +86,8 @@
             <tbody></tbody>
         </table>
     </div>
-    <div class="modal fade" id="role_new_edit" tabindex="-1" role="dialog" aria-labelledby="myModalTitle" aria-hidden="true">
-    <div class="modal-dialog">
+    <!--<div class="modal fade" id="role_new_edit" tabindex="-1" role="dialog" aria-labelledby="myModalTitle" aria-hidden="true">-->
+    <!--<div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -99,7 +99,7 @@
                 <button id="cancelButton" type="button" class="btn btn-default" data-dismiss="modal">Descartar</button>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
 {% endblock %}
 {% block otherJavascripts %}
@@ -195,31 +195,60 @@
                        // $.Roles.charts(_table.ajax.json().cantRoles);
                     }
                 });
+                //Comportamiento del boton 'Listo' del modal -> manda el formulario del modal-
+                $('#okButton').on('click',function(){
+                    $('#panel-config form').submit();
+                });
             },
             $.Roles.charts = function(){},
             $.Roles.editar = function(url){console.log(url);}
             $.Roles.nuevo = function(){
-                modal = $('#role_new_edit');
-                $.get(
-                      '{{ path('role_new') }}',
-                      null,
-                      function(data)
-                      {
-                        $('.modal-title').html('Nuevo Rol');
-                        $('.modal-body').html(data);
-                        modal.modal();
-                      }
-                     );
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html("Nuevo Rol");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load("{{ path('role_new') }}",function(){
+                    $('#panel-config form').submit(function(event){
+                        event.preventDefault();
+                        $.post('{{path('role_new')}}',
+                               $('#panel-config form').serialize(),
+                               function(data){
+                                  console.log(data);
+                               }
+                        );
+                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
+                        //return false;
+                        
+                        //console.log($('#role_name').val());
+                        //console.log($("#seguridadbundle_roletypeform").serialize());
+                    });
+                });
+                $('#panel-config').modal();
+                
+                //modal = $('#role_new_edit');
+                //$.get(
+                //      '{{ path('role_new') }}',
+                //      null,
+                //      function(data)
+                //      {
+                //        $('.modal-title').html('Nuevo Rol');
+                //        $('.modal-body').html(data);
+                //        modal.modal();
+                //      }
+                //     );
                 
             },
             $.Roles.crear = function(datos){
+                console.log($('#role_name').val());
+                console.log($("#seguridadbundle_roletypeform").serialize());
                 console.log(datos);
-                $.post('{{path('role_new')}}',
-                       datos,
-                       function(data)
-                       {
-                          console.log(data);
-                       });
+                //$.post('{{path('role_new')}}',
+                //       datos,
+                //       function(data)
+                //       {
+                //          console.log(data);
+                //       });
                        return false;
             }
             
