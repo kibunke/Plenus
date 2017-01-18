@@ -199,112 +199,16 @@
                 });
             },
             $.Roles.charts = function(){},
-            $.Roles.editar = function(url){
-              $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Editar Rol");
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url,function(){
-                $('#panel-config form').submit(function(event){
-                        event.preventDefault();
-                        $.post(url,
-                               $('#panel-config form').serialize(),
-                               function(data){
-                                  if(data.resultado == 0)
-                                  {
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                  },
-                                  function(){
-                                    _table.ajax.reload( null, false );
-                                    $('#panel-config').modal('toggle');
-                                  });
-                                    
-                                  }else{
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                        },
-                                        function(){});
-                                      }
-                               }
-                        );
-                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
-                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
-                        //return false;
-                    });
-                });
-                $('#panel-config').modal();  
-            },
-            $.Roles.borrar = function(url){
-              $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Eliminar Rol");
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url,function(){
-                $('#panel-config form').submit(function(event){
-                        event.preventDefault();
-                        $.post(url,
-                               $('#panel-config form').serialize(),
-                               function(data){
-                                  if(data.resultado == 0)
-                                  {
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                  },
-                                  function(){
-                                    _table.ajax.reload( null, false );
-                                    $('#panel-config').modal('toggle');
-                                  });
-                                    
-                                  }else{
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                        },
-                                        function(){});
-                                      }
-                               }
-                        );
-                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
-                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
-                        //return false;
-                    });
-                });
-                $('#panel-config').modal();  
-            },
-            $.Roles.nuevo = function()
+            $.Roles.crearModal = function(url,title)
             {
                 $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Nuevo Rol");
+                $('#panel-config .modal-title').html(title);
                 $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load("{{ path('role_new') }}",function(){
+                $('#panel-config .modal-body').load(url,function(){
                 $('#panel-config form').submit(function(event){
                         event.preventDefault();
-                        $.post('{{path('role_new')}}',
+                        $.post(url,
                                $('#panel-config form').serialize(),
                                function(data){
                                   if(data.resultado == 0)
@@ -342,7 +246,17 @@
                         //return false;
                     });
                 });
-                $('#panel-config').modal();
+                $('#panel-config').modal();  
+            },
+            $.Roles.editar = function(url){
+                $.Roles.crearModal(url,"Editar Rol");
+            },
+            $.Roles.borrar = function(url){
+                $.Roles.crearModal(url,"Eliminar Rol");
+            },
+            $.Roles.nuevo = function()
+            {
+               $.Roles.crearModal("{{ path('role_new') }}","Nuevo Rol");
             }
         })(jQuery);
         $(document).ready(function(){$.Roles.init();});

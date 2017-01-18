@@ -143,7 +143,7 @@ class PerfilController extends Controller
   
             try{
                 $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Rol eliminado con éxito'));
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Perfil eliminado con éxito'));
             }
             catch(\Exception $e ){
                  return new JsonResponse(array('resultado' => 1, 'mensaje' => 'No pudo ser eliminado el Rol'));

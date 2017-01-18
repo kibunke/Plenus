@@ -223,14 +223,14 @@
                 });
             },
             $.Usuario.charts = function(){},
-            $.Usuario.editar = function(url){
+            $.Usuario.crearModal = function(url,title)
+            {
                 $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Editar Usuario");
+                $('#panel-config .modal-title').html(title);
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(url,function(){
                 $('#panel-config form').submit(function(event){
-
                         event.preventDefault();
                         $.post(url,
                                $('#panel-config form').serialize(),
@@ -271,6 +271,9 @@
                     });
                 });
                 $('#panel-config').modal();  
+            },
+            $.Usuario.editar = function(url){
+                  $.Usuario.crearModal(url,"Editar Usuario");
             }
         })(jQuery);
         $(document).ready(function(){$.Usuario.init();});

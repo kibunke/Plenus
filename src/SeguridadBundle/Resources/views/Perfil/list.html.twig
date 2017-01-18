@@ -201,112 +201,16 @@
                 });
             },
             $.Perfiles.charts = function(){},
-            $.Perfiles.editar = function(url){
-                $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Editar Perfil");
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url,function(){
-                $('#panel-config form').submit(function(event){
-                        event.preventDefault();
-                        $.post(url,
-                               $('#panel-config form').serialize(),
-                               function(data){
-                                  if(data.resultado == 0)
-                                  {
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                  },
-                                  function(){
-                                    _table.ajax.reload( null, false );
-                                    $('#panel-config').modal('toggle');
-                                  });
-                                    
-                                  }else{
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                        },
-                                        function(){});
-                                      }
-                               }
-                        );
-                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
-                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
-                        //return false;
-                    });
-                });
-                $('#panel-config').modal();  
-            },
-            $.Perfiles.borrar = function(url){
-              $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Eliminar Perfil");
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url,function(){
-                $('#panel-config form').submit(function(event){
-                        event.preventDefault();
-                        $.post(url,
-                               $('#panel-config form').serialize(),
-                               function(data){
-                                  if(data.resultado == 0)
-                                  {
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                  },
-                                  function(){
-                                    _table.ajax.reload( null, false );
-                                    $('#panel-config').modal('toggle');
-                                  });
-                                    
-                                  }else{
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                        },
-                                        function(){});
-                                      }
-                               }
-                        );
-                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
-                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
-                        //return false;
-                    });
-                });
-                $('#panel-config').modal();  
-            },
-            $.Perfiles.nuevo = function()
+            $.Perfiles.crearModal = function(url,title)
             {
                 $('#okButton').button('reset');
                 $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Nuevo Perfil");
+                $('#panel-config .modal-title').html(title);
                 $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load("{{ path('perfil_new') }}",function(){
+                $('#panel-config .modal-body').load(url,function(){
                 $('#panel-config form').submit(function(event){
                         event.preventDefault();
-                        $.post('{{path('perfil_new')}}',
+                        $.post(url,
                                $('#panel-config form').serialize(),
                                function(data){
                                   if(data.resultado == 0)
@@ -344,7 +248,17 @@
                         //return false;
                     });
                 });
-                $('#panel-config').modal();
+                $('#panel-config').modal();  
+            },
+            $.Perfiles.editar = function(url){
+                $.Perfiles.crearModal(url,"Editar Perfil");
+            },
+            $.Perfiles.borrar = function(url){
+                $.Perfiles.crearModal(url,"Eliminar Perfil");
+            },
+            $.Perfiles.nuevo = function()
+            {
+               $.Perfiles.crearModal("{{ path('perfil_new') }}","Nuevo Perfil");
             }
         })(jQuery);
         $(document).ready(function(){$.Perfiles.init();});
