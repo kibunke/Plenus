@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use SeguridadBundle\Form\UsuarioType;
+use SeguridadBundle\Form\UsuarioAdminType;
 use SeguridadBundle\Entity\Usuario;
 
 /**
@@ -194,7 +195,12 @@ class UsuarioController extends Controller
      */
     private function createCreateForm(Usuario $entity)
     {
-        $form = $this->createForm(UsuarioType::class, $entity);
+        $form = $this->createForm(UsuarioAdminType::class, $entity,
+                                  array(
+                                        'action' => $this->generateUrl('user_edit', array('user' => $entity->getId())),
+                                        'method' => 'POST'
+                                       )
+                                 );
     
         return $form;
     }

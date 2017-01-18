@@ -61,6 +61,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     
     /**
      * @ORM\OneToMany(targetEntity="Log", mappedBy="usuario")
+     * @ORM\OrderBy({"id" = "DESC"})
      */
     private $logs;
 
