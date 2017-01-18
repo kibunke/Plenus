@@ -67,7 +67,7 @@ class Persona
      * 
      * @ORM\Column(name="fNacimiento", type="date", nullable=true)
      * @Assert\NotBlank(
-     *      message="birthdate missing!"
+     *      message="Falta la fecha de Nacimiento!"
      * )
      * @Assert\Date()
      */
