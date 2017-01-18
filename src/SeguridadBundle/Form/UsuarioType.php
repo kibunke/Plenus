@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
@@ -26,9 +27,10 @@ class UsuarioType extends AbstractType
                                                 ->orderBy('p.name', 'ASC');
                                         },
                                         'choice_label' => 'legend',
-                                        'placeholder' => 'para que vas a usar Plenus?'
+                                        'placeholder'  => 'para que vas a usar Plenus?'
                                     )
                 )
+            ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))            
         ;
     }
 

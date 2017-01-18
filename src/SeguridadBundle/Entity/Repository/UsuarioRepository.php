@@ -13,19 +13,19 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     public function dataTable($request,$user,$canViewAll)
     {
         return array(
-                        "total" => $this->getTotalRows($user,$canViewAll),
-                        "filtered" => $this->getFilteredRows($request,$user,$canViewAll),
-                        "rows" => $this->getRows($request,$user,$canViewAll)
+                      "total"    => $this->getTotalRows($user,$canViewAll),
+                      "filtered" => $this->getFilteredRows($request,$user,$canViewAll),
+                      "rows"     => $this->getRows($request,$user,$canViewAll)
             );
     }
     
     public function getRows($request,$user,$canViewAll)
     {
-        $columns = ["id","ico","usuario","apellido","dni","active","info","pass","actions"];
+        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","u.isActive","info","pass","actions"];
         $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
                 
         if (!$canViewAll){
-            $where = " AND ('m.id = $user->gerPersona()->getMunicipio()->getId())";
+            $where = " AND (m.id = $user->gerPersona()->getMunicipio()->getId())";
         }
         return $this->getEntityManager()
                         ->createQuery(" SELECT u
@@ -33,7 +33,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                         JOIN u.persona p
                                         JOIN p.municipio m
                                         WHERE $where
-                                        ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
                         ->setFirstResult($request->get('start'))
@@ -45,7 +45,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
         $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
                 
         if (!$canViewAll){
-            $where = " AND ('m.id = $user->gerPersona()->getMunicipio()->getId())";
+            $where = " AND (m.id = $user->gerPersona()->getMunicipio()->getId())";
         }
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(u)
@@ -61,9 +61,9 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     {
         $where = "1 = 1";
         if (!$canViewAll){
-            $where = " AND ('m.id = $user->gerPersona()->getMunicipio()->getId())";
+            $where = " AND (m.id = $user->gerPersona()->getMunicipio()->getId())";
         }
-        $query = $this->getEntityManager()
+        return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(u)
                                         FROM SeguridadBundle:Usuario u
                                         JOIN u.persona p
@@ -71,6 +71,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                         WHERE $where ")
                         ->getSingleScalarResult();
     }
+    
     //
     //public function countActivos()
     //{

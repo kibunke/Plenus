@@ -12,6 +12,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use SeguridadBundle\Form\UsuarioType;
+use SeguridadBundle\Entity\Usuario;
+
 /**
  * Usuario controller.
  *
@@ -45,42 +48,38 @@ class UsuarioController extends Controller
      */
     public function listDataTableAction(Request $request)
     {
-        $user = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
+        $user   = $this->getUser();
+        $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker')->isGranted('ROLE_USER_LIST_ALL'));
 
-        //$cant = array(
-        //              "activos" => $em->getRepository('SeguridadBundle:Usuario')->countActivos(),
-        //              "inactivos" => $em->getRepository('SeguridadBundle:Usuario')->countInactivos()
-        //            );
         $data=array(
-            "draw"=> $request->request->get('draw'),
-            "recordsTotal"=> $filter['total'],
-            "recordsFiltered"=> $filter['filtered'],
-            "data"=> array()
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
         );
         
         foreach ($filter['rows'] as $user){
-            $role = $user->getRoles()[0];
+            $role    = $user->getRoles()[0];
             $persona = $user->getPersona();
             $data['data'][] = array(
-                "id" => $user->getId(),
-                "ico" => strpos($role, "ADMIN")>-1? true : false,
-                "user"=> $user->getUsername(),
+                "id"      => $user->getId(),
+                "ico"     => strpos($role, "ADMIN")>-1? true : false,
+                "user"    => $user->getUsername(),
                 "persona" => array(
-                    "name"=> $persona->getNombre(),
-                    "lastname"=> $persona->getApellido(),
-                    "dni"=> $persona->getDni(),
-                    "email" => $persona->getEmail(),
-                    "telefono" => $persona->getTelefono(),
+                                    "name"     => $persona->getApellido() . ', ' . $persona->getNombre(),
+                                    "dni"      => $persona->getDni(),
+                                    "email"    => $persona->getEmail(),
+                                    "telefono" => $persona->getTelefono(),
                 ),
-                "active"=> $user->getIsActive(),
-                "info"=> array(
-                            "created" => $user->getCreatedAt(),
-                            "lastop" => $user->getLastActivity()
-                        ),
-                "pass"=> $user->getChangePassword(),
-                "actions"=> '',//$this->generateUrl('usuario_list_logs', array('user' => $user->getId() ))
+                "perfil" => $user->getPerfil()->getName(),
+                "active" => $user->getIsActive(),
+                "info"   => array(
+                                    "created" => $user->getCreatedAt(),
+                                    "lastop"  => $user->getLastActivity()
+                                 ),
+                "pass"    => $user->getChangePassword(),
+                "actions" => $this->renderView('SeguridadBundle:Usuario:actions.html.twig', array('entity' => $user)),
             );
         }
         return new JsonResponse($data);
@@ -153,5 +152,50 @@ class UsuarioController extends Controller
         return array(
             'user' => $user
         );
+    }
+    
+     /**
+     * @Route("/{user}/edit", name="user_edit", defaults={"user":"__00__"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("SeguridadBundle:Usuario:edit.html.twig")
+     */
+    public function editAction(Request $request,Usuario $user)
+    {
+        $form = $this->createCreateForm($user);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            $user->setUpdatedBy($this->getUser());
+  
+            try{
+                $em->flush();
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario modificado con éxito'));
+            }
+            catch(\Exception $e ){
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Usuario con ese nombre de usuario'));
+            }
+        }
+        return array(
+            'entity' => $user,
+            'form'   => $form->createView(),
+        );
+    }
+   
+   
+    /**
+     * Creates a form to create a Email entity.
+     *
+     * @param Perfil $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(Usuario $entity)
+    {
+        $form = $this->createForm(UsuarioType::class, $entity);
+    
+        return $form;
     }
 }

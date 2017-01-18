@@ -149,13 +149,13 @@ class Usuario implements AdvancedUserInterface, \Serializable
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
-        $this->isActive = false;
-        $this->checkData = true;
+        $this->createdAt      = new \DateTime();
+        $this->isActive       = false;
+        $this->checkData      = true;
         $this->changePassword = true;
-        $this->salt = md5(uniqid(null, true));
-        $this->logs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->salt           = md5(uniqid(null, true));
+        $this->logs           = new ArrayCollection();
+        $this->roles          = new ArrayCollection();
     }
     
     /**
