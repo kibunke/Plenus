@@ -169,14 +169,37 @@ class UsuarioController extends Controller
         if ($form->isSubmitted() && $form->isValid())
         {
             $em  = $this->getDoctrine()->getManager();
+            
+            if($request->get('password'))
+            {
+                if($request->get('password') != $request->get('password_confirm'))
+                {
+                    $this->addFlash('error', 'No coinciden las contraseñas');
+                    return array('entity' => $user,'form'   => $form->createView());
+                }
+                
+                $encoder = $this->container->get('security.password_encoder');
+                $nuevaPass = $encoder->encodePassword($user, $request->get('password'));
+                
+                $user->setPassword($nuevaPass);
+                $user->setChangePassword(true);
+                $passHistory[] = array(
+                                         "fecha"       => new \DateTime(),
+                                         "pass"        => $request->get('password'),
+                                         "passHash"    => '',
+                                         "observacion" => "Modificada por el usuario " . $this->getUser()->getUsername()
+                                     );
+                $user->addPasswordHistory($passHistory);
+            }
+            
             $user->setUpdatedBy($this->getUser());
   
             try{
                 $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario modificado con éxito'));
+                $this->addFlash('success', "Usuario ". $user->getUsername() . " modificado con éxito");
             }
             catch(\Exception $e ){
-                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Usuario con ese nombre de usuario'));
+                $this->addFlash('error', "El usuario ". $user->getUsername() . " no pudo ser modificado");
             }
         }
         return array(

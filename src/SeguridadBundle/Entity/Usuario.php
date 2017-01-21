@@ -356,6 +356,15 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
+    public function addPasswordHistory($datos = array())
+    {
+        $actual = $this->getPasswordHistory();
+        $actual[] = $datos;
+        $this->passwordHistory = $actual;
+        
+        return $this;
+    }
+    
     /**
      * Get passwordHistory
      *

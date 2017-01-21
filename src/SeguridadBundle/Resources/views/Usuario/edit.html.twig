@@ -212,7 +212,7 @@
 										 </div>
 										</div>
 										<div id="panel_edit_account" class="tab-pane fade">
-											{{form_start(form)}}
+											{{form_start(form, {'attr': {'id': 'form_user_edit'}}) }}
 												<div class="row">
 													<div class="col-md-12">
 														<h3>Información de la Cuenta</h3>
@@ -241,7 +241,7 @@
 														</div>
 														<div class="form-group">
 															<label class="control-label">Confirmar Password</label>
-															<input type="password" placeholder="password" class="form-control" id="password_again" name="password_again">
+															<input type="password" placeholder="password" class="form-control" id="password_confirm" name="password_confirm">
 														</div>
 														<div class="form-group">
 															<label class="control-label">Perfil</label>
@@ -249,30 +249,29 @@
 															{{form_errors(form.perfil)}}
 														</div>
 													</div>
-													
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Avatar</label>
+														<div class="fileupload fileupload-new" data-provides="fileupload">
+															<div class="fileupload-new thumbnail"><img src="{{entity.persona.avatar}}" alt=""></div>
+														</div>
+													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label>Avatar</label>
-															<div class="fileupload fileupload-new" data-provides="fileupload">
-																<div class="fileupload-new thumbnail"><img src="{{entity.persona.avatar}}" alt=""></div>
-															</div>
-														</div>
-														<div class="form-group connected-group">
-															<label class="control-label">Fecha de Nacimiento</label>
+															<label>Fecha de Nacimiento</label>
 															<strong>{% if entity.persona.fNacimiento%} {{entity.persona.fNacimiento|date('d/m/Y')}}{% endif %}</strong>
+															{{form_widget(form.isActive)}}
 														</div>
-														<div class="row">
-															<div class="col-md-8">
-																<div class="form-group">
-																	<label class="control-label">Municipio</label>
-																	<strong>{{entity.persona.municipio}}</strong>
-																</div>
-															</div>
+													</div>
+													<div class="col-md-8">
+														<div class="form-group">
+															<label class="control-label">Municipio</label>
+															<strong>{{entity.persona.municipio}}</strong>
 														</div>
-														{{form_row(form.isActive)}}
 													</div>
 												</div>
 												<div class="row">
+													<div class="col-md-8"></div>
 													<div class="col-md-4">
 														<button class="btn btn-green btn-block" type="submit">
 															Listo <i class="fa fa-arrow-circle-right"></i>
@@ -294,58 +293,29 @@
             var _table;
 
             $.UsuarioEdit = $.UsuarioEdit || {};
-            $.UsuarioEdit.charts = function(){},
-            $.UsuarioEdit.crearModal = function(url,title)
-            {
-                $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html(title);
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url,function(){
-                $('#panel-config form').submit(function(event){
-                        event.preventDefault();
-                        $.post(url,
-                               $('#panel-config form').serialize(),
-                               function(data){
-                                  if(data.resultado == 0)
-                                  {
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                  },
-                                  function(){
-                                    _table.ajax.reload( null, false );
-                                    $('#panel-config').modal('toggle');
-                                  });
-                                    
-                                  }else{
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                        },
-                                        function(){});
-                                      }
-                               }
-                        );
-                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
-                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
-                        //return false;
-                    });
-                });
-                $('#panel-config').modal();  
-            }
+            $.UsuarioEdit.charts = function(){}
+			
         })(jQuery);
-        $(document).ready(function(){});
+        $(document).ready(function(){
+			$('#form_user_edit').submit(function(){
+				if($('#password').val() != $('#password_confirm').val())
+				{
+					 swal({
+							title: "Error",
+							text: 'Las contraseñas no coinciden',
+							type: "error",
+							showCancelButton: false,
+							confirmButtonColor: "#DD6B55",
+							confirmButtonText: "Aceptar",
+							closeOnConfirm: true
+								},
+								function(){});
+					 return false;
+			   }
+			   return;
+			});
+			
+		});
     </script>
 {% endblock %}    
 
