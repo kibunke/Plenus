@@ -413,4 +413,9 @@ class Perfil
     {
         return $this->availableForNewUsers;
     }
+    
+    public function hasRole($role)
+    {
+        return (in_array($role,$this->getRoles()->toArray()));
+    }
 }

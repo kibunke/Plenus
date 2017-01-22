@@ -13,7 +13,7 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a  href="#1" onclick="$.Perfiles.nuevo()">
+                        <a  href="{{path('perfil_new')}}">
                             <i class="fa fa-id-card"></i> NUEVO
                         </a>
                     </li>
@@ -166,7 +166,7 @@
                                         resultado = '';
                                         if(row.id > 0)
                                         {
-                                            resultado += '<a href="#2" onclick="$.Perfiles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
+                                            resultado += '<a href='+ url_edit + ' title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
                                         }
                                         
                                         url_delete  = "'" + _path_delete_perfil.replace('__00__',row.id) + "'";
@@ -255,12 +255,8 @@
             },
             $.Perfiles.borrar = function(url){
                 $.Perfiles.crearModal(url,"Eliminar Perfil");
-            },
-            $.Perfiles.nuevo = function()
-            {
-               $.Perfiles.crearModal("{{ path('perfil_new') }}","Nuevo Perfil");
             }
         })(jQuery);
         $(document).ready(function(){$.Perfiles.init();});
     </script>
-{% endblock %}    
+{% endblock %} 
