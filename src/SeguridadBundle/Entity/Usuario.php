@@ -61,6 +61,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     
     /**
      * @ORM\OneToMany(targetEntity="Log", mappedBy="usuario")
+     * @ORM\OrderBy({"id" = "DESC"})
      */
     private $logs;
 
@@ -360,6 +361,15 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
+    public function addPasswordHistory($datos = array())
+    {
+        $actual = $this->getPasswordHistory();
+        $actual[] = $datos;
+        $this->passwordHistory = $actual;
+        
+        return $this;
+    }
+    
     /**
      * Get passwordHistory
      *

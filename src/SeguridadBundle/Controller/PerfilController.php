@@ -70,25 +70,27 @@ class PerfilController extends Controller
      */
     public function editAction(Request $request,Perfil $perfil)
     {
-        $form          = $this->createCreateForm($perfil);
+        $em     = $this->getDoctrine()->getManager();
+        $roles  = $em->getRepository('SeguridadBundle:Role')->findBy(array('isActive'=>true));
+        $form   = $this->createEditForm($perfil);
         $form->handleRequest($request);
-        
+     
         if ($form->isSubmitted() && $form->isValid())
         {
-            $em  = $this->getDoctrine()->getManager();
             $perfil->setUpdatedBy($this->getUser());
-  
             try{
                 $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Perfil modificado con éxito'));
-            }
-            catch(\Exception $e ){
-                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Perfil con ese nombre'));
+                $this->addFlash('success', "Perfil ". $perfil->getName() . " modificado con éxito");
+                return $this->redirectToRoute('perfil_edit',array('perfil' => $perfil->getId()));
+            }catch(\Exception $e ){
+                $this->addFlash('error', "El Perfil no pudo ser modificado");
+                return $this->redirectToRoute('perfil_edit',array('perfil' => $perfil->getId()));
             }
         }
         return array(
             'entity' => $perfil,
             'form'   => $form->createView(),
+            'roles'  => $roles
         );
     }
     
@@ -101,23 +103,29 @@ class PerfilController extends Controller
     {
         $entity = new Perfil();
         $form   = $this->createCreateForm($entity);
+        $em     = $this->getDoctrine()->getManager();
+        $roles  = $em->getRepository('SeguridadBundle:Role')->findBy(array('isActive'=>true));
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid())
         {
-            $em  = $this->getDoctrine()->getManager();
+            
             $entity->setCreatedBy($this->getUser());
             $em->persist($entity);
             try{
                 $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Perfil creado con éxito'));
+                $this->addFlash('success', "Perfil ". $entity->getName() . " creado con éxito");
+                return $this->redirectToRoute('perfil_list');
             }
             catch(\Exception $e ){
-                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Ya existe un Perfil con ese nombre'));
+                $this->addFlash('error', "El Perfil no pudo ser creado");
+                return $this->redirectToRoute('perfil_list');
             }
         }
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'roles'  => $roles
         );
     }
 
@@ -165,6 +173,25 @@ class PerfilController extends Controller
     private function createCreateForm(Perfil $entity)
     {
         $form = $this->createForm(PerfilType::class, $entity);
+    
+        return $form;
+    }
+    
+     /**
+     * Creates a form to create a Email entity.
+     *
+     * @param Perfil $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Perfil $entity)
+    {
+        $form = $this->createForm(PerfilType::class, $entity,
+                                  array(
+                                        'action' => $this->generateUrl('perfil_edit', array('perfil' => $entity->getId())),
+                                        'method' => 'POST'
+                                       )
+                                  );
     
         return $form;
     }
