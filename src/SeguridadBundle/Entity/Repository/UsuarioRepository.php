@@ -25,7 +25,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
         $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
                 
         if (!$canViewAll){
-            $where = " AND (m.id = $user->gerPersona()->getMunicipio()->getId())";
+            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ")";
         }
         return $this->getEntityManager()
                         ->createQuery(" SELECT u
@@ -45,7 +45,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
         $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
                 
         if (!$canViewAll){
-            $where = " AND (m.id = $user->gerPersona()->getMunicipio()->getId())";
+            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ")";
         }
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(u)
@@ -61,7 +61,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     {
         $where = "1 = 1";
         if (!$canViewAll){
-            $where = " AND (m.id = $user->gerPersona()->getMunicipio()->getId())";
+            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ")";
         }
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(u)
