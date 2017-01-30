@@ -223,57 +223,48 @@
                 });
             },
             $.Usuario.charts = function(){},
-            $.Usuario.crearModal = function(url,title)
-            {
-                $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html(title);
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url,function(){
-                $('#panel-config form').submit(function(event){
-                        event.preventDefault();
-                        $.post(url,
-                               $('#panel-config form').serialize(),
-                               function(data){
-                                  if(data.resultado == 0)
-                                  {
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                  },
-                                  function(){
-                                    _table.ajax.reload( null, false );
-                                    $('#panel-config').modal('toggle');
-                                  });
-                                    
-                                  }else{
-                                    swal({
-                                    title: "Resultado",
-                                    text: data.mensaje,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Aceptar",
-                                    closeOnConfirm: true
-                                        },
-                                        function(){});
-                                      }
-                               }
-                        );
+            $.Usuario.activar = function(url){
+                $.Main.openFormModal(url,"Activar Usuario",function(){
+                    $('#panel-config form').submit(function(event){
+                                            event.preventDefault();
+                                            $.post(url,
+                                                   $('#panel-config form').serialize(),
+                                                   function(data){
+                                                      if(data.resultado == 0)
+                                                      {
+                                                        swal({
+                                                        title: "Resultado",
+                                                        text: data.mensaje,
+                                                        type: "success",
+                                                        showCancelButton: false,
+                                                        confirmButtonColor: "#DD6B55",
+                                                        confirmButtonText: "Aceptar",
+                                                        closeOnConfirm: true
+                                                      },
+                                                      function(){
+                                                        _table.ajax.reload( null, false );
+                                                        $('#panel-config').modal('toggle');
+                                                      });
+                                                        
+                                                      }else{
+                                                        swal({
+                                                        title: "Resultado",
+                                                        text: data.mensaje,
+                                                        type: "error",
+                                                        showCancelButton: false,
+                                                        confirmButtonColor: "#DD6B55",
+                                                        confirmButtonText: "Aceptar",
+                                                        closeOnConfirm: true
+                                                            },
+                                                            function(){});
+                                                          }
+                                                    }
+                                            );
                         //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
                         //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
                         //return false;
-                    });
-                });
-                $('#panel-config').modal();  
-            },
-            $.Usuario.editar = function(url){
-                  $.Usuario.crearModal(url,"Editar Usuario");
+                    })
+            });
             }
         })(jQuery);
         $(document).ready(function(){$.Usuario.init();});
