@@ -1,14 +1,14 @@
 <?php
 
-namespace JuegosBA\InscripcionBundle\Entity;
+namespace InscripcionBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\InscripcionBundle\Entity\Origen
- * @ORM\Table(name="services_juegosba_final.Origen")
- * @ORM\Entity()
+ * InscripcionBundle\Entity\Origen
+ * @ORM\Table(name="Origen")
+ * @ORM\Entity(repositoryClass="InscripcionBundle\Entity\Repository\OrigenRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
@@ -35,20 +35,7 @@ abstract class Origen
      * @ORM\Column(name="nombre", type="string", length=150)
      */
     private $nombre;
-
-    /**
-     * @var string $icono
-     *
-     * @ORM\Column(name="icono", type="string", length=20, nullable=true)
-     */
-    private $icono;
-    
-    /**
-     * @var string $color
-     *
-     * @ORM\Column(name="color", type="string", length=20, nullable=true)
-     */
-    private $color;    
+ 
      /**
      * @var string $descripcion
      *
@@ -57,7 +44,7 @@ abstract class Origen
     private $descripcion;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
      */       
     private $municipio;
@@ -70,7 +57,7 @@ abstract class Origen
     private $createdAt;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */       
     private $createdBy;
@@ -83,12 +70,27 @@ abstract class Origen
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;    
-    
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+    
+    /**
+     * __toString
+     */    
+    public function __toString()
+    {
+        return $this->getNombre();
+    }
+    
     /**
      * Get id
      *
@@ -123,26 +125,13 @@ abstract class Origen
     }
 
     /**
-     * Set icono
-     *
-     * @param string $icono
-     * @return Origen
-     */
-    public function setIcono($icono)
-    {
-        $this->icono = $icono;
-
-        return $this;
-    }
-
-    /**
      * Get icono
      *
      * @return string 
      */
     public function getIcono()
     {
-        return $this->icono;
+        return "fa fa-user";
     }
 
     /**
@@ -240,10 +229,10 @@ abstract class Origen
     /**
      * Set municipio
      *
-     * @param \JuegosBA\CommonBundle\Entity\Partido $municipio
+     * @param \CommonBundle\Entity\Partido $municipio
      * @return Origen
      */
-    public function setMunicipio(\JuegosBA\CommonBundle\Entity\Partido $municipio = null)
+    public function setMunicipio(\CommonBundle\Entity\Partido $municipio = null)
     {
         $this->municipio = $municipio;
 
@@ -253,7 +242,7 @@ abstract class Origen
     /**
      * Get municipio
      *
-     * @return \JuegosBA\CommonBundle\Entity\Partido 
+     * @return \CommonBundle\Entity\Partido 
      */
     public function getMunicipio()
     {
@@ -263,10 +252,10 @@ abstract class Origen
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Origen
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -276,7 +265,7 @@ abstract class Origen
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -286,10 +275,10 @@ abstract class Origen
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Origen
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -299,7 +288,7 @@ abstract class Origen
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {

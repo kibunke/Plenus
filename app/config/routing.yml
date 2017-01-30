@@ -10,3 +10,7 @@ gestion:
     resource: "@GestionBundle/Controller/"
     type:     annotation
     prefix:   /system
+inscripcion:
+    resource: "@InscripcionBundle/Controller/"
+    type:     annotation
+    prefix:   /inscripcion

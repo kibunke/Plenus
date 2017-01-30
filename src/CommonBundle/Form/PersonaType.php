@@ -26,7 +26,7 @@ class PersonaType extends AbstractType
             ->add('dni', NumberType::class, array("attr" => array('placeholder' => 'Nro documento')))
             ->add('email', EmailType::class, array("attr" => array('placeholder' => 'casilla@email.com')))
             ->add('municipio', EntityType::class, array(
-                                        'class' => 'CommonBundle:Partido',
+                                        'class' => 'CommonBundle:Municipio',
                                         'query_builder' => function (EntityRepository $er) {
                                             return $er->createQueryBuilder('p')
                                                 ->where('p.provincia = 1')

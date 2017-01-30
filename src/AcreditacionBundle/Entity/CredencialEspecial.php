@@ -22,7 +22,7 @@ use SeguridadBundle\Entity\Usuario;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="services_juegosba_final.CredencialEspecial")
+ * @ORM\Table(name="CredencialEspecial")
  * @ORM\Entity(repositoryClass="AcreditacionBundle\Entity\Repository\CredencialEspecialRepository")
  */
 class CredencialEspecial {

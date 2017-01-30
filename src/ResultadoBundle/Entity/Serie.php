@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ResultadoBundle\Entity\Serie
- * @ORM\Table(name="services_juegosba_final.Serie")
+ * @ORM\Table(name="Serie")
  * @ORM\Entity()
  */
 class Serie

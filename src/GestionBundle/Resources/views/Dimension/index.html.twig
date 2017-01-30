@@ -1,6 +1,5 @@
 {% extends 'CommonBundle::layout.html.twig' %}
 {% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
 {% endblock %}
 
 {% block contenidoToolbar %}
@@ -23,24 +22,24 @@
                             <li>
                                 <div class="drop-down-wrapper ps-container">
                                     <ul>
-                                        <li class="unread">
-                                            <a  href="{{ path('torneo_new') }}">
-                                                <i class="fa fa-plus"></i> NUEVO TORNEO
+                                        <li class="">
+                                            <a href="#1" onclick="$.Dimension.openAjaxForm('{{ path('torneo_new') }}','Nuevo Torneo')">
+                                                <i class="fa fa-plus"></i> Nuevo Torneo
                                             </a>
                                         </li>
                                         <li class="unread">
-                                            <a  href="{{ path('modalidad_new') }}">
-                                                <i class="fa fa-plus"></i> NUEVA MODALIDAD
+                                            <a  href="#1" onclick="$.Dimension.openAjaxForm('{{ path('modalidad_new') }}''Nueva Modalidad')">
+                                                <i class="fa fa-plus"></i> Nueva Modalidad
                                             </a>
                                         </li>                    
                                         <li class="unread">
-                                            <a  href="{{ path('categoria_new') }}">
-                                                <i class="fa fa-plus"></i> NUEVA CATEGORÍA
+                                            <a  href="#1" onclick="$.Dimension.openAjaxForm('{{ path('categoria_new') }}''Nueva Categoría')">
+                                                <i class="fa fa-plus"></i> Nueva Categoría
                                             </a>
                                         </li>
                                         <li class="unread">
-                                            <a  href="{{ path('genero_new') }}">
-                                                <i class="fa fa-plus"></i> NUEVO GÉNERO
+                                            <a  href="#1" onclick="$.Dimension.openAjaxForm('{{ path('genero_new') }}''Nuevo Género')">
+                                                <i class="fa fa-plus"></i> Nuevo Género
                                             </a>
                                         </li>
                                     </ul>
@@ -60,7 +59,7 @@
             <ol class="breadcrumb">
                 <li>
                     <a href="{{ path('homepage') }}">
-                        {{ icon('home') }}
+                        <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
                 </li>                
                 <li>
@@ -78,390 +77,266 @@
 {% block contenidoContent %}
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-white">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Tabla <span class="text-bold"> de torneos</span></h4>
-                    <div class="panel-tools">
-                        <div class="dropdown">
-                            <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                                <i class="fa fa-cog"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                                <li>
-                                    <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
-                                </li>
-                                <li>
-                                    <a class="panel-refresh" href="#">
-                                        <i class="fa fa-refresh"></i> <span>Refresh</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-config" href="#panel-config" data-toggle="modal">
-                                        <i class="fa fa-wrench"></i> <span>Configurations</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-expand" href="#">
-                                        <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-xs btn-link panel-close" href="#">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th style="min-width: 95px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for entity in torneos %}
-                                <tr>
-                                    <td>{{ entity.id }}</td>
-                                    <td>{{ entity.nombre }}</td>
-                                    <td>{{ entity.descripcion }}</td>
-                                    <td class="center">
-                                        <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                            <a href="{{ path('torneo_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ path('torneo_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-                                            <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
-                                        </div>
-                                        <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                            <div class="btn-group">
-                                                <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
-                                                </a>
-                                                <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('torneo_show', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-eye"></i> Ver
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('torneo_edit', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-edit"></i> Editar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="#">
-                                                            <i class="fa fa-times"></i> Eliminar
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>        
+            {% include 'GestionBundle:Torneo:list.html.twig' %}
+        </div>
         <div class="col-md-6">
-            <div class="panel panel-white">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Tabla <span class="text-bold"> de modalidades</span></h4>
-                    <div class="panel-tools">
-                        <div class="dropdown">
-                            <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                                <i class="fa fa-cog"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                                <li>
-                                    <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
-                                </li>
-                                <li>
-                                    <a class="panel-refresh" href="#">
-                                        <i class="fa fa-refresh"></i> <span>Refresh</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-config" href="#panel-config" data-toggle="modal">
-                                        <i class="fa fa-wrench"></i> <span>Configurations</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-expand" href="#">
-                                        <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-xs btn-link panel-close" href="#">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th style="min-width: 95px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for entity in modalidades %}
-                                <tr>
-                                    <td>{{ entity.id }}</td>
-                                    <td>{{ entity.nombre }}</td>
-                                    <td>{{ entity.descripcion }}</td>
-                                    <td class="center">
-                                        <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                            <a href="{{ path('modalidad_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ path('modalidad_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-                                            <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
-                                        </div>
-                                        <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                            <div class="btn-group">
-                                                <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
-                                                </a>
-                                                <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('modalidad_show', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-eye"></i> Ver
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('modalidad_edit', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-edit"></i> Editar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="#">
-                                                            <i class="fa fa-times"></i> Eliminar
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% include 'GestionBundle:Modalidad:list.html.twig' %}
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-white">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Tabla <span class="text-bold"> de categorias</span></h4>
-                    <div class="panel-tools">
-                        <div class="dropdown">
-                            <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                                <i class="fa fa-cog"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                                <li>
-                                    <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
-                                </li>
-                                <li>
-                                    <a class="panel-refresh" href="#">
-                                        <i class="fa fa-refresh"></i> <span>Refresh</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-config" href="#panel-config" data-toggle="modal">
-                                        <i class="fa fa-wrench"></i> <span>Configurations</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-expand" href="#">
-                                        <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-xs btn-link panel-close" href="#">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th style="min-width: 95px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for entity in categorias %}
-                                <tr class="{% if entity.soloInscribe %}warning{% endif %}">
-                                    <td>
-                                        {{ entity.id }}
-                                        {% if entity.soloInscribe %}
-                                            <i class="fa fa-warning tooltips" data-original-title="Solo utilizado en la inscripción" data-placement="top" style="color: orange"></i>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ entity.nombre }}</td>
-                                    <td>{{ entity.descripcion }}</td>
-                                    <td class="center">
-                                        <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                            <a href="{{ path('categoria_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ path('categoria_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-                                            <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
-                                        </div>
-                                        <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                            <div class="btn-group">
-                                                <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
-                                                </a>
-                                                <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('categoria_show', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-eye"></i> Ver
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('categoria_edit', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-edit"></i> Editar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="#">
-                                                            <i class="fa fa-times"></i> Eliminar
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>        
+            {% include 'GestionBundle:Genero:list.html.twig' %}
+        </div>
         <div class="col-md-6">
-            <div class="panel panel-white">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Tabla <span class="text-bold"> de generos</span></h4>
-                    <div class="panel-tools">
-                        <div class="dropdown">
-                            <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                                <i class="fa fa-cog"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                                <li>
-                                    <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
-                                </li>
-                                <li>
-                                    <a class="panel-refresh" href="#">
-                                        <i class="fa fa-refresh"></i> <span>Refresh</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-config" href="#panel-config" data-toggle="modal">
-                                        <i class="fa fa-wrench"></i> <span>Configurations</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="panel-expand" href="#">
-                                        <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-xs btn-link panel-close" href="#">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th style="min-width: 95px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for entity in generos %}
-                                <tr>
-                                    <td>{{ entity.id }}</td>
-                                    <td>{{ entity.nombre }}</td>
-                                    <td>{{ entity.descripcion }}</td>
-                                    <td class="center">
-                                        <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                            <a href="{{ path('genero_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ path('genero_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-                                            <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
-                                        </div>
-                                        <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                            <div class="btn-group">
-                                                <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
-                                                </a>
-                                                <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('genero_show', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-eye"></i> Ver
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="{{ path('genero_edit', { 'id': entity.id }) }}">
-                                                            <i class="fa fa-edit"></i> Editar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a role="menuitem" tabindex="-1" href="#">
-                                                            <i class="fa fa-times"></i> Eliminar
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% include 'GestionBundle:Categoria:list.html.twig' %}
         </div>
     </div>    
 {% endblock %}
 {% block otherJavascripts %}
-    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
     <script>
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
-            var table;
-            $.Default = $.Default || {};
-            $.Default.init = function() {        
-                table=$('table').dataTable( {
-                    "language": {
-                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
-                    },                
-                    "columnDefs": [ {
-                        "searchable": false,
-                        "orderable": false,
-                        "targets": [3]
-                    } ],
+            var _tableTorneo,
+                _tableModalidad,
+                _tableGenero,
+                _tableCategoria;
+            $.Dimension = $.Dimension || {};
+            $.Dimension.table = {},
+            $.Dimension.init = function() {
+                $.Dimension.table.torneo();
+                $.Dimension.table.genero();
+                $.Dimension.table.categoria();
+                $.Dimension.table.modalidad();
+            }
+            $.Dimension.blockTables = function(){
+                $('.panel').block($.Main.defaultBlockConf());
+            }
+            $.Dimension.unblockTables = function(){
+                _tableTorneo.fnDraw(true);
+                _tableModalidad.fnDraw(true);
+                _tableGenero.fnDraw(true);
+                _tableCategoria.fnDraw(true);
+            }
+            $.Dimension.openAjaxForm = function(url,title) {
+                $.Main.openFormModal(url,title, function(){
+                        $('#panel-config form').submit(function(event){
+                            $.Dimension.blockTables();
+                            $('#okButton').button('loading')
+                            event.preventDefault();
+                            $.post(url, $('#panel-config form').serialize(), function(data){
+                                if(data.success){
+                                    toastr['success'](data.message, 'Excelente!');
+                                    $.Main.closeFormModal();
+                                }else if(data.error){
+                                    toastr['error'](data.message, 'Cuidado!');
+                                }else{
+                                    $("#panel-config form").html($(data).find('form').html());
+                                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
+                                }
+                                $('#okButton').button('reset');
+                                $.Dimension.unblockTables();
+                            });
+                        });
+                    }
+                );            
+            }
+            $.Dimension.table.torneo = function() {
+                _tableTorneo = $('#tableTorneo').dataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('torneo_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "torneo.id" },
+                        { "data": "torneo" },
+                        { "data": "torneo.eventos" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        },
+                        {
+                            "targets": 1,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
+                                        }
+                        },
+                        {
+                            "targets": 2,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div class="text-center">'+ data +'</div>':'';
+                                        }
+                        }
+                    ],
+                    "drawCallback": function( oSettings ) {
+                        $('#tableTorneo').parents('.panel').unblock();
+                    }
+                });
+            },
+            $.Dimension.table.genero = function() {
+                _tableGenero = $('#tableGenero').dataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('genero_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "genero.id" },
+                        { "data": "genero" },
+                        { "data": "genero.eventos" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        },
+                        {
+                            "targets": 1,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
+                                        }
+                        },
+                        {
+                            "targets": 2,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div class="text-center">'+ data +'</div>':'';
+                                        }
+                        }
+                    ],
+                    "drawCallback": function( oSettings ) {
+                        $('#tableGenero').parents('.panel').unblock();
+                    }
+                });
+            },
+            $.Dimension.table.categoria = function() {
+                _tableCategoria = $('#tableCategoria').dataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('categoria_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "categoria.id" },
+                        { "data": "categoria" },
+                        { "data": "categoria.eventos" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        },
+                        {
+                            "targets": 1,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
+                                        }
+                        },
+                        {
+                            "targets": 2,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div class="text-center">'+ data +'</div>':'';
+                                        }
+                        }
+                    ],
+                    "drawCallback": function( oSettings ) {
+                        $('#tableCategoria').parents('.panel').unblock();
+                    }
+                });
+            }
+            $.Dimension.table.modalidad = function() {
+                _tableModalidad = $('#tableModalidad').dataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('modalidad_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "modalidad.id" },
+                        { "data": "modalidad" },
+                        { "data": "modalidad.eventos" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        },
+                        {
+                            "targets": 1,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
+                                        }
+                        },
+                        {
+                            "targets": 2,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div class="text-center">'+ data +'</div>':'';
+                                        }
+                        }
+                    ],
+                    "drawCallback": function( oSettings ) {
+                        $('#tableModalidad').parents('.panel').unblock();
+                    }
                 });
             }
         })(jQuery);
-        $(document).ready(function(){$.Default.init();});
+        $(document).ready(function(){$.Dimension.init();});
     </script>
 {% endblock %}    

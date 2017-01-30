@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ResultadoBundle\Entity\Plaza
  *
  * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\PlazaRepository")
- * @ORM\Table(name="services_juegosba_final.Plaza")
+ * @ORM\Table(name="Plaza")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({

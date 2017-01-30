@@ -13,10 +13,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use ResultadoBundle\Entity\Torneo;
 use GestionBundle\Form\TorneoType;
+
 /**
  * Torneo controller.
  *
- * @Route("/gestion")
+ * @Route("/gestion/torneo")
  * @Security("has_role('ROLE_ADMIN')")
  */
 class TorneoController extends Controller
@@ -24,7 +25,7 @@ class TorneoController extends Controller
     /**
      * Lists all Torneo entities.
      *
-     * @Route("/torneo", name="torneo")
+     * @Route("/", name="torneo")
      * @Method("GET")
      */
     public function indexAction()
@@ -33,177 +34,104 @@ class TorneoController extends Controller
     }
     
     /**
+     * @Route("/list/datatable", name="torneo_list_datatable")
+     * @Method("POST")
+     */
+    public function listDataTableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('ResultadoBundle:Torneo')->datatable($request->request);
+        
+        $data = array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+        
+        foreach ($filter['rows'] as $torneo){
+            $data['data'][] = array(
+                "torneo"  => array(
+                                    "id" => $torneo->getId(),
+                                    "nombre" => $torneo->getNombre(),
+                                    "descripcion"  => $torneo->getDescripcion(),
+                                    "eventos"   => count($torneo->getEventos())
+                            ),
+                "actions"   => $this->renderView('GestionBundle:Torneo:actions.html.twig', array('entity' => $torneo)),
+            );
+        }
+        return new JsonResponse($data);
+    }    
+    
+    /**
      * Creates a new Torneo entity.
      *
-     * @Route("/torneo", name="torneo_create")
-     * @Method("POST")
+     * @Route("/new", name="torneo_new")
+     * @Method({"GET", "POST"})
      * @Template("GestionBundle:Torneo:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $entity = new Torneo();
-        $form = $this->createCreateForm($entity);
+        //$form = $this->createForm(TorneoType::class, $entity, array('action' => $this->generateUrl('torneo_new')));
+        $form = $this->createForm(TorneoType::class, $entity);
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity->setCreatedBy($this->getUser());            
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setCreatedBy($this->getUser());
             try{
                 $em->persist($entity);
                 $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');
-                //return new JsonResponse(array('success' => true));
-                return $this->redirectToRoute('torneo');
+                return new JsonResponse(array('success' => true, 'message' => 'Se agregó un torneo.'));
             } catch (Exception $e) {
-                $this->addFlash('error', 'La información no pudo ser guardada correctamente.');    
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
-
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
-    }
-
-    /**
-     * Creates a form to create a Torneo entity.
-     *
-     * @param Torneo $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Torneo $entity)
-    {
-        $form = $this->createForm(new TorneoType(), $entity, array(
-            'action' => $this->generateUrl('torneo_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Guardar'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Torneo entity.
-     *
-     * @Route("/torneo/new", name="torneo_new")
-     * @Method("GET")
-     * @Template("GestionBundle:Torneo:new.html.twig")
-     */
-    public function newAction()
-    {
-        $entity = new Torneo();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
+    } 
     
     /**
      * Finds and displays a Torneo entity.
      *
-     * @Route("/torneo/{id}", name="torneo_show")
+     * @Route("/{id}", name="torneo_show")
      * @Method("GET")
      * @Template()
      */
     public function showAction(Torneo $id)
     {
-        //$em = $this->getDoctrine()->getManager();
-        //
-        //$entity = $em->getRepository('SeguridadBundle:Usuario')->find($id);
-        //
-        //if (!$entity) {
-        //    throw $this->createNotFoundException('Unable to find Usuario entity.');
-        //}
-        //
-        //$deleteForm = $this->createDeleteForm($id);
-        //
-        //return array(
-        //    'entity'      => $entity,
-        //    'delete_form' => $deleteForm->createView(),
-        //);
     }
 
     /**
      * Displays a form to edit an existing Torneo entity.
      *
-     * @Route("/torneo/{id}/edit", name="torneo_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="torneo_edit")
+     * @Method({"GET", "POST"})
      * @Template("GestionBundle:Torneo:edit.html.twig")
      */
-    public function editAction(Torneo $entity)
+    public function editAction(Request $request, Torneo $entity)
     {
         $em = $this->getDoctrine()->getManager();
-
-        if (!$entity) {
-            throw $this->createNotFoundException('No existe la Torneo que quiere modificar.');
-        }
-
-        $form = $this->createEditForm($entity);
-
-        return array(
-            'entity'      => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to edit a Torneo entity.
-    *
-    * @param Usuario $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Torneo $entity)
-    {
-        $form = $this->createForm(new TorneoType(), $entity, array(
-            'action' => $this->generateUrl('torneo_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Actualizar'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing Torneo entity.
-     *
-     * @Route("/torneo/{id}", name="torneo_update")
-     * @Method("PUT")
-     * @Template("GestionBundle:Torneo:new.html.twig")
-     */
-    public function updateAction(Request $request,Torneo $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $oldEntity = clone $entity;
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Usuario entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
+        //$form = $this->createForm(TorneoType::class, $entity, array('action' => $this->generateUrl('torneo_edit', array('id'=> $entity->getId()))));
+        $form = $this->createForm(TorneoType::class, $entity);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $entity->setUpdatedBy($this->getUser());
             $entity->setUpdatedAt(new \DateTime());       
             try{
                 $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');
-                //return new JsonResponse(array('success' => true));
-                return $this->redirectToRoute('torneo');
+                return new JsonResponse(array('success' => true, 'message' => 'El torneo fue modificado.'));
             } catch (Exception $e) {
-                $this->addFlash('error', 'La información no pudo ser guardada correctamente.');    
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
-
         return array(
-            'entity'      => $entity,
-            'form'   => $editForm->createView(),
+            'entity' => $entity,
+            'form'   => $form->createView(),
         );
-    }    
+    }
 }

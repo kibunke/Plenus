@@ -8,9 +8,8 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * SeguridadBundle\Entity\Rol
- * @ORM\Table(name="services_juegosba_admin.Rol")
+ * @ORM\Table(name="Rol")
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\RolRepository")
- * @Gedmo\Loggable 
  */
 class Rol implements RoleInterface
 {
@@ -27,7 +26,6 @@ class Rol implements RoleInterface
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string", length=255, unique=true)
-     * @Gedmo\Versioned
      */
     private $nombre;
 
@@ -42,13 +40,12 @@ class Rol implements RoleInterface
      * @var boolean $soloAdmin
      *
      * @ORM\Column(name="soloAdmin", type="boolean", nullable=true)
-     * @Gedmo\Versioned
      */
     protected $soloAdmin;
 
     /**
      * @ORM\ManyToMany(targetEntity="Perfil", mappedBy="roles")
-     * @ORM\JoinTable(name="services_juegosba_admin.perfil_rol")
+     * @ORM\JoinTable(name="perfil_rol")
      */  
     private $perfiles;
     

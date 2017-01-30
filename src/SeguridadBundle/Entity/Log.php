@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * SeguridadBundle\Entity\Log
  * 
- * @ORM\Table(name="plenus_admin.Log")
+ * @ORM\Table(name="Log")
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\LogRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")

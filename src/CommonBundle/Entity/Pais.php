@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Pais
  *
- * @ORM\Table(name="plenus_admin.Pais")
+ * @ORM\Table(name="Pais")
  * @ORM\Entity
  */
 class Pais

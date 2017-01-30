@@ -49,7 +49,7 @@ class Cronograma
     
     /**
      * @ORM\ManyToMany(targetEntity="Evento", inversedBy="cronogramas")
-     * @ORM\JoinTable(name="services_juegosba_final.evento_cronograma")
+     * @ORM\JoinTable(name="evento_cronograma")
      **/
     private $eventos;
 

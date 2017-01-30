@@ -3,11 +3,12 @@
 namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ResultadoBundle\Entity\Evento
- * @ORM\Table(name="services_juegosba_final.Evento")
+ * @ORM\Table(name="Evento")
  * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\EventoRepository")
  */
 class Evento
@@ -34,20 +35,6 @@ class Evento
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
-     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="inscribe", type="boolean", nullable=true)
-     */
-    private $inscribe;
-    
-     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="soloInscribe", type="boolean", nullable=true)
-     */
-    private $soloInscribe;
 
      /**
      * @var boolean
@@ -62,11 +49,6 @@ class Evento
      * @ORM\Column(name="orden", type="integer")
      */
     private $orden;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Inscripto", mappedBy="evento")
-     */
-    private $inscriptos;
 
     /**
      * @ORM\OneToMany(targetEntity="Etapa", mappedBy="evento")
@@ -109,8 +91,14 @@ class Evento
     private $disciplina;
     
     /**
+     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Segmento", inversedBy="eventos")
+     * @ORM\JoinColumn(name="segmento", referencedColumnName="id")
+     */       
+    private $segmento;
+    
+    /**
      * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
-     * @ORM\JoinTable(name="services_juegosba_admin.usuarios_coordina_eventos")
+     * @ORM\JoinTable(name="usuarios_coordina_eventos")
      **/    
     private $coordinadores;
     
@@ -544,52 +532,6 @@ class Evento
     {
         return $this->updatedBy;
     }
-    
-    /**
-     * Set inscribe
-     *
-     * @param boolean $inscribe
-     * @return Evento
-     */
-    public function setInscribe($inscribe)
-    {
-        $this->inscribe = $inscribe;
-
-        return $this;
-    }
-
-    /**
-     * Get inscribe
-     *
-     * @return boolean
-     */
-    public function getInscribe()
-    {
-        return $this->inscribe;
-    }
-
-    /**
-     * Set soloInscribe
-     *
-     * @param boolean $soloInscribe
-     * @return Evento
-     */
-    public function setSoloInscribe($soloInscribe)
-    {
-        $this->soloInscribe = $soloInscribe;
-
-        return $this;
-    }
-
-    /**
-     * Get soloInscribe
-     *
-     * @return boolean
-     */
-    public function getSoloInscribe()
-    {
-        return $this->soloInscribe;
-    }
 
     /**
      * Set eventoAdaptado
@@ -635,23 +577,6 @@ class Evento
     public function getOrden()
     {
         return $this->orden;
-    }
-    
-    /**
-     * Get totalInscriptos
-     *
-     * @return array
-     */
-    public function getTotalInscriptos()
-    {
-        $result = ['masculinos'=>0,'femeninos'=>0,'total'=>0];
-        foreach ($this->getInscriptos() as $inscripto)
-        {
-            $result['masculinos']=$result['masculinos']+$inscripto->getCantidadMasculinos();
-            $result['femeninos']=$result['femeninos']+$inscripto->getCantidadFemeninos();
-            $result['total']=$result['total']+$inscripto->getCantidadMasculinos()+$inscripto->getCantidadFemeninos();
-        }
-        return $result;
     }    
 
     /**
@@ -829,7 +754,6 @@ class Evento
      */
     public function __construct()
     {
-        $this->inscriptos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->etapas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();

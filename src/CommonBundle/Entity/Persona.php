@@ -18,7 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *                          "persona"    = "Persona"
+ *                          "persona"       = "Persona",
+ *                          "participante"    = "ResultadoBundle\Entity\Participante",
  *                      })
  *                        "competitor"= "TournamentBundle\Entity\Competitor",
  *                        "coach"     = "TournamentBundle\Entity\Coach",
@@ -110,7 +111,7 @@ class Persona
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
      */       
     private $municipio;
@@ -287,7 +288,17 @@ class Persona
     {
         return $this->apellido;
     }
-
+    
+    /**
+     * Get nombreCompleto
+     *
+     * @return string
+     */
+    public function getNombreCompleto()
+    {
+        return $this->apellido.", ".$this->nombre;
+    }
+    
     /**
      * Set fNacimiento
      *
@@ -653,10 +664,10 @@ class Persona
     /**
      * Set municipio
      *
-     * @param \CommonBundle\Entity\Partido $municipio
+     * @param \CommonBundle\Entity\Municipio $municipio
      * @return Persona
      */
-    public function setMunicipio(\CommonBundle\Entity\Partido $municipio = null)
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
     {
         $this->municipio = $municipio;
 
@@ -666,7 +677,7 @@ class Persona
     /**
      * Get municipio
      *
-     * @return \CommonBundle\Entity\Partido
+     * @return \CommonBundle\Entity\Municipio
      */
     public function getMunicipio()
     {

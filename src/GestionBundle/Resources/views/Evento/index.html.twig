@@ -1,6 +1,5 @@
 {% extends 'CommonBundle::layout.html.twig' %}
 {% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
 {% endblock %}
 
 {% block contenidoToolbar %}
@@ -16,7 +15,7 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a  href="{{ path('evento_new') }}">
+                        <a onclick="$.Default.openAjaxForm('{{ path('evento_new') }}','Nuevo Evento')">
                             <i class="fa fa-plus"></i> NUEVO
                         </a>
                     </li>
@@ -32,7 +31,7 @@
             <ol class="breadcrumb">
                 <li>
                     <a href="{{ path('homepage') }}">
-                        {{ icon('home') }}
+                        <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
                 </li>                
                 <li>
@@ -88,89 +87,90 @@
                     <th style="min-width: 55px">Id</th>
                     <th>Ord</th>
                     <th>Nombre</th>
-                    <th class="visible-lg">Descripción</th>
-                    <th><i class="fa fa-pencil tooltips" data-original-title="Inscribe" data-placement="top"></i></th>
-                    <th>Total</th>
+                    <!--<th><i class="fa fa-pencil tooltips" data-original-title="Inscribe" data-placement="top"></i></th>-->
+                    <!--<th>Total</th>-->
                     <th style="min-width: 95px"></th>
                 </tr>
             </thead>
-            <tbody>
-                {% for entity in entities %}
-                    <tr class="{% if entity.soloInscribe %}warning{% endif %}">
-                        <td>
-                            {{ entity.id }}
-                            {% if entity.soloInscribe %}
-                                <i class="fa fa-warning tooltips" data-original-title="Solo utilizado en la inscripción" data-placement="top" style="color: orange"></i>
-                            {% endif %}                            
-                        </td>
-                        <td>{{ entity.orden }}</td>
-                        <td>{{ entity.getNombreCompleto }}</td>
-                        <td class="visible-lg">{{ entity.descripcion[0:10] }}</td>
-                        <td>
-                            {% if entity.inscribe %}
-                                <i class="fa fa-check-circle-o fa-lg" style="color: #38d683"><i class="sr-only">si</i></i>
-                            {% else %}
-                                <i class="fa fa-times-circle-o fa-lg" style="color: #ea8557"><i class="sr-only">no</i></i>
-                            {% endif %}
-                        </td>
-                        <td>{{ entity.getTotalInscriptos['total'] }}</td>
-                        <td class="center">
-                            <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                <a href="{{ path('evento_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
-                                <a href="{{ path('evento_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-                                <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
-                            </div>
-                            <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                <div class="btn-group">
-                                    <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                        <i class="fa fa-cog"></i> <span class="caret"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="{{ path('evento_show', { 'id': entity.id }) }}">
-                                                <i class="fa fa-eye"></i> Ver
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="{{ path('evento_edit', { 'id': entity.id }) }}">
-                                                <i class="fa fa-edit"></i> Editar
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="#">
-                                                <i class="fa fa-times"></i> Eliminar
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 {% endblock %}
 {% block otherJavascripts %}
-    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
     <script>
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
-            var table;
+            var _table;
             $.Default = $.Default || {};
-            $.Default.init = function() {        
-                table=$('#eventoTable').dataTable( {
-                    "language": {
-                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
-                    },                
-                    "columnDefs": [ {
-                        "searchable": false,
-                        "orderable": false,
-                        "targets": [0,6]
-                    } ],
-                    "order": [[ 1, 'asc' ]]
+            $.Default.init = function() {
+                _table = $('#eventoTable').dataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('evento_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "evento.id" },
+                        { "data": "evento.orden" },
+                        { "data": "evento" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        },
+                        {
+                            "targets": 2,
+                            "data": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                '<div title="'+ data.descripcion +'">'+ data.nombre +'</div>':'';
+                                        }
+                        },
+                        //{
+                        //    "targets": 2,
+                        //    "data": true,
+                        //    "render":   function ( data, type, full, meta ) {
+                        //                    return type === 'display' ?
+                        //                        '<div class="text-center">'+ data +'</div>':'';
+                        //                }
+                        //}
+                    ]
                 });
             }
+            $.Default.openAjaxForm = function(url,title) {
+                $.Main.openFormModal(url,title, function(){
+                        $('#panel-config form').submit(function(event){
+                            $('#eventoTable').parents('panel').block($.Main.defaultBlockConf());
+                            $('#okButton').button('loading')
+                            event.preventDefault();
+                            $.post(url, $('#panel-config form').serialize(), function(data){
+                                if(data.success){
+                                    toastr['success'](data.message, 'Excelente!');
+                                    _table.fnDraw(true);
+                                    $.Main.closeFormModal();
+                                }else if(data.error){
+                                    toastr['error'](data.message, 'Cuidado!');
+                                }else{
+                                    $("#panel-config form").html($(data).find('form').html());
+                                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
+                                }
+                                $('#okButton').button('reset');
+                            });
+                        });
+                    }
+                );
+            }                 
         })(jQuery);
         $(document).ready(function(){$.Default.init();});   
     </script>

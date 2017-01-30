@@ -118,8 +118,8 @@ class EventoRepository extends EntityRepository
                     0 as h3,
                     0 as m3,
                     o.discr
-                    FROM services_juegosba_final.Inscripto as i
-                    LEFT JOIN services_juegosba_final.Origen as o ON i.origen = o.id
+                    FROM Inscripto as i
+                    LEFT JOIN Origen as o ON i.origen = o.id
                     WHERE o.discr = "Municipio"
                     GROUP BY i.evento, i.municipio
                     
@@ -133,8 +133,8 @@ class EventoRepository extends EntityRepository
                     0 as h3,
                     0 as m3,
                     o.discr
-                    FROM services_juegosba_final.Inscripto as i
-                    LEFT JOIN services_juegosba_final.Origen as o ON i.origen = o.id
+                    FROM Inscripto as i
+                    LEFT JOIN Origen as o ON i.origen = o.id
                     WHERE o.discr = "Escuela"
                     GROUP BY i.evento, i.municipio
                     
@@ -148,12 +148,12 @@ class EventoRepository extends EntityRepository
                     SUM(i.cantidadMasculinos) as h3,
                     SUM(i.cantidadFemeninos) as m3,
                     o.discr
-                    FROM services_juegosba_final.Inscripto as i
-                    LEFT JOIN services_juegosba_final.Origen as o ON i.origen = o.id
+                    FROM Inscripto as i
+                    LEFT JOIN Origen as o ON i.origen = o.id
                     WHERE o.discr = "Otro"
                     GROUP BY i.evento, i.municipio
                 ) as q
-                LEFT JOIN services_juegosba_admin.Partido as mun ON q.municipio=mun.id';
+                LEFT JOIN Municipio as mun ON q.municipio=mun.id';
         if ($evento)
             $query .= " WHERE q.evento in (".implode(",", $evento).")";
         $query.=" GROUP BY q.municipio";
@@ -173,7 +173,7 @@ class EventoRepository extends EntityRepository
                     SELECT e.evento, e.municipio,
                         COUNT(e.id) as cantEquipos,
                         0 as cantParticipantes
-                    FROM services_juegosba_final.Equipo as e
+                    FROM Equipo as e
                     GROUP BY e.municipio,e.evento
                     
                     UNION ALL
@@ -181,13 +181,13 @@ class EventoRepository extends EntityRepository
                     SELECT e.evento, e.municipio,
                         0 as cantEquipos,
                         COUNT(p.id) as cantParticipantes
-                    FROM services_juegosba_final.Equipo as e
-                    LEFT JOIN services_juegosba_final.equipo_participante as r ON r.equipo_id = e.id
-                    LEFT JOIN services_juegosba_final.Persona as p ON r.participante_id = p.id
+                    FROM Equipo as e
+                    LEFT JOIN equipo_participante as r ON r.equipo_id = e.id
+                    LEFT JOIN Persona as p ON r.participante_id = p.id
                     WHERE p.discr = "Participante"
                     GROUP BY e.municipio,e.evento
                 ) as q
-                LEFT JOIN services_juegosba_admin.Partido as mun ON q.municipio=mun.id';
+                LEFT JOIN Municipio as mun ON q.municipio=mun.id';
         if ($evento)
             $query .= " WHERE q.evento in (".implode(",", $evento).")";
         $query.=" GROUP BY q.municipio";
@@ -216,10 +216,10 @@ class EventoRepository extends EntityRepository
         if (!$evento) return [];
         $query= '
                 SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,i.evento,SUM(i.cantidadMasculinos + i.cantidadFemeninos) as inscripcion
-                FROM services_juegosba_admin.Partido as m
+                FROM Municipio as m
                 LEFT JOIN (
                     SELECT *
-                    FROM services_juegosba_final.Inscripto as ii';
+                    FROM Inscripto as ii';
         if ($evento)
             $query .= ' WHERE ii.evento in ('.implode(',', $evento).')';
         $query.=') as i ON i.municipio = m.id
@@ -338,5 +338,72 @@ class EventoRepository extends EntityRepository
                     ->setParameter(1,$municipio)
                     ->getResult();
         ;      
-    }     
+    }
+    
+    public function dataTable($request)
+    {
+        return array(
+                      "total"    => $this->getTotalRows(),
+                      "filtered" => $this->getFilteredRows($request),
+                      "rows"     => $this->getRows($request)
+            );
+    }
+    
+    public function getRows($request)
+    {
+        $columns = ["e.id","e.nombre,d.nombre,c.nombre,g.nombre,m.nombre"];
+        $where = "( e.id LIKE ?1 OR
+                    e.nombre LIKE ?1 OR
+                    d.nombre LIKE ?1 OR
+                    t.nombre LIKE ?1 OR
+                    g.nombre LIKE ?1 OR
+                    c.nombre LIKE ?1 OR
+                    m.nombre LIKE ?1)";
+                
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT e
+                                        FROM ResultadoBundle:Evento e
+                                        JOIN e.disciplina d
+                                        JOIN e.torneo t
+                                        JOIN e.categoria c
+                                        JOIN e.modalidad m
+                                        JOIN e.genero g
+                                        WHERE $where 
+                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->setMaxResults($request->get('length'))
+                        ->setFirstResult($request->get('start'))
+                        ->getResult();
+    }
+    
+    public function getFilteredRows($request)
+    {
+        $where = "( e.id LIKE ?1 OR
+                    e.nombre LIKE ?1 OR
+                    d.nombre LIKE ?1 OR
+                    t.nombre LIKE ?1 OR
+                    g.nombre LIKE ?1 OR
+                    c.nombre LIKE ?1 OR
+                    m.nombre LIKE ?1)";
+                
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(e)
+                                        FROM ResultadoBundle:Evento e
+                                        JOIN e.disciplina d
+                                        JOIN e.torneo t
+                                        JOIN e.categoria c
+                                        JOIN e.modalidad m
+                                        JOIN e.genero g                                        
+                                        WHERE $where ")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->getSingleScalarResult();
+    }
+    
+    public function getTotalRows()
+    {
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(e)
+                                        FROM ResultadoBundle:Evento e")
+                        ->getSingleScalarResult();
+    }        
 }

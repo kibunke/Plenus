@@ -1,13 +1,42 @@
 (function ($) {
+    "use strict";
     // no se sobreescribe el namespace, si ya existe
     $.Main = $.Main || {};
     $.Main.modal = {},
     $.Main.init = function() {
         console.log("Main functions load!");
+        $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
         Main.init();        
     },    
     $.Main.moneyFormat = function(val){
         return val.toFixed(2).replace('.',',').replace(/(\d)(?=(\d{3})+\,)/g, '$1.');
+    },
+    $.Main.openFormModal = function(url,title,callback){
+        $('#okButton').button('reset');
+        $('#panel-config .modal-footer').show();
+        $('#panel-config .modal-title').html(title);
+        $('#panel-config .modal-body').html("");
+        $('#panel-config .modal-body').load(url,callback);
+        $('#okButton').unbind('click').on('click',function(){
+            $('#panel-config form').submit();
+        });
+        $('#panel-config').modal();
+    },
+    $.Main.closeFormModal = function(){
+        $('#panel-config').modal('hide');
+    },
+    $.Main.defaultBlockConf = function(){
+        return {
+                overlayCSS: {
+                    backgroundColor: '#fff'
+                },
+                message: '<i class="fa fa-spinner fa-spin"></i>',
+                css: {
+                    border: 'none',
+                    color: '#333',
+                    background: 'none'
+                }
+            }
     }
 })(jQuery);
 

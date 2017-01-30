@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * SeguridadBundle\Entity\Usuario
  * 
- * @ORM\Table(name="plenus_admin.Usuario", uniqueConstraints={
+ * @ORM\Table(name="Usuario", uniqueConstraints={
  *          @ORM\UniqueConstraint(name="unique_username", columns={"username"})
  *      }
  * )
@@ -79,6 +79,11 @@ class Usuario implements AdvancedUserInterface, \Serializable
      *      )
      */
     private $roles;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="ResultadoBundle\Entity\Evento", mappedBy="coordinadores")
+     **/
+    private $coordina;
     
     /**
      * @ORM\ManyToOne(targetEntity="Perfil", inversedBy="usuarios")

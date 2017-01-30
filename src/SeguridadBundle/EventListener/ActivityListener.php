@@ -44,7 +44,8 @@ class ActivityListener
 			$routes = ['_reset_password_step1','_changePassword','_checkUserData','_login','_new_account','_wdt','_new_account_check_data'];
 			if ( !in_array($request->attributes->get('_route'), $routes)){
 				// Check token authentication availability
-				if ($this->securityContext->getToken() && $user = $this->securityContext->getToken()->getUser())
+				$user = $this->securityContext->getToken()->getUser();
+				if ($this->securityContext->getToken() && is_object($user))
 				{
 					$session = $request->getSession();
 					if (!$session->has('haveUser')){

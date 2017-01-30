@@ -186,9 +186,9 @@ class UsuarioController extends Controller
    
    
     /**
-     * Creates a form to create a Email entity.
+     * Creates a form to create a User entity.
      *
-     * @param Perfil $entity The entity
+     * @param Usuario $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */

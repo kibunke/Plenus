@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AcreditacionBundle\Entity\Avatar
  *
- * @ORM\Table(name="services_juegosba_final.Avatar")
+ * @ORM\Table(name="Avatar")
  * @ORM\Entity
  */
 class Avatar {

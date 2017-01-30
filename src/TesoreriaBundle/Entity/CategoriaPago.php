@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * TesoreriaBundle\Entity\CategoriaPago
- * @ORM\Table(name="services_juegosba_final.CategoriaPago")
+ * @ORM\Table(name="CategoriaPago")
  * @ORM\Entity(repositoryClass="TesoreriaBundle\Entity\Repository\CategoriaPagoRepository")
  */
 class CategoriaPago {

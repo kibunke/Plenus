@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * TesoreriaBundle\Entity\Movimiento
- * @ORM\Table(name="services_juegosba_final.Movimiento")
+ * @ORM\Table(name="Movimiento")
  * @ORM\Entity(repositoryClass="TesoreriaBundle\Entity\Repository\MovimientoRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")

@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * AcreditacionBundle\Entity\AreaCategoriaPago
- * @ORM\Table(name="services_juegosba_final.AreaCategoriaPago")
+ * @ORM\Table(name="AreaCategoriaPago")
  * @ORM\Entity(repositoryClass="AcreditacionBundle\Entity\Repository\AreaCategoriaPagoRepository")
  */
 class AreaCategoriaPago {

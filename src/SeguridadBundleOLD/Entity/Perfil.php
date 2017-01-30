@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SeguridadBundle\Entity\Perfil
- * @ORM\Table(name="services_juegosba_admin.Perfil")
+ * @ORM\Table(name="Perfil")
  * @ORM\Entity()
  */
 class Perfil
@@ -37,7 +37,7 @@ class Perfil
     
     /**
      * @ORM\ManyToMany(targetEntity="Rol", inversedBy="perfiles")
-     * @ORM\JoinTable(name="services_juegosba_admin.perfil_rol")
+     * @ORM\JoinTable(name="perfil_rol")
      * 
      */
     private $roles;

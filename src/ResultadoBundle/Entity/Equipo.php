@@ -3,11 +3,12 @@
 namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ResultadoBundle\Entity\Equipo
- * @ORM\Table(name="services_juegosba_final.Equipo")
+ * @ORM\Table(name="Equipo")
  * @ORM\Entity()
  */
 class Equipo
@@ -53,13 +54,19 @@ class Equipo
     private $participantes;
    
     /**
+     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", cascade={"persist"})
+     * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
+     */       
+    private $planilla;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Evento", inversedBy="equipos")
      * @ORM\JoinColumn(name="evento", referencedColumnName="id")
      */       
     private $evento;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="\CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
      */       
     private $municipio;
@@ -318,10 +325,10 @@ class Equipo
     /**
      * Set municipio
      *
-     * @param \CommonBundle\Entity\Partido $municipio
+     * @param \CommonBundle\Entity\Municipio $municipio
      * @return Equipo
      */
-    public function setMunicipio(\CommonBundle\Entity\Partido $municipio = null)
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
     {
         $this->municipio = $municipio;
 
@@ -331,7 +338,7 @@ class Equipo
     /**
      * Get municipio
      *
-     * @return \CommonBundle\Entity\Partido 
+     * @return \CommonBundle\Entity\Municipio 
      */
     public function getMunicipio()
     {

@@ -45,4 +45,63 @@ class DisciplinaRepository extends EntityRepository
         
         return $resultado;
     }
+    
+    public function dataTable($request)
+    {
+        return array(
+                      "total"    => $this->getTotalRows(),
+                      "filtered" => $this->getFilteredRows($request),
+                      "rows"     => $this->getRows($request)
+            );
+    }
+    
+    public function getRows($request)
+    {
+        $columns = ["t.id","t.nombre"];
+        $where = "( t.id LIKE ?1 OR
+                    TRIM(CONCAT(tttt.nombre,' ',ttt.nombre,' ',tt.nombre,' ',t.nombre)) LIKE ?1 OR
+                    TRIM(CONCAT(ttt.nombre,' ',tt.nombre,' ',t.nombre)) LIKE ?1 OR
+                    TRIM(CONCAT(tt.nombre,' ',t.nombre)) LIKE ?1 OR
+                    t.nombre LIKE ?1)";
+                
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT t
+                                        FROM ResultadoBundle:Disciplina t
+                                        LEFT JOIN t.padre tt
+                                        LEFT JOIN tt.padre ttt
+                                        LEFT JOIN ttt.padre tttt
+                                        WHERE $where 
+                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->setMaxResults($request->get('length'))
+                        ->setFirstResult($request->get('start'))
+                        ->getResult();
+    }
+    
+    public function getFilteredRows($request)
+    {
+        $where = "( t.id LIKE ?1 OR
+                    TRIM(CONCAT(tttt.nombre,' ',ttt.nombre,' ',tt.nombre,' ',t.nombre)) LIKE ?1 OR
+                    TRIM(CONCAT(ttt.nombre,' ',tt.nombre,' ',t.nombre)) LIKE ?1 OR
+                    TRIM(CONCAT(tt.nombre,' ',t.nombre)) LIKE ?1 OR
+                    t.nombre LIKE ?1)";
+                
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(t)
+                                        FROM ResultadoBundle:Disciplina t
+                                        LEFT JOIN t.padre tt
+                                        LEFT JOIN tt.padre ttt
+                                        LEFT JOIN ttt.padre tttt
+                                        WHERE $where ")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->getSingleScalarResult();
+    }
+    
+    public function getTotalRows()
+    {
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(t)
+                                        FROM ResultadoBundle:Disciplina t")
+                        ->getSingleScalarResult();
+    }     
 }

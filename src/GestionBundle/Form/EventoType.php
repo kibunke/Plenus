@@ -5,6 +5,8 @@ namespace GestionBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EventoType extends AbstractType
 {
@@ -17,62 +19,60 @@ class EventoType extends AbstractType
         $builder
             ->add('nombre')
             ->add('descripcion')
-            ->add('inscribe')
-            ->add('soloInscribe')
             ->add('eventoAdaptado')
             ->add('orden')
-            //->add('inscriptos')
-            ->add('torneo', 'entity', array(
+            ->add('torneo', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Torneo',
-                                                'property' => 'nombre',
+                                                'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
                   )
-            ->add('disciplina', 'entity', array(
+            ->add('disciplina', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Disciplina',
-                                                'property' => 'nombre',
+                                                'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
                   )            
-            ->add('categoria', 'entity', array(
+            ->add('categoria', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Categoria',
-                                                'property' => 'nombre',
+                                                'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
                   )
-            ->add('genero', 'entity', array(
+            ->add('genero', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Genero',
-                                                'property' => 'nombre',
+                                                'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
                   )            
-            ->add('modalidad', 'entity', array(
+            ->add('modalidad', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Modalidad',
-                                                'property' => 'nombre',
+                                                'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
                   )
             //->add('coordinadores')
-            ->add('coordinadores', 'entity', array(
-                                                'class' => 'SeguridadBundle:Usuario',
-                                                'property' => 'nombreCompleto',
+            ->add('coordinadores', EntityType::class, array(
+                                                'class' => 'CommonBundle:Persona',
+                                                'choice_label' => 'nombreCompleto',
                                                 'query_builder' => function(\Doctrine\ORM\EntityRepository $er )
                                                                     {
-                                                                        return $er->createQueryBuilder('u')
-                                                                                    ->join('u.funcion','f')
-                                                                                    ->where('f.nombre <> :fun')
-                                                                                    ->orderby('u.apellido','ASC')
-                                                                                    ->setParameter('fun', 'Consulta municipal');
+                                                                        return $er->createQueryBuilder('p')
+                                                                                    ->join('p.usuario','u')
+                                                                                    ->join('u.perfil','perf')
+                                                                                    ->where('perf.name = :perf')
+                                                                                    ->orderby('p.apellido','ASC')
+                                                                                    ->setParameter('perf', 'Coordinador');
                                                                     },
                                                 'multiple' => true,
                                                 'required' => false,
@@ -98,6 +98,6 @@ class EventoType extends AbstractType
      */
     public function getName()
     {
-        return 'juegosba_resultadobundle_evento';
+        return 'plenus_resultadobundle_evento';
     }
 }

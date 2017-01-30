@@ -3,13 +3,14 @@
 namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ResultadoBundle\Entity\Disciplina
  *
  * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\DisciplinaRepository")
- * @ORM\Table(name="services_juegosba_final.Disciplina")
+ * @ORM\Table(name="Disciplina")
  */
 class Disciplina
 {
@@ -24,7 +25,7 @@ class Disciplina
 
     /**
      * @var string $nombre
-     *
+     * @Assert\NotNull()
      * @ORM\Column(name="nombre", type="string", length=100)
      */
     protected $nombre;

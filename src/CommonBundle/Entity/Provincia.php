@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Provincia
  *
- * @ORM\Table(name="plenus_admin.Provincia")
+ * @ORM\Table(name="Provincia")
  * @ORM\Entity
  */
 class Provincia
@@ -31,9 +31,9 @@ class Provincia
     private $nombre;
 
      /**
-     * @ORM\OneToMany(targetEntity="Partido", mappedBy="provincia", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Municipio", mappedBy="provincia", cascade={"persist"})
      */
-    private $partidos;
+    private $municipios;
 
      /**
      * @ORM\ManyToOne(targetEntity="Pais", inversedBy="provincias")
@@ -81,7 +81,7 @@ class Provincia
      */
     public function __construct()
     {
-        $this->partidos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->municipios = new \Doctrine\Common\Collections\ArrayCollection();
         $this->setActive(true);
         $this->createdAt = new \DateTime();
     }
@@ -201,37 +201,37 @@ class Provincia
     }
 
     /**
-     * Add partido
+     * Add municipio
      *
-     * @param \CommonBundle\Entity\Partido $partido
+     * @param \CommonBundle\Entity\Municipio $municipio
      *
      * @return Provincia
      */
-    public function addPartido(\CommonBundle\Entity\Partido $partido)
+    public function addMunicipio(\CommonBundle\Entity\Municipio $municipio)
     {
-        $this->partidos[] = $partido;
+        $this->municipios[] = $municipio;
 
         return $this;
     }
 
     /**
-     * Remove partido
+     * Remove municipio
      *
-     * @param \CommonBundle\Entity\Partido $partido
+     * @param \CommonBundle\Entity\Municipio $municipio
      */
-    public function removePartido(\CommonBundle\Entity\Partido $partido)
+    public function removeMunicipio(\CommonBundle\Entity\Municipio $municipio)
     {
-        $this->partidos->removeElement($partido);
+        $this->municipios->removeElement($municipio);
     }
 
     /**
-     * Get partidos
+     * Get municipios
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getPartidos()
+    public function getMunicipios()
     {
-        return $this->partidos;
+        return $this->municipios;
     }
 
     /**

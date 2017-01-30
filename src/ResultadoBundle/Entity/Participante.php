@@ -15,7 +15,7 @@ class Participante extends Persona
 {
     /**
     * @ORM\ManyToMany(targetEntity="Equipo", inversedBy="participantes")
-    * @ORM\JoinTable(name="services_juegosba_final.equipo_participante")
+    * @ORM\JoinTable(name="equipo_participante")
     */
     private $equipos;
 

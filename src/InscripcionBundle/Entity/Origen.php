@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * InscripcionBundle\Entity\Origen
- * @ORM\Table(name="services_juegosba_final.Origen")
+ * @ORM\Table(name="Origen")
  * @ORM\Entity(repositoryClass="InscripcionBundle\Entity\Repository\OrigenRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *                      })
  */
 
-class Origen
+abstract class Origen
 {
     /**
      * @var integer $id
@@ -44,7 +44,7 @@ class Origen
     private $descripcion;
     
     /**
-     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
      */       
     private $municipio;

@@ -16,7 +16,7 @@ use GestionBundle\Form\CategoriaType;
 /**
  * Categoria controller.
  *
- * @Route("/gestion")
+ * @Route("/gestion/categoria")
  * @Security("has_role('ROLE_ADMIN')")
  */
 class CategoriaController extends Controller
@@ -24,7 +24,7 @@ class CategoriaController extends Controller
     /**
      * Lists all Categoria entities.
      *
-     * @Route("/categoria", name="categoria")
+     * @Route("/", name="categoria")
      * @Method("GET")
      */
     public function indexAction()
@@ -33,177 +33,102 @@ class CategoriaController extends Controller
     }
     
     /**
+     * @Route("/list/datatable", name="categoria_list_datatable")
+     * @Method("POST")
+     */
+    public function listDataTableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('ResultadoBundle:Categoria')->datatable($request->request);
+        
+        $data = array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+        
+        foreach ($filter['rows'] as $categoria){
+            $data['data'][] = array(
+                "categoria"  => array(
+                                    "id" => $categoria->getId(),
+                                    "nombre" => $categoria->getNombre(),
+                                    "descripcion"  => $categoria->getDescripcion(),
+                                    "eventos"   => count($categoria->getEventos())
+                            ),
+                "actions"   => $this->renderView('GestionBundle:Categoria:actions.html.twig', array('entity' => $categoria)),
+            );
+        }
+        return new JsonResponse($data);
+    }    
+    
+    /**
      * Creates a new Categoria entity.
      *
-     * @Route("/categoria", name="categoria_create")
-     * @Method("POST")
+     * @Route("/new", name="categoria_new")
+     * @Method({"GET", "POST"})
      * @Template("GestionBundle:Categoria:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $entity = new Categoria();
-        $form = $this->createCreateForm($entity);
+        $form = $this->createForm(CategoriaType::class, $entity);
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        if ($form->isSubmitted() && $form->isValid()) {
             $entity->setCreatedBy($this->getUser());
             try{
                 $em->persist($entity);
                 $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');
-                //return new JsonResponse(array('success' => true));
-                return $this->redirectToRoute('categoria');
+                return new JsonResponse(array('success' => true, 'message' => 'Se agregó la categoria.'));
             } catch (Exception $e) {
-                $this->addFlash('error', 'La información no pudo ser guardada correctamente.');    
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
-
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
-    }
-
-    /**
-     * Creates a form to create a Categoria entity.
-     *
-     * @param Categoria $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Categoria $entity)
-    {
-        $form = $this->createForm(new CategoriaType(), $entity, array(
-            'action' => $this->generateUrl('categoria_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Guardar'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Categoria entity.
-     *
-     * @Route("/categoria/new", name="categoria_new")
-     * @Method("GET")
-     * @Template("GestionBundle:Categoria:new.html.twig")
-     */
-    public function newAction()
-    {
-        $entity = new Categoria();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
+    } 
     
     /**
      * Finds and displays a Categoria entity.
      *
-     * @Route("/categoria/{id}", name="categoria_show")
+     * @Route("/{id}", name="categoria_show")
      * @Method("GET")
      * @Template()
      */
     public function showAction(Categoria $id)
     {
-        //$em = $this->getDoctrine()->getManager();
-        //
-        //$entity = $em->getRepository('SeguridadBundle:Usuario')->find($id);
-        //
-        //if (!$entity) {
-        //    throw $this->createNotFoundException('Unable to find Usuario entity.');
-        //}
-        //
-        //$deleteForm = $this->createDeleteForm($id);
-        //
-        //return array(
-        //    'entity'      => $entity,
-        //    'delete_form' => $deleteForm->createView(),
-        //);
     }
 
     /**
      * Displays a form to edit an existing Categoria entity.
      *
-     * @Route("/categoria/{id}/edit", name="categoria_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="categoria_edit")
+     * @Method({"GET", "POST"})
      * @Template("GestionBundle:Categoria:edit.html.twig")
      */
-    public function editAction(Categoria $entity)
+    public function editAction(Request $request, Categoria $entity)
     {
         $em = $this->getDoctrine()->getManager();
-
-        if (!$entity) {
-            throw $this->createNotFoundException('No existe la Categoria que quiere modificar.');
+        $form = $this->createForm(CategoriaType::class, $entity);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setUpdatedBy($this->getUser());
+            $entity->setUpdatedAt(new \DateTime());       
+            try{
+                $em->flush();
+                return new JsonResponse(array('success' => true, 'message' => 'La categoría fue modificada.'));
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+            }
         }
-
-        $form = $this->createEditForm($entity);
-
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'form'   => $form->createView(),
         );
     }
-
-    /**
-    * Creates a form to edit a Categoria entity.
-    *
-    * @param Usuario $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Categoria $entity)
-    {
-        $form = $this->createForm(new CategoriaType(), $entity, array(
-            'action' => $this->generateUrl('categoria_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Actualizar'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing Categoria entity.
-     *
-     * @Route("/categoria/{id}", name="categoria_update")
-     * @Method("PUT")
-     * @Template("GestionBundle:Categoria:new.html.twig")
-     */
-    public function updateAction(Request $request,Categoria $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $oldEntity = clone $entity;
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Usuario entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $entity->setUpdatedBy($this->getUser());
-            $entity->setUpdatedAt(new \DateTime());
-            try{
-                $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');
-                //return new JsonResponse(array('success' => true));
-                return $this->redirectToRoute('categoria');
-            } catch (Exception $e) {
-                $this->addFlash('error', 'La información no pudo ser guardada correctamente.');    
-            }
-        }
-
-        return array(
-            'entity'      => $entity,
-            'form'   => $editForm->createView(),
-        );
-    }    
 }

@@ -14,9 +14,8 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * SeguridadBundle\Entity\Logs
  * 
- * @ORM\Table(name="services_juegosba_admin.Logs")
+ * @ORM\Table(name="Logs")
  * @ORM\Entity()
- * @Gedmo\Loggable 
  */
 
 class Logs

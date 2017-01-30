@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * SeguridadBundle\Entity\Perfil
  *
  * @ORM\Entity
- * @ORM\Table(name="plenus_admin.Perfil")
+ * @ORM\Table(name="Perfil")
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\PerfilRepository")
  * 
  */

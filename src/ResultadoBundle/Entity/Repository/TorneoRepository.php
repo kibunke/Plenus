@@ -12,16 +12,49 @@ use Doctrine\ORM\Query\ResultSetMapping;
  * repository methods below.
  */
 class TorneoRepository extends EntityRepository
-{
-    public function getEventosPorTorneo()
+{    
+    public function dataTable($request)
+    {
+        return array(
+                      "total"    => $this->getTotalRows(),
+                      "filtered" => $this->getFilteredRows($request),
+                      "rows"     => $this->getRows($request)
+            );
+    }
+    
+    public function getRows($request)
+    {
+        $columns = ["t.id","t.nombre"];
+        $where = "(t.id LIKE ?1 OR t.nombre LIKE ?1)";
+                
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT t
+                                        FROM ResultadoBundle:Torneo t
+                                        WHERE $where 
+                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->setMaxResults($request->get('length'))
+                        ->setFirstResult($request->get('start'))
+                        ->getResult();
+    }
+    
+    public function getFilteredRows($request)
+    {
+        $where = "(t.id LIKE ?1 OR t.nombre LIKE ?1)";
+                
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(t)
+                                        FROM ResultadoBundle:Torneo t
+                                        WHERE $where ")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->getSingleScalarResult();
+    }
+    
+    public function getTotalRows()
     {
         return $this->getEntityManager()
-                        ->createQuery(" SELECT t.id,t.nombre, COUNT(e)
-                                        FROM ResultadoBundle:Evento e
-                                        JOIN e.torneo t
-                                        WHERE e.soloInscribe = 0 OR e.soloInscribe IS NULL
-                                        GROUP BY t.id")
-                        ->getArrayResult();
-        ;
+                        ->createQuery(" SELECT COUNT(t)
+                                        FROM ResultadoBundle:Torneo t")
+                        ->getSingleScalarResult();
     }
 }

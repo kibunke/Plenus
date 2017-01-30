@@ -1,0 +1,127 @@
+<div class="row">
+    <div class="col-sm-12">    
+        {{ form_start(form) }}
+            {{ form_errors(form)}}
+            {{ global_form_errors(form)}}
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    {{ form_label(form.evento) }}
+                    {{ form_widget(form.evento) }}
+                </div>
+            </div>
+           <div class="row">
+                <div class="form-group col-sm-12">
+                    {{ form_label(form.municipio) }}
+                    {{ form_widget(form.municipio) }}
+                </div>
+            </div>            
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    {{ form_label(form.cantidadMasculinos) }}
+                    <span class="input-icon">
+                        {{ form_widget(form.cantidadMasculinos) }}
+                        <i class="fa fa-male"></i>
+                    </span>
+                    {{ form_errors(form.cantidadMasculinos)}}
+                </div>
+                <div class="form-group col-sm-6">
+                    {{ form_label(form.cantidadFemeninos) }}
+                    <span class="input-icon">
+                        {{ form_widget(form.cantidadFemeninos) }}
+                        <i class="fa fa-female"></i>
+                    </span>
+                    {{ form_errors(form.cantidadFemeninos)}}
+                </div>
+            </div>
+           <div class="row">
+                <div class="form-group col-sm-12">
+                    {{ form_label(form.tipoOrigen) }}
+                    {{ form_widget(form.tipoOrigen) }}
+                </div>
+            </div>
+           <div class="row">
+                <div class="form-group col-sm-12">
+                    {{ form_label(form.origen) }}
+                    {{ form_widget(form.origen) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    {{ form_label(form.descripcion) }}
+                    {{ form_widget(form.descripcion) }}
+                </div>
+            </div>           
+            <div class="hidden">
+                {{ form_rest(form)}}
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+<script>
+    (function ($) {        
+        // no se sobreescribe el namespace, si ya existe
+        $.New = $.New || {};
+        $.New.init = function() {
+            $('#juegosba_inscripcionbundle_inscripto_evento').on('change',function(){
+                $('#juegosba_inscripcionbundle_inscripto_cantidadMasculinos,#juegosba_inscripcionbundle_inscripto_cantidadFemeninos').removeAttr('readonly').val(0);
+                text = $(this).find(':selected').text().toUpperCase();
+                if (text.indexOf("FEMENINO") >= 0) {
+                    $('#juegosba_inscripcionbundle_inscripto_cantidadMasculinos').attr('readonly','true');
+                }else if (text.indexOf("MASCULINO") >= 0) {
+                    $('#juegosba_inscripcionbundle_inscripto_cantidadFemeninos').attr('readonly','true');
+                }
+            })
+            $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').mousedown(function(){
+                if ($(this).attr('readonly')) {
+                    toastr['warning']('Este campo está deshabilitado hasta seleccionar un municipio.', 'Cuidado');
+                }
+            })
+            $('#juegosba_inscripcionbundle_inscripto_origen').on('click',function(){
+                if ($(this).prop('readonly') && $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').val()!='Municipio') {
+                    toastr['warning']('Este campo está deshabilitado hasta seleccionar un tipo de origen.', 'Cuidado');
+                }
+            })            
+            
+            $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').on('change',function(){
+                $('#juegosba_inscripcionbundle_inscripto_origen').removeAttr('readonly');
+                if (this.value=='Municipio') {
+                    $('#juegosba_inscripcionbundle_inscripto_origen').val('Municipio');
+                    $('#juegosba_inscripcionbundle_inscripto_origen').attr('readonly','true');
+                }else{
+                    $('#juegosba_inscripcionbundle_inscripto_origen').val('')
+                }
+                console.log($.Default.autocomplete.getData($('#juegosba_inscripcionbundle_inscripto_municipio').val(),$("#juegosba_inscripcionbundle_inscripto_tipoOrigen").val()));
+                if ($("#juegosba_inscripcionbundle_inscripto_origen").autocomplete())
+                    $("#juegosba_inscripcionbundle_inscripto_origen").autocomplete("destroy");
+                $("#juegosba_inscripcionbundle_inscripto_origen").autocomplete({
+                    source: $.Default.autocomplete.getData($('#juegosba_inscripcionbundle_inscripto_municipio').val(),$("#juegosba_inscripcionbundle_inscripto_tipoOrigen").val()),
+                    appendTo: $("form:first")
+                });                
+                
+            })
+            $('.help-block li').addClass('text-danger');
+            $('#panel-config form').bind("keypress", function(e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            $('#juegosba_inscripcionbundle_inscripto_origen').prop('readonly','readonly');
+            if ($('#juegosba_inscripcionbundle_inscripto_municipio').val()>1){
+                toastr['warning']('El sistema a pre-seleccionado el último municipio utilizado para agilizar su trabajo.', 'Cuidado');
+            }else{
+                //$('#juegosba_inscripcionbundle_inscripto_tipoOrigen').prop('disabled','disabled');
+                $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').attr('readonly','readonly');
+                $('#juegosba_inscripcionbundle_inscripto_tipoOrigen option:not(:selected)').attr('disabled',true);
+            }
+            $('#juegosba_inscripcionbundle_inscripto_municipio').on('change',function(){
+                //$('#juegosba_inscripcionbundle_inscripto_tipoOrigen').removeAttr('disabled');
+                $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').removeAttr('readonly');
+                $('#juegosba_inscripcionbundle_inscripto_tipoOrigen option').removeAttr('disabled');                
+                $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').val('');
+                $("#juegosba_inscripcionbundle_inscripto_origen").val('');
+            });      
+        }
+    })(jQuery);
+    $(document).ready(function(){$.New.init();});
+</script>

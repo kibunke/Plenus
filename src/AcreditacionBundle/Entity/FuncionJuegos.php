@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * AcreditacionBundle\Entity\FuncionJuegos
- * @ORM\Table(name="services_juegosba_final.FuncionJuegos")
+ * @ORM\Table(name="FuncionJuegos")
  * @ORM\Entity(repositoryClass="AcreditacionBundle\Entity\Repository\FuncionJuegosRepository")
  */
 class FuncionJuegos {

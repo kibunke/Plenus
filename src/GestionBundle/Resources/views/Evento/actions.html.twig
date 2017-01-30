@@ -1,0 +1,29 @@
+<div class="visible-md visible-lg hidden-sm hidden-xs">
+    <a disabled href="{{ path('evento_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+    <a onclick="$.Default.openAjaxForm('{{ path('evento_edit', { 'id': entity.id }) }}','Editar Evento')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
+    <a disabled href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
+</div>
+<div class="visible-xs visible-sm hidden-md hidden-lg">
+    <div class="btn-group">
+        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </a>
+        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+            <li>
+                <a disabled role="menuitem" tabindex="-1" href="{{ path('disciplina_show', { 'id': entity.id }) }}">
+                    <i class="fa fa-eye"></i> Ver
+                </a>
+            </li>
+            <li>
+                <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Default.openAjaxForm('{{ path('evento_edit', { 'id': entity.id }) }}','Editar Evento')">
+                    <i class="fa fa-edit"></i> Editar
+                </a>
+            </li>
+            <li>
+                <a disabled role="menuitem" tabindex="-1" href="#">
+                    <i class="fa fa-times"></i> Eliminar
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

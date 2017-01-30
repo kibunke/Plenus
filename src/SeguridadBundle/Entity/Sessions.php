@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Sessions
  *
- * @ORM\Table(name="plenus_admin.Sessions")
+ * @ORM\Table(name="Sessions")
  * @ORM\Entity
  */
 class Sessions

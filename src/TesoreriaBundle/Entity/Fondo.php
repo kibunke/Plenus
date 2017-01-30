@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * TesoreriaBundle\Entity\Fondo
- * @ORM\Table(name="services_juegosba_final.Fondo")
+ * @ORM\Table(name="Fondo")
  * @ORM\Entity(repositoryClass="TesoreriaBundle\Entity\Repository\FondoRepository")
  */
 class Fondo {

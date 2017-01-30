@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TipoDocumento
  *
- * @ORM\Table(name="plenus_admin.TipoDocumento")
+ * @ORM\Table(name="TipoDocumento")
  * @ORM\Entity
  */
 class TipoDocumento

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Localidad
  *
- * @ORM\Table(name="plenus_admin.Localidad")
+ * @ORM\Table(name="Localidad")
  * @ORM\Entity
  */
 class Localidad
@@ -31,10 +31,10 @@ class Localidad
     private $nombre;
 
      /**
-     * @ORM\ManyToOne(targetEntity="Partido", inversedBy="localidades")
-     * @ORM\JoinColumn(name="idPartido", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Municipio", inversedBy="localidades")
+     * @ORM\JoinColumn(name="idMunicipio", referencedColumnName="id")
      */
-    private $partido;
+    private $municipio;
 
     /**
      * @var datetime $createdAt
@@ -191,27 +191,27 @@ class Localidad
     }
 
     /**
-     * Set partido
+     * Set municipio
      *
-     * @param \CommonBundle\Entity\Partido $partido
+     * @param \CommonBundle\Entity\Municipio $municipio
      *
      * @return Localidad
      */
-    public function setPartido(\CommonBundle\Entity\Partido $partido = null)
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
     {
-        $this->partido = $partido;
+        $this->municipio = $municipio;
 
         return $this;
     }
 
     /**
-     * Get partido
+     * Get municipio
      *
-     * @return \CommonBundle\Entity\Partido
+     * @return \CommonBundle\Entity\Municipio
      */
-    public function getPartido()
+    public function getMunicipio()
     {
-        return $this->partido;
+        return $this->municipio;
     }
 
     /**

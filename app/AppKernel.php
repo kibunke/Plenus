@@ -18,6 +18,8 @@ class AppKernel extends Kernel
             new CommonBundle\CommonBundle(),
             new SeguridadBundle\SeguridadBundle(),
             new GestionBundle\GestionBundle(),
+            new InscripcionBundle\InscripcionBundle(),
+            new ResultadoBundle\ResultadoBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

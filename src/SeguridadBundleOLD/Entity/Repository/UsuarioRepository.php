@@ -51,7 +51,7 @@ class UsuarioRepository extends EntityRepository implements UserProviderInterfac
     {
         $em=$this->getEntityManager();
         $q='SELECT COUNT(DISTINCT(l.usuario)) as cant,DATE_FORMAT(l.fecha,"%d") as dia,DATE_FORMAT(l.fecha,"%d-%m-%Y") as fecha
-            FROM services_juegosba_admin.Logs l
+            FROM Logs l
             WHERE l.actividad = "login" AND DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)<= DATE(fecha)
             GROUP BY dia
             ORDER BY l.fecha ASC';

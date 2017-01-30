@@ -14,9 +14,8 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * SeguridadBundle\Entity\Usuario
  * 
- * @ORM\Table(name="services_juegosba_admin.Usuario")
+ * @ORM\Table(name="Usuario")
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\UsuarioRepository")
- * @Gedmo\Loggable 
  */
 
 class Usuario implements UserInterface, \Serializable
@@ -34,7 +33,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $usuario
      *
      * @ORM\Column(name="usuario", type="string", length=50, unique=true)
-     * @Gedmo\Versioned
      */
     protected $usuario;
 
@@ -42,7 +40,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $password
      *
      * @ORM\Column(name="password", type="string", length=255)
-     * @Gedmo\Versioned
      */
     protected $password;
 
@@ -50,7 +47,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string", length=100)
-     * @Gedmo\Versioned
      */
     protected $nombre;
 
@@ -58,7 +54,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $apellido
      *
      * @ORM\Column(name="apellido", type="string", length=100)
-     * @Gedmo\Versioned
      */
     protected $apellido;
 
@@ -73,7 +68,6 @@ class Usuario implements UserInterface, \Serializable
      * @var boolean $activo
      *
      * @ORM\Column(name="activo", type="boolean")
-     * @Gedmo\Versioned
      */
     protected $activo;
 
@@ -93,7 +87,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $telefono
      *
      * @ORM\Column(name="telefono", type="string", length=100, nullable=true)
-     * @Gedmo\Versioned
      */
     private $telefono;
      
@@ -101,7 +94,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $email
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
-     * @Gedmo\Versioned
      */
     private $email;     
 
@@ -115,7 +107,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $facebook
      *
      * @ORM\Column(name="facebook", type="string", length=30, nullable=true)
-     * @Gedmo\Versioned
      */
     private $facebook;     
 
@@ -123,7 +114,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $skype
      *
      * @ORM\Column(name="skype", type="string", length=30, nullable=true)
-     * @Gedmo\Versioned
      */
     private $skype;
      
@@ -131,7 +121,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $twitter
      *
      * @ORM\Column(name="twitter", type="string", length=30, nullable=true)
-     * @Gedmo\Versioned
      */
     private $twitter;
 
@@ -139,7 +128,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $gplus
      *
      * @ORM\Column(name="gplus", type="string", length=30, nullable=true)
-     * @Gedmo\Versioned
      */
     private $gplus;
      
@@ -147,7 +135,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $linkedin
      *
      * @ORM\Column(name="linkedin", type="string", length=30, nullable=true)
-     * @Gedmo\Versioned
      */
     private $linkedin;
      
@@ -155,7 +142,6 @@ class Usuario implements UserInterface, \Serializable
      * @var datetime $fechaNacimiento
      *
      * @ORM\Column(name="fechaNacimiento", type="datetime", nullable=true)
-     * @Gedmo\Versioned
      */
     private $fechaNacimiento;
      
@@ -170,7 +156,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $ip_login
      *
      * @ORM\Column(name="ip_login", type="string", length=255)
-     * @Gedmo\Versioned 
      */
     protected $ip_login;
 
@@ -178,7 +163,6 @@ class Usuario implements UserInterface, \Serializable
      * @var datetime $ultimoLogin
      *
      * @ORM\Column(name="ultimoLogin", type="datetime", nullable=true)
-     * @Gedmo\Versioned
      */
     private $ultimoLogin;
 
@@ -200,7 +184,6 @@ class Usuario implements UserInterface, \Serializable
     
     /**
      * @ORM\ManyToOne(targetEntity="Perfil", inversedBy="usuarios")
-     * @Gedmo\Versioned
      */
     private $perfil;
     
@@ -208,7 +191,6 @@ class Usuario implements UserInterface, \Serializable
      * @var string $passwordGenerada
      *
      * @ORM\Column(name="password_generada", type="string", length=255)
-     * @Gedmo\Versioned
      */
     protected $passwordGenerada;
 

@@ -16,7 +16,7 @@ use GestionBundle\Form\EventoType;
 /**
  * Evento controller.
  *
- * @Route("/gestion")
+ * @Route("/gestion/evento")
  * @Security("has_role('ROLE_ADMIN')")
  */
 class EventoController extends Controller
@@ -24,196 +24,114 @@ class EventoController extends Controller
     /**
      * Lists all Evento entities.
      *
-     * @Route("/evento", name="evento")
+     * @Route("/", name="evento")
      * @Method("GET")
      * @Template("GestionBundle:Evento:index.html.twig")
      */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('ResultadoBundle:Evento')->findAll();
-        //$aux=$em->getRepository('ResultadoBundle:Disciplina')->getOnlyRoot();
-        //$tree = $em->getRepository('ResultadoBundle:Disciplina')->getArbolAsArray($aux);
         
-        return array(
-            'entities' => $entities,
-            //'tree' => json_encode($tree),
-        );
+        return array();
     }
+    
+    /**
+     * @Route("/list/datatable", name="evento_list_datatable")
+     * @Method("POST")
+     */
+    public function listDataTableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('ResultadoBundle:Evento')->datatable($request->request);
+        
+        $data = array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+        
+        foreach ($filter['rows'] as $evento){
+            $data['data'][] = array(
+                "evento"  => array(
+                                    "id" => $evento->getId(),
+                                    "nombre" => $evento->getNombreCompletoRaw(),
+                                    "orden" => $evento->getOrden(),
+                                    "descripcion"  => $evento->getDescripcion()
+                            ),
+                "actions"   => $this->renderView('GestionBundle:Evento:actions.html.twig', array('entity' => $evento)),
+            );
+        }
+        return new JsonResponse($data);
+    }    
     
     /**
      * Creates a new Evento entity.
      *
-     * @Route("/evento", name="evento_create")
-     * @Method("POST")
+     * @Route("/new", name="evento_new")
+     * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $entity = new Evento();
-        $form = $this->createCreateForm($entity);
+        $form = $this->createForm(EventoType::class, $entity);
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity->setCreatedBy($this->getUser());            
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setCreatedBy($this->getUser());
             try{
                 $em->persist($entity);
                 $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');
-                //return new JsonResponse(array('success' => true));
-                return $this->redirectToRoute('evento');
+                return new JsonResponse(array('success' => true, 'message' => 'Se agregó el evento.'));
             } catch (Exception $e) {
-                $this->addFlash('error', 'La información no pudo ser guardada correctamente.');    
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
-
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
-    }
-
-    /**
-     * Creates a form to create a Evento entity.
-     *
-     * @param Evento $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Evento $entity)
-    {
-        $form = $this->createForm(new EventoType(), $entity, array(
-            'action' => $this->generateUrl('evento_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Guardar'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Evento entity.
-     *
-     * @Route("/evento/new", name="evento_new")
-     * @Method("GET")
-     * @Template("GestionBundle:Evento:new.html.twig")
-     */
-    public function newAction()
-    {
-        $entity = new Evento();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
+    } 
     
     /**
      * Finds and displays a Evento entity.
      *
-     * @Route("/evento/{id}", name="evento_show")
+     * @Route("/{id}", name="evento_show")
      * @Method("GET")
      * @Template()
      */
     public function showAction(Evento $id)
     {
-        //$em = $this->getDoctrine()->getManager();
-        //
-        //$entity = $em->getRepository('SeguridadBundle:Usuario')->find($id);
-        //
-        //if (!$entity) {
-        //    throw $this->createNotFoundException('Unable to find Usuario entity.');
-        //}
-        //
-        //$deleteForm = $this->createDeleteForm($id);
-        //
-        //return array(
-        //    'entity'      => $entity,
-        //    'delete_form' => $deleteForm->createView(),
-        //);
     }
 
     /**
      * Displays a form to edit an existing Evento entity.
      *
-     * @Route("/evento/{id}/edit", name="evento_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="evento_edit")
+     * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:edit.html.twig")
      */
-    public function editAction(Evento $entity)
+    public function editAction(Request $request, Evento $entity)
     {
         $em = $this->getDoctrine()->getManager();
-
-        if (!$entity) {
-            throw $this->createNotFoundException('No existe la Evento que quiere modificar.');
-        }
-
-        $form = $this->createEditForm($entity);
-
-        return array(
-            'entity'      => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to edit a Evento entity.
-    *
-    * @param Usuario $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Evento $entity)
-    {
-        $form = $this->createForm(new EventoType(), $entity, array(
-            'action' => $this->generateUrl('evento_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Actualizar'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing Evento entity.
-     *
-     * @Route("/evento/{id}", name="evento_update")
-     * @Method("PUT")
-     * @Template("GestionBundle:Evento:new.html.twig")
-     */
-    public function updateAction(Request $request,Evento $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $oldEntity = clone $entity;
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Usuario entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
+        $form = $this->createForm(EventoType::class, $entity);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $entity->setUpdatedBy($this->getUser());
             $entity->setUpdatedAt(new \DateTime());       
             try{
                 $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');
-                //return new JsonResponse(array('success' => true));
-                return $this->redirectToRoute('evento');
+                return new JsonResponse(array('success' => true, 'message' => 'El evento fue modificado.'));
             } catch (Exception $e) {
-                $this->addFlash('error', 'La información no pudo ser guardada correctamente.');    
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
-
         return array(
-            'entity'      => $entity,
-            'form'   => $editForm->createView(),
+            'entity' => $entity,
+            'form'   => $form->createView(),
         );
-    }    
+    }
 }
