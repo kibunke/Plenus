@@ -34,11 +34,19 @@
 						<a href="javascript:void(0)"><i class="fa fa-cogs"></i> <span class="title"> Gestión </span><i class="icon-arrow"></i> </a>
 						<ul class="sub-menu">
 							<li>
-								<a href="{#{ path('gestion_configuracion') }#}">
+								<a href="javascript:void(0)">
 									<i class="fa fa-cog"></i>
 									<span class="title"> Configuración </span>
-								</a>							
-								<a href="javascript:;">
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="{{ path('conf_global_index') }}">
+											<i class="fa fa-cogs"></i>
+											<span class="title">Global </span>
+										</a>
+									</li>
+								</ul>
+								<a href="javascript:void(0);">
 									<i class="fa fa-shield"></i>
 									Seguridad <i class="icon-arrow"></i>
 								</a>
