@@ -216,7 +216,7 @@ class UsuarioController extends Controller
     /**
      * @Route("/{user}/activar", name="user_activar")
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("SeguridadBundle:Usuario:generic.form.html.twig")
+     * @Template("CommonBundle::generic.form.html.twig")
      */
     public function activarAction(Request $request,Usuario $user)
     {

@@ -31,7 +31,7 @@ class ConfiguracionController extends Controller
     
     /**
      * @Route("/{conf}/edit", name="conf_global_edit")
-     * @Template("SeguridadBundle:Usuario:generic.form.html.twig")
+     * @Template("CommonBundle::generic.form.html.twig")
      */
     public function editAction(Request $request, ConfiguracionGlobal $conf)
     {
