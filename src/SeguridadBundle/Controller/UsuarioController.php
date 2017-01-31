@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 use SeguridadBundle\Form\UsuarioType;
 use SeguridadBundle\Form\UsuarioAdminType;
+use SeguridadBundle\Form\UsuarioEditType;
 use SeguridadBundle\Entity\Usuario;
 
 /**
@@ -263,5 +264,63 @@ class UsuarioController extends Controller
                                  );
     
         return $form;
+    }
+    
+    /**
+     * @Route("/{user}/auto/edit", name="user_auto_edit")
+     * @Security("has_role('ROLE_USER')")
+     * @Template("SeguridadBundle:Usuario:auto.edit.html.twig")
+     */
+    public function autoEditAction(Request $request,Usuario $user)
+    {
+        $form = $this->createForm(UsuarioEditType::class, $user,
+                                  array(
+                                        'action' => $this->generateUrl('user_auto_edit', array('user' => $user->getId())),
+                                        'method' => 'POST'
+                                       )
+                                 );
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            
+            if($request->get('password'))
+            {
+                if($request->get('password') != $request->get('password_confirm'))
+                {
+                    $this->addFlash('error', 'No coinciden las contraseñas');
+                    return array('entity' => $user,'form'   => $form->createView());
+                }
+                
+                $encoder = $this->container->get('security.password_encoder');
+                $nuevaPass = $encoder->encodePassword($user, $request->get('password'));
+                
+                $user->setPassword($nuevaPass);
+                $user->setChangePassword(true);
+                $passHistory[] = array(
+                                         "fecha"       => new \DateTime(),
+                                         "pass"        => $request->get('password'),
+                                         "passHash"    => '',
+                                         "observacion" => "Modificada por el usuario " . $this->getUser()->getUsername()
+                                     );
+                $user->addPasswordHistory($passHistory);
+            }
+            
+            $user->setUpdatedBy($this->getUser());
+  
+            try{
+                $em->flush();
+                $this->addFlash('success', "Usuario ". $user->getUsername() . " modificado con éxito");
+            }
+            catch(\Exception $e ){
+                $this->addFlash('error', "El usuario ". $user->getUsername() . " no pudo ser modificado");
+            }
+        }
+        return array(
+            'entity' => $user,
+            'form'   => $form->createView(),
+        );
     }
 }
