@@ -153,7 +153,7 @@
 																	</tr>
 																	<tr>
 																		<td>twitter:</td>
-																		<td>{{persona.twitter}}</td>
+																		<td>{% if persona.twitter %}<a href="https://www.twitter.com/{{persona.twitter}}" target="_blank">{{persona.twitter}}</a>{% endif %}</td>
 																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
 																	</tr>
 																</tbody>
@@ -174,10 +174,6 @@
 																	<tr>
 																		<td>Última Actividad</td>
 																		<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
-																	</tr>
-																	<tr>
-																		<td>Estado</td>
-																		<td colspan="2"><i class="fa fa-lg fa-thumbs-o-{% if entity.isActive %}up text-success">{% else %}down text-danger">{% endif %}</i></td>
 																	</tr>
 																</tbody>
 															</table>
