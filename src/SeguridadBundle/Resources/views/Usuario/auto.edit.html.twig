@@ -4,7 +4,7 @@
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
-                <h1>Edición del Usuario <small>Todo los datos del usuario "{{entity.username}}"</small></h1>
+                <h1>Edición de Datos Personales <small>Todo los datos del usuario "{{entity.username}}"</small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -58,6 +58,7 @@
     </div>
 {% endblock %}
 {% block contenidoData %}
+	{% set persona = entity.persona %}
     <!-- start: PAGE CONTENT -->
 						<div class="row">
 							<div class="col-sm-12">
@@ -77,12 +78,12 @@
 									<div class="tab-content">
 										<div id="panel_overview" class="tab-pane fade in active">
 											<div class="row">
-												<div class="col-sm-5 col-md-4">
+												<div class="col-sm-6 col-md-4">
 													<div class="user-left">
 														<div class="center">
-															<h4>{{entity.persona.apellido ~ ', ' ~ entity.persona.nombre}}</h4>
+															<h4>{{persona.apellido ~ ', ' ~ persona.nombre}}</h4>
 																<div class="user-image">
-																	<div class="fileupload-new thumbnail"><img src="{{entity.persona.avatar}}" alt=""></div>
+																	<div class="fileupload-new thumbnail"><img src="{{persona.avatar}}" alt=""></div>
 																</div>
 															<hr>
 															<div class="social-icons block">
@@ -114,80 +115,88 @@
 																	</li>
 																</ul>
 															</div>
-															<hr>
+														   </div>
+														 </div>
 														</div>
-														<table class="table table-condensed table-hover">
-															<thead>
-																<tr>
-																	<th colspan="2"><i class="fa fa-address-book fa-lg"></i> Información de Contacto</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>email:</td>
-																	<td><small>{{entity.persona.email}}</small></td>
-																</tr>
-																<tr>
-																	<td>teléfono:</td>
-																	<td>{{entity.persona.telefono}}</td>
-																</tr>
-																<tr>
-																	<td>skype:</td>
-																	<td>{{entity.persona.skype}}</td>
-																</tr>
-                                                                <tr>
-																	<td>facebook:</td>
-																	<td>{{entity.persona.facebook}}</td>
-																</tr>
-                                                                <tr>
-																	<td>linkedin:</td>
-																	<td>{{entity.persona.linkedin}}</td>
-																</tr>
-                                                                <tr>
-																	<td>twitter:</td>
-																	<td>{{entity.persona.twitter}}</td>
-																</tr>
-															</tbody>
-														</table>
-														<table class="table table-condensed table-hover">
-															<thead>
-																<tr>
-																	<th colspan="3">Información General</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>Perfil</td>
-																	<td>{{entity.perfil}}</td>
-																	<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
-																</tr>
-																<tr>
-																	<td>Última Actividad</td>
-																	<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
-																</tr>
-																<tr>
-																	<td>Estado</td>
-																	<td><i class="fa fa-lg fa-thumbs-o-{% if entity.isActive %}up text-success">{% else %}down text-danger">{% endif %}</i></td>
-																	<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
-																</tr>
-															</tbody>
-														</table>
-														<table class="table table-condensed table-hover">
-															<thead>
-																<tr>
-																	<th colspan="3">Información Adicional</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>Nacimiento</td>
-																	<td colspan="2">{% if entity.persona.fNacimiento %}{{entity.persona.fNacimiento| date('d/m/Y')}}{% endif %}</td>
-																</tr>
-															</tbody>
-														</table>
+														<div class="col-sm-6 col-md-4">
+															<table class="table table-condensed table-hover">
+																<thead>
+																	<tr>
+																		<th colspan="3"><i class="fa fa-address-book fa-lg"></i> Información de Contacto</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>email:</td>
+																		<td><small>{{persona.email}}</small></td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																	<tr>
+																		<td>teléfono:</td>
+																		<td>{{persona.telefono}}</td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																	<tr>
+																		<td>skype:</td>
+																		<td>{{persona.skype}}</td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																	<tr>
+																		<td>facebook:</td>
+																		<td> {% if persona.facebook %}<a href="https://www.facebook.com/{{persona.facebook}}" target="_blank">{{persona.facebook}}</a>{% endif %}</td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																	<tr>
+																		<td>linkedin:</td>
+																		<td> {% if persona.linkedin %}<a href="https://www.linkedin.com/in/{{persona.linkedin}}" target="_blank">{{persona.linkedin}}</a>{% endif %}</td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																	<tr>
+																		<td>twitter:</td>
+																		<td>{{persona.twitter}}</td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+														<div class="col-sm-6 col-md-4">
+															<table class="table table-condensed table-hover">
+																<thead>
+																	<tr>
+																		<th colspan="3">Información General</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>Perfil</td>
+																		<td colspan="2">{{entity.perfil}}</td>
+																	</tr>
+																	<tr>
+																		<td>Última Actividad</td>
+																		<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
+																	</tr>
+																	<tr>
+																		<td>Estado</td>
+																		<td colspan="2"><i class="fa fa-lg fa-thumbs-o-{% if entity.isActive %}up text-success">{% else %}down text-danger">{% endif %}</i></td>
+																	</tr>
+																</tbody>
+															</table>
+															<table class="table table-condensed table-hover">
+																<thead>
+																	<tr>
+																		<th colspan="3">Información Adicional</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>Nacimiento</td>
+																		<td>{% if persona.fNacimiento %}{{persona.fNacimiento| date('d/m/Y')}}{% endif %}</td>
+																		<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
 													</div>
-												</div>
-										 </div>
 										</div>
 										<div id="panel_edit_account" class="tab-pane fade">
 											{{form_start(form, {'attr': {'id': 'form_user_auto_edit'}}) }}
@@ -199,11 +208,11 @@
 													<div class="col-md-6">
 														<div class="form-group">
 															<label class="control-label col-md-3">Nombre</label>
-															<div class="col-md-9"><strong>{{entity.persona.nombre}}</strong></div>
+															<div class="col-md-9"><strong>{{persona.nombre}}</strong></div>
 														</div>
 														<div class="form-group">
 															<label class="control-label col-md-3">Apellido</label>
-															<div class="col-md-9"><strong>{{entity.persona.apellido}}</strong></div>
+															<div class="col-md-9"><strong>{{persona.apellido}}</strong></div>
 														</div>
 														<div class="form-group">
 															<label class="control-label col-md-3">Email</label>
@@ -241,13 +250,10 @@
 													</div>
 													<div class="form-group">
 														<label class="control-label col-md-3">Avatar</label>
-														{% if entity.persona.avatar %}
+														{% if persona.avatar %}
 														<div class="fileupload fileupload-new col-md-9" data-provides="fileupload">
-															<div class="fileupload-new thumbnail"><img src="{{entity.persona.avatar}}" alt=""></div>
-														</div>
-													    {% else %}
-														<div class="fileupload fileupload-new col-md-9" data-provides="fileupload">
-															<div class="fileupload-new thumbnail"><input type="file" id="avatar"  value="Elegir Avatar..."/></div>
+															<div class="fileupload-new thumbnail"><img src="{{persona.avatar}}" alt="" id="img_avatar"></div>
+															<div class="fileupload-new thumbnail"><input type="file" id="input_avatar"  value="Elegir Avatar..."/></div>
 														</div>
 													    {% endif %}
 													     <div class="hide">
@@ -277,6 +283,24 @@
             // no se sobreescribe el namespace, si ya existe
             $.UsuarioEdit = $.UsuarioEdit || {};
             $.UsuarioEdit.charts = function(){}
+			$.UsuarioEdit.readFile = function () {
+  
+				if (this.files && this.files[0]) {
+				  
+				  var FR= new FileReader();
+				  
+				  FR.addEventListener("load", function(e) {
+					console.log(e.target.result);
+					$("#img_avatar").attr('src',e.target.result);
+					$("#{{form.persona.avatar.vars.id}}").attr('value',e.target.result);
+				  }); 
+				  
+				  FR.readAsDataURL( this.files[0] );
+				}
+				
+			  }
+			  
+			  document.getElementById("input_avatar").addEventListener("change", $.UsuarioEdit.readFile);
 	    })(jQuery);
         $(document).ready(function(){
 		    $('.datetimepicker').datetimepicker({
