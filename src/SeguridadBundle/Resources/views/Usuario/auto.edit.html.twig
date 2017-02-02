@@ -194,7 +194,7 @@
 									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3">Municipio</label>
-										<div class="col-md-9">{{form_widget(form.persona.municipio)}}</div>
+										<div class="col-md-9"><strong>{{persona.municipio}}</strong></div>
 									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3">Fecha de Nacimiento</label>
@@ -256,16 +256,47 @@
             $.UsuarioEdit.charts = function(){}
 			$.UsuarioEdit.readFile = function ()
 			{
+				var tamanio_maximo     = 1 * (1024*1024);
+				var imagenesPermitidas = new Array('image/jpg','image/jpeg','image/gif','image/png');
 				if (this.files && this.files[0]) {
 				  
 				  var FR= new FileReader();
 				  
-				  FR.addEventListener("load", function(e) {
-					$("#img_avatar").attr('src',e.target.result);
-					$("#{{form.persona.avatar.vars.id}}").val(e.target.result);
-				  }); 
-				  
-				  FR.readAsDataURL( this.files[0] );
+				  if(this.files[0].size < tamanio_maximo)
+				  {
+					    if(imagenesPermitidas.indexOf(this.files[0].type) > 0)
+						{
+							FR.addEventListener("load", function(e)
+							{
+							  $("#img_avatar").attr('src',e.target.result);
+							  $("#{{form.persona.avatar.vars.id}}").val(e.target.result);
+							}); 
+							
+							FR.readAsDataURL( this.files[0] );
+						}else{  
+							  swal({
+								title: "",
+								text: '<h2>Tipo de Archivo No permitido</h2><h3>Solamente son validos <strong>jpg, png o gif</strong></h3>',
+								type: "error",
+								showCancelButton: false,
+								confirmButtonColor: "#DD6B55",
+								confirmButtonText: "Aceptar",
+								closeOnConfirm: true,
+								html:true
+							});
+				        }
+						
+				  }else{
+					    swal({
+								title: "Error",
+								text: 'El archivo debe ser menor que 1Mb',
+								type: "error",
+								showCancelButton: false,
+								confirmButtonColor: "#DD6B55",
+								confirmButtonText: "Aceptar",
+								closeOnConfirm: true
+							});
+				  }
 				}
 				
 			}
@@ -275,7 +306,6 @@
         $(document).ready(function(){
 			
 		    $('.datetimepicker').datetimepicker({
-				                                  // después ver cómo cargar el moment.locale("es") y me dé pelota :P
 				                                  //locale: 'es',
 							                      viewMode: 'years',
 				                                  format: 'DD/MM/YYYY'
