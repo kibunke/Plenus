@@ -11,9 +11,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 use SeguridadBundle\Form\UsuarioType;
 use SeguridadBundle\Form\UsuarioAdminType;
+use SeguridadBundle\Form\UsuarioEditType;
 use SeguridadBundle\Entity\Usuario;
 
 /**
@@ -61,11 +63,10 @@ class UsuarioController extends Controller
         );
         
         foreach ($filter['rows'] as $user){
-            $role    = $user->getRoles()[0];
             $persona = $user->getPersona();
             $data['data'][] = array(
                 "id"      => $user->getId(),
-                "ico"     => strpos($role, "ADMIN")>-1? true : false,
+                "ico"     => false,
                 "user"    => $user->getUsername(),
                 "persona" => array(
                                     "name"     => $persona->getApellido() . ', ' . $persona->getNombre(),
@@ -155,14 +156,19 @@ class UsuarioController extends Controller
         );
     }
     
-     /**
+    /**
      * @Route("/{user}/edit", name="user_edit", defaults={"user":"__00__"})
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("SeguridadBundle:Usuario:edit.html.twig")
      */
     public function editAction(Request $request,Usuario $user)
     {
-        $form = $this->createCreateForm($user);
+        $form = $this->createForm(UsuarioAdminType::class, $user,
+                                  array(
+                                        'action' => $this->generateUrl('user_edit', array('user' => $user->getId())),
+                                        'method' => 'POST'
+                                       )
+                                 );
         
         $form->handleRequest($request);
         
@@ -208,7 +214,39 @@ class UsuarioController extends Controller
         );
     }
    
-   
+    /**
+     * @Route("/{user}/activar", name="user_activar")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("CommonBundle::generic.form.html.twig")
+     */
+    public function activarAction(Request $request,Usuario $user)
+    {
+         $form = $this->createFormBuilder($user)
+                      ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))
+                      ->getForm()
+                      ;
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            
+            $user->setUpdatedBy($this->getUser());
+  
+            try{
+                $em->flush();
+                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario activado con éxito'));
+            }
+            catch(\Exception $e ){
+                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al activar el usuario'));
+            }
+        }
+        return array(
+            'entity' => $user,
+            'form'   => $form->createView(),
+        );
+    }
     /**
      * Creates a form to create a User entity.
      *
@@ -226,5 +264,40 @@ class UsuarioController extends Controller
                                  );
     
         return $form;
+    }
+    
+    /**
+     * @Route("/{user}/auto/edit", name="user_auto_edit")
+     * @Security("has_role('ROLE_USER')")
+     * @Template("SeguridadBundle:Usuario:auto.edit.html.twig")
+     */
+    public function autoEditAction(Request $request,Usuario $user)
+    {
+        $form = $this->createForm(UsuarioEditType::class, $user,
+                                  array(
+                                        'action' => $this->generateUrl('user_auto_edit', array('user' => $user->getId())),
+                                        'method' => 'POST'
+                                       )
+                                 );
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            $user->setUpdatedBy($this->getUser());
+  
+            try{
+                $em->flush();
+                $this->addFlash('success', "Usuario ". $user->getUsername() . " modificado con éxito");
+            }
+            catch(\Exception $e ){
+                $this->addFlash('error', "El usuario ". $user->getUsername() . " no pudo ser modificado");
+            }
+        }
+        return array(
+            'entity' => $user,
+            'form'   => $form->createView(),
+        );
     }
 }

@@ -1,0 +1,144 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1>Configuración Global <small>Todo lo referido a los datos básicos del sistema</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="#1" onclick="$.ConfiguracionGlobal.edit('{{path("conf_global_edit",{"conf":entity.id})}}');">
+                            <i class="fa fa-id-card"></i> Modificar
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('conf_global_index') }}">
+                        Configuración Global
+                    </a>
+                </li>
+                <li class="active">
+                    Datos
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <h4 class="panel-title">Datos <span class="text-bold">globales</span></h4>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                           <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                           <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                           <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <style>
+        .popover-content{
+            overflow: hidden;
+        }
+    </style>
+    <div class="panel-body">
+        <div class="col-md-4">
+           <h3>Activa: {% if entity.isActive %}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}</h3>
+        </div>
+        <div class="col-md-4">
+           <h3>Reset de Password Activa: {% if entity.isResetPasswordActive%}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}</h3>
+        </div>
+        <div class="col-md-4">
+           <h3>Nueva Cuenta Activa: {% if entity.isNewAccountActive%}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}</h3>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script type="text/javascript">
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            
+            $.ConfiguracionGlobal = $.ConfiguracionGlobal|| {};
+            $.ConfiguracionGlobal.init = function() {
+              
+            $.ConfiguracionGlobal.charts = function(){},
+            $.ConfiguracionGlobal.edit   = function(url){
+                $.Main.openFormModal(url,"Modificar Configuración Global",function(){
+                    $('#panel-config form').submit(function(event){
+                                    event.preventDefault();
+                                    $.post(url,
+                                           $('#panel-config form').serialize(),
+                                           function(data){
+                                              if(data.resultado == 0)
+                                              {
+                                                swal({
+                                                title: "Resultado",
+                                                text: data.mensaje,
+                                                type: "success",
+                                                showCancelButton: false,
+                                                confirmButtonColor: "#DD6B55",
+                                                confirmButtonText: "Aceptar",
+                                                closeOnConfirm: true
+                                              },
+                                              function(){
+                                                $('#panel-config').modal('toggle');
+                                                document.location.href = '{{path("conf_global_index")}}'
+                                              });
+                                                
+                                              }else{
+                                                swal({
+                                                title: "Resultado",
+                                                text: data.mensaje,
+                                                type: "error",
+                                                showCancelButton: false,
+                                                confirmButtonColor: "#DD6B55",
+                                                confirmButtonText: "Aceptar",
+                                                closeOnConfirm: true
+                                                    },
+                                                    function(){});
+                                                  }
+                                            }
+                                    );
+                                //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                                //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
+                                //return false;
+                            })
+                    })
+                 }
+            }
+        })(jQuery);
+        $(document).ready(function(){$.ConfiguracionGlobal.init();});
+    </script>
+{% endblock %}    

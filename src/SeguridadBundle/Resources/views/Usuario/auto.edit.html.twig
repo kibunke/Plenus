@@ -1,0 +1,286 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1>Edición de Datos Personales <small>Todo los datos del usuario "{{entity.username}}"</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="menu-search">
+                        <!-- start: SEARCH POPOVER -->
+                        <div class="popover bottom search-box transition-all">
+                            <div class="arrow"></div>
+                            <div class="popover-content">
+                                <!-- start: SEARCH FORM -->
+                                <form class="" id="searchform" action="#">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Buscar">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-main-color btn-squared" type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                                <!-- end: SEARCH FORM -->
+                            </div>
+                        </div>
+                        <!-- end: SEARCH POPOVER -->
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">
+                        Usuario
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{{ path('user_auto_edit',{'user':entity.id}) }}">
+                        {{entity.username}}
+                    </a>
+               </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+	{% set persona = entity.persona %}
+    <!-- start: PAGE CONTENT -->
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="tabbable">
+					<ul class="nav nav-tabs tab-padding tab-space-3 tab-blue" id="myTab4">
+						<li class="active">
+							<a data-toggle="tab" href="#panel_overview">Vista General</a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#panel_edit_account">Editar Cuenta</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div id="panel_overview" class="tab-pane fade in active">
+							<div class="row">
+								<div class="col-sm-6 col-md-4">
+									<div class="user-left">
+										<div class="center">
+											<h4>{{persona.apellido ~ ', ' ~ persona.nombre}}</h4>
+												<a href="#panel_edit_account" class="thumbnail show-tab">
+													<img src="{{persona.avatar}}" alt="" style="height: 300px;">
+												</a>
+											<hr>
+											<div class="social-icons block">
+												<ul>
+													<li data-placement="top" data-original-title="Twitter" class="social-twitter tooltips">
+														<a href="https://www.twitter.com/{% if persona.twitter %}{{persona.twitter}}{% endif %}" target="_blank">Twitter</a>
+													</li>
+													<li data-placement="top" data-original-title="Facebook" class="social-facebook tooltips">
+														<a href="https://www.facebook.com/{% if persona.facebook %}{{persona.facebook}}{% endif %}" target="_blank">Facebook</a>
+													</li>
+													<li data-placement="top" data-original-title="Skype" class="social-skype tooltips">
+														<a href="https://www.skype.com" target="_blank">Skype</a>
+													</li>
+													<li data-placement="top" data-original-title="LinkedIn" class="social-linkedin tooltips">
+														<a href="https://www.linkedin.com/{% if persona.linkedin %}in/{{persona.linkedin}}{% endif %}" target="_blank">LinkedIn</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<table class="table table-condensed table-hover">
+											<thead>
+												<tr>
+													<th colspan="2"><i class="fa fa-address-book fa-lg"></i> Información de Contacto</th>
+													<th><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>email:</td>
+													<td colspan="2"><small>{{persona.email}}</small></td>
+												</tr>
+												<tr>
+													<td>teléfono:</td>
+													<td colspan="2">{{persona.telefono}}</td>
+												</tr>
+												<tr>
+													<td>skype:</td>
+													<td colspan="2">{{persona.skype}}</td>
+												</tr>
+												<tr>
+													<td>facebook:</td>
+													<td colspan="2">{{persona.facebook}}</td>
+												</tr>
+												<tr>
+													<td>linkedin:</td>
+													<td colspan="2">{{persona.linkedin}}</td>
+												</tr>
+												<tr>
+													<td>Twitter</td>
+													<td colspan="2">{{persona.twitter}}</td>
+												</tr>
+											</tbody>
+										</table>
+										<table class="table table-condensed table-hover">
+											<thead>
+												<tr>
+													<th colspan="3">Información General</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Perfil</td>
+													<td colspan="2">{{entity.perfil}}</td>
+												</tr>
+												<tr>
+													<td>Última Actividad</td>
+													<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
+												</tr>
+											</tbody>
+										</table>
+										<table class="table table-condensed table-hover">
+											<thead>
+												<tr>
+													<th colspan="2">Información Adicional</th>
+													<th><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Nacimiento</td>
+													<td>{% if persona.fNacimiento %}{{persona.fNacimiento| date('d/m/Y')}}{% endif %}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="panel_edit_account" class="tab-pane fade">
+							{{form_start(form, {'attr': {'id': 'form_user_auto_edit'}}) }}
+							<div class="row">
+								<div class="col-md-12">
+									<h3>Información de la Cuenta</h3>
+									<hr>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label col-md-3">Nombre</label>
+										<div class="col-md-9"><strong>{{persona.nombre}}</strong></div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Apellido</label>
+										<div class="col-md-9"><strong>{{persona.apellido}}</strong></div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Email</label>
+										<div class="col-md-9">{{form_widget(form.persona.email)}}</div>															
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Teléfono</label>
+										<div class="col-md-9">{{form_widget(form.persona.telefono)}}</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Municipio</label>
+										<div class="col-md-9">{{form_widget(form.persona.municipio)}}</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Fecha de Nacimiento</label>
+										<div class="col-md-9">{{form_widget(form.persona.fNacimiento)}}</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Facebook</label>
+										<div class="col-md-9">{{form_widget(form.persona.facebook)}}</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Skype</label>
+										<div class="col-md-9">{{form_widget(form.persona.skype)}}</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Twitter</label>
+										<div class="col-md-9">{{form_widget(form.persona.twitter)}}</div>
+									</div>
+								</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label col-md-3">Linkedin</label>
+									<div class="col-md-9">{{form_widget(form.persona.linkedin)}}</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Avatar</label>
+									
+									<div class="col-md-9">
+										<a href="#" class="thumbnail">
+										  <img src="{{persona.avatar}}" alt="" id="img_avatar" style="max-height: 300px;">
+										</a>
+										<div class="fileupload-new thumbnail"><input type="file" id="input_avatar"  value="Elegir Avatar..."/></div>
+									</div>
+									<div class="hide">
+										{{form_row(form.persona.avatar)}}
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6"></div>
+								<div class="col-md-6">
+									<button class="btn btn-green btn-block" type="submit">
+										Listo <i class="fa fa-arrow-circle-right"></i>
+									</button>
+								</div>
+							</div>
+						{{form_end(form)}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- end: PAGE CONTENT-->
+{% endblock %}
+{% block otherJavascripts %}
+    <script type="text/javascript">
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            $.UsuarioEdit = $.UsuarioEdit || {};
+            $.UsuarioEdit.charts = function(){}
+			$.UsuarioEdit.readFile = function ()
+			{
+				if (this.files && this.files[0]) {
+				  
+				  var FR= new FileReader();
+				  
+				  FR.addEventListener("load", function(e) {
+					$("#img_avatar").attr('src',e.target.result);
+					$("#{{form.persona.avatar.vars.id}}").val(e.target.result);
+				  }); 
+				  
+				  FR.readAsDataURL( this.files[0] );
+				}
+				
+			}
+			
+			$("#input_avatar").on("change", $.UsuarioEdit.readFile);
+	    })(jQuery);
+        $(document).ready(function(){
+			
+		    $('.datetimepicker').datetimepicker({
+				                                  // después ver cómo cargar el moment.locale("es") y me dé pelota :P
+				                                  locale: 'ru',
+							                      viewMode: 'years',
+				                                  format: 'DD/MM/YYYY'
+    	                                       });
+    	});
+    </script>
+{% endblock %}    
+

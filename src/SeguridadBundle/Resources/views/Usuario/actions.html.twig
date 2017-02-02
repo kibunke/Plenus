@@ -1,1 +1,2 @@
 <a href="{{path("user_edit",{"user": entity.id})}}"><i class="fa fa-edit"></i></a>
+{% if not entity.isActive %}<a href="#1" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check text-success" title="Activar"></i></a>{% endif %}
