@@ -44,6 +44,11 @@ class Categoria
     private $soloInscribe;
     
     /**
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="categoria")
+     */
+    private $segmentos;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Evento", mappedBy="categoria")
      */
     private $eventos;

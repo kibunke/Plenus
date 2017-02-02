@@ -33,7 +33,7 @@ class ModalidadController extends Controller
     }
     
         /**
-     * @Route("/list/datatable", name="modalidad_list_datatable")
+     * @Route("/list/datatable", name="modalidad_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
@@ -65,7 +65,7 @@ class ModalidadController extends Controller
     /**
      * Creates a new Modalidad entity.
      *
-     * @Route("/new", name="modalidad_new")
+     * @Route("/new", name="modalidad_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Modalidad:new.html.twig")
      */
@@ -83,7 +83,7 @@ class ModalidadController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'Se agregó la modalidad.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(
@@ -95,7 +95,7 @@ class ModalidadController extends Controller
     /**
      * Finds and displays a Modalidad entity.
      *
-     * @Route("/{id}", name="modalidad_show")
+     * @Route("/{id}", name="modalidad_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -106,7 +106,7 @@ class ModalidadController extends Controller
     /**
      * Displays a form to edit an existing Modalidad entity.
      *
-     * @Route("/{id}/edit", name="modalidad_edit")
+     * @Route("/{id}/edit", name="modalidad_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Modalidad:edit.html.twig")
      */
@@ -123,7 +123,7 @@ class ModalidadController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'La modalidad fue modificada.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(

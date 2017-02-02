@@ -33,7 +33,7 @@ class GeneroController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="genero_list_datatable")
+     * @Route("/list/datatable", name="genero_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
@@ -65,7 +65,7 @@ class GeneroController extends Controller
     /**
      * Creates a new Genero entity.
      *
-     * @Route("/new", name="genero_new")
+     * @Route("/new", name="genero_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Genero:new.html.twig")
      */
@@ -83,7 +83,7 @@ class GeneroController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'Se agregó el género.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(
@@ -95,7 +95,7 @@ class GeneroController extends Controller
     /**
      * Finds and displays a Genero entity.
      *
-     * @Route("/{id}", name="genero_show")
+     * @Route("/{id}", name="genero_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -106,7 +106,7 @@ class GeneroController extends Controller
     /**
      * Displays a form to edit an existing Genero entity.
      *
-     * @Route("/{id}/edit", name="genero_edit")
+     * @Route("/{id}/edit", name="genero_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Genero:edit.html.twig")
      */
@@ -123,7 +123,7 @@ class GeneroController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'El género fue modificado.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(

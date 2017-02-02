@@ -42,6 +42,11 @@ class Modalidad
     private $eventos;
     
     /**
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="modalidad")
+     */
+    private $segmentos;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")

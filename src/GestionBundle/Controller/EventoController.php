@@ -36,7 +36,7 @@ class EventoController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="evento_list_datatable")
+     * @Route("/list/datatable", name="evento_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
@@ -68,7 +68,7 @@ class EventoController extends Controller
     /**
      * Creates a new Evento entity.
      *
-     * @Route("/new", name="evento_new")
+     * @Route("/new", name="evento_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:new.html.twig")
      */
@@ -86,7 +86,7 @@ class EventoController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'Se agregó el evento.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(
@@ -98,7 +98,7 @@ class EventoController extends Controller
     /**
      * Finds and displays a Evento entity.
      *
-     * @Route("/{id}", name="evento_show")
+     * @Route("/{id}", name="evento_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -109,7 +109,7 @@ class EventoController extends Controller
     /**
      * Displays a form to edit an existing Evento entity.
      *
-     * @Route("/{id}/edit", name="evento_edit")
+     * @Route("/{id}/edit", name="evento_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:edit.html.twig")
      */
@@ -126,7 +126,7 @@ class EventoController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'El evento fue modificado.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(

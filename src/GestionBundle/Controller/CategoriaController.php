@@ -33,7 +33,7 @@ class CategoriaController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="categoria_list_datatable")
+     * @Route("/list/datatable", name="categoria_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
@@ -65,7 +65,7 @@ class CategoriaController extends Controller
     /**
      * Creates a new Categoria entity.
      *
-     * @Route("/new", name="categoria_new")
+     * @Route("/new", name="categoria_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Categoria:new.html.twig")
      */
@@ -83,7 +83,7 @@ class CategoriaController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'Se agregó la categoria.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(
@@ -95,7 +95,7 @@ class CategoriaController extends Controller
     /**
      * Finds and displays a Categoria entity.
      *
-     * @Route("/{id}", name="categoria_show")
+     * @Route("/{id}", name="categoria_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -106,7 +106,7 @@ class CategoriaController extends Controller
     /**
      * Displays a form to edit an existing Categoria entity.
      *
-     * @Route("/{id}/edit", name="categoria_edit")
+     * @Route("/{id}/edit", name="categoria_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Categoria:edit.html.twig")
      */
@@ -123,7 +123,7 @@ class CategoriaController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'La categoría fue modificada.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(

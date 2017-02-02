@@ -55,6 +55,11 @@ class Disciplina
      * @ORM\OneToMany(targetEntity="Evento", mappedBy="disciplina")
      */
     private $eventos;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="disciplina")
+     */
+    private $segmentos;    
 
      /**
      * @var boolean

@@ -44,7 +44,7 @@ class DisciplinaController extends Controller
     
     /**
      *
-     * @Route("/tree", name="disciplina_list_tree")
+     * @Route("/tree", name="disciplina_list_tree", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      */
     public function treeAction()
@@ -55,7 +55,7 @@ class DisciplinaController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="disciplina_list_datatable")
+     * @Route("/list/datatable", name="disciplina_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
@@ -87,7 +87,7 @@ class DisciplinaController extends Controller
     /**
      * Creates a new Disciplina entity.
      *
-     * @Route("/new", name="disciplina_new")
+     * @Route("/new", name="disciplina_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Disciplina:new.html.twig")
      */
@@ -105,7 +105,7 @@ class DisciplinaController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'Se agregó la disciplina.'));
             }catch (\Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(
@@ -117,7 +117,7 @@ class DisciplinaController extends Controller
     /**
      * Finds and displays a Disciplina entity.
      *
-     * @Route("/{id}", name="disciplina_show")
+     * @Route("/{id}", name="disciplina_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -128,7 +128,7 @@ class DisciplinaController extends Controller
     /**
      * Displays a form to edit an existing Disciplina entity.
      *
-     * @Route("/{id}/edit", name="disciplina_edit")
+     * @Route("/{id}/edit", name="disciplina_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Disciplina:edit.html.twig")
      */
@@ -145,7 +145,7 @@ class DisciplinaController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'La disciplina fue modificada.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(

@@ -54,7 +54,7 @@ class Equipo
     private $participantes;
    
     /**
-     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", inversedBy="competidores", cascade={"persist"})
      * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
      */       
     private $planilla;

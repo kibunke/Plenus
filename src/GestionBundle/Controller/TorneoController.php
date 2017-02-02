@@ -34,7 +34,7 @@ class TorneoController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="torneo_list_datatable")
+     * @Route("/list/datatable", name="torneo_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
@@ -66,7 +66,7 @@ class TorneoController extends Controller
     /**
      * Creates a new Torneo entity.
      *
-     * @Route("/new", name="torneo_new")
+     * @Route("/new", name="torneo_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Torneo:new.html.twig")
      */
@@ -85,7 +85,7 @@ class TorneoController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'Se agregó un torneo.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(
@@ -97,7 +97,7 @@ class TorneoController extends Controller
     /**
      * Finds and displays a Torneo entity.
      *
-     * @Route("/{id}", name="torneo_show")
+     * @Route("/{id}", name="torneo_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -108,7 +108,7 @@ class TorneoController extends Controller
     /**
      * Displays a form to edit an existing Torneo entity.
      *
-     * @Route("/{id}/edit", name="torneo_edit")
+     * @Route("/{id}/edit", name="torneo_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Torneo:edit.html.twig")
      */
@@ -126,7 +126,7 @@ class TorneoController extends Controller
                 return new JsonResponse(array('success' => true, 'message' => 'El torneo fue modificado.'));
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                return new JsonResponse(array('success' => false, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
             }
         }
         return array(

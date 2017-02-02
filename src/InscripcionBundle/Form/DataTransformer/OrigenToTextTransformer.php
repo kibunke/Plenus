@@ -59,7 +59,7 @@ class OrigenToTextTransformer implements DataTransformerInterface
         $nombre=$text[0];
         $tipo=$text[1];
         $municipio=$this->om
-                       ->getRepository('CommonBundle:Partido')
+                       ->getRepository('CommonBundle:Municipio')
                        ->find($text[2]);
         $object = $this->om
                        ->getRepository('InscripcionBundle:Origen')

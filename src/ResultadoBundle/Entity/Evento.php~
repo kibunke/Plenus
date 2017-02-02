@@ -1,14 +1,15 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Evento
- * @ORM\Table(name="services_juegosba_final.Evento")
- * @ORM\Entity(repositoryClass="JuegosBA\ResultadoBundle\Entity\Repository\EventoRepository")
+ * ResultadoBundle\Entity\Evento
+ * @ORM\Table(name="Evento")
+ * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\EventoRepository")
  */
 class Evento
 {
@@ -34,20 +35,6 @@ class Evento
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
-     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="inscribe", type="boolean", nullable=true)
-     */
-    private $inscribe;
-    
-     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="soloInscribe", type="boolean", nullable=true)
-     */
-    private $soloInscribe;
 
      /**
      * @var boolean
@@ -62,11 +49,6 @@ class Evento
      * @ORM\Column(name="orden", type="integer")
      */
     private $orden;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="JuegosBA\InscripcionBundle\Entity\Inscripto", mappedBy="evento")
-     */
-    private $inscriptos;
 
     /**
      * @ORM\OneToMany(targetEntity="Etapa", mappedBy="evento")
@@ -109,15 +91,20 @@ class Evento
     private $disciplina;
     
     /**
-     * @ORM\ManyToMany(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
-     * @ORM\JoinTable(name="services_juegosba_admin.usuarios_coordina_eventos")
+     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Segmento", inversedBy="eventos")
+     * @ORM\JoinColumn(name="segmento", referencedColumnName="id")
+     */       
+    private $segmento;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
+     * @ORM\JoinTable(name="usuarios_coordina_eventos")
      **/    
     private $coordinadores;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Cronograma", inversedBy="eventos", cascade={"all"})
-     * @ORM\JoinTable(name="services_juegosba_final.evento_cronograma")
-     **/
+     * @ORM\ManyToMany(targetEntity="Cronograma", mappedBy="eventos")
+     **/    
     private $cronogramas;
     
     /**
@@ -128,7 +115,7 @@ class Evento
     private $createdAt;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */       
     private $createdBy;
@@ -141,7 +128,7 @@ class Evento
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -322,10 +309,10 @@ class Evento
     /**
      * Add inscriptos
      *
-     * @param \JuegosBA\InscripcionBundle\Entity\Inscripto $inscriptos
+     * @param \InscripcionBundle\Entity\Inscripto $inscriptos
      * @return Evento
      */
-    public function addInscripto(\JuegosBA\InscripcionBundle\Entity\Inscripto $inscriptos)
+    public function addInscripto(\InscripcionBundle\Entity\Inscripto $inscriptos)
     {
         $this->inscriptos[] = $inscriptos;
 
@@ -335,9 +322,9 @@ class Evento
     /**
      * Remove inscriptos
      *
-     * @param \JuegosBA\InscripcionBundle\Entity\Inscripto $inscriptos
+     * @param \InscripcionBundle\Entity\Inscripto $inscriptos
      */
-    public function removeInscripto(\JuegosBA\InscripcionBundle\Entity\Inscripto $inscriptos)
+    public function removeInscripto(\InscripcionBundle\Entity\Inscripto $inscriptos)
     {
         $this->inscriptos->removeElement($inscriptos);
     }
@@ -355,10 +342,10 @@ class Evento
     /**
      * Set torneo
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Torneo $torneo
+     * @param \ResultadoBundle\Entity\Torneo $torneo
      * @return Evento
      */
-    public function setTorneo(\JuegosBA\ResultadoBundle\Entity\Torneo $torneo = null)
+    public function setTorneo(\ResultadoBundle\Entity\Torneo $torneo = null)
     {
         $this->torneo = $torneo;
 
@@ -368,7 +355,7 @@ class Evento
     /**
      * Get torneo
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Torneo 
+     * @return \ResultadoBundle\Entity\Torneo 
      */
     public function getTorneo()
     {
@@ -378,10 +365,10 @@ class Evento
     /**
      * Set categoria
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Categoria $categoria
+     * @param \ResultadoBundle\Entity\Categoria $categoria
      * @return Evento
      */
-    public function setCategoria(\JuegosBA\ResultadoBundle\Entity\Categoria $categoria = null)
+    public function setCategoria(\ResultadoBundle\Entity\Categoria $categoria = null)
     {
         $this->categoria = $categoria;
 
@@ -391,7 +378,7 @@ class Evento
     /**
      * Get categoria
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Categoria 
+     * @return \ResultadoBundle\Entity\Categoria 
      */
     public function getCategoria()
     {
@@ -401,10 +388,10 @@ class Evento
     /**
      * Set modalidad
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Modalidad $modalidad
+     * @param \ResultadoBundle\Entity\Modalidad $modalidad
      * @return Evento
      */
-    public function setModalidad(\JuegosBA\ResultadoBundle\Entity\Modalidad $modalidad = null)
+    public function setModalidad(\ResultadoBundle\Entity\Modalidad $modalidad = null)
     {
         $this->modalidad = $modalidad;
 
@@ -414,7 +401,7 @@ class Evento
     /**
      * Get modalidad
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Modalidad 
+     * @return \ResultadoBundle\Entity\Modalidad 
      */
     public function getModalidad()
     {
@@ -424,10 +411,10 @@ class Evento
     /**
      * Set genero
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Genero $genero
+     * @param \ResultadoBundle\Entity\Genero $genero
      * @return Evento
      */
-    public function setGenero(\JuegosBA\ResultadoBundle\Entity\Genero $genero = null)
+    public function setGenero(\ResultadoBundle\Entity\Genero $genero = null)
     {
         $this->genero = $genero;
 
@@ -437,7 +424,7 @@ class Evento
     /**
      * Get genero
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Genero 
+     * @return \ResultadoBundle\Entity\Genero 
      */
     public function getGenero()
     {
@@ -447,10 +434,10 @@ class Evento
     /**
      * Set disciplina
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Disciplina $disciplina
+     * @param \ResultadoBundle\Entity\Disciplina $disciplina
      * @return Evento
      */
-    public function setDisciplina(\JuegosBA\ResultadoBundle\Entity\Disciplina $disciplina = null)
+    public function setDisciplina(\ResultadoBundle\Entity\Disciplina $disciplina = null)
     {
         $this->disciplina = $disciplina;
 
@@ -460,7 +447,7 @@ class Evento
     /**
      * Get disciplina
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Disciplina 
+     * @return \ResultadoBundle\Entity\Disciplina 
      */
     public function getDisciplina()
     {
@@ -470,10 +457,10 @@ class Evento
     /**
      * Add coordinadores
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $coordinadores
+     * @param \SeguridadBundle\Entity\Usuario $coordinadores
      * @return Evento
      */
-    public function addCoordinadore(\JuegosBA\SeguridadBundle\Entity\Usuario $coordinadores)
+    public function addCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
     {
         $this->coordinadores[] = $coordinadores;
 
@@ -483,9 +470,9 @@ class Evento
     /**
      * Remove coordinadores
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $coordinadores
+     * @param \SeguridadBundle\Entity\Usuario $coordinadores
      */
-    public function removeCoordinadore(\JuegosBA\SeguridadBundle\Entity\Usuario $coordinadores)
+    public function removeCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
     {
         $this->coordinadores->removeElement($coordinadores);
     }
@@ -503,10 +490,10 @@ class Evento
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Evento
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -516,7 +503,7 @@ class Evento
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -526,10 +513,10 @@ class Evento
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Evento
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -539,57 +526,11 @@ class Evento
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
         return $this->updatedBy;
-    }
-    
-    /**
-     * Set inscribe
-     *
-     * @param boolean $inscribe
-     * @return Evento
-     */
-    public function setInscribe($inscribe)
-    {
-        $this->inscribe = $inscribe;
-
-        return $this;
-    }
-
-    /**
-     * Get inscribe
-     *
-     * @return boolean
-     */
-    public function getInscribe()
-    {
-        return $this->inscribe;
-    }
-
-    /**
-     * Set soloInscribe
-     *
-     * @param boolean $soloInscribe
-     * @return Evento
-     */
-    public function setSoloInscribe($soloInscribe)
-    {
-        $this->soloInscribe = $soloInscribe;
-
-        return $this;
-    }
-
-    /**
-     * Get soloInscribe
-     *
-     * @return boolean
-     */
-    public function getSoloInscribe()
-    {
-        return $this->soloInscribe;
     }
 
     /**
@@ -636,32 +577,15 @@ class Evento
     public function getOrden()
     {
         return $this->orden;
-    }
-    
-    /**
-     * Get totalInscriptos
-     *
-     * @return array
-     */
-    public function getTotalInscriptos()
-    {
-        $result = ['masculinos'=>0,'femeninos'=>0,'total'=>0];
-        foreach ($this->getInscriptos() as $inscripto)
-        {
-            $result['masculinos']=$result['masculinos']+$inscripto->getCantidadMasculinos();
-            $result['femeninos']=$result['femeninos']+$inscripto->getCantidadFemeninos();
-            $result['total']=$result['total']+$inscripto->getCantidadMasculinos()+$inscripto->getCantidadFemeninos();
-        }
-        return $result;
     }    
 
     /**
      * Add etapas
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Etapa $etapas
+     * @param \ResultadoBundle\Entity\Etapa $etapas
      * @return Evento
      */
-    public function addEtapa(\JuegosBA\ResultadoBundle\Entity\Etapa $etapas)
+    public function addEtapa(\ResultadoBundle\Entity\Etapa $etapas)
     {
         $this->etapas[] = $etapas;
 
@@ -671,9 +595,9 @@ class Evento
     /**
      * Remove etapas
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Etapa $etapas
+     * @param \ResultadoBundle\Entity\Etapa $etapas
      */
-    public function removeEtapa(\JuegosBA\ResultadoBundle\Entity\Etapa $etapas)
+    public function removeEtapa(\ResultadoBundle\Entity\Etapa $etapas)
     {
         $this->etapas->removeElement($etapas);
     }
@@ -691,10 +615,10 @@ class Evento
     /**
      * Add equipos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Equipo $equipos
+     * @param \ResultadoBundle\Entity\Equipo $equipos
      * @return Evento
      */
-    public function addEquipo(\JuegosBA\ResultadoBundle\Entity\Equipo $equipos)
+    public function addEquipo(\ResultadoBundle\Entity\Equipo $equipos)
     {
         $this->equipos[] = $equipos;
 
@@ -704,9 +628,9 @@ class Evento
     /**
      * Remove equipos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Equipo $equipos
+     * @param \ResultadoBundle\Entity\Equipo $equipos
      */
-    public function removeEquipo(\JuegosBA\ResultadoBundle\Entity\Equipo $equipos)
+    public function removeEquipo(\ResultadoBundle\Entity\Equipo $equipos)
     {
         $this->equipos->removeElement($equipos);
     }
@@ -718,7 +642,13 @@ class Evento
      */
     public function getEquipos()
     {
-        return $this->equipos;
+        //return $this->equipos;
+        $return = $this->equipos->toArray();
+        usort($return, function ($a, $b){
+                return $a->getMunicipio()->getRegionDeportiva() > $b->getMunicipio()->getRegionDeportiva();
+            }
+        );        
+        return $return;        
     }
 
     /**
@@ -775,37 +705,14 @@ class Evento
         //return $percent;
         return round($percent,1);
     }
-    
-    /**
-     * Set cronograma
-     *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma
-     * @return Disciplina
-     */
-    public function setCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma = null)
-    {
-        $this->cronograma = $cronograma;
-
-        return $this;
-    }
-
-    /**
-     * Get cronograma
-     *
-     * @return \JuegosBA\ResultadoBundle\Entity\Cronograma 
-     */
-    public function getCronograma()
-    {
-        return $this->cronograma;
-    }    
 
     /**
      * Add cronogramas
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $cronogramas
+     * @param \ResultadoBundle\Entity\Cronograma $cronogramas
      * @return Evento
      */
-    public function addCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronogramas)
+    public function addCronograma(\ResultadoBundle\Entity\Cronograma $cronogramas)
     {
         $this->cronogramas[] = $cronogramas;
 
@@ -815,9 +722,9 @@ class Evento
     /**
      * Remove cronogramas
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $cronogramas
+     * @param \ResultadoBundle\Entity\Cronograma $cronogramas
      */
-    public function removeCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronogramas)
+    public function removeCronograma(\ResultadoBundle\Entity\Cronograma $cronogramas)
     {
         $this->cronogramas->removeElement($cronogramas);
     }
@@ -828,7 +735,62 @@ class Evento
      * @return \Doctrine\Common\Collections\Collection 
      */
     public function getCronogramas()
+    {        
+        $cronogramas = $this->cronogramas->toArray();
+        usort($cronogramas, function ($a, $b){
+                if ($a->getFecha() > $b->getFecha()){
+                    return true;
+                }elseif ($a->getFecha() == $b->getFecha()){
+                    return $a->getDescripcion()>$b->getDescripcion();
+                }
+                return false;
+            }
+        );                
+        return $cronogramas;
+    }
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        return $this->cronogramas;
+        $this->etapas = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->cronogramas = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->createdAt = new \DateTime();
+    }
+    
+    /**
+     * Get partidos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPartidos()
+    {
+        $partidos=[];
+        foreach($this->getEtapas() as $etapa){
+            $partidos=array_merge($etapa->getPartidos(),$partidos);            
+        }
+        usort($partidos, function ($a, $b){
+                //return $a->getCronograma()->getFecha() > $b->getCronograma()->getFecha();
+                if ($a->getCronograma()->getFecha() > $b->getCronograma()->getFecha()){
+                    return true;
+                }elseif ($a->getCronograma()->getFecha() == $b->getCronograma()->getFecha()){
+                    return $a->getNombre() > $b->getNombre();
+                }
+                return false;            
+            }
+        );        
+        return $partidos;
+    }
+
+    /**
+     * Get PlazasMedallero
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */    
+    function getPlazasMedallero(){
+        return $this->getEtapas()->last()->getCompetencia()->getPlazas();
     }
 }

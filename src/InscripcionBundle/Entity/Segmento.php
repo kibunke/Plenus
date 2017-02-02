@@ -82,6 +82,36 @@ class Segmento
     private $maxFechaNacimiento;
     
     /**
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Torneo", inversedBy="segmentos")
+     * @ORM\JoinColumn(name="torneo", referencedColumnName="id")
+     */       
+    private $torneo;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Categoria", inversedBy="segmentos")
+     * @ORM\JoinColumn(name="categoria", referencedColumnName="id")
+     */       
+    private $categoria;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Modalidad", inversedBy="segmentos")
+     * @ORM\JoinColumn(name="modalidad", referencedColumnName="id")
+     */       
+    private $modalidad;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Genero", inversedBy="segmentos")
+     * @ORM\JoinColumn(name="genero", referencedColumnName="id")
+     */       
+    private $genero;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Disciplina", inversedBy="segmentos")
+     * @ORM\JoinColumn(name="disciplina", referencedColumnName="id")
+     */       
+    private $disciplina;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -112,6 +142,7 @@ class Segmento
      */
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -150,6 +181,48 @@ class Segmento
     }
 
     /**
+     * Get nombreCompleto
+     *
+     * @return string
+     */
+    public function getNombreCompleto()
+    {
+        $name = "";
+        if ($this->getTorneo())
+            $name .= $this->getTorneo()->getNombre();
+        if ($this->getDisciplina())
+            $name .= " - ".$this->getDisciplina()->getNombre();
+        if ($this->getCategoria())
+            $name .= " - ".$this->getCategoria()->getNombre();
+        if ($this->getGenero())
+            $name .= " - ".$this->getGenero()->getNombre();
+        if ($this->getModalidad())
+            $name .= " - ".$this->getModalidad()->getNombre();
+        if ($this->getNombre())
+            $name." - ".$this->getNombre();
+        return $name;
+    }    
+
+    /**
+     * Get nombreCompletoRaw
+     *
+     * @return string 
+     */
+    public function getNombreCompletoRaw()
+    {
+        $nomAux = '';
+        if ($this->nombre)
+            $nomAux = " - <small>".$this->getNombre()."</small>";
+        $nom =  "<div title='".$this->getNombreCompleto()."'>".
+                    "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
+                    "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
+                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>".$nomAux.
+                "</div>";
+
+        return $nom;
+    }
+
+    /**
      * Set descripcion
      *
      * @param string $descripcion
@@ -182,6 +255,7 @@ class Segmento
      */
     public function addEvento(\ResultadoBundle\Entity\Evento $evento)
     {
+        $evento->setSegmento($this);
         $this->eventos[] = $evento;
 
         return $this;
@@ -455,5 +529,125 @@ class Segmento
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+
+    /**
+     * Set torneo
+     *
+     * @param \ResultadoBundle\Entity\Torneo $torneo
+     *
+     * @return Segmento
+     */
+    public function setTorneo(\ResultadoBundle\Entity\Torneo $torneo = null)
+    {
+        $this->torneo = $torneo;
+
+        return $this;
+    }
+
+    /**
+     * Get torneo
+     *
+     * @return \ResultadoBundle\Entity\Torneo
+     */
+    public function getTorneo()
+    {
+        return $this->torneo;
+    }
+
+    /**
+     * Set categoria
+     *
+     * @param \ResultadoBundle\Entity\Categoria $categoria
+     *
+     * @return Segmento
+     */
+    public function setCategoria(\ResultadoBundle\Entity\Categoria $categoria = null)
+    {
+        $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    /**
+     * Get categoria
+     *
+     * @return \ResultadoBundle\Entity\Categoria
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * Set modalidad
+     *
+     * @param \ResultadoBundle\Entity\Modalidad $modalidad
+     *
+     * @return Segmento
+     */
+    public function setModalidad(\ResultadoBundle\Entity\Modalidad $modalidad = null)
+    {
+        $this->modalidad = $modalidad;
+
+        return $this;
+    }
+
+    /**
+     * Get modalidad
+     *
+     * @return \ResultadoBundle\Entity\Modalidad
+     */
+    public function getModalidad()
+    {
+        return $this->modalidad;
+    }
+
+    /**
+     * Set genero
+     *
+     * @param \ResultadoBundle\Entity\Genero $genero
+     *
+     * @return Segmento
+     */
+    public function setGenero(\ResultadoBundle\Entity\Genero $genero = null)
+    {
+        $this->genero = $genero;
+
+        return $this;
+    }
+
+    /**
+     * Get genero
+     *
+     * @return \ResultadoBundle\Entity\Genero
+     */
+    public function getGenero()
+    {
+        return $this->genero;
+    }
+
+    /**
+     * Set disciplina
+     *
+     * @param \ResultadoBundle\Entity\Disciplina $disciplina
+     *
+     * @return Segmento
+     */
+    public function setDisciplina(\ResultadoBundle\Entity\Disciplina $disciplina = null)
+    {
+        $this->disciplina = $disciplina;
+
+        return $this;
+    }
+
+    /**
+     * Get disciplina
+     *
+     * @return \ResultadoBundle\Entity\Disciplina
+     */
+    public function getDisciplina()
+    {
+        return $this->disciplina;
     }
 }

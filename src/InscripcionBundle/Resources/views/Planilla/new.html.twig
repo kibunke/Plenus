@@ -1,0 +1,174 @@
+<style>
+    .header-planilla th{
+        width: 25%;
+        text-align: right;
+    }
+    .header-planilla td{
+        text-align: left;
+    }
+    
+    input.error {
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;	
+        outline: thin auto red;
+    }
+    .validate-no-edit-td{
+        background: #eee;
+        color: #999;
+    }
+</style>
+<div class="col-sm-12" style="padding: 0px 20px 0px 45px">
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class="text-center">Solicitud de inscripción<br>Lista de buena fe</h3>
+            {{ form_row(form.municipio) }}
+        </div>
+        <div class="col-sm-6">
+            <table class="table header-planilla">
+                <tr>
+                    <th>Disciplina</th>
+                    <td>{{ planilla.segmento.disciplina.nombreCompleto }}</td>
+                </tr>
+                <tr>
+                    <th>Genero</th>
+                    <td>{{ planilla.segmento.genero.nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Categoria</th>
+                    <td>{{ planilla.segmento.categoria.nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Modalidad</th>
+                    <td>{{ planilla.segmento.modalidad.nombre }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table id="planillaBuenaFe" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center validate-no-edit"><i class="fa fa-hashtag" aria-hidden="true"></i></th>
+                        <th class="validate-text">Apellido</th>
+                        <th class="validate-text">Nombres</th>
+                        <th class="text-center validate-number">N° documento</th>
+                        <th class="text-center validate-date">F. nacimiento</th>
+                        <th class="validate-text">Domicilio</th>
+                        <th class="validate-text">Localidad</th>
+                        <th class="text-center validate-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#% for i in integrantes %}
+                        <tr>
+                            <td class="text-center">{{ loop.index }}</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center"></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="danger text-center"><h5>NO ES POSIBLE CARGAR DATOS EN ESTA SECCIÓN</h5></td>
+                        </tr>
+                    {% endfor %#}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">Sustitutos</td>
+                    </tr>
+                    {#% for i in sustitutos %}
+                        <tr>
+                            <td class="text-center">{{ loop.index }}</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center"></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="danger text-center"><h5>NO ES POSIBLE CARGAR DATOS EN ESTA SECCIÓN</h5></td>
+                        </tr>
+                    {% endfor %#}                    
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {{ form_end(form) }}
+ </div>
+
+<script>
+
+    $.fn.addFunctions = function () {
+        'use strict';
+        var element = $(this),
+            tfoot = element.find('tfoot tr'),
+            thead = element.find('thead tr'),
+            dataRows = element.find('tbody tr'),
+            dateStart = new Date('{{ planilla.segmento.minFechaNacimiento | date ('Y-n-j') }}'),
+            dateEnd = new Date('{{ planilla.segmento.maxFechaNacimiento | date ('Y-n-j') }}'),
+            formatDate = (date) => {
+                return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+            },
+            validateNumber = (value)=>{
+                return !isNaN(parseFloat(value))
+                        && isFinite(value)
+                        && value > 1000000 && value < 100000000;
+            },
+            validateDate = (value)=>{
+                let f = value.split('/'),
+                    d = new Date(f[2],f[1]-1,f[0]);
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)
+                        && f[0]>0 && f[0]<=31
+                        && f[1]>0 && f[1]<=12
+                        && !isNaN(d)){
+                    if (d.getTime() >= dateStart.getTime() && d.getTime() <= dateEnd.getTime()){
+                        return true;
+                    }
+                    toastr['warning']('La fecha ingresada esta fuera del rango permitido para este segmento.<br>Fechas validas entre: <b>'+formatDate(dateStart)+'</b> y <b>' +formatDate(dateEnd)+'</b>','Cuidado!')
+                }
+                return  false;
+            },
+            validateEmail = (value)=>{
+                return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(value);
+            };            
+        element.find('td').each(function (evt) {
+            var cell = $(this),
+                column = cell.index();
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-no-edit')){
+                cell.addClass('validate-no-edit-td');
+            }                
+        }).on('focus', function (evt, value) {
+            var cell = $(this),
+                column = cell.index();
+            if (cell.hasClass('validate-no-edit-td')) {
+                cell.trigger('blur');
+            }
+        }).on('validate', function (evt, value) {
+            var cell = $(this),
+                column = cell.index();
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-number')){
+                return validateNumber(value);
+            }
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-date')){
+                return validateDate(value);
+            }
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-email')){
+                return validateEmail(value);
+            }
+        });
+        return this;
+    };    
+    $(document).ready(function() {
+        $('#planillaBuenaFe').editableTableWidget().addFunctions().find('td:first').focus();;
+    } );
+</script>

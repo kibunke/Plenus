@@ -29259,6 +29259,88 @@ M:11},qf=Math.abs,rf=wb.prototype;
 // PARSING
 // Side effect imports
 return rf.abs=Wc,rf.add=Yc,rf.subtract=Zc,rf.as=cd,rf.asMilliseconds=$e,rf.asSeconds=_e,rf.asMinutes=af,rf.asHours=bf,rf.asDays=cf,rf.asWeeks=df,rf.asMonths=ef,rf.asYears=ff,rf.valueOf=dd,rf._bubble=_c,rf.get=fd,rf.milliseconds=gf,rf.seconds=hf,rf.minutes=jf,rf.hours=kf,rf.days=lf,rf.weeks=hd,rf.months=mf,rf.years=nf,rf.humanize=md,rf.toISOString=nd,rf.toString=nd,rf.toJSON=nd,rf.locale=lc,rf.localeData=mc,rf.toIsoString=x("toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)",nd),rf.lang=Re,U("X",0,0,"unix"),U("x",0,0,"valueOf"),Z("x",Vd),Z("X",Yd),ba("X",function(a,b,c){c._d=new Date(1e3*parseFloat(a,10))}),ba("x",function(a,b,c){c._d=new Date(u(a))}),a.version="2.17.1",b(sb),a.fn=Xe,a.min=ub,a.max=vb,a.now=Le,a.utc=k,a.unix=Lc,a.months=Rc,a.isDate=g,a.locale=$a,a.invalid=o,a.duration=Ob,a.isMoment=s,a.weekdays=Tc,a.parseZone=Mc,a.localeData=bb,a.isDuration=xb,a.monthsShort=Sc,a.weekdaysMin=Vc,a.defineLocale=_a,a.updateLocale=ab,a.locales=cb,a.weekdaysShort=Uc,a.normalizeUnits=K,a.relativeTimeRounding=kd,a.relativeTimeThreshold=ld,a.calendarFormat=Ub,a.prototype=Xe,a});
+//! moment.js locale configuration
+//! locale : Spanish [es]
+//! author : Julio Napurí : https://github.com/julionc
+
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('../moment')) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+
+var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split('_');
+var monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_');
+
+var es = moment.defineLocale('es', {
+    months : 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_'),
+    monthsShort : function (m, format) {
+        if (/-MMM-/.test(format)) {
+            return monthsShort[m.month()];
+        } else {
+            return monthsShortDot[m.month()];
+        }
+    },
+    monthsParseExact : true,
+    weekdays : 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
+    weekdaysShort : 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
+    weekdaysMin : 'do_lu_ma_mi_ju_vi_sá'.split('_'),
+    weekdaysParseExact : true,
+    longDateFormat : {
+        LT : 'H:mm',
+        LTS : 'H:mm:ss',
+        L : 'DD/MM/YYYY',
+        LL : 'D [de] MMMM [de] YYYY',
+        LLL : 'D [de] MMMM [de] YYYY H:mm',
+        LLLL : 'dddd, D [de] MMMM [de] YYYY H:mm'
+    },
+    calendar : {
+        sameDay : function () {
+            return '[hoy a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        nextDay : function () {
+            return '[mañana a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        nextWeek : function () {
+            return 'dddd [a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        lastDay : function () {
+            return '[ayer a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        lastWeek : function () {
+            return '[el] dddd [pasado a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+        },
+        sameElse : 'L'
+    },
+    relativeTime : {
+        future : 'en %s',
+        past : 'hace %s',
+        s : 'unos segundos',
+        m : 'un minuto',
+        mm : '%d minutos',
+        h : 'una hora',
+        hh : '%d horas',
+        d : 'un día',
+        dd : '%d días',
+        M : 'un mes',
+        MM : '%d meses',
+        y : 'un año',
+        yy : '%d años'
+    },
+    ordinalParse : /\d{1,2}º/,
+    ordinal : '%dº',
+    week : {
+        dow : 1, // Monday is the first day of the week.
+        doy : 4  // The week that contains Jan 4th is the first week of the year.
+    }
+});
+
+return es;
+
+})));
+
 /*! version : 4.17.42
  =========================================================
  bootstrap-datetimejs
@@ -36925,6 +37007,134 @@ module.exports = function (element) {
 	return $scrollTo;
 });
 
+$.fn.editableTableWidget = function (options) {
+    'use strict';
+    return $(this).each(function () {
+        var buildDefaultOptions = function () {
+                var opts = $.extend({}, $.fn.editableTableWidget.defaultOptions);
+                opts.editor = opts.editor.clone();
+                return opts;
+            },
+            activeOptions = $.extend(buildDefaultOptions(), options),
+            ARROW_LEFT = 37, ARROW_UP = 38, ARROW_RIGHT = 39, ARROW_DOWN = 40, ENTER = 13, ESC = 27, TAB = 9,
+            element = $(this),
+            editor = activeOptions.editor.css('position', 'absolute').hide().appendTo(element.parent()),
+            active,
+            showEditor = function (select) {
+                active = element.find('td:focus');
+                if (active.length) {
+                    editor.val(active.text())
+                        .removeClass('error')
+                        .show()
+                        .offset(active.offset())
+                        .css(active.css(activeOptions.cloneProperties))
+                        .width(active.width())
+                        .height(active.height())
+                        .focus();
+                    if (select) {
+                        editor.select();
+                    }
+                }
+            },
+            setActiveText = function () {
+                var text = editor.val(),
+                    evt = $.Event('change'),
+                    originalContent;
+                if (active.text() === text || editor.hasClass('error')) {
+                    return true;
+                }
+                originalContent = active.html();
+                active.text(text).trigger(evt, text);
+                if (evt.result === false) {
+                    active.html(originalContent);
+                }
+            },
+            movement = function (element, keycode) {
+                if (keycode === ARROW_RIGHT) {
+                    return element.next('td');
+                } else if (keycode === ARROW_LEFT) {
+                    return element.prev('td');
+                } else if (keycode === ARROW_UP) {
+                    return element.parent().prev().children().eq(element.index());
+                } else if (keycode === ARROW_DOWN) {
+                    return element.parent().next().children().eq(element.index());
+                }
+                return [];
+            };
+        editor.blur(function () {
+            setActiveText();
+            editor.hide();
+        }).keydown(function (e) {
+            if (e.which === ENTER) {
+                setActiveText();
+                editor.hide();
+                active.focus();
+                e.preventDefault();
+                e.stopPropagation();
+            } else if (e.which === ESC) {
+                editor.val(active.text());
+                e.preventDefault();
+                e.stopPropagation();
+                editor.hide();
+                active.focus();
+            } else if (e.which === TAB) {
+                active.focus();
+            } else if (this.selectionEnd - this.selectionStart === this.value.length) {
+                var possibleMove = movement(active, e.which);
+                if (possibleMove.length > 0) {
+                    possibleMove.focus();
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }
+        })
+        .on('input paste', function () {
+            var evt = $.Event('validate');
+            active.trigger(evt, editor.val());
+            if (evt.result === false) {
+                editor.addClass('error');
+            } else {
+                editor.removeClass('error');
+            }
+        });
+        element.on('click keypress dblclick', showEditor)
+        .css('cursor', 'pointer')
+        .keydown(function (e) {
+            var prevent = true,
+                possibleMove = movement($(e.target), e.which);
+            if (possibleMove.length > 0) {
+                possibleMove.focus();
+            } else if (e.which === ENTER) {
+                showEditor(false);
+            } else if (e.which === 17 || e.which === 91 || e.which === 93) {
+                showEditor(true);
+                prevent = false;
+            } else {
+                prevent = false;
+            }
+            if (prevent) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+
+        element.find('td').prop('tabindex', 1);
+
+        $(window).on('resize', function () {
+            if (editor.is(':visible')) {
+                editor.offset(active.offset())
+                .width(active.width())
+                .height(active.height());
+            }
+        });
+    });
+};
+$.fn.editableTableWidget.defaultOptions = {
+    cloneProperties: ['padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
+                      'text-align', 'font', 'font-size', 'font-family', 'font-weight',
+                      'border', 'border-top', 'border-bottom', 'border-left', 'border-right'],
+    editor: $('<input>')
+};
 (function ($) {
     "use strict";
     // no se sobreescribe el namespace, si ya existe
@@ -38427,3 +38637,396 @@ var Main = function() {
         }
     };
 }();
+(function($) {
+	"use strict";
+	var subViews = $(".subviews"), show_functions = [], close_functions = [], hide_functions = [], subview_id = [], screenPosition, $this, subViewElement, subviewShowClass = ".show-sv", subviewHideClass = ".hide-sv", subviewBackClass = ".back-sv", subview_action = "", thisBody = document.body || document.documentElement, thisStyle = thisBody.style, supportTransition = thisStyle.transition !== undefined || thisStyle.WebkitTransition !== undefined || thisStyle.MozTransition !== undefined || thisStyle.MsTransition !== undefined || thisStyle.OTransition !== undefined;
+
+	$(subviewShowClass).on("click", function(e) {
+		subViewElement = $(this);
+		var customOptions = new Object;
+
+		customOptions.content = subViewElement.attr('href');
+		customOptions.startFrom = subViewElement.data("startfrom"), customOptions.onShow = subViewElement.data("onshow"), customOptions.onHide = subViewElement.data("onhide"), customOptions.onClose = subViewElement.data("onclose");
+		$.subview(customOptions);
+		e.preventDefault();
+	});
+	$(subviewHideClass).on("click", function(e) {
+		subview_action = "close";
+		$.hideSubview();
+		e.preventDefault();
+	});
+	$(subviewBackClass).on("click", function(e) {
+		$.hideSubview();
+		e.preventDefault();
+	});
+	$.extend({
+		subview: function(options) {
+			// extend the options from pre-defined values:
+			var defaults = {
+				content: "",
+				startFrom: "top",
+				onShow: "",
+				onHide: "",
+				onClose: ""
+			};
+
+			var settings = $.extend({}, defaults, options);
+			$this = this;
+			show_functions.push(settings.onShow);
+			hide_functions.push(settings.onHide);
+			close_functions.push(settings.onClose);
+			subview_id.push(settings.content);
+
+			if(subViews.is(":visible") == false) {
+				if(supportTransition) {
+
+					$(".toolbar-tools").css({
+						opacity: 0,
+						left: "-20px"
+					}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+						$(this).off().hide();
+						$(".close-subviews").show(0, function(e) {
+							$(this).css({
+								opacity: 1,
+								left: "0px"
+							});
+						}).off().on("click", function(e) {
+							subview_action = "close";
+
+							if(jQuery.isFunction(close_functions[close_functions.length - 1])) {
+								close_functions[close_functions.length - 1].call($this);
+								return false;
+							}
+							$.hideSubview();
+						});
+					});
+					screenPosition = $(window).scrollTop();
+					$("html, body").animate({
+						scrollTop: 0
+					}, "slow", function() {
+						$('.main-container').css({
+							'max-height': $windowHeight - topBar.outerHeight(true),
+							'min-height': $windowHeight - topBar.outerHeight(true),
+							'overflow': 'hidden',
+						});
+					});
+					switch (settings.startFrom) {
+						case "right" :
+
+							subViews.addClass("subviews-right").css({
+								"right": 0,
+								"top": $(".toolbar").outerHeight(true),
+								height: $windowHeight - topBar.outerHeight(true) - $(".toolbar").outerHeight(true)
+							}).show(0, function() {
+								$(this).css({
+									width: "100%"
+								}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+
+									$(this).off();
+									if($(subview_id[0]).length) {
+										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+												show_functions[show_functions.length - 1].call($this);
+											}
+										});
+									} else {
+										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									}
+
+								});
+							});
+							break;
+						default :
+
+							subViews.addClass("subviews-top").css("top", $(".toolbar").outerHeight(true)).show(0, function() {
+								$(this).css({
+									height: $windowHeight - topBar.outerHeight(true) - $(".toolbar").outerHeight(true)
+
+								}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+
+									$(this).off();
+									if($(subview_id[0]).length) {
+										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+												show_functions[show_functions.length - 1].call($this);
+											}
+										});
+									} else {
+										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									}
+								});
+							});
+							break;
+					}
+				} else {
+					$(".toolbar-tools").animate({
+						opacity: 0,
+						left: "-20px"
+					}, 300, function() {
+						$(this).hide();
+						$(".close-subviews").show(0, function(e) {
+							$(this).animate({
+								opacity: 1,
+								left: "0px"
+							});
+						}).on("click", function(e) {
+							subview_action = "close";
+
+							if(jQuery.isFunction(close_functions[close_functions.length - 1])) {
+								close_functions[close_functions.length - 1].call($this);
+								return false;
+							}
+							$.hideSubview();
+						});
+					});
+					screenPosition = $(window).scrollTop();
+					$("html, body").animate({
+						scrollTop: 0
+					}, "slow", function() {
+
+						$('.main-container').css({
+							'max-height': $windowHeight - topBar.outerHeight(true),
+							'min-height': $windowHeight - topBar.outerHeight(true),
+							'overflow': 'hidden',
+						});
+					});
+					switch (settings.startFrom) {
+						case "right" :
+							subViews.addClass("subviews-right").css({
+								"right": 0,
+								"top": $(".toolbar").outerHeight(true),
+								height: $windowHeight - topBar.outerHeight(true) - $(".toolbar").outerHeight(true)
+							}).show(0, function() {
+								$(this).animate({
+									width: "100%"
+								}, 300, function() {
+
+									if($(subview_id[0]).length) {
+										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+												show_functions[show_functions.length - 1].call($this);
+											}
+										});
+									} else {
+										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									}
+
+								});
+							});
+							break;
+						default :
+
+							subViews.addClass("subviews-top").css("top", $(".toolbar").outerHeight(true)).show(0, function() {
+								$(this).animate({
+									height: $windowHeight - topBar.outerHeight(true) - $(".toolbar").outerHeight(true)
+
+								}, 300, function() {
+
+									$(this).off();
+									if($(subview_id[0]).length) {
+										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+												show_functions[show_functions.length - 1].call($this);
+											}
+										});
+									} else {
+										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									}
+								});
+							});
+							break;
+					}
+				}
+			} else {
+				$(".back-subviews").show(300, function(e) {
+					$(this).css({
+						opacity: 1,
+						left: "0px"
+					});
+				}).off().on("click", function(e) {
+					subview_action = "back";
+
+					if(jQuery.isFunction(close_functions[close_functions.length - 1])) {
+						close_functions[close_functions.length - 1].call($this);
+						return false;
+					}
+					close_functions.pop();
+					$.hideSubview();
+					e.preventDefault();
+				});
+				$(".subviews-container").children().filter(':visible').fadeOut(function() {
+					if(jQuery.isFunction(hide_functions[hide_functions.length - 2])) {
+						hide_functions[hide_functions.length - 2].call($this);
+					}
+					$(this).appendTo("body");
+
+					$(subview_id[subview_id.length - 1]).appendTo(".subviews-container").show(0, function() {
+
+						if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+							show_functions[show_functions.length - 1].call($this);
+						}
+					});
+				});
+			}
+		},
+		hideSubview: function() {
+			if(subview_id.length > 1 && subview_action !== "close") {
+
+				subview_action = "";
+				if(subview_id.length < 3) {
+					if(supportTransition) {
+						$(".back-subviews").css({
+							opacity: 0,
+							left: "20px"
+						}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+							$(this).off().hide(200);
+						});
+					} else {
+						$(".back-subviews").animate({
+							opacity: 0,
+							left: "20px"
+						}, 300, function() {
+							$(this).hide(200);
+						});
+					}
+				}
+
+				$(".subviews-container").children().filter(':visible').fadeOut(function() {
+					if(jQuery.isFunction(hide_functions[hide_functions.length - 1])) {
+						hide_functions[hide_functions.length - 1].call($this);
+					}
+					hide_functions.pop();
+					show_functions.pop();
+					subview_id.pop();
+					$(this).appendTo("body");
+					$(subview_id[subview_id.length - 1]).appendTo(".subviews-container").fadeIn(function() {
+						if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+							show_functions[show_functions.length - 1].call($this);
+						}
+					});
+				});
+			} else {
+				subview_action = "";
+				$(".subviews-container").children().hide(0, function() {
+					if(jQuery.isFunction(hide_functions[hide_functions.length - 1])) {
+						hide_functions[hide_functions.length - 1].call($this);
+					}
+					$(this).appendTo("body");
+					show_functions = [];
+					close_functions = [];
+					subview_id = [];
+
+				});
+				if(supportTransition) {
+					if($(".back-subviews").is(":visible")) {
+						$(".back-subviews").css({
+							opacity: 0,
+							left: "20px"
+						}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+							$(this).off().hide();
+						});
+					}
+					$(".close-subviews").css({
+						opacity: 0,
+						left: "20px"
+					}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+						$(this).off().hide();
+						hide_functions = [];
+						$(".toolbar-tools").show(0, function() {
+							$(this).css({
+								opacity: 1,
+								left: "0px"
+							});
+						});
+					});
+
+					if(subViews.hasClass("subviews-right")) {
+						subViews.css({
+							width: 0
+						}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+							$(this).off().removeClass("subviews-right").hide().removeAttr("style");
+							$('.main-container').css({
+								'max-height': '',
+								'min-height': '',
+								'overflow': ''
+							});
+
+							$("html, body").animate({
+								scrollTop: screenPosition
+							}, "slow");
+						});
+					} else {
+						subViews.css({
+							height: 0
+						}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
+							$(this).off().removeClass("subviews-top").hide().removeAttr("style");
+							$('.main-container').css({
+								'max-height': '',
+								'min-height': '',
+								'overflow': ''
+							});
+
+							$("html, body").animate({
+								scrollTop: screenPosition
+							}, "slow");
+						});
+					}
+				} else {
+					if($(".back-subviews").is(":visible")) {
+						$(".back-subviews").animate({
+							opacity: 0,
+							left: "20px"
+						}, 300, function() {
+							$(this).off().hide();
+						});
+					}
+					$(".close-subviews").animate({
+						opacity: 0,
+						left: "20px"
+					}, 300, function() {
+						$(this).off().hide();
+						hide_functions = [];
+						$(".toolbar-tools").show(0, function() {
+							$(this).animate({
+								opacity: 1,
+								left: "0px"
+							});
+						});
+					});
+
+					if(subViews.hasClass("subviews-right")) {
+						subViews.animate({
+							width: 0
+						}, 300, function() {
+							$(this).off().removeClass("subviews-right").hide().removeAttr("style");
+							$('.main-container').css({
+								'max-height': '',
+								'min-height': '',
+								'overflow': ''
+							});
+
+							$("html, body").animate({
+								scrollTop: screenPosition
+							}, "slow");
+						});
+					} else {
+						subViews.animate({
+							height: 0
+						}, 300, function() {
+							$(this).off().removeClass("subviews-top").hide().removeAttr("style");
+							$('.main-container').css({
+								'max-height': '',
+								'min-height': '',
+								'overflow': ''
+							});
+
+							$("html, body").animate({
+								scrollTop: screenPosition
+							}, "slow");
+						});
+					}
+				}
+			}
+		}
+	});
+})(jQuery);

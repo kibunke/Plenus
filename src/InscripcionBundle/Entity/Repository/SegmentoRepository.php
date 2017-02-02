@@ -23,13 +23,33 @@ class SegmentoRepository extends EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["s.id","s.nombre"];
-        $where = "(s.id LIKE ?1 OR s.nombre LIKE ?1)";
+        $columns = ["s.id",
+                    "t.nombre ".$request->get('order')[0]['dir'].
+                    ",d.nombre ".$request->get('order')[0]['dir'].
+                    ",c.nombre ".$request->get('order')[0]['dir'].
+                    ",g.nombre ".$request->get('order')[0]['dir'].
+                    ",m.nombre ".$request->get('order')[0]['dir'].
+                    ",s.nombre ",
+                    "eventos"];
+        $where = "( s.id LIKE ?1 OR
+                    s.nombre LIKE ?1 OR
+                    d.nombre LIKE ?1 OR
+                    t.nombre LIKE ?1 OR
+                    g.nombre LIKE ?1 OR
+                    c.nombre LIKE ?1 OR
+                    m.nombre LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT s
+                        ->createQuery(" SELECT s, COUNT(e.id) AS HIDDEN eventos
                                         FROM InscripcionBundle:Segmento s
-                                        WHERE $where 
+                                        JOIN s.disciplina d
+                                        JOIN s.torneo t
+                                        JOIN s.categoria c
+                                        JOIN s.modalidad m
+                                        JOIN s.genero g
+                                        LEFT JOIN s.eventos e
+                                        WHERE $where
+                                        GROUP BY s.id
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
@@ -39,11 +59,22 @@ class SegmentoRepository extends EntityRepository
     
     public function getFilteredRows($request)
     {
-        $where = "(s.id LIKE ?1 OR s.nombre LIKE ?1)";
+        $where = "( s.id LIKE ?1 OR
+                    s.nombre LIKE ?1 OR
+                    d.nombre LIKE ?1 OR
+                    t.nombre LIKE ?1 OR
+                    g.nombre LIKE ?1 OR
+                    c.nombre LIKE ?1 OR
+                    m.nombre LIKE ?1)";
                 
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
                                         FROM InscripcionBundle:Segmento s
+                                        JOIN s.disciplina d
+                                        JOIN s.torneo t
+                                        JOIN s.categoria c
+                                        JOIN s.modalidad m
+                                        JOIN s.genero g                                        
                                         WHERE $where ")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();

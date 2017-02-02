@@ -10,21 +10,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use InscripcionBundle\Entity\Segmento;
-use InscripcionBundle\Form\SegmentoType;
+use InscripcionBundle\Entity\Planilla;
+use InscripcionBundle\Form\PlanillaType;
 
 /**
- * Segmento controller.
+ * Planilla controller.
  *
- * @Route("/segmento")
+ * @Route("/planilla")
  * @Security("has_role('ROLE_INSCRIPCION') and has_role('ROLE_SEGMENTO')")
  */
-class SegmentoController extends Controller
+class PlanillaController extends Controller
 {
     /**
-     * Lists all Segmento entities.
+     * Lists all Planilla entities.
      *
-     * @Route("/list", name="segmento_list")
+     * @Route("/list", name="planilla_list")
      * @Method("GET")
      * @Template()
      */
@@ -34,9 +34,9 @@ class SegmentoController extends Controller
     }
     
     /**
-     * show a Segmento entiti.
+     * show a Planilla entity.
      *
-     * @Route("/{id}/show", name="segmento_show", condition="request.isXmlHttpRequest()")
+     * @Route("/{id}/show", name="planilla_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Template()
      */
@@ -46,14 +46,14 @@ class SegmentoController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="segmento_list_datatable", condition="request.isXmlHttpRequest()")
+     * @Route("/list/datatable", name="planilla_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Segmento')->datatable($request->request);
-
+        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request);
+        
         $data = array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
@@ -61,39 +61,44 @@ class SegmentoController extends Controller
                     "data"            => array()
         );
         
-        foreach ($filter['rows'] as $segmento){
+        foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
-                "id"        => $segmento->getId(),
-                "segmento"  => $segmento->getNombreCompletoRaw(),
-                "eventos"   => count($segmento->getEventos()),
-                "inscriptos"=> 0,//$user->getUsername(),
-                "actions"   => $this->renderView('InscripcionBundle:Segmento:actions.html.twig', array('entity' => $segmento)),
+                "id"        => $planilla->getId(),
+                "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
+                "inscriptos"   => 0,
+                "estado"  => 0,
+                "actions"   => $this->renderView('InscripcionBundle:Planilla:actions.html.twig', array('entity' => $planilla)),
             );
         }
         return new JsonResponse($data);
     }
     
     /**
-     * @Route("/new", name="segmento_new", condition="request.isXmlHttpRequest()")
+     * @Route("/new", name="planilla_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
-     * @Template("InscripcionBundle:Segmento:new.html.twig")
+     * @Template("InscripcionBundle:Planilla:new.html.twig")
      */
     public function newAction(Request $request)
-    {
+    {        
         $em = $this->getDoctrine()->getManager();
-        $segmento = new Segmento();
-        $form = $this->createForm(SegmentoType::class, $segmento);
+        $planilla = new Planilla();
+        
+        $segmento = $em->getRepository('InscripcionBundle:Segmento')->find(13);
+        $planilla->setSegmento($segmento);
+        
+        
+        $form = $this->createForm(PlanillaType::class, $planilla);
         //$form = $this->createNewAccountForm($user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {            
             try {
-                $segmento->setCreatedBy($this->getUser());
+                $planilla->setCreatedBy($this->getUser());
                 //foreach($segmento->getEventos() as $evento){
                 //    $segmento->addEvento($evento);
                 //}
-                $em->persist($segmento);
-                $em->flush();
-                return new JsonResponse(array('success' => true, 'message' => 'Se creo el Segmento'));
+                //$em->persist($segmento);
+                //$em->flush();
+                return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla'));
             }
             catch(\Exception $e ){
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
@@ -101,6 +106,7 @@ class SegmentoController extends Controller
         }
         return array(
                 'form' => $form->createView(),
+                'planilla' => $planilla
             );
     }
     

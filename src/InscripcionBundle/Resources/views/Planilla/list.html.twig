@@ -4,26 +4,23 @@
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
-                <h1><i class="fa fa-list-ol"></i> Listado de Segmentos <small>Todo lo referido a los segmentos de inscripción</small></h1>
+                <h1><i class="fa fa-list-ol"></i> Listado de Planillas <small>Aquí encontrara sus planillas de buena fe</small></h1>
+                <h1 class="no-display"><i class="fa fa-edit"></i> Nueva planilla de buena fe <small>Llene el formulario para crear una nueva planillas de buena fe</small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
+            <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews ">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
-                    <!--<li class="dropdown">
-                        <a  href="{{ path('inscripcion')}}" >
-                            <i class="fa fa-arrow-left"></i> VOLVER
+                    <li class="dropdown">
+                        <a  href="#1" class="show-sv" onclick="$('.page-header h1').toggle();$.Planilla.add('{{ path('planilla_new') }}')" href="#globalSubView" data-startFrom="right"">
+                            <i class="fa fa-plus"></i> NUEVA
                         </a>
-                    </li>-->
-                    {#% if is_granted('ROLE_INSCRIPCION_NEW') %#}
-                        <li class="dropdown">
-                            <a  href="#1" onclick="$.Segmento.newModal('{{path('segmento_new')}}')">
-                                <i class="fa fa-user"></i> NUEVO
-                            </a>
-                        </li>
-                    {#% endif %#}
+                    </li>
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -53,44 +50,12 @@
 {% endblock %}
 {% block contenidoData %}
     <div class="panel-heading">
-        <h4 class="panel-title">Tabla <span class="text-bold">de segmentos </span></h4>
+        <h4 class="panel-title">Mis <span class="text-bold">planillas </span></h4>
         <div class="panel-tools">
             <div class="dropdown">
                 <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
                     <i class="fa fa-cloud-download"></i>
                 </a>
-                <!--<ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a href="#1" class="export-csv">
-                            <i class="fa fa-file-text-o"></i> Guardar como CSV
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-txt">
-                            <i class="fa fa-file-text-o"></i> Guardar como TXT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-sql">
-                            <i class="fa fa-file-text-o"></i> Guardar como SQL
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-json">
-                            <i class="fa fa-file-text-o"></i> Guardar como JSON
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-excel">
-                            <i class="fa fa-file-text-o"></i> Exportar como Excel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-doc">
-                            <i class="fa fa-file-text-o"></i> Exportar como Word
-                        </a>
-                    </li>
-                </ul>-->
             </div>
             <div class="dropdown">
                 <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
@@ -117,13 +82,13 @@
         </div>
     </div>
     <div class="panel-body">
-        <table id="segmentoTable" class="table table-striped table-hover">
+        <table id="planillaTable" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Segmento</th>
-                    <th>Eventos</th>
                     <th>Inscriptos</th>
+                    <th>Estado</th>
                     <th style="min-width: 95px"></th>
                 </tr>
             </thead>
@@ -131,34 +96,21 @@
         </table>
     </div>
 {% endblock %}
-{#% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
-{% endblock %#}
-
 
 {% block otherJavascripts %}
-    {#
-    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
-    #}
     <script>
         (function ($) {
             "use strict";
             // no se sobreescribe el namespace, si ya existe
             var _table;
-            $.Segmento = $.Segmento || {};
-            $.Segmento.init = function() {
+            $.Planilla = $.Planilla || {};
+            $.Planilla.init = function() {
                 //$(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
-                _table = $('#segmentoTable').dataTable( {
+                _table = $('#planillaTable').dataTable( {
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '{{ path('segmento_list_datatable') }}',
+                        "url": '{{ path('planilla_list_datatable') }}',
                         "type": 'POST'
                     },
                     "language" : {
@@ -179,85 +131,72 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [3,4]
+                            "targets": [4]
                         }
                     ],
-                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                        if ( aData.dni == "0" )
-                            $(nRow).addClass( 'info' );
-                        return nRow;
-                    },
-                    "fnDrawCallback": function(oSettings, json) {
-                        
-                        //$('[data-toggle="popover"]').popover();
-                        //$input = $('#list_users_filter input');
-                        //if ($input.val().length>0) {
-                        //    $('#list_users tbody td').each(function(){
-                        //        $td=$(this);
-                        //        if ($td.text().toUpperCase().indexOf($input.val().toUpperCase())>-1) {
-                        //            $td.html($td.text().toUpperCase().replace($input.val().toUpperCase(),'<span class="occurrence">'+$input.val().toUpperCase()+'</span>'))
-                        //        }
-                        //    });
-                        //}
-                        //$.Usuario.charts(_table.ajax.json().cantUsers);
-                    }       
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {},
+                    "fnDrawCallback": function(oSettings, json) {}
                 });
+
             }
             //$.Default.inscripto = function(){}
-            $.Segmento.newModal = function(url){
-                $.Segmento.openAjaxModal(url,'Nuevo Segmento');
+            $.Planilla.add = function(url){
+                setTimeout(()=>{
+                    $('#globalSubView .subviews-container').load(url);
+                },100);
+                
             }
-            $.Segmento.editModal = function(url){
-                $.Segmento.openAjaxModal(url,'Editar Segmento');
-            }
-            $.Segmento.deleteConfirm = function(url){
-                swal({
-                    title: 'Esta seguro?',
-                    text: "El segmento será borrado!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Si, borrar!'
-                },function () {
-                    $.post(url,{})
-                    .done((data)=>{
-                        if (data.success){
-                            swal('Borrado!','El segmento fue borrado con exito.','success')
-                            _table.fnDraw(true);
-                        }else{
-                            swal('Cuidado!',data.message,'error')
-                        }
-                    }).fail(()=>{
-                        swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
-                    })
-                })
-            }            
-            $.Segmento.openAjaxModal = function(url,title){
-                $.Main.openFormModal(url,title, function(){
-                        $('#panel-config form').submit(function(event){
-                            $('#segmentoTable').parents('panel').block($.Main.defaultBlockConf());
-                            $('#okButton').button('loading')
-                            event.preventDefault();
-                            $.post(url, $('#panel-config form').serialize(), function(data){
-                                if(data.success){
-                                    toastr['success'](data.message, 'Excelente!');
-                                    _table.fnDraw(true);
-                                    $.Main.closeFormModal();
-                                }else if(data.error){
-                                    toastr['error'](data.message, 'Cuidado!');
-                                }else{
-                                    $("#panel-config form").html($(data).find('form').html());
-                                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
-                                }
-                                $('#okButton').button('reset');
-                                $('#segmentoTable').parents('panel').unblock();
-                            });
-                        });
-                    }
-                );                
-                //$.Main.openModal(url,"Nuevo Segmento");
-            }
+            //$.Segmento.editModal = function(url){
+            //    $.Segmento.openAjaxModal(url,'Editar Segmento');
+            //}
+            //$.Segmento.deleteConfirm = function(url){
+            //    swal({
+            //        title: 'Esta seguro?',
+            //        text: "El segmento será borrado!",
+            //        type: 'warning',
+            //        showCancelButton: true,
+            //        confirmButtonColor: '#3085d6',
+            //        cancelButtonColor: '#d33',
+            //        confirmButtonText: 'Si, borrar!'
+            //    },function () {
+            //        $.post(url,{})
+            //        .done((data)=>{
+            //            if (data.success){
+            //                swal('Borrado!','El segmento fue borrado con exito.','success')
+            //                _table.fnDraw(true);
+            //            }else{
+            //                swal('Cuidado!',data.message,'error')
+            //            }
+            //        }).fail(()=>{
+            //            swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+            //        })
+            //    })
+            //}            
+            //$.Segmento.openAjaxModal = function(url,title){
+            //    $.Main.openFormModal(url,title, function(){
+            //            $('#panel-config form').submit(function(event){
+            //                $('#segmentoTable').parents('panel').block($.Main.defaultBlockConf());
+            //                $('#okButton').button('loading')
+            //                event.preventDefault();
+            //                $.post(url, $('#panel-config form').serialize(), function(data){
+            //                    if(data.success){
+            //                        toastr['success'](data.message, 'Excelente!');
+            //                        _table.fnDraw(true);
+            //                        $.Main.closeFormModal();
+            //                    }else if(data.error){
+            //                        toastr['error'](data.message, 'Cuidado!');
+            //                    }else{
+            //                        $("#panel-config form").html($(data).find('form').html());
+            //                        toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
+            //                    }
+            //                    $('#okButton').button('reset');
+            //                    $('#segmentoTable').parents('panel').unblock();
+            //                });
+            //            });
+            //        }
+            //    );                
+            //    //$.Main.openModal(url,"Nuevo Segmento");
+            //}
             //$.Default.inscripto.editModal = function(url){
             //    $('#okButton').button('reset');
             //    $('#panel-config .modal-footer').show();
@@ -298,7 +237,7 @@
             //    }
             //}
         })(jQuery);
-        $(document).ready(function(){$.Segmento.init();/*$.TableExport.init()*/});
+        $(document).ready(function(){$.Planilla.init();/*$.TableExport.init()*/});
         
 //        (function ($) {
 //            var exportTable = "#inscripcionTable";

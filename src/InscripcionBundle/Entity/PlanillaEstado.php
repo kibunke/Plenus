@@ -40,6 +40,12 @@ abstract class PlanillaEstado
     private $nombre;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Planilla", inversedBy="estados")
+     * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
+     */       
+    private $planilla;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -132,5 +138,29 @@ abstract class PlanillaEstado
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set planilla
+     *
+     * @param \InscripcionBundle\Entity\Planilla $planilla
+     *
+     * @return PlanillaEstado
+     */
+    public function setPlanilla(\InscripcionBundle\Entity\Planilla $planilla = null)
+    {
+        $this->planilla = $planilla;
+
+        return $this;
+    }
+
+    /**
+     * Get planilla
+     *
+     * @return \InscripcionBundle\Entity\Planilla
+     */
+    public function getPlanilla()
+    {
+        return $this->planilla;
     }
 }

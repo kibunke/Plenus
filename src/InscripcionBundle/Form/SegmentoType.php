@@ -6,11 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 use Doctrine\ORM\EntityRepository;
 
 use CommonBundle\Form\PersonaType;
@@ -22,23 +23,61 @@ class SegmentoType extends AbstractType
         $builder
             ->add('nombre', TextType::class, array("attr" => array('placeholder' => 'Ingrese el nombre del segmento')))
             ->add('descripcion', TextareaType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
-            ->add('maxIntegrantes', NumberType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
-            ->add('minIntegrantes', NumberType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
-            ->add('maxReemplazos', NumberType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
-            ->add('minFechaNacimiento', DateType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
-            ->add('maxFechaNacimiento', DateType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
-            ->add('eventos', EntityType::class, array(
-                                        'class' => 'ResultadoBundle:Evento',
-            //                            'query_builder' => function (EntityRepository $er) {
-            //                                return $er->createQueryBuilder('p')
-            //                                    ->where('p.availableForNewUsers = 1')
-            //                                    ->orderBy('p.name', 'ASC');
-            //                            },
-                                        'choice_label' => 'getNombreCompleto',
-                                        'placeholder'  => 'Eventos del segmento'
-                                    )
-                )
-            //->add('eventos', CheckboxType::class, array('label' => 'Activo', 'required' => false))            
+            ->add('torneo', EntityType::class, array(
+                                                'class' => 'ResultadoBundle:Torneo',
+                                                'choice_label' => 'nombre',
+                                                'multiple' => false,
+                                                'required' => true,
+                                                'empty_data'  => null
+                                            )
+                  )
+            ->add('disciplina', EntityType::class, array(
+                                                'class' => 'ResultadoBundle:Disciplina',
+                                                'choice_label' => 'nombre',
+                                                'multiple' => false,
+                                                'required' => true,
+                                                'empty_data'  => null
+                                            )
+                  )            
+            ->add('categoria', EntityType::class, array(
+                                                'class' => 'ResultadoBundle:Categoria',
+                                                'choice_label' => 'nombre',
+                                                'multiple' => false,
+                                                'required' => true,
+                                                'empty_data'  => null
+                                            )
+                  )
+            ->add('genero', EntityType::class, array(
+                                                'class' => 'ResultadoBundle:Genero',
+                                                'choice_label' => 'nombre',
+                                                'multiple' => false,
+                                                'required' => true,
+                                                'empty_data'  => null
+                                            )
+                  )            
+            ->add('modalidad', EntityType::class, array(
+                                                'class' => 'ResultadoBundle:Modalidad',
+                                                'choice_label' => 'nombre',
+                                                'multiple' => false,
+                                                'required' => true,
+                                                'empty_data'  => null
+                                            )
+                  )            
+            ->add('maxIntegrantes', IntegerType::class, array("attr" => array('min' => 0)))
+            ->add('minIntegrantes', IntegerType::class, array("attr" => array('min' => 0)))
+            ->add('maxReemplazos', IntegerType::class, array("attr" => array('min' => 0)))
+            ->add('minFechaNacimiento', DateType::class, array(
+                'widget' => 'single_text',
+                // do not render as type="date", to avoid HTML5 date pickers
+                'html5' => true,
+                //'data' => new \DateTime('01/01/2000')
+            ))
+            ->add('maxFechaNacimiento', DateType::class, array(
+                'widget' => 'single_text',
+                // do not render as type="date", to avoid HTML5 date pickers
+                'html5' => true,
+                //'data' => new \DateTime('01/01/2000')
+            ))
         ;
     }
 

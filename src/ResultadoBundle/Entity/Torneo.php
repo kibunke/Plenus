@@ -42,6 +42,11 @@ class Torneo
     private $eventos;
     
     /**
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="torneo")
+     */
+    private $segmentos;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")

@@ -793,4 +793,28 @@ class Evento
     function getPlazasMedallero(){
         return $this->getEtapas()->last()->getCompetencia()->getPlazas();
     }
+
+    /**
+     * Set segmento
+     *
+     * @param \InscripcionBundle\Entity\Segmento $segmento
+     *
+     * @return Evento
+     */
+    public function setSegmento(\InscripcionBundle\Entity\Segmento $segmento = null)
+    {
+        $this->segmento = $segmento;
+
+        return $this;
+    }
+
+    /**
+     * Get segmento
+     *
+     * @return \InscripcionBundle\Entity\Segmento
+     */
+    public function getSegmento()
+    {
+        return $this->segmento;
+    }
 }

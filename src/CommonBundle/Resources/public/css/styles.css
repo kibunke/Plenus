@@ -57,7 +57,9 @@ html, body {
   width: 100%;
   overflow-x: hidden;
 }
-
+.debug,.debug div{
+  border: 1px solid red;
+}
 /* line 8, ../sass/partials/_base.scss */
 body {
   color: #8B91A0;

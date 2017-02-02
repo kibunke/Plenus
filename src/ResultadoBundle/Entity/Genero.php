@@ -42,6 +42,11 @@ class Genero
     private $eventos;
     
     /**
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="genero")
+     */
+    private $segmentos;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
