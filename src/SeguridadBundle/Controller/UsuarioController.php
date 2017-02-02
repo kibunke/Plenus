@@ -215,38 +215,27 @@ class UsuarioController extends Controller
     }
    
     /**
-     * @Route("/{user}/activar", name="user_activar")
+     * @Route("/{user}/activar", name="user_activar", condition="request.isXmlHttpRequest()")
      * @Security("has_role('ROLE_ADMIN')")
-     * @Template("CommonBundle::generic.form.html.twig")
+     * @Method({"POST"})
+     * 
      */
     public function activarAction(Request $request,Usuario $user)
     {
-         $form = $this->createFormBuilder($user)
-                      ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))
-                      ->getForm()
-                      ;
-        
-        $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $em  = $this->getDoctrine()->getManager();
-            
-            $user->setUpdatedBy($this->getUser());
+        $em  = $this->getDoctrine()->getManager();
+           
+        $user->setIsActive(true);    
+        $user->setUpdatedBy($this->getUser());
   
-            try{
-                $em->flush();
-                return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario activado con éxito'));
-            }
-            catch(\Exception $e ){
-                 return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al activar el usuario'));
-            }
+        try{
+            $em->flush();
+            return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario activado con éxito'));
         }
-        return array(
-            'entity' => $user,
-            'form'   => $form->createView(),
-        );
+        catch(\Exception $e ){
+             return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al activar el usuario'));
+        }
     }
+    
     /**
      * Creates a form to create a User entity.
      *

@@ -224,48 +224,52 @@
             },
             $.Usuario.charts = function(){},
             $.Usuario.activar = function(url){
-                $.Main.openFormModal(url,"Activar Usuario",function(){
-                    $('#panel-config form').submit(function(event){
-                                            event.preventDefault();
-                                            $.post(url,
-                                                   $('#panel-config form').serialize(),
-                                                   function(data){
-                                                      if(data.resultado == 0)
-                                                      {
-                                                        swal({
-                                                        title: "Resultado",
-                                                        text: data.mensaje,
-                                                        type: "success",
-                                                        showCancelButton: false,
-                                                        confirmButtonColor: "#DD6B55",
-                                                        confirmButtonText: "Aceptar",
-                                                        closeOnConfirm: true
-                                                      },
-                                                      function(){
-                                                        _table.ajax.reload( null, false );
-                                                        $('#panel-config').modal('toggle');
-                                                      });
-                                                        
-                                                      }else{
-                                                        swal({
-                                                        title: "Resultado",
-                                                        text: data.mensaje,
-                                                        type: "error",
-                                                        showCancelButton: false,
-                                                        confirmButtonColor: "#DD6B55",
-                                                        confirmButtonText: "Aceptar",
-                                                        closeOnConfirm: true
-                                                            },
-                                                            function(){});
-                                                          }
-                                                    }
-                                            );
-                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
-                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
-                        //return false;
-                    })
-            });
-            }
+                swal({
+                        title: "Activar Usuario",
+                        text: "Desea Activar al Usuario",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Activar",
+                        closeOnConfirm: false
+                      },
+                      function(){
+                            $.post(url,
+                                   null,
+                                   function(data)
+                                   {
+                                       if(data.resultado == 0)
+                                       {
+                                         swal({
+                                         title: "Resultado",
+                                         text: data.mensaje,
+                                         type: "success",
+                                         showCancelButton: false,
+                                         confirmButtonColor: "#DD6B55",
+                                         confirmButtonText: "Aceptar",
+                                         closeOnConfirm: true
+                                        },
+                                        function(){
+                                          _table.ajax.reload( null, false );
+                                        });
+                                          
+                                       }else{
+                                         swal({
+                                         title: "Resultado",
+                                         text: data.mensaje,
+                                         type: "error",
+                                         showCancelButton: false,
+                                         confirmButtonColor: "#DD6B55",
+                                         confirmButtonText: "Aceptar",
+                                         closeOnConfirm: true
+                                             },
+                                             function(){});
+                                           }
+                                    }
+                             );
+                      }
+                    );
+                }
         })(jQuery);
         $(document).ready(function(){$.Usuario.init();});
     </script>

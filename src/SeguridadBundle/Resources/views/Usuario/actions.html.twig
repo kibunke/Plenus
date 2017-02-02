@@ -1,2 +1,23 @@
-<a href="{{path("user_edit",{"user": entity.id})}}"><i class="fa fa-edit"></i></a>
-{% if not entity.isActive %}<a href="#1" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check text-success" title="Activar"></i></a>{% endif %}
+<div class="visible-md visible-lg hidden-sm hidden-xs">
+    <a href="{{path("user_edit",{"user": entity.id})}}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
+    {% if not entity.isActive %}<a href="#1" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check text-success" title="Activar"></i></a>{% endif %}
+</div>
+<div class="visible-xs visible-sm hidden-md hidden-lg">
+    <div class="btn-group">
+        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </a>
+        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+            <li>
+                <a role="menuitem" tabindex="-1"  href="{{path("user_edit",{"user": entity.id})}}" >
+                    <i class="fa fa-edit"></i>Editar
+                </a>
+            </li>
+            {% if not entity.isActive %}
+            <li>
+                <a href="#1" role="menuitem" tabindex="-1" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check text-success" title="Activar"></i> Activar</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

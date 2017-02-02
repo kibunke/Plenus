@@ -18,17 +18,17 @@ class PersonaType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, array('attr' => array('placeholder' => 'casilla@email.com')))
-            ->add('municipio', EntityType::class, array(
-                                        'class' => 'CommonBundle:Municipio',
-                                        'query_builder' => function (EntityRepository $er) {
-                                            return $er->createQueryBuilder('p')
-                                                ->where('p.provincia = 1')
-                                                ->orderBy('p.nombre', 'ASC');
-                                        },
-                                        'choice_label' => 'nombre',
-                                        'placeholder' => 'Seleccione su municipio'
-                                    )
-                )
+            //->add('municipio', EntityType::class, array(
+            //                            'class' => 'CommonBundle:Municipio',
+            //                            'query_builder' => function (EntityRepository $er) {
+            //                                return $er->createQueryBuilder('p')
+            //                                    ->where('p.provincia = 1')
+            //                                    ->orderBy('p.nombre', 'ASC');
+            //                            },
+            //                            'choice_label' => 'nombre',
+            //                            'placeholder' => 'Seleccione su municipio'
+            //                        )
+            //    )
             ->add('fNacimiento', DateType::class, array(
                                                          'attr'    => array(
                                                                             'placeholder' => 'Fecha de Nacimiento',
