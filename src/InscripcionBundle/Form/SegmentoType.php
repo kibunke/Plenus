@@ -68,15 +68,15 @@ class SegmentoType extends AbstractType
             ->add('maxReemplazos', IntegerType::class, array("attr" => array('min' => 0)))
             ->add('minFechaNacimiento', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
-                'html5' => true,
-                //'data' => new \DateTime('01/01/2000')
+                'html5' => false,
+                'format'   => 'dd/MM/yyyy',
+                'attr' => array('class' => 'datetimepicker')
             ))
             ->add('maxFechaNacimiento', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
-                'html5' => true,
-                //'data' => new \DateTime('01/01/2000')
+                'html5' => false,
+                'format'   => 'dd/MM/yyyy',
+                'attr' => array('class' => 'datetimepicker')
             ))
         ;
     }

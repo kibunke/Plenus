@@ -131,21 +131,8 @@
         </table>
     </div>
 {% endblock %}
-{#% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
-{% endblock %#}
-
 
 {% block otherJavascripts %}
-    {#
-    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
-    #}
     <script>
         (function ($) {
             "use strict";
@@ -187,21 +174,16 @@
                             $(nRow).addClass( 'info' );
                         return nRow;
                     },
-                    "fnDrawCallback": function(oSettings, json) {
-                        
-                        //$('[data-toggle="popover"]').popover();
-                        //$input = $('#list_users_filter input');
-                        //if ($input.val().length>0) {
-                        //    $('#list_users tbody td').each(function(){
-                        //        $td=$(this);
-                        //        if ($td.text().toUpperCase().indexOf($input.val().toUpperCase())>-1) {
-                        //            $td.html($td.text().toUpperCase().replace($input.val().toUpperCase(),'<span class="occurrence">'+$input.val().toUpperCase()+'</span>'))
-                        //        }
-                        //    });
-                        //}
-                        //$.Usuario.charts(_table.ajax.json().cantUsers);
-                    }       
+                    "fnDrawCallback": function(oSettings, json) {}       
                 });
+            }
+            $.Segmento.initDatePicker = function(){
+                $('.datetimepicker').datetimepicker({
+                    // después ver cómo cargar el moment.locale("es") y me dé pelota :P
+                    //locale: 'es',
+                    viewMode: 'years',
+                    format: 'DD/MM/YYYY'
+                 });
             }
             //$.Default.inscripto = function(){}
             $.Segmento.newModal = function(url){
@@ -235,6 +217,7 @@
             }            
             $.Segmento.openAjaxModal = function(url,title){
                 $.Main.openFormModal(url,title, function(){
+                        $.Segmento.initDatePicker();
                         $('#panel-config form').submit(function(event){
                             $('#segmentoTable').parents('panel').block($.Main.defaultBlockConf());
                             $('#okButton').button('loading')
@@ -255,114 +238,9 @@
                             });
                         });
                     }
-                );                
-                //$.Main.openModal(url,"Nuevo Segmento");
+                );
             }
-            //$.Default.inscripto.editModal = function(url){
-            //    $('#okButton').button('reset');
-            //    $('#panel-config .modal-footer').show();
-            //    $('#panel-config .modal-title').html("Editar Inscripto");
-            //    $('#panel-config .modal-body').html("");
-            //    $('#panel-config .modal-body').load(url)
-            //    $('#panel-config').modal();                 
-            //}            
-            //$.Default.inscripto.deleteModal = function(url){
-            //    jQuery.get(url, function(data){
-            //        swal({
-            //            title: "Seguro quiere eliminar la planilla?",
-            //            text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
-            //            type: "warning",
-            //            showCancelButton: true,
-            //            confirmButtonColor: "#DD6B55",
-            //            confirmButtonText: "Si, eliminar!",
-            //            cancelButtonText: "No, cancelar!",
-            //            closeOnConfirm: false,
-            //            closeOnCancel: true,
-            //            html: true
-            //        },
-            //        function (isConfirm) {
-            //            if (isConfirm) {
-            //                $('#deleteFormAux form').submit();
-            //                swal("Excelente!", "La planilla de inscripto fue borrada.", "success");
-            //            }
-            //        });
-            //    });
-            //}            
-            //$.Default.autocomplete = function(){}
-            //$.Default.autocomplete.getData = function(municipio,tipo){
-            //    try {
-            //        return instituciones[municipio][tipo];
-            //    }
-            //    catch(err) {
-            //        return null
-            //    }
-            //}
         })(jQuery);
         $(document).ready(function(){$.Segmento.init();/*$.TableExport.init()*/});
-        
-//        (function ($) {
-//            var exportTable = "#inscripcionTable";
-//            var ignoreColumn = 6;
-//            // no se sobreescribe el namespace, si ya existe
-//            $.TableExport = $.TableExport || {};
-//            $.TableExport.init = function() {
-//                $(".export-pdf").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'pdf',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-excel").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'excel',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-doc").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'doc',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-csv").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'csv',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-txt").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'txt',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-sql").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'sql',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-json").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'json',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});                
-//            }
-//        })(jQuery);  
     </script>
 {% endblock %}

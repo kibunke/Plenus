@@ -10342,156 +10342,6 @@ body.stop-scrolling {
     -o-transform: translateY(145%);
     transform: translateY(145%); } }
 
-/*  Basic Elements & Classes
-/* ---------------------------------------------------------------------- */
-
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  color: #8B91A0;
-  direction: ltr;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  padding: 0;
-  margin: 0;
-  background: #ffffff;
-  height: 100%;
-}
-
-a, a:focus, a:hover, a:active {
-  outline: 0 !important;
-  text-decoration: none !important;
-}
-
-a {
-  color: #88BBC8;
-}
-
-a:hover, a:focus, a:active {
-  color: #4a8fa0;
-}
-
-h1, h2, h3, h4 {
-  font-family: "Raleway", sans-serif;
-  font-weight: 300;
-}
-
-.text-bold h1, h1.text-bold, h1 .text-bold, .text-bold h2, h2.text-bold, h2 .text-bold, .text-bold h3, h3.text-bold, h3 .text-bold, .text-bold h4, h4.text-bold, h4 .text-bold {
-  font-weight: 600;
-}
-
-.main-wrapper {
-  position: relative;
-}
-
-/* ---------------------------------------------------------------------- */
-/*  Utilities
-/* ---------------------------------------------------------------------- */
-
-.no-padding {
-  padding: 0 !important;
-}
-
-.no-margin {
-  margin: 0 !important;
-}
-
-.inline {
-  display: inline;
-}
-
-.no-radius {
-  -moz-border-radius: 0 !important;
-  -webkit-border-radius: 0 !important;
-  border-radius: 0 !important;
-}
-
-.no-border {
-  border: none !important;
-}
-
-.border-right {
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-color: inherit;
-}
-
-.border-left {
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-color: inherit;
-}
-
-.border-top {
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-color: inherit;
-}
-
-.border-bottom {
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-color: inherit;
-}
-
-.text-azure {
-    color: #00BDCC;
-}
-
-/* ---------------------------------------------------------------------- */
-/*  Buttons
-/* ---------------------------------------------------------------------- */
-
-.btn {
-  transition: all 0.3s ease 0s !important;
-}
-
-.btn-azure {
-  background-color: #00BDCC;
-  border-color: #00a5b3;
-  color: #ffffff;
-}
-
-.btn-azure:hover, .btn-azure:focus, .btn-azure:active, .btn-azure.active {
-  background-color: #00a5b3;
-  border-color: #008e99;
-  color: #ffffff;
-}
-
-.btn-azure.disabled:hover, .btn-azure.disabled:focus, .btn-azure.disabled:active, .btn-azure.disabled.active, .btn-azure[disabled]:hover, .btn-azure[disabled]:focus, .btn-azure[disabled]:active, .btn-azure[disabled].active, fieldset[disabled] .btn-azure:hover, fieldset[disabled] .btn-azure:focus, fieldset[disabled] .btn-azure:active, fieldset[disabled] .btn-azure.active {
-  background-color: #e5fdff;
-  border-color: #ccfbff;
-  color: #ffffff;
-}
-
-.btn-azure .caret {
-  border-top-color: #ffffff;
-}
-
-.btn-red {
-  background-color: #e66b6b;
-  border-color: #e25555;
-  color: #ffffff;
-}
-
-.btn-red:hover, .btn-red:focus, .btn-red:active, .btn-red.active {
-  background-color: #e25555;
-  border-color: #df3f3f;
-  color: #ffffff;
-}
-
-.btn-red.disabled:hover, .btn-red.disabled:focus, .btn-red.disabled:active, .btn-red.disabled.active, .btn-red[disabled]:hover, .btn-red[disabled]:focus, .btn-red[disabled]:active, .btn-red[disabled].active, fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[disabled] .btn-red:active, fieldset[disabled] .btn-red.active {
-  background-color: white;
-  border-color: white;
-  color: #ffffff;
-}
-
-.btn-red .caret {
-  border-top-color: #ffffff;
-}
 /*
 
 
@@ -14704,7 +14554,7 @@ ul.post-list .post-image {
 }
 /* line 85, ../sass/partials/_buttons.scss */
 .btn-blue.disabled:hover, .btn-blue.disabled:focus, .btn-blue.disabled:active, .btn-blue.disabled.active, .btn-blue[disabled]:hover, .btn-blue[disabled]:focus, .btn-blue[disabled]:active, .btn-blue[disabled].active, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: #f8fafb;
   color: #ffffff;
 }
@@ -14731,7 +14581,7 @@ ul.post-list .post-image {
 }
 /* line 108, ../sass/partials/_buttons.scss */
 .btn-light-blue.disabled:hover, .btn-light-blue.disabled:focus, .btn-light-blue.disabled:active, .btn-light-blue.disabled.active, .btn-light-blue[disabled]:hover, .btn-light-blue[disabled]:focus, .btn-light-blue[disabled]:active, .btn-light-blue[disabled].active, fieldset[disabled] .btn-light-blue:hover, fieldset[disabled] .btn-light-blue:focus, fieldset[disabled] .btn-light-blue:active, fieldset[disabled] .btn-light-blue.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -14866,7 +14716,7 @@ ul.post-list .post-image {
 }
 /* line 223, ../sass/partials/_buttons.scss */
 .btn-orange.disabled:hover, .btn-orange.disabled:focus, .btn-orange.disabled:active, .btn-orange.disabled.active, .btn-orange[disabled]:hover, .btn-orange[disabled]:focus, .btn-orange[disabled]:active, .btn-orange[disabled].active, fieldset[disabled] .btn-orange:hover, fieldset[disabled] .btn-orange:focus, fieldset[disabled] .btn-orange:active, fieldset[disabled] .btn-orange.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -14893,7 +14743,7 @@ ul.post-list .post-image {
 }
 /* line 246, ../sass/partials/_buttons.scss */
 .btn-light-orange.disabled:hover, .btn-light-orange.disabled:focus, .btn-light-orange.disabled:active, .btn-light-orange.disabled.active, .btn-light-orange[disabled]:hover, .btn-light-orange[disabled]:focus, .btn-light-orange[disabled]:active, .btn-light-orange[disabled].active, fieldset[disabled] .btn-light-orange:hover, fieldset[disabled] .btn-light-orange:focus, fieldset[disabled] .btn-light-orange:active, fieldset[disabled] .btn-light-orange.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -14920,7 +14770,7 @@ ul.post-list .post-image {
 }
 /* line 269, ../sass/partials/_buttons.scss */
 .btn-dark-orange.disabled:hover, .btn-dark-orange.disabled:focus, .btn-dark-orange.disabled:active, .btn-dark-orange.disabled.active, .btn-dark-orange[disabled]:hover, .btn-dark-orange[disabled]:focus, .btn-dark-orange[disabled]:active, .btn-dark-orange[disabled].active, fieldset[disabled] .btn-dark-orange:hover, fieldset[disabled] .btn-dark-orange:focus, fieldset[disabled] .btn-dark-orange:active, fieldset[disabled] .btn-dark-orange.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -14947,7 +14797,7 @@ ul.post-list .post-image {
 }
 /* line 292, ../sass/partials/_buttons.scss */
 .btn-red.disabled:hover, .btn-red.disabled:focus, .btn-red.disabled:active, .btn-red.disabled.active, .btn-red[disabled]:hover, .btn-red[disabled]:focus, .btn-red[disabled]:active, .btn-red[disabled].active, fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[disabled] .btn-red:active, fieldset[disabled] .btn-red.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }

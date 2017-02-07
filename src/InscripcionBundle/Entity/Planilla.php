@@ -369,4 +369,29 @@ class Planilla
     {
         return $this->updatedBy;
     }
+    
+    /**
+     * Get inscriptos
+     *
+     * @return json
+     */
+    public function getInscriptos()
+    {
+        $inscriptos = array();
+        for ($i=0; $i<$this->getSegmento()->getMaxIntegrantes();$i++){
+            $inscriptos[] = array(
+                                    'order' => $i+1,
+                                    'type' => 'inscripto',
+                                    'persona' => array(),
+                            );
+        }
+        for ($j=0; $j<$this->getSegmento()->getMaxReemplazos();$j++){
+            $inscriptos[] = array(
+                                    'order' => $j+1,
+                                    'type' => 'sustituto',
+                                    'persona' => array(),
+                            );
+        }        
+        return $inscriptos;
+    }    
 }

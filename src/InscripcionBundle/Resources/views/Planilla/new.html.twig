@@ -61,53 +61,123 @@
                         <th class="text-center validate-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></th>
                     </tr>
                 </thead>
-                <tbody>
-                    {#% for i in integrantes %}
-                        <tr>
-                            <td class="text-center">{{ loop.index }}</td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center"></td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="8" class="danger text-center"><h5>NO ES POSIBLE CARGAR DATOS EN ESTA SECCIÓN</h5></td>
-                        </tr>
-                    {% endfor %#}
-                </tbody>
+                <tbody></tbody>
                 <tfoot>
                     <tr>
                         <td colspan="8" class="text-center">Sustitutos</td>
                     </tr>
-                    {#% for i in sustitutos %}
-                        <tr>
-                            <td class="text-center">{{ loop.index }}</td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center"></td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="8" class="danger text-center"><h5>NO ES POSIBLE CARGAR DATOS EN ESTA SECCIÓN</h5></td>
-                        </tr>
-                    {% endfor %#}                    
                 </tfoot>
             </table>
         </div>
     </div>
+    <div class="row">
+        <h4> Tipo inscripción : 
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Municipal
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Institucional <small>(Escuela/Club)</small>
+                </label>
+            </div>
+        </h4>
+        <div class="table-responsive col-sm-3">
+            <table id="" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Director técnico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td ></td>
+                    </tr>
+                    <tr>
+                        <th>Firma</th>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Director técnico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td ></td>
+                    </tr>
+                    <tr>
+                        <th>Firma</th>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Director técnico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td ></td>
+                    </tr>
+                    <tr>
+                        <th>Firma</th>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Director técnico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td ></td>
+                    </tr>
+                    <tr>
+                        <th>Firma</th>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
     {{ form_end(form) }}
  </div>
 
 <script>
-
     $.fn.addFunctions = function () {
         'use strict';
         var element = $(this),
@@ -167,8 +237,25 @@
             }
         });
         return this;
-    };    
-    $(document).ready(function() {
-        $('#planillaBuenaFe').editableTableWidget().addFunctions().find('td:first').focus();;
-    } );
+    };
+    (function ($) {
+        "use strict";
+        // no se sobreescribe el namespace, si ya existe
+        var _inscriptos = JSON.parse('{{ planilla.getInscriptos() | json_encode() | raw }}'),
+            _tr = $('<tr><td class="text-center"></td><td></td><td></td><td class="text-center"></td><td class="text-center"></td><td></td><td></td><td class="text-center"></td></tr>');
+        $.Planilla = $.Planilla || {};
+        $.Planilla.init = function() {
+            $.map(_inscriptos,(data)=>{
+                let $tr = _tr.clone();
+                $tr.find(':nth-child(1)').html(data.order)
+                if (data.type == 'inscripto'){
+                    $('#planillaBuenaFe tbody').append($tr);
+                }else{
+                    $('#planillaBuenaFe tfoot').append($tr);
+                }
+            })
+            $('#planillaBuenaFe').editableTableWidget().addFunctions().find('td:first').focus();
+        }
+    })(jQuery);
+    $(document).ready(function(){$.Planilla.init();});
 </script>

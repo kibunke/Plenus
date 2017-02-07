@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Municipio
  *
  * @ORM\Table(name="Municipio")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CommonBundle\Entity\Repository\MunicipioRepository")
  */
 class Municipio
 {

@@ -138,13 +138,13 @@ class SegmentoController extends Controller
      * @Route("/{id}/delete", name="segmento_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
      */
-    public function deleteAction(Request $request,Segmento $segmento)
+    public function deleteAction(Request $request,Segmento $entity)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($segmento){
-            if(!count($segmento->getEventos())){
+        if ($entity){
+            if(!count($entity->getEventos())){
                 try {
-                    $em->remove($segmento);
+                    $em->remove($entity);
                     $em->flush();
                     return new JsonResponse(array('success' => true, 'message' => 'Se eliminó el Segmento'));
                 }
@@ -156,5 +156,5 @@ class SegmentoController extends Controller
             }
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
-    }    
+    }
 }

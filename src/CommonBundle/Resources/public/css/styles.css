@@ -4256,7 +4256,7 @@ ul.post-list .post-image {
 }
 /* line 85, ../sass/partials/_buttons.scss */
 .btn-blue.disabled:hover, .btn-blue.disabled:focus, .btn-blue.disabled:active, .btn-blue.disabled.active, .btn-blue[disabled]:hover, .btn-blue[disabled]:focus, .btn-blue[disabled]:active, .btn-blue[disabled].active, fieldset[disabled] .btn-blue:hover, fieldset[disabled] .btn-blue:focus, fieldset[disabled] .btn-blue:active, fieldset[disabled] .btn-blue.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: #f8fafb;
   color: #ffffff;
 }
@@ -4283,7 +4283,7 @@ ul.post-list .post-image {
 }
 /* line 108, ../sass/partials/_buttons.scss */
 .btn-light-blue.disabled:hover, .btn-light-blue.disabled:focus, .btn-light-blue.disabled:active, .btn-light-blue.disabled.active, .btn-light-blue[disabled]:hover, .btn-light-blue[disabled]:focus, .btn-light-blue[disabled]:active, .btn-light-blue[disabled].active, fieldset[disabled] .btn-light-blue:hover, fieldset[disabled] .btn-light-blue:focus, fieldset[disabled] .btn-light-blue:active, fieldset[disabled] .btn-light-blue.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -4418,7 +4418,7 @@ ul.post-list .post-image {
 }
 /* line 223, ../sass/partials/_buttons.scss */
 .btn-orange.disabled:hover, .btn-orange.disabled:focus, .btn-orange.disabled:active, .btn-orange.disabled.active, .btn-orange[disabled]:hover, .btn-orange[disabled]:focus, .btn-orange[disabled]:active, .btn-orange[disabled].active, fieldset[disabled] .btn-orange:hover, fieldset[disabled] .btn-orange:focus, fieldset[disabled] .btn-orange:active, fieldset[disabled] .btn-orange.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -4445,7 +4445,7 @@ ul.post-list .post-image {
 }
 /* line 246, ../sass/partials/_buttons.scss */
 .btn-light-orange.disabled:hover, .btn-light-orange.disabled:focus, .btn-light-orange.disabled:active, .btn-light-orange.disabled.active, .btn-light-orange[disabled]:hover, .btn-light-orange[disabled]:focus, .btn-light-orange[disabled]:active, .btn-light-orange[disabled].active, fieldset[disabled] .btn-light-orange:hover, fieldset[disabled] .btn-light-orange:focus, fieldset[disabled] .btn-light-orange:active, fieldset[disabled] .btn-light-orange.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -4472,7 +4472,7 @@ ul.post-list .post-image {
 }
 /* line 269, ../sass/partials/_buttons.scss */
 .btn-dark-orange.disabled:hover, .btn-dark-orange.disabled:focus, .btn-dark-orange.disabled:active, .btn-dark-orange.disabled.active, .btn-dark-orange[disabled]:hover, .btn-dark-orange[disabled]:focus, .btn-dark-orange[disabled]:active, .btn-dark-orange[disabled].active, fieldset[disabled] .btn-dark-orange:hover, fieldset[disabled] .btn-dark-orange:focus, fieldset[disabled] .btn-dark-orange:active, fieldset[disabled] .btn-dark-orange.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
@@ -4499,7 +4499,7 @@ ul.post-list .post-image {
 }
 /* line 292, ../sass/partials/_buttons.scss */
 .btn-red.disabled:hover, .btn-red.disabled:focus, .btn-red.disabled:active, .btn-red.disabled.active, .btn-red[disabled]:hover, .btn-red[disabled]:focus, .btn-red[disabled]:active, .btn-red[disabled].active, fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[disabled] .btn-red:active, fieldset[disabled] .btn-red.active {
-  background-color: white;
+  /*background-color: white;*/
   border-color: white;
   color: #ffffff;
 }
