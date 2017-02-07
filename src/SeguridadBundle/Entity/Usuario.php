@@ -92,8 +92,8 @@ class Usuario implements AdvancedUserInterface, \Serializable
     private $perfil;
     
     /**
-     * @ORM\OneToOne(targetEntity="CommonBundle\Entity\Persona", inversedBy="usuario", cascade={"persist"})
-     * @ORM\JoinColumn(name="persona_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="CommonBundle\Entity\Persona", inversedBy="usuario", cascade={"all"})
+     * @ORM\JoinColumn(name="persona_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $persona;
     
@@ -709,5 +709,13 @@ class Usuario implements AdvancedUserInterface, \Serializable
     public function getAvatar()
     {
         return $this->getPersona()->getAvatar();
+    }
+    
+    public function clearPersona()
+    {
+        $this->persona->clearUsuario();
+        $this->persona = NULL;
+        
+        return $this;
     }
 }

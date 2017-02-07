@@ -707,4 +707,11 @@ class Persona
     {
         return $this->email;
     }
+    
+    public function clearUsuario()
+    {
+        $this->usuario = NULL;
+        
+        return $this;
+    }
 }

@@ -289,4 +289,36 @@ class UsuarioController extends Controller
             'form'   => $form->createView(),
         );
     }
+    
+     /**
+     * @Route("/{user}/eliminar", name="user_eliminar", condition="request.isXmlHttpRequest()")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Method({"POST"})
+     * 
+     */
+    public function eliminarAction(Request $request,Usuario $user)
+    {
+        if($user->getLastActivity())
+        {
+            return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al eliminar el usuario, el mismo registra actividad'));
+        }
+        
+        $em  = $this->getDoctrine()->getManager();
+
+        foreach($user->getLogs() as $log)
+        {
+            $em->remove($log);
+        }
+        $em->flush();
+        
+        $em->remove($user);
+        
+        try{
+            $em->flush();
+            return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario eliminado con éxito'));
+        }
+        catch(\Exception $e ){
+             return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al eliminar el usuario' . $e->getMessage()));
+        }
+    }
 }
