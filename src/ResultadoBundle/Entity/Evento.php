@@ -307,39 +307,6 @@ class Evento
     }
 
     /**
-     * Add inscriptos
-     *
-     * @param \InscripcionBundle\Entity\Inscripto $inscriptos
-     * @return Evento
-     */
-    public function addInscripto(\InscripcionBundle\Entity\Inscripto $inscriptos)
-    {
-        $this->inscriptos[] = $inscriptos;
-
-        return $this;
-    }
-
-    /**
-     * Remove inscriptos
-     *
-     * @param \InscripcionBundle\Entity\Inscripto $inscriptos
-     */
-    public function removeInscripto(\InscripcionBundle\Entity\Inscripto $inscriptos)
-    {
-        $this->inscriptos->removeElement($inscriptos);
-    }
-
-    /**
-     * Get inscriptos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getInscriptos()
-    {
-        return $this->inscriptos;
-    }
-
-    /**
      * Set torneo
      *
      * @param \ResultadoBundle\Entity\Torneo $torneo
