@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use ResultadoBundle\Entity\Evento;
-use CommonBundle\Entity\Partido;
+use CommonBundle\Entity\Municipio;
 
 /**
  * Default controller.

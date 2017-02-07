@@ -3,7 +3,7 @@
 namespace AcreditacionBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CommonBundle\Entity\Partido;
+use CommonBundle\Entity\Municipio;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,7 +40,7 @@ class DatosOperativo {
     /**
      * @var  Partido $idaOrigen
      * 
-     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="idaOrigen", referencedColumnName="id", nullable=true)
      */
     private $idaOrigen;
@@ -55,7 +55,7 @@ class DatosOperativo {
     /**
      * @var  Partido $regresoDestino
      * 
-     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="regresoDestino", referencedColumnName="id", nullable=true)
      */
     private $regresoDestino;
@@ -472,10 +472,10 @@ class DatosOperativo {
     /**
      * Set idaOrigen
      *
-     * @param \CommonBundle\Entity\Partido $idaOrigen
+     * @param \CommonBundle\Entity\Municipio $idaOrigen
      * @return DatosOperativo
      */
-    public function setIdaOrigen(\CommonBundle\Entity\Partido $idaOrigen = null) {
+    public function setIdaOrigen(\CommonBundle\Entity\Municipio $idaOrigen = null) {
         $this->idaOrigen = $idaOrigen;
 
         return $this;
@@ -484,7 +484,7 @@ class DatosOperativo {
     /**
      * Get idaOrigen
      *
-     * @return \CommonBundle\Entity\Partido 
+     * @return \CommonBundle\Entity\Municipio 
      */
     public function getIdaOrigen() {
         return $this->idaOrigen;
@@ -493,10 +493,10 @@ class DatosOperativo {
     /**
      * Set regresoDestino
      *
-     * @param \CommonBundle\Entity\Partido $regresoDestino
+     * @param \CommonBundle\Entity\Municipio $regresoDestino
      * @return DatosOperativo
      */
-    public function setRegresoDestino(\CommonBundle\Entity\Partido $regresoDestino = null) {
+    public function setRegresoDestino(\CommonBundle\Entity\Municipio $regresoDestino = null) {
         $this->regresoDestino = $regresoDestino;
 
         return $this;
@@ -505,7 +505,7 @@ class DatosOperativo {
     /**
      * Get regresoDestino
      *
-     * @return \CommonBundle\Entity\Partido 
+     * @return \CommonBundle\Entity\Municipio 
      */
     public function getRegresoDestino() {
         return $this->regresoDestino;

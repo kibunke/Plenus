@@ -29,7 +29,7 @@ class PartidoType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CommonBundle\Entity\Partido'
+            'data_class' => 'CommonBundle\Entity\Municipio'
         ));
     }
 

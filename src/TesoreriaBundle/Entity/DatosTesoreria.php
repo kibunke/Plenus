@@ -62,7 +62,7 @@ class DatosTesoreria {
     /**
      * @var Partido $pagoPartido
      * 
-     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="pagoPartido", referencedColumnName="id")
      * @Assert\NotNull(groups={"datosTesoreria"})
      */
@@ -396,10 +396,10 @@ class DatosTesoreria {
     /**
      * Set pagoPartido
      *
-     * @param \CommonBundle\Entity\Partido $pagoPartido
+     * @param \CommonBundle\Entity\Municipio $pagoPartido
      * @return DatosTesoreria
      */
-    public function setPagoPartido(\CommonBundle\Entity\Partido $pagoPartido = null)
+    public function setPagoPartido(\CommonBundle\Entity\Municipio $pagoPartido = null)
     {
         $this->pagoPartido = $pagoPartido;
 

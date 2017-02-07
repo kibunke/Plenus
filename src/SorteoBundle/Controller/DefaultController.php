@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use CommonBundle\PDFs\DocumentoPDF;
 
 use ResultadoBundle\Entity\Evento;
-use CommonBundle\Entity\Partido;
+use CommonBundle\Entity\Municipio;
 
 /**
  * Default controller.

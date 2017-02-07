@@ -229,10 +229,10 @@ abstract class Origen
     /**
      * Set municipio
      *
-     * @param \CommonBundle\Entity\Partido $municipio
+     * @param \CommonBundle\Entity\Municipio $municipio
      * @return Origen
      */
-    public function setMunicipio(\CommonBundle\Entity\Partido $municipio = null)
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
     {
         $this->municipio = $municipio;
 
@@ -242,7 +242,7 @@ abstract class Origen
     /**
      * Get municipio
      *
-     * @return \CommonBundle\Entity\Partido 
+     * @return \CommonBundle\Entity\Municipio 
      */
     public function getMunicipio()
     {
