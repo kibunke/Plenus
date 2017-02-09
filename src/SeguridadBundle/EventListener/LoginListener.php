@@ -50,7 +50,7 @@ class LoginListener //implements AuthenticationSuccessHandlerInterface
 			//Redirect to logout by Inactive User
 			$log->setActivityGroup('loginFailure')->setActivity('userInactive')->setDescription('This user isnt active');
 			$request->getSession()->set(Security::AUTHENTICATION_ERROR, (object) array('message' => 'Usuario inactivo'));
-			$request->getSession()->getFlashBag()->add('error', 'Usuario inactivo.');
+			$request->getSession()->getFlashBag()->add('error', 'Usuario inactivo. En el email que recibió al registrarse se indico como es el proceso de alta.');
 			$error = true;
 		}
 		$this->em->persist($log);

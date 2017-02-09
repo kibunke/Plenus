@@ -47,7 +47,7 @@ class Municipio
     /**
      * @var string
      *
-     * @ORM\Column(name="cruceRegional", type="string", length=10)
+     * @ORM\Column(name="cruceRegional", type="string", length=10, nullable=true)
      */
     private $cruceRegional;
     
