@@ -69,11 +69,11 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "municipio.id" },
+                        { "data": "municipio.id", "className": "text-center" },
                         { "data": "municipio.nombre" },
-                        { "data": "municipio.seccionElectoral" },
-                        { "data": "municipio.regionDeportiva" },
-                        { "data": "municipio.cruceRegional" },
+                        { "data": "municipio.seccionElectoral", "className": "text-center" },
+                        { "data": "municipio.regionDeportiva", "className": "text-center" },
+                        { "data": "municipio.cruceRegional", "className": "text-center" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -84,8 +84,8 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [4,5]
-                        },
+                            "targets": [5]
+                        }
                     ],
                     "initComplete": function( oSettings ) {}
                 });

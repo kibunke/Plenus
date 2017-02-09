@@ -23,8 +23,12 @@ class MunicipioRepository extends EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva",""];
-        $where = "( m.id LIKE ?1 OR m.nombre LIKE ?1 OR m.regionDeportiva LIKE ?1 OR m.seccionElectoral LIKE ?1)";
+        $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva","m.cruceRegional"];
+        $where = "( m.id LIKE ?1 OR
+                    m.nombre LIKE ?1 OR
+                    m.regionDeportiva LIKE ?1 OR
+                    m.seccionElectoral LIKE ?1 OR
+                    m.cruceRegional LIKE ?1)";
                 
         return $this->getEntityManager()
                         ->createQuery(" SELECT m
@@ -39,8 +43,12 @@ class MunicipioRepository extends EntityRepository
     
     public function getFilteredRows($request)
     {
-        $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva",""];
-        $where = "( m.id LIKE ?1 OR m.nombre LIKE ?1 OR m.regionDeportiva LIKE ?1 OR m.seccionElectoral LIKE ?1)";
+        $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva","m.cruceRegional"];
+        $where = "( m.id LIKE ?1 OR
+                    m.nombre LIKE ?1 OR
+                    m.regionDeportiva LIKE ?1 OR
+                    m.seccionElectoral LIKE ?1 OR
+                    m.cruceRegional LIKE ?1)";
                 
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(m)
