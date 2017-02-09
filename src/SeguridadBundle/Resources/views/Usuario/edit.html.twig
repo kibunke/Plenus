@@ -209,43 +209,42 @@
 						</div>
 						<div id="panel_edit_account" class="tab-pane fade">
 							{{form_start(form, {'attr': {'id': 'form_user_edit'}}) }}
-								<div class="row">
-									<div class="col-md-12">
-										<h3>Información de la Cuenta</h3>
-										<hr>
+								<div class="col-md-12 no-padding">
+									<h3><i class="fa fa-edit"></i>Información de la Cuenta</h3>
+									<hr>
+								</div>
+								<div class="col-sm-6 padding-horizontal-20">
+									<div class="form-group">
+										<label class="control-label">Nombre</label>
+										<input disabled type="text" class="form-control" value="{{entity.persona.nombre}}">
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">Nombre</label>
-											<strong>{{entity.persona.nombre}}</strong>
-										</div>
-										<div class="form-group">
-											<label class="control-label">Apellido</label>
-											<strong>{{entity.persona.apellido}}</strong>
-										</div>
-										<div class="form-group">
-											<label class="control-label">Email</label>
-											<strong>{{entity.persona.email}}</strong>
-										</div>
-										<div class="form-group">
-											<label class="control-label">Teléfono</label>
-											<strong>{{entity.persona.telefono}}</strong>
-										</div>
-										<div class="form-group">
-											<label class="control-label">Password</label>
-											<input type="password" placeholder="password" class="form-control" name="password" id="password">
-										</div>
-										<div class="form-group">
-											<label class="control-label">Confirmar Password</label>
-											<input type="password" placeholder="password" class="form-control" id="password_confirm" name="password_confirm">
-										</div>
-										<div class="form-group">
-											<label class="control-label">Perfil</label>
-											{{form_widget(form.perfil)}}
-											{{form_errors(form.perfil)}}
-										</div>
+									<div class="form-group">
+										<label class="control-label">Apellido</label>
+										<input disabled type="text" class="form-control" value="{{entity.persona.apellido}}">
 									</div>
-								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label">Email</label>
+										<input disabled type="text" class="form-control" value="{{entity.persona.email}}">
+									</div>
+									<div class="form-group">
+										<label class="control-label">Teléfono</label>
+										<input disabled type="text" class="form-control" value="{{entity.persona.telefono}}">
+									</div>
+									<div class="form-group">
+										<label class="control-label">Password</label>
+										<input type="password" placeholder="password" class="form-control" name="password" id="password">
+									</div>
+									<div class="form-group">
+										<label class="control-label">Confirmar Password</label>
+										<input type="password" placeholder="password" class="form-control" id="password_confirm" name="password_confirm">
+									</div>
+									<div class="form-group">
+										<label class="control-label">Perfil</label>
+										{{form_widget(form.perfil)}}
+										{{form_errors(form.perfil)}}
+									</div>
+								</div>
+								<div class="col-sm-6 padding-horizontal-20">
 									<div class="form-group">
 										<label>Avatar</label>
 										<div class="fileupload fileupload-new" data-provides="fileupload">

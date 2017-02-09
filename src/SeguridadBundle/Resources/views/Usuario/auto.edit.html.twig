@@ -60,160 +60,161 @@
 {% block contenidoData %}
 	{% set persona = entity.persona %}
     <!-- start: PAGE CONTENT -->
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="tabbable">
-					<ul class="nav nav-tabs tab-padding tab-space-3 tab-blue" id="myTab4">
-						<li class="active">
-							<a data-toggle="tab" href="#panel_overview">Vista General</a>
-						</li>
-						<li>
-							<a data-toggle="tab" href="#panel_edit_account">Editar Cuenta</a>
-						</li>
-					</ul>
-					<div class="tab-content">
-						<div id="panel_overview" class="tab-pane fade in active">
-							<div class="row">
-								<div class="col-sm-6 col-md-4">
-									<div class="user-left">
-										<div class="center">
-											<h4>{{persona.apellido ~ ', ' ~ persona.nombre}}</h4>
-												<a href="#panel_edit_account" class="thumbnail show-tab">
-													<img src="{{persona.avatar}}" alt="" style="height: 300px;">
-												</a>
-											<hr>
-											<div class="social-icons block">
-												<ul>
-													<li data-placement="top" data-original-title="Twitter" class="social-twitter tooltips">
-														<a href="https://www.twitter.com/{% if persona.twitter %}{{persona.twitter}}{% endif %}" target="_blank">Twitter</a>
-													</li>
-													<li data-placement="top" data-original-title="Facebook" class="social-facebook tooltips">
-														<a href="https://www.facebook.com/{% if persona.facebook %}{{persona.facebook}}{% endif %}" target="_blank">Facebook</a>
-													</li>
-													<li data-placement="top" data-original-title="Skype" class="social-skype tooltips">
-														<a href="https://www.skype.com" target="_blank">Skype</a>
-													</li>
-													<li data-placement="top" data-original-title="LinkedIn" class="social-linkedin tooltips">
-														<a href="https://www.linkedin.com/{% if persona.linkedin %}in/{{persona.linkedin}}{% endif %}" target="_blank">LinkedIn</a>
-													</li>
-												</ul>
-											</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="tabbable">
+				<ul class="nav nav-tabs tab-padding tab-space-3 tab-blue" id="myTab4">
+					<li class="active">
+						<a data-toggle="tab" href="#panel_overview">Vista General</a>
+					</li>
+					<li>
+						<a data-toggle="tab" href="#panel_edit_account">Editar Cuenta</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div id="panel_overview" class="tab-pane fade in active">
+						<div class="row">
+							<div class="col-sm-6 col-md-4">
+								<div class="user-left">
+									<div class="center">
+										<h4>{{persona.apellido ~ ', ' ~ persona.nombre}}</h4>
+											<a href="#panel_edit_account" class="thumbnail show-tab">
+												<img src="{{persona.avatar}}" alt="" style="height: 300px;">
+											</a>
+										<hr>
+										<div class="social-icons block">
+											<ul>
+												<li data-placement="top" data-original-title="Twitter" class="social-twitter tooltips">
+													<a href="https://www.twitter.com/{% if persona.twitter %}{{persona.twitter}}{% endif %}" target="_blank">Twitter</a>
+												</li>
+												<li data-placement="top" data-original-title="Facebook" class="social-facebook tooltips">
+													<a href="https://www.facebook.com/{% if persona.facebook %}{{persona.facebook}}{% endif %}" target="_blank">Facebook</a>
+												</li>
+												<li data-placement="top" data-original-title="Skype" class="social-skype tooltips">
+													<a href="https://www.skype.com" target="_blank">Skype</a>
+												</li>
+												<li data-placement="top" data-original-title="LinkedIn" class="social-linkedin tooltips">
+													<a href="https://www.linkedin.com/{% if persona.linkedin %}in/{{persona.linkedin}}{% endif %}" target="_blank">LinkedIn</a>
+												</li>
+											</ul>
 										</div>
-										<table class="table table-condensed table-hover">
-											<thead>
-												<tr>
-													<th colspan="2"><i class="fa fa-address-book fa-lg"></i> Información de Contacto</th>
-													<th><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>email:</td>
-													<td colspan="2"><small>{{persona.email}}</small></td>
-												</tr>
-												<tr>
-													<td>teléfono:</td>
-													<td colspan="2">{{persona.telefono}}</td>
-												</tr>
-												<tr>
-													<td>skype:</td>
-													<td colspan="2">{{persona.skype}}</td>
-												</tr>
-												<tr>
-													<td>facebook:</td>
-													<td colspan="2">{{persona.facebook}}</td>
-												</tr>
-												<tr>
-													<td>linkedin:</td>
-													<td colspan="2">{{persona.linkedin}}</td>
-												</tr>
-												<tr>
-													<td>Twitter</td>
-													<td colspan="2">{{persona.twitter}}</td>
-												</tr>
-											</tbody>
-										</table>
-										<table class="table table-condensed table-hover">
-											<thead>
-												<tr>
-													<th colspan="3">Información General</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Perfil</td>
-													<td colspan="2">{{entity.perfil}}</td>
-												</tr>
-												<tr>
-													<td>Última Actividad</td>
-													<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
-												</tr>
-											</tbody>
-										</table>
-										<table class="table table-condensed table-hover">
-											<thead>
-												<tr>
-													<th colspan="2">Información Adicional</th>
-													<th><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Nacimiento</td>
-													<td>{% if persona.fNacimiento %}{{persona.fNacimiento| date('d/m/Y')}}{% endif %}</td>
-												</tr>
-											</tbody>
-										</table>
 									</div>
+									<table class="table table-condensed table-hover">
+										<thead>
+											<tr>
+												<th colspan="2">
+													<i class="fa fa-address-book fa-lg"></i> Información de Contacto
+													<a href="#panel_edit_account" class="show-tab pull-right"><i class="fa fa-pencil edit-user-info"></i></a>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>email:</td>
+												<td colspan="2"><small>{{persona.email}}</small></td>
+											</tr>
+											<tr>
+												<td>teléfono:</td>
+												<td colspan="2">{{persona.telefono}}</td>
+											</tr>
+											<tr>
+												<td>skype:</td>
+												<td colspan="2">{{persona.skype}}</td>
+											</tr>
+											<tr>
+												<td>facebook:</td>
+												<td colspan="2">{{persona.facebook}}</td>
+											</tr>
+											<tr>
+												<td>linkedin:</td>
+												<td colspan="2">{{persona.linkedin}}</td>
+											</tr>
+											<tr>
+												<td>Twitter</td>
+												<td colspan="2">{{persona.twitter}}</td>
+											</tr>
+										</tbody>
+									</table>
+									<table class="table table-condensed table-hover">
+										<thead>
+											<tr>
+												<th colspan="3">Información General</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Perfil</td>
+												<td colspan="2">{{entity.perfil}}</td>
+											</tr>
+											<tr>
+												<td>Última Actividad</td>
+												<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
+											</tr>
+										</tbody>
+									</table>
+									<table class="table table-condensed table-hover">
+										<thead>
+											<tr>
+												<th colspan="2">Información Adicional</th>
+												<th><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Nacimiento</td>
+												<td>{% if persona.fNacimiento %}{{persona.fNacimiento| date('d/m/Y')}}{% endif %}</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
-						<div id="panel_edit_account" class="tab-pane fade">
-							{{form_start(form, {'attr': {'id': 'form_user_auto_edit'}}) }}
-							<div class="row">
-								<div class="col-md-12">
-									<h3>Información de la Cuenta</h3>
-									<hr>
+					</div>
+					<div id="panel_edit_account" class="tab-pane fade">
+						{{form_start(form, {'attr': {'id': 'form_user_auto_edit'}}) }}
+							<div class="col-md-12">
+								<h3><i class="fa fa-edit"></i>Información de la Cuenta</h3>
+								<hr>
+							</div>
+							<div class="col-md-6 padding-horizontal-20">
+								<div class="form-group">
+									<label class="control-label col-md-3">Nombre</label>
+									<div class="col-md-9">{{form_widget(form.persona.nombre)}}</div>
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label col-md-3">Nombre</label>
-										<div class="col-md-9">{{form_widget(form.persona.nombre)}}</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Apellido</label>
-										<div class="col-md-9">{{form_widget(form.persona.apellido)}}</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Email</label>
-										<div class="col-md-9">{{form_widget(form.persona.email)}}</div>															
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Teléfono</label>
-										<div class="col-md-9">{{form_widget(form.persona.telefono)}}</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Municipio</label>
-										<div class="col-md-9"><strong>{{persona.municipio}}</strong></div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Fecha de Nacimiento</label>
-										<div class="col-md-9">{{form_widget(form.persona.fNacimiento)}}</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Facebook</label>
-										<div class="col-md-9">{{form_widget(form.persona.facebook)}}</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Skype</label>
-										<div class="col-md-9">{{form_widget(form.persona.skype)}}</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Twitter</label>
-										<div class="col-md-9">{{form_widget(form.persona.twitter)}}</div>
-									</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Apellido</label>
+									<div class="col-md-9">{{form_widget(form.persona.apellido)}}</div>
 								</div>
-							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label col-md-3">Email</label>
+									<div class="col-md-9">{{form_widget(form.persona.email)}}</div>															
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Teléfono</label>
+									<div class="col-md-9">{{form_widget(form.persona.telefono)}}</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Municipio</label>
+									<div class="col-md-9"><input disabled type="text" class="form-control" value="{{persona.municipio}}"></div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Fecha de Nacimiento</label>
+									<div class="col-md-9">{{form_widget(form.persona.fNacimiento)}}</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Facebook</label>
+									<div class="col-md-9">{{form_widget(form.persona.facebook)}}</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Skype</label>
+									<div class="col-md-9">{{form_widget(form.persona.skype)}}</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">Twitter</label>
+									<div class="col-md-9">{{form_widget(form.persona.twitter)}}</div>
+								</div>
+							</div>
+							<div class="col-md-6 padding-horizontal-20">
 								<div class="form-group">
 									<label class="control-label col-md-3">Linkedin</label>
 									<div class="col-md-9">{{form_widget(form.persona.linkedin)}}</div>
