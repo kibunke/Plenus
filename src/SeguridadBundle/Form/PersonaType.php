@@ -12,62 +12,21 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class PersonaType extends AbstractType
+class PersonaType extends PersonaCheckDataType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('email', EmailType::class, array('attr' => array('placeholder' => 'casilla@email.com')))
-            //->add('municipio', EntityType::class, array(
-            //                            'class' => 'CommonBundle:Municipio',
-            //                            'query_builder' => function (EntityRepository $er) {
-            //                                return $er->createQueryBuilder('p')
-            //                                    ->where('p.provincia = 1')
-            //                                    ->orderBy('p.nombre', 'ASC');
-            //                            },
-            //                            'choice_label' => 'nombre',
-            //                            'placeholder' => 'Seleccione su municipio'
-            //                        )
-            //    )
-            ->add('fNacimiento', DateType::class, array(
-                                                         'attr'    => array(
-                                                                            'placeholder' => 'Fecha de Nacimiento',
-                                                                            'class'       => 'datetimepicker'
-                                                                           ),
-                                                         'widget'   => 'single_text',
-                                                         'format'   => 'dd/MM/yyyy',
-                                                         'required' => false
-                                                        )
-                 )
-            ->add('telefono', TextType::class, array(
-                                                      'attr' => array('placeholder' => 'Teléfono'),
-                                                      'required' => false
-                                                     )
-                  )
-            ->add('facebook', TextType::class, array(
-                                                     'attr' => array('placeholder' => 'Cuenta de Facebook'),
-                                                     'required' => false
-                                                     )
-                  )
-            ->add('skype', TextType::class, array(
-                                                  'attr' => array('placeholder' => 'Cuenta de Skype'),
-                                                  'required' => false,
-                                                  )
-                  )
-            ->add('twitter', TextType::class, array(
-                                                    'attr' => array('placeholder' => 'Cuenta de Twitter'),
-                                                    'required' => false
-                                                    )
-                  )
-            ->add('linkedin', TextType::class, array(
-                                                     'attr' => array('placeholder' => 'Cuenta de Linkedin'),
-                                                     'required' => false)
-                  )
-            ->add('avatar', TextType::class, array(
-                                                   'attr' => array('placeholder' => 'Cuenta de Linkedin'),
-                                                   'required' => false)
-                  )
-        ;
+            $builder->add('avatar', TextType::class, array(
+                                                'attr' => array('placeholder' => 'Cuenta de Linkedin'),
+                                                'required' => false)
+                         )
+                    ->add('email', EmailType::class, array('attr' => array('placeholder' => 'casilla@email.com'))
+            
+            
+            );
+            
+            return parent::buildForm($builder,$options);
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -75,5 +34,5 @@ class PersonaType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'CommonBundle\Entity\Persona',
         ));
-    }    
+    }
 }

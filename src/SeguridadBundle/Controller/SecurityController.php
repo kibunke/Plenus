@@ -321,13 +321,15 @@ class SecurityController extends Controller
      */
     public function newAccountAction(Request $request)
     {
-        if ($this->get('app.plenusConfig')->isNewAccountActive()){
+        if ($this->get('app.plenusConfig')->isNewAccountActive())
+        {
             $em = $this->getDoctrine()->getManager();
             $user = new Usuario();
             $form = $this->createForm(UsuarioType::class, $user);
             //$form = $this->createNewAccountForm($user);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid())
+            {
                 $newPassword = $this->resetPassword($user);
                         
                 $message = \Swift_Message::newInstance()
