@@ -64,7 +64,7 @@ class LoginListener //implements AuthenticationSuccessHandlerInterface
 		}
 		// if error invalidate session token  
 		if ($error){
-			$this->securityContext->setToken(null);
+			//$this->securityContext->setToken(null);
 			//don't must invalidate all session because it's have flash messages
 			//$request->getSession()->invalidate();
 		}
