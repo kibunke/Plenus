@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use SeguridadBundle\Form\UsuarioType;
 use SeguridadBundle\Form\UsuarioAdminType;
 use SeguridadBundle\Form\UsuarioEditType;
+use SeguridadBundle\Form\UsuarioCheckDataType;
 use SeguridadBundle\Entity\Usuario;
 
 /**
@@ -32,7 +33,32 @@ class UsuarioController extends Controller
      */
     public function checkUserDataAction(Request $request)
     {
-        return array();
+        $user = $this->getUser();
+        $form = $this->createForm(UsuarioCheckDataType::class, $user);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em  = $this->getDoctrine()->getManager();
+            $user->setCheckData(false)
+                 ->setUpdatedBy($user)
+                 ;
+            
+            try{
+                $em->flush();
+                $this->addFlash('success','Usuario completado con éxito');
+                return $this->redirectToRoute('homepage');
+            }
+            catch(\Exception $e ){
+                 $this->addFlash('error','Error al completar los datos de usuario');
+            }
+        }
+        
+        return array(
+            'entity' => $user,
+            'form'   => $form->createView(),
+        );
     }
 
     /**
@@ -226,9 +252,15 @@ class UsuarioController extends Controller
            
         $user->setIsActive(true);    
         $user->setUpdatedBy($this->getUser());
-  
+        $message = \Swift_Message::newInstance()
+                   ->setSubject("PLENUS - Cuenta activada del usuario: " . $user->getUsername())
+                   ->setFrom($this->container->getParameter('mail_from_no_reply'))
+                   ->setTo($user->getEmail())
+                   ->setBody($this->renderView('SeguridadBundle:Usuario:cuenta.activada.email.html.twig', array()),'text/html')
+                   ;
         try{
             $em->flush();
+            $this->get('mailer')->send($message);
             return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario activado con éxito'));
         }
         catch(\Exception $e ){
@@ -281,7 +313,19 @@ class UsuarioController extends Controller
                 $this->addFlash('success', "Usuario ". $user->getUsername() . " modificado con éxito");
             }
             catch(\Exception $e ){
-                $this->addFlash('error', "El usuario ". $user->getUsername() . " no pudo ser modificado");
+                
+                if(strpos($e->getMessage(), 'unique_dni') !== false)
+                {
+                    $error = 'Ya existe un usuario con ese tipo y número de documento.';
+                }else{
+                    if(strpos($e->getMessage(), 'unique_email') !== false)
+                    {
+                        $error = 'Ya existe un usuario con ese email registrado.';   
+                    }else{
+                        $error = 'Error al actualizar los datos';
+                    }
+                }
+                $this->addFlash('error', $error);
             }
         }
         return array(

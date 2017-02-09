@@ -5,16 +5,11 @@
     </div>    
     <h2>&nbsp;</h2>
     <p>Este es un mensaje enviado por Plenus desde la Sub-secretaría de Deportes de la Provincia de Buenos Aires.</p>
-    <br>
+    <h1>&nbsp;</h1>
     <p>Estimado/a :</p>
-    <p>Se inició el proceso de recupero de contraseña.</p>
-    <p>
-        Para confirmar y continuar con el proceso, ingrese al siguiente vínculo:
-        <a href="{{link}}" target="_blank" >Confirmar el recupero de clave</a>
-    </p>
-    
+    <p>Su cuenta fue activada <a href="{{ absolute_url(path('_login')) }}" target="_blank" >Ir a Plenus</a> ya puede comenzar a utilizarla</p>
     <p>Si el v&iacute;nculo no funciona, copie y pegue el siguiente link en su navegador</p>
-    <p style="max-width: 650px;overflow: hidden;">{{ link }}</p>
+    <p style="max-width: 650px;overflow: hidden;">{{ absolute_url(path('_login')) }}</p>
     <h1>&nbsp;</h1>
     <p>Este e-mail ha sido generado de manera automática. No lo responda. Ante cualquier inquietud, utilice los recursos que provee la Mesa de Ayuda.</p>
 </div>
