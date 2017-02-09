@@ -63,16 +63,30 @@ class SegmentoType extends AbstractType
                                                 'empty_data'  => null
                                             )
                   )            
-            ->add('maxIntegrantes', IntegerType::class, array("attr" => array('min' => 0)))
-            ->add('minIntegrantes', IntegerType::class, array("attr" => array('min' => 0)))
-            ->add('maxReemplazos', IntegerType::class, array("attr" => array('min' => 0)))
+            ->add('maxIntegrantes', IntegerType::class, array(
+                                                              "attr" => array('min' => 0),
+                                                              "label" => "Cantidad máxima de integrantes"
+                                                            )
+                  )
+            ->add('minIntegrantes', IntegerType::class, array(
+                                                              "attr" => array('min' => 0),
+                                                              "label" => "Cantidad mínima de integrantes"
+                                                            )
+                  )
+            ->add('maxReemplazos', IntegerType::class, array(
+                                                             "attr" => array('min' => 0),
+                                                             "label" => "Cantidad máxima de reemplazos"
+                                                            )
+                  )
             ->add('minFechaNacimiento', DateType::class, array(
+                "label" => "Fecha de nacimiento inicio",
                 'widget' => 'single_text',
                 'html5' => false,
                 'format'   => 'dd/MM/yyyy',
                 'attr' => array('class' => 'datetimepicker')
             ))
             ->add('maxFechaNacimiento', DateType::class, array(
+                "label" => "Fecha de nacimiento fin",
                 'widget' => 'single_text',
                 'html5' => false,
                 'format'   => 'dd/MM/yyyy',
