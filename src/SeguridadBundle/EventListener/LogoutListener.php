@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Doctrine\ORM\EntityManager;
 use SeguridadBundle\Entity\Log;
-
+//handlers: [mybundle_logoutlistener]
 class LogoutListener implements LogoutSuccessHandlerInterface
 {
     private $security;
@@ -26,6 +26,8 @@ class LogoutListener implements LogoutSuccessHandlerInterface
     
     public function onLogoutSuccess(Request $request)
     {
+        echo "lalala";
+        die;
         //if ($this->security){
         //    $user = $this->security->getToken()->getUser();
         //    if ($user){

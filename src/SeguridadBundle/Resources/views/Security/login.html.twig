@@ -8,11 +8,6 @@
                 <h3><i class="fa fa-comments-o fa-lg"></i> Acceda a su Cuenta</h3>
                 <p class="comment">
                     Ingrese su usuario y contraseña.
-                    <br><b>Me falta el logout listener</b>
-                    <br><b>Me falta avisar si está inactivo y con quién contactarse</b>
-                    <br>{#{ path('_login') }#}
-                    
-
                 </p>
                 <div class="form">
                     <form class="form-login" action="{{ path('_security_check') }}" method="post">
@@ -41,7 +36,7 @@
                             </div>
                             
                         </div>
-                        <button type="submit" class="pull-left btn btn-primary" tabindex="4"><span class="fa fa-send"></span> Enviar</button>
+                        <button type="submit" class="pull-right btn btn-primary" tabindex="4"><span class="fa fa-send"></span> Enviar</button>
                     </form>
                 </div>
                 <div class="new-account clearboth">
