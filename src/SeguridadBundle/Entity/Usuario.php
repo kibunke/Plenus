@@ -231,7 +231,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
-            $this->isActive
+            //$this->isActive
             // see section on salt below
             // $this->salt
         ) = unserialize($serialized);
@@ -266,7 +266,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
      */     
     public function isEnabled()
     {
-        return $this->isActive;
+        return true;//$this->isActive;
     }    
 
     /**

@@ -49,6 +49,7 @@ class LoginFailureListener//  extends DefaultAuthenticationFailureHandler
 			$log->setActivity('wrongUser');
 			$log->setDescription("Intento de login con usuario incorrecto : ".$request->request->get('_username'));
 		}
+		$request->getSession()->getFlashBag()->add('error', 'Error en los datos.');
 		$this->em->persist($log);
 		$this->em->flush($log);
         return new RedirectResponse($this->router->generate('_login'));   
