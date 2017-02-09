@@ -44,11 +44,14 @@ class LoginListener //implements AuthenticationSuccessHandlerInterface
 			//Redirect to logout by Captcha error
 			$log->setActivityGroup('loginFailure')->setActivity('wrongCaptcha')->setDescription('Captcha: '.$request->getSession()->get('captcha').' Input value: '.$request->request->get('_input_captcha'));
 			$request->getSession()->set(Security::AUTHENTICATION_ERROR, (object) array('message' => 'Captcha inválido'));
+			$request->getSession()->getFlashBag()->add('error', 'Captcha inválido.');
+
 			$error = true;
 		}elseif(!$user->getIsActive()){
 			//Redirect to logout by Inactive User
 			$log->setActivityGroup('loginFailure')->setActivity('userInactive')->setDescription('This user isnt active');
 			$request->getSession()->set(Security::AUTHENTICATION_ERROR, (object) array('message' => 'Usuario inactivo'));
+			$request->getSession()->getFlashBag()->add('error', 'Usuario inactivo.');
 			$error = true;
 		}
 		$this->em->persist($log);
