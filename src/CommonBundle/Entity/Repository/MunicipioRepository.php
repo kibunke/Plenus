@@ -23,7 +23,7 @@ class MunicipioRepository extends EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["m.id","m.nombre","m.regionDeportiva","m.seccionElectoral"];
+        $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva",""];
         $where = "( m.id LIKE ?1 OR m.nombre LIKE ?1 OR m.regionDeportiva LIKE ?1 OR m.seccionElectoral LIKE ?1)";
                 
         return $this->getEntityManager()
@@ -39,7 +39,7 @@ class MunicipioRepository extends EntityRepository
     
     public function getFilteredRows($request)
     {
-        $columns = ["m.id","m.nombre","m.regionDeportiva","m.seccionElectoral"];
+        $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva",""];
         $where = "( m.id LIKE ?1 OR m.nombre LIKE ?1 OR m.regionDeportiva LIKE ?1 OR m.seccionElectoral LIKE ?1)";
                 
         return $this->getEntityManager()
