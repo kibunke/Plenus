@@ -24,7 +24,7 @@ class SegmentoRepository extends EntityRepository
     public function getRows($request)
     {
         $columns = ["s.id",
-                    ",d.nombreRecursivo ".$request->get('order')[0]['dir'].
+                    "d.nombreRecursivo ".$request->get('order')[0]['dir'].
                     ",c.nombre ".$request->get('order')[0]['dir'].
                     ",g.nombre ".$request->get('order')[0]['dir'].
                     ",m.nombre ".$request->get('order')[0]['dir'].
