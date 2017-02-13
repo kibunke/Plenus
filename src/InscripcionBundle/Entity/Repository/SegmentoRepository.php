@@ -25,23 +25,27 @@ class SegmentoRepository extends EntityRepository
     {
         $columns = ["s.id",
                     "t.nombre ".$request->get('order')[0]['dir'].
-                    ",d.nombre ".$request->get('order')[0]['dir'].
+                    ",d.nombreRecursivo ".$request->get('order')[0]['dir'].
                     ",c.nombre ".$request->get('order')[0]['dir'].
                     ",g.nombre ".$request->get('order')[0]['dir'].
                     ",m.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
-                    "eventos"];
+                    "eventos",
+                    "coordinadores",
+                    "inscriptos"];
         $where = "( s.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
+                    d.nombreRecursivo LIKE ?1 OR
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT s, COUNT(e.id) AS HIDDEN eventos
+                        ->createQuery(" SELECT s, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores
                                         FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
                                         JOIN s.categoria c
@@ -62,6 +66,7 @@ class SegmentoRepository extends EntityRepository
         $where = "( s.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
+                    d.nombreRecursivo LIKE ?1 OR
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR

@@ -152,9 +152,9 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "torneo.id" },
+                        { "data": "torneo.id", "className": "text-center" },
                         { "data": "torneo" },
-                        { "data": "torneo.eventos" },
+                        { "data": "torneo.eventos", "className": "text-center" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -173,14 +173,6 @@
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
                                                 '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
-                                        }
-                        },
-                        {
-                            "targets": 2,
-                            "data": true,
-                            "render":   function ( data, type, full, meta ) {
-                                            return type === 'display' ?
-                                                '<div class="text-center">'+ data +'</div>':'';
                                         }
                         }
                     ],
@@ -201,9 +193,9 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "genero.id" },
+                        { "data": "genero.id", "className": "text-center" },
                         { "data": "genero" },
-                        { "data": "genero.eventos" },
+                        { "data": "genero.eventos", "className": "text-center" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -222,14 +214,6 @@
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
                                                 '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
-                                        }
-                        },
-                        {
-                            "targets": 2,
-                            "data": true,
-                            "render":   function ( data, type, full, meta ) {
-                                            return type === 'display' ?
-                                                '<div class="text-center">'+ data +'</div>':'';
                                         }
                         }
                     ],
@@ -250,9 +234,9 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "categoria.id" },
+                        { "data": "categoria.id", "className": "text-center" },
                         { "data": "categoria" },
-                        { "data": "categoria.eventos" },
+                        { "data": "categoria.eventos", "className": "text-center" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -271,14 +255,6 @@
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
                                                 '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
-                                        }
-                        },
-                        {
-                            "targets": 2,
-                            "data": true,
-                            "render":   function ( data, type, full, meta ) {
-                                            return type === 'display' ?
-                                                '<div class="text-center">'+ data +'</div>':'';
                                         }
                         }
                     ],
@@ -299,9 +275,9 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "modalidad.id" },
+                        { "data": "modalidad.id", "className": "text-center" },
                         { "data": "modalidad" },
-                        { "data": "modalidad.eventos" },
+                        { "data": "modalidad.eventos", "className": "text-center" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -320,14 +296,6 @@
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
                                                 '<div title="'+ data['descripcion'] +'">'+ data.nombre +'</div>':'';
-                                        }
-                        },
-                        {
-                            "targets": 2,
-                            "data": true,
-                            "render":   function ( data, type, full, meta ) {
-                                            return type === 'display' ?
-                                                '<div class="text-center">'+ data +'</div>':'';
                                         }
                         }
                     ],

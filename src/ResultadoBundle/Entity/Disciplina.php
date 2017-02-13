@@ -64,7 +64,14 @@ class Disciplina
      /**
      * @var boolean
      *
-     * @ORM\Column(name="nombreRecursivo", type="boolean", nullable=true)
+     * @ORM\Column(name="armarNombreRecursivo", type="boolean", nullable=true)
+     */
+    private $armarNombreRecursivo;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="nombreRecursivo", type="string", length=100)
      */
     private $nombreRecursivo;
     
@@ -114,7 +121,7 @@ class Disciplina
         $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->hijos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->createdAt = new \DateTime();
-        $this->nombreRecursivo = TRUE;
+        $this->armarNombreRecursivo = TRUE;
     }
     
     /**
@@ -449,9 +456,32 @@ class Disciplina
     }
     
     /**
+     * Set armarNombreRecursivo
+     *
+     * @param boolean $armarNombreRecursivo
+     * @return Disciplina
+     */
+    public function setrmarNombreRecursivo($armarNombreRecursivo)
+    {
+        $this->armarNombreRecursivo = $armarNombreRecursivo;
+
+        return $this;
+    }
+
+    /**
+     * Get armarNombreRecursivo
+     *
+     * @return boolean
+     */
+    public function getArmarNombreRecursivo()
+    {
+        return $this->armarNombreRecursivo;
+    }
+    
+    /**
      * Set nombreRecursivo
      *
-     * @param boolean $nombreRecursivo
+     * @param string $nombreRecursivo
      * @return Disciplina
      */
     public function setNombreRecursivo($nombreRecursivo)
@@ -462,9 +492,9 @@ class Disciplina
     }
 
     /**
-     * Get nombreRecursivo
+     * Get nombre
      *
-     * @return boolean
+     * @return string 
      */
     public function getNombreRecursivo()
     {

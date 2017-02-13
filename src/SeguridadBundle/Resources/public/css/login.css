@@ -3,7 +3,7 @@
 /* ---------------------------------------------------------------------- */
 .box-login, .box-forgot, .box-register {
     background-image: url('../images/logos/logosolojuegos.png') !important;
-    background-size: 110px 120px !important;
+    background-size: 110px auto !important;
     background-repeat: no-repeat !important;
     background-position: 98% 98% !important;
     min-width: 415px;

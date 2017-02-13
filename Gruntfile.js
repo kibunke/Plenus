@@ -21,7 +21,8 @@ module.exports = function (grunt) {
                     'js/toastr.js': 'toastr/toastr.js',
                     'js/velocity.js': 'velocity/velocity.js',
                     'js/scrollTo.js': 'jquery.scrollTo/jquery.scrollTo.js',
-                    'js/sweetalert.js': 'sweetalert/dist/sweetalert.min.js'
+                    'js/sweetalert.js': 'sweetalert/dist/sweetalert.min.js',
+                    'js/select2.js': 'select2/dist/js/select2.min.js'
                 }
             },
             stylesheets: {
@@ -33,7 +34,8 @@ module.exports = function (grunt) {
                     'css/data-tables.bootstrap.css': 'datatables.net-bs/css/dataTables.bootstrap.css',
                     'css/animate.min.css': 'animate.css/animate.min.css',
                     'css/toastr.min.css': 'toastr/toastr.min.css',
-                    'css/sweetalert.css': 'sweetalert/dist/sweetalert.css'
+                    'css/sweetalert.css': 'sweetalert/dist/sweetalert.css',
+                    'css/select2.css': 'select2/dist/css/select2.min.css'
                 }
             },
             fonts: {
@@ -74,6 +76,7 @@ module.exports = function (grunt) {
                     'web/assets/css/animate.min.css',
                     'web/assets/css/toastr.min.css',
                     'web/assets/css/sweetalert.css',
+                    'web/assets/css/select2.css',
                     'src/CommonBundle/Resources/public/css/*.css'
                 ],
                 dest: 'web/assets/css/bundled.css'
@@ -94,6 +97,7 @@ module.exports = function (grunt) {
                     'web/assets/js/sweetalert.js',
                     'web/assets/js/velocity.js',
                     'web/assets/js/scrollTo.js',
+                    'web/assets/js/select2.js',
                     //'src/CommonBundle/Resources/public/js/main.js',
                     'src/CommonBundle/Resources/public/js/*.js'
                 ],

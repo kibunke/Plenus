@@ -351,10 +351,11 @@ class EventoRepository extends EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["e.id","e.nombre,d.nombre,c.nombre,g.nombre,m.nombre"];
+        $columns = ["e.id","e.nombre,d.nombreRecursivo,c.nombre,g.nombre,m.nombre"];
         $where = "( e.id LIKE ?1 OR
                     e.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
+                    d.nombreRecursivo LIKE ?1 OR
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
@@ -381,6 +382,7 @@ class EventoRepository extends EntityRepository
         $where = "( e.id LIKE ?1 OR
                     e.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
+                    d.nombreRecursivo LIKE ?1 OR
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR

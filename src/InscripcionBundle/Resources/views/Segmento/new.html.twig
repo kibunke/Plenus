@@ -2,6 +2,48 @@
 <div class="row">
     <div class="col-sm-12">
         {{ form_start(form) }}
+            {{ form_row(form.nombre) }}
+            <div class="hidden">
+                {{ form_row(form.descripcion) }}
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    {{ form_row(form.torneo) }}
+                </div>
+                <div class="col-sm-6">
+                    {{ form_row(form.disciplina) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ form_row(form.categoria) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.genero) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.modalidad) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ form_row(form.maxIntegrantes) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.minIntegrantes) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.maxReemplazos) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    {{ form_row(form.minFechaNacimiento) }}
+                </div>
+                <div class="col-sm-6">
+                    {{ form_row(form.maxFechaNacimiento) }}
+                </div>
+            </div>
         {{ form_end(form) }}
     </div>
 </div>

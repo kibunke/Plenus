@@ -152,6 +152,27 @@ class DisciplinaController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
         );
-    }    
+    }
     
+    /**
+     * Update nombreRecursivo field of all existing Disciplina entity.
+     *
+     * @Route("/update/nombreRecursivo", name="disciplina_update_nombreRecursivo", condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
+     */
+    public function updateNombreRecursivoAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $diciplinas = $em->getRepository('ResultadoBundle:Disciplina')->findAll();
+        foreach ($diciplinas as $disciplina){
+            $disciplina->setNombreRecursivo($disciplina->getNombreCompleto());
+        }
+        try{
+            $em->flush();
+            return new JsonResponse(array('success' => true, 'message' => 'Las disciplinas fueron modificadas.'));
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+        }
+    }    
 }

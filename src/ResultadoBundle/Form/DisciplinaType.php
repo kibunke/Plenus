@@ -22,7 +22,7 @@ class DisciplinaType extends AbstractType
             ->add('nombre', TextType::class, array('required' => true))
             ->add('abreviatura')
             ->add('descripcion')
-            ->add('nombreRecursivo')
+            ->add('armarNombreRecursivo')
             ->add('eventos')
             ->add('parametros')
             ->add('padre',  EntityType::class, array(

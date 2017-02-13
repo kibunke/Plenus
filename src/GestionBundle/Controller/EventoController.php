@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use ResultadoBundle\Entity\Evento;
 use GestionBundle\Form\EventoType;
+use InscripcionBundle\Entity\Segmento;
 /**
  * Evento controller.
  *
@@ -95,6 +96,38 @@ class EventoController extends Controller
         );
     } 
     
+    /**
+     * Creates a new Evento entity.
+     *
+     * @Route("/new/from/segmento/{id}", name="evento_new_from_segmento", condition="request.isXmlHttpRequest()")
+     * @Method({"GET", "POST"})
+     * @Template("GestionBundle:Evento:new.html.twig")
+     */
+    public function newFromSegmentoAction(Request $request, Segmento $segmento)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = new Evento();
+        $form = $this->createForm(EventoType::class, $entity);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setCreatedBy($this->getUser());
+            try{
+                $em->persist($entity);
+                $em->flush();
+                return new JsonResponse(array('success' => true, 'message' => 'Se agregó el evento.'));
+            } catch (Exception $e) {
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+            }
+        }elseif(!$form->isSubmitted()){
+            $entity->setDimensionesFromSegmento($segmento);
+            $form = $this->createForm(EventoType::class, $entity);
+        }
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }    
     /**
      * Finds and displays a Evento entity.
      *

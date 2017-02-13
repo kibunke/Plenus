@@ -45,7 +45,7 @@ class Evento
     
     /**
      * @var integer $orden
-     *
+     * @Assert\NotNull()
      * @ORM\Column(name="orden", type="integer")
      */
     private $orden;
@@ -93,14 +93,9 @@ class Evento
     /**
      * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Segmento", inversedBy="eventos")
      * @ORM\JoinColumn(name="segmento", referencedColumnName="id")
+     * @Assert\NotNull()
      */       
     private $segmento;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
-     * @ORM\JoinTable(name="usuarios_coordina_eventos")
-     **/    
-    private $coordinadores;
     
     /**
      * @ORM\ManyToMany(targetEntity="Cronograma", mappedBy="eventos")
@@ -422,36 +417,13 @@ class Evento
     }
 
     /**
-     * Add coordinadores
-     *
-     * @param \SeguridadBundle\Entity\Usuario $coordinadores
-     * @return Evento
-     */
-    public function addCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
-    {
-        $this->coordinadores[] = $coordinadores;
-
-        return $this;
-    }
-
-    /**
-     * Remove coordinadores
-     *
-     * @param \SeguridadBundle\Entity\Usuario $coordinadores
-     */
-    public function removeCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
-    {
-        $this->coordinadores->removeElement($coordinadores);
-    }
-
-    /**
      * Get coordinadores
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
     public function getCoordinadores()
     {
-        return $this->coordinadores;
+        return $this->getSegmento()->getCoordinadores();
     }
 
     /**
@@ -723,7 +695,6 @@ class Evento
     {
         $this->etapas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cronogramas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->createdAt = new \DateTime();
     }
@@ -784,4 +755,25 @@ class Evento
     {
         return $this->segmento;
     }
+    
+    /**
+     * Set DimensionesFromSegmento
+     *
+     * @return Evento
+     */
+    public function setDimensionesFromSegmento($segmento)
+    {
+        //if ($segmento->getTorneo())
+            $this->setTorneo($segmento->getTorneo());
+        //if ($segmento->setDisciplina())
+            $this->setDisciplina($segmento->getDisciplina());
+        //if ($segmento->setCategoria())
+            $this->setCategoria($segmento->getCategoria());
+        //if ($segmento->setGenero())
+            $this->setGenero($segmento->getGenero());
+        //if ($segmento->setModalidad())
+            $this->setModalidad($segmento->getModalidad());
+        $this->setSegmento($segmento);
+        return $this;
+    }    
 }

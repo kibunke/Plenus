@@ -1,7 +1,8 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
-    <a disabled href="{{ path('segmento_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+    <button disabled class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></button>
     <button onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
     <button {% if entity.eventos | length %}disabled title="El segmento no debe tener eventos asociados"{% endif %} onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
+    <button title="Crear evento a partir de este segmento" onclick="$.Segmento.openAjaxModal('{{ path('evento_new_from_segmento', { 'id': entity.id }) }}','Nuevo Evento')" href="#" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-trophy fa fa-white"></i></button>
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">
     <div class="btn-group">
@@ -10,7 +11,7 @@
         </a>
         <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
             <li>
-                <a disabled role="menuitem" tabindex="-1" href="{{ path('segmento_show', { 'id': entity.id }) }}">
+                <a disabled role="menuitem" tabindex="-1" href="#1">
                     <i class="fa fa-eye"></i> Ver
                 </a>
             </li> 
@@ -20,15 +21,15 @@
                 </a>
             </li>
             <li>
-                <a  {% if entity.eventos | length %}
-                        disabled title="El segmento no debe tener eventos asociados"
-                    {% else %}
-                        onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')"
-                    {% endif %}
-                    role="menuitem" tabindex="-1" href="#">
-                        <i class="fa fa-times"></i> Eliminar
+                <a onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" role="menuitem" tabindex="-1" href="#">
+                    <i class="fa fa-times"></i> Eliminar
                 </a>
             </li>
+            <li>
+                <a onclick="$.Segmento.openAjaxModal('{{ path('evento_new_from_segmento', { 'id': entity.id }) }}','Nuevo Evento')" role="menuitem" tabindex="-1" href="#">
+                    <i class="fa fa-trophy"></i> Crear evento
+                </a>
+            </li>            
         </ul>
     </div>
 </div>

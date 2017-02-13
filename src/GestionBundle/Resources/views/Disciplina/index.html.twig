@@ -20,6 +20,11 @@
                             <i class="fa fa-plus"></i> NUEVA
                         </a>
                     </li>
+                    <li class="dropdown">
+                        <a href="#1" onclick="$.Default.refreshNombresRecursivos('{{ path('disciplina_update_nombreRecursivo') }}','Nueva Disciplina')">
+                            <i class="fa fa-refresh"></i> NOMBRES
+                        </a>
+                    </li>
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -116,9 +121,9 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "disciplina.id" },
+                        { "data": "disciplina.id", "className": "text-center" },
                         { "data": "disciplina" },
-                        { "data": "disciplina.eventos" },
+                        { "data": "disciplina.eventos", "className": "text-center" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -138,14 +143,6 @@
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
                                                 '<div title="'+ data.descripcion +'">'+ data.nombre +'</div>':'';
-                                        }
-                        },
-                        {
-                            "targets": 2,
-                            "data": true,
-                            "render":   function ( data, type, full, meta ) {
-                                            return type === 'display' ?
-                                                '<div class="text-center">'+ data +'</div>':'';
                                         }
                         }
                     ],
@@ -212,6 +209,44 @@
                     }
                 );
             }
+            $.Default.deleteConfirm = function(url){
+                swal({
+                    title: 'Esta seguro?',
+                    text: "La disciplina será borrada!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, borrar!'
+                },function () {
+                    $.post(url,{})
+                    .done((data)=>{
+                        if (data.success){
+                            swal('Borrado!',data.message,'success')
+                            $('#tree').jstree(true).refresh();
+                            _table.fnDraw(true);
+                        }else{
+                            swal('Cuidado!',data.message,'error')
+                        }
+                    }).fail(()=>{
+                        swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                    })
+                })
+            }
+            $.Default.refreshNombresRecursivos = function(url){
+                $.post(url,{})
+                .done((data)=>{
+                    if (data.success){
+                        swal('Actualizado!',data.message,'success')
+                        $('#tree').jstree(true).refresh();
+                        _table.fnDraw(true);
+                    }else{
+                        swal('Cuidado!',data.message,'error')
+                    }
+                }).fail(()=>{
+                    swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                })
+            }            
         })(jQuery);
         $(document).ready(function(){$.Default.init();});
     </script>

@@ -66,7 +66,15 @@ class SegmentoController extends Controller
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
                 "eventos"   => count($segmento->getEventos()),
+                "coordinadores" => count($segmento->getCoordinadores()),
                 "inscriptos"=> 0,//$user->getUsername(),
+                "parametros"=> array(
+                    "max" => $segmento->getMaxIntegrantes(),
+                    "min" => $segmento->getMinIntegrantes(),
+                    "reemplazos" => $segmento->getMaxReemplazos(),
+                    "maxFecha" => $segmento->getMaxFechaNacimiento()->format("d/m/Y"),
+                    "minFecha" => $segmento->getMinFechaNacimiento()->format("d/m/Y"),
+                ),
                 "actions"   => $this->renderView('InscripcionBundle:Segmento:actions.html.twig', array('entity' => $segmento)),
             );
         }

@@ -64,18 +64,28 @@ class SegmentoType extends AbstractType
                                             )
                   )            
             ->add('maxIntegrantes', IntegerType::class, array(
-                                                              "attr" => array('min' => 0),
-                                                              "label" => "Cantidad máxima de integrantes"
+                                                              "attr" => array(
+                                                                                'min' => 0,
+                                                                                'placeholder' => 'Máximo integrantes'
+                                                                        ),
+                                                              "label" => "Máximo"
                                                             )
                   )
             ->add('minIntegrantes', IntegerType::class, array(
-                                                              "attr" => array('min' => 0),
-                                                              "label" => "Cantidad mínima de integrantes"
+                                                              "attr" => array(
+                                                                                'min' => 0,
+                                                                                'placeholder' => 'Mínimo integrantes'
+                                                                        ),
+                                                              "label" => "Mínimo"
                                                             )
                   )
             ->add('maxReemplazos', IntegerType::class, array(
-                                                             "attr" => array('min' => 0),
-                                                             "label" => "Cantidad máxima de reemplazos"
+                                                             "attr" => array(
+                                                                                'min' => 0,
+                                                                                'placeholder' => 'Máximo reemplazos'
+                                                                        ),
+                                                             
+                                                             "label" => "Reemplazos"
                                                             )
                   )
             ->add('minFechaNacimiento', DateType::class, array(
@@ -92,6 +102,24 @@ class SegmentoType extends AbstractType
                 'format'   => 'dd/MM/yyyy',
                 'attr' => array('class' => 'datetimepicker')
             ))
+            ->add('coordinadores', EntityType::class, array(
+                                                'class' => 'SeguridadBundle:Usuario',
+                                                'choice_label' => 'nombreCompleto',
+                                                'query_builder' => function(\Doctrine\ORM\EntityRepository $er )
+                                                                    {
+                                                                        return $er->createQueryBuilder('u')
+                                                                                    ->join('u.persona','p')
+                                                                                    ->join('u.perfil','perf')
+                                                                                    ->where('perf.name = :perf AND u.isActive = :active')
+                                                                                    ->orderby('p.apellido','ASC')
+                                                                                    ->setParameter('perf', 'Coordinador')
+                                                                                    ->setParameter('active', true);
+                                                                    },
+                                                'multiple' => true,
+                                                'required' => false,
+                                                'empty_data'  => null
+                                            )
+                  )            
         ;
     }
 

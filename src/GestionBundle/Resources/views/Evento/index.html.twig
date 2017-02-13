@@ -114,8 +114,8 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "evento.id" },
-                        { "data": "evento.orden" },
+                        { "data": "evento.id", "className": "text-center" },
+                        { "data": "evento.orden", "className": "text-center" },
                         { "data": "evento" },
                         { "data": "actions" }
                     ],
@@ -136,15 +136,7 @@
                                             return type === 'display' ?
                                                 '<div title="'+ data.descripcion +'">'+ data.nombre +'</div>':'';
                                         }
-                        },
-                        //{
-                        //    "targets": 2,
-                        //    "data": true,
-                        //    "render":   function ( data, type, full, meta ) {
-                        //                    return type === 'display' ?
-                        //                        '<div class="text-center">'+ data +'</div>':'';
-                        //                }
-                        //}
+                        }
                     ]
                 });
             }

@@ -48,35 +48,47 @@ class Segmento
     
     /**
      * @var integer $maxIntegrantes
-     *
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      max = 50
+     * )
      * @ORM\Column(name="maxIntegrantes", type="integer", nullable=true)
      */
     protected $maxIntegrantes;
 
     /**
      * @var integer $minIntegrantes
-     *
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 0
+     * )
      * @ORM\Column(name="minIntegrantes", type="integer", nullable=true)
      */
     protected $minIntegrantes;
     
     /**
      * @var integer $maxReemplazos
-     *
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 10
+     * )
      * @ORM\Column(name="maxReemplazos", type="integer", nullable=true)
      */
     protected $maxReemplazos;
     
     /**
      * @var datetime $minFechaNacimiento
-     *
+     * @Assert\NotNull()
+     * @Assert\Date()
      * @ORM\Column(name="minFechaNacimiento", type="datetime")
      */
     private $minFechaNacimiento;
     
     /**
      * @var datetime $maxFechaNacimiento
-     *
+     * @Assert\NotNull()
+     * @Assert\Date()
      * @ORM\Column(name="maxFechaNacimiento", type="datetime")
      */
     private $maxFechaNacimiento;
@@ -110,6 +122,12 @@ class Segmento
      * @ORM\JoinColumn(name="disciplina", referencedColumnName="id")
      */       
     private $disciplina;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
+     * @ORM\JoinTable(name="usuario_coordina_segmento")
+     **/    
+    private $coordinadores;
     
     /**
      * @var datetime $createdAt
@@ -144,6 +162,7 @@ class Segmento
     {
         $this->createdAt = new \DateTime();
         $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -191,7 +210,7 @@ class Segmento
         if ($this->getTorneo())
             $name .= $this->getTorneo()->getNombre();
         if ($this->getDisciplina())
-            $name .= " - ".$this->getDisciplina()->getNombre();
+            $name .= " - ".$this->getDisciplina()->getNombreCompleto();
         if ($this->getCategoria())
             $name .= " - ".$this->getCategoria()->getNombre();
         if ($this->getGenero())
@@ -650,4 +669,37 @@ class Segmento
     {
         return $this->disciplina;
     }
+
+    /**
+     * Add coordinadores
+     *
+     * @param \SeguridadBundle\Entity\Usuario $coordinadores
+     * @return Evento
+     */
+    public function addCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
+    {
+        $this->coordinadores[] = $coordinadores;
+
+        return $this;
+    }
+
+    /**
+     * Remove coordinadores
+     *
+     * @param \SeguridadBundle\Entity\Usuario $coordinadores
+     */
+    public function removeCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
+    {
+        $this->coordinadores->removeElement($coordinadores);
+    }
+
+    /**
+     * Get coordinadores
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCoordinadores()
+    {
+        return $this->coordinadores;
+    }    
 }

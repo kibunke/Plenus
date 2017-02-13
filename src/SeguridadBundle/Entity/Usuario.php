@@ -82,7 +82,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     private $roles;
     
     /**
-     * @ORM\ManyToMany(targetEntity="ResultadoBundle\Entity\Evento", mappedBy="coordinadores")
+     * @ORM\ManyToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="coordinadores")
      **/
     private $coordina;
     
@@ -710,6 +710,15 @@ class Usuario implements AdvancedUserInterface, \Serializable
     public function getAvatar()
     {
         return $this->getPersona()->getAvatar();
+    }
+    
+    /**
+     * get NombreCompleto
+     *
+     */     
+    public function getNombreCompleto()
+    {
+       return $this->persona->getNombreCompleto();
     }
     
     public function clearPersona()

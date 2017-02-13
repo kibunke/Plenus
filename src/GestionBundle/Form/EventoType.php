@@ -52,7 +52,7 @@ class EventoType extends AbstractType
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
-                  )            
+                  )
             ->add('modalidad', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Modalidad',
                                                 'choice_label' => 'nombre',
@@ -61,25 +61,14 @@ class EventoType extends AbstractType
                                                 'empty_data'  => null
                                             )
                   )
-            //->add('coordinadores')
-            ->add('coordinadores', EntityType::class, array(
-                                                'class' => 'CommonBundle:Persona',
-                                                'choice_label' => 'nombreCompleto',
-                                                'query_builder' => function(\Doctrine\ORM\EntityRepository $er )
-                                                                    {
-                                                                        return $er->createQueryBuilder('p')
-                                                                                    ->join('p.usuario','u')
-                                                                                    ->join('u.perfil','perf')
-                                                                                    ->where('perf.name = :perf')
-                                                                                    ->orderby('p.apellido','ASC')
-                                                                                    ->setParameter('perf', 'Coordinador');
-                                                                    },
-                                                'multiple' => true,
-                                                'required' => false,
+        ->add('segmento', EntityType::class, array(
+                                                'class' => 'InscripcionBundle:Segmento',
+                                                'choice_label' => 'getNombreCompleto',
+                                                'multiple' => false,
+                                                'required' => true,
                                                 'empty_data'  => null
                                             )
-                  )            
-            ->add('descripcion')
+                  )
         ;
     }
     

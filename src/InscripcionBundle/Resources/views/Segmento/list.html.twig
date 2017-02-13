@@ -117,18 +117,22 @@
         </div>
     </div>
     <div class="panel-body">
-        <table id="segmentoTable" class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Segmento</th>
-                    <th>Eventos</th>
-                    <th>Inscriptos</th>
-                    <th style="min-width: 95px"></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="segmentoTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Segmento</th>
+                        <th title="Eventos del segmento"><i class="fa fa-trophy" aria-hidden="true"></i></th>
+                        <th title="Coordinadores del segmento"><i class="fa fa-sitemap" aria-hidden="true"></i></th>
+                        <th title="Inscriptos en el segmento"><i class="fa fa-users" aria-hidden="true"></i></th>
+                        <th class="hidden-sm hidden-xs">Parámetros</th>
+                        <th style="min-width: 110px"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 
@@ -152,10 +156,12 @@
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columns": [
-                        { "data": "id" },
+                        { "data": "id", "className": "text-center" },
                         { "data": "segmento" },
-                        { "data": "eventos" },
-                        { "data": "inscriptos" },
+                        { "data": "eventos", "className": "text-center" },
+                        { "data": "coordinadores", "className": "text-center" },
+                        { "data": "inscriptos", "className": "text-center" },
+                        { "data": "parametros", "className": "hidden-sm hidden-xs" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -166,12 +172,29 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [3,4]
+                            "targets": [5,6]
+                        },
+                        {
+                            "targets": 5,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    '<div>'+
+                                                        '  <i title="Cantidad máxima de participantes" class="fa fa-arrow-circle-o-up text-success" aria-hidden="true"></i> '+ data.max +
+                                                        '  <i title="Cantidad mínima de participantes" class="fa fa-arrow-circle-o-down text-success" aria-hidden="true"></i> '+ data.min +
+                                                        '  <i title="Cantidad máxima de reemplazos" class="fa fa-arrow-circle-o-right text-danger" aria-hidden="true"></i> '+ data.reemplazos +
+                                                    '</div><div>'+
+                                                        '<i title="Fecha máxima de nacimiento" class="fa fa-calendar-plus-o text-info" aria-hidden="true"></i> '+ data.maxFecha +
+                                                    '</div><div>'+
+                                                        '<i title="Fecha mínima de nacimiento" class="fa fa-calendar-minus-o text-info" aria-hidden="true"></i> '+ data.minFecha +
+                                                    '</div>'
+                                                :'';
+                                        }
                         }
                     ],
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                        if ( aData.dni == "0" )
-                            $(nRow).addClass( 'info' );
+                        $(nRow).attr( 'id', 'row_'+aData.id );
                         return nRow;
                     },
                     "fnDrawCallback": function(oSettings, json) {}       
@@ -190,6 +213,9 @@
                 $.Segmento.openAjaxModal(url,'Nuevo Segmento');
             }
             $.Segmento.editModal = function(url){
+                let id = url.split('/');
+                $('tr').removeClass('info');
+                $('#row_'+id[id.length-2]).addClass('info');
                 $.Segmento.openAjaxModal(url,'Editar Segmento');
             }
             $.Segmento.deleteConfirm = function(url){
@@ -218,6 +244,7 @@
             $.Segmento.openAjaxModal = function(url,title){
                 $.Main.openFormModal(url,title, function(){
                         $.Segmento.initDatePicker();
+                        $("#segmento_coordinadores").select2();
                         $('#panel-config form').submit(function(event){
                             $('#segmentoTable').parents('panel').block($.Main.defaultBlockConf());
                             $('#okButton').button('loading')
