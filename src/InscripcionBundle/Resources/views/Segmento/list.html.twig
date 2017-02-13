@@ -258,6 +258,8 @@
                                     toastr['error'](data.message, 'Cuidado!');
                                 }else{
                                     $("#panel-config form").html($(data).find('form').html());
+                                    $.Segmento.initDatePicker();
+                                    $("#segmento_coordinadores").select2();
                                     toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
                                 }
                                 $('#okButton').button('reset');
