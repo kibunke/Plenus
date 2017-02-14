@@ -44,7 +44,9 @@ class SecurityController extends Controller
      */
     public function logoutAllAction()
     {
-        return $this->redirectToRoute('homepage');
+       $this->getDoctrine()->getManager()->createQuery('DELETE FROM SeguridadBundle:Sessions')->execute();
+       
+       return $this->redirectToRoute('_login');
     }
     
     /**
