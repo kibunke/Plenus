@@ -388,14 +388,14 @@ class UsuarioController extends Controller
     
     private function validarEdicionUsuario($usuario)
     {
-        if(!$this->getUser()->mismoMunicipio($usuario))
-        {
-            return false;
-        }
-        
         if(!$usuario->hasRole('ROLE_INSCRIPTOR') || $usuario->hasRole('ROLE_ADMIN'))
         {
             return false;            
+        }
+        
+        if(!$this->getUser()->mismoMunicipio($usuario))
+        {
+            return false;
         }
         
         return true;
