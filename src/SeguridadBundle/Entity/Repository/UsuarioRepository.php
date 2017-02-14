@@ -53,6 +53,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                       LEFT JOIN f.roles r
                                       JOIN p.municipio m
                                      WHERE $where
+                                     GROUP BY u.id
                                   ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                     ->setParameter(1,'%'.$request->get('search')['value'].'%')
                     ->setMaxResults($request->get('length'))
