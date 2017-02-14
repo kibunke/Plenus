@@ -388,14 +388,16 @@ class UsuarioController extends Controller
     
     private function validarEdicionUsuario($usuario)
     {
-        if(!$usuario->hasRole('ROLE_INSCRIPTOR') || $usuario->hasRole('ROLE_ADMIN'))
-        {
-            return false;            
+        if($this->isGranted('ROLE_ADMIN')){
+            return true;
         }
         
-        if(!$this->getUser()->mismoMunicipio($usuario))
-        {
+        if(!$this->getUser()->mismoMunicipio($usuario)){
             return false;
+        }
+        
+        if(!$usuario->hasRole('ROLE_INSCRIPTOR') || $usuario->hasRole('ROLE_ADMIN')){
+            return false;            
         }
         
         return true;
