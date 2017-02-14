@@ -23,7 +23,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     private function getAdmins()
     {
          $admins = $this->getEntityManager()
-                        ->createQuery(" SELECT DISTINCT (u.id)
+                        ->createQuery(" SELECT u.id
                                           FROM SeguridadBundle:Usuario u
                                           JOIN u.perfil f
                                           JOIN f.roles r
@@ -46,7 +46,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
         }
         
         return $this->getEntityManager()
-                    ->createQuery(" SELECT DISTINCT(u)
+                    ->createQuery(" SELECT u
                                       FROM SeguridadBundle:Usuario u
                                       JOIN u.persona p
                                       JOIN u.perfil f
