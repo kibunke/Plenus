@@ -211,10 +211,10 @@ class Evento
         $nom =  "<div title='".$this->getNombreCompleto()."'>".
                     "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
                     "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
-                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>".
-                "</div>";
+                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>";
         if ($this->nombre)
-            $nom = $nom."-".$this->getNombre();
+            $nom .= "-<small>".$this->getNombre()."</small>";
+        $nom .= "</div>";
         return $nom;
     }
 
