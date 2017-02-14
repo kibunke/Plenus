@@ -1,6 +1,6 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
     <a href="{{path("user_edit",{"user": entity.id})}}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-    {% if not entity.isActive %}<a href="#1" class="btn btn-xs btn-green tooltips" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check" title="Activar"></i></a>{% endif %}
+    {% if not entity.isActive %}<a href="#1" class="btn btn-xs btn-blue tooltips" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check" title="Activar"></i></a>{% endif %}
     {% if not entity.lastActivity %}<a href="#1" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Elimianr" onclick="$.Usuario.eliminar('{{path("user_eliminar",{"user": entity.id})}}')"><i class="fa fa-trash" title="Eliminar"></i></a>{% endif %}
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">

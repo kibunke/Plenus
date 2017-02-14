@@ -42,7 +42,7 @@ class PlanillaController extends Controller
      */
     public function showAction()
     {
-        return array();        
+        return array();
     }
     
     /**

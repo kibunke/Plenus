@@ -80,11 +80,13 @@ class UsuarioController extends Controller
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker')->isGranted('ROLE_USER_LIST_ALL'));
+        $sessions = $em->getRepository('SeguridadBundle:Sessions')->findAll();
 
         $data=array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
+                    "sessions"        => count($sessions),
                     "data"            => array()
         );
         
@@ -94,6 +96,7 @@ class UsuarioController extends Controller
                 "id"      => $user->getId(),
                 "ico"     => false,
                 "user"    => $user->getUsername(),
+                //"session" => $user->getUsername(),
                 "persona" => array(
                                     "name"     => $persona->getApellido() . ', ' . $persona->getNombre(),
                                     "dni"      => $persona->getDni(),

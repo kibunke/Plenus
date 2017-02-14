@@ -39,6 +39,15 @@ class SecurityController extends Controller
     }
     
     /**
+     * @Route("/system/users/logout", name="logout_all_users")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function logoutAllAction()
+    {
+        return $this->redirectToRoute('homepage');
+    }
+    
+    /**
      * @Route("/login", name="_login")
      * @Template("SeguridadBundle:Security:login.html.twig")
      */

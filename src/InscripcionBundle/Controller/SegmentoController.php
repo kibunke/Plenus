@@ -84,6 +84,7 @@ class SegmentoController extends Controller
     /**
      * @Route("/new", name="segmento_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_SEGMENTO_NEW')")
      * @Template("InscripcionBundle:Segmento:new.html.twig")
      */
     public function newAction(Request $request)
@@ -115,6 +116,7 @@ class SegmentoController extends Controller
     /**
      * @Route("/{id}/edit", name="segmento_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
+     * * @Security("has_role('ROLE_SEGMENTO_EDIT')")
      * @Template("InscripcionBundle:Segmento:edit.html.twig")
      */
     public function editAction(Request $request,Segmento $segmento)
@@ -145,6 +147,7 @@ class SegmentoController extends Controller
     /**
      * @Route("/{id}/delete", name="segmento_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_SEGMENTO_DELETE')")
      */
     public function deleteAction(Request $request,Segmento $entity)
     {
