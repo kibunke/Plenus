@@ -407,4 +407,9 @@ class Municipio
     {
         return $this->updatedBy;
     }
+    
+    public function mismoMunicipio(Municipio $municipio)
+    {
+        return $this->id == $municipio->getId();
+    }
 }

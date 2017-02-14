@@ -193,6 +193,11 @@ class UsuarioController extends Controller
      */
     public function editAction(Request $request,Usuario $user)
     {
+        if(!$this->validarEdicionUsuario($user))
+        {
+            $this->addFlash('error', "El usuario no puede ser modificado");
+            return $this->redirectToRoute('user_list');
+        }
         
         $form = $this->createForm(UsuarioAdminType::class, $user,
                                   array(
@@ -253,6 +258,11 @@ class UsuarioController extends Controller
      */
     public function activarAction(Request $request,Usuario $user)
     {
+        if(!$this->validarEdicionUsuario($user))
+        {
+            return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al activar el usuario'));
+        }
+        
         $em  = $this->getDoctrine()->getManager();
            
         $user->setIsActive(true);    
@@ -352,6 +362,11 @@ class UsuarioController extends Controller
             return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al eliminar el usuario, el mismo registra actividad'));
         }
         
+        if(!$this->validarEdicionUsuario($user))
+        {
+            return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al eliminar el usuario'));
+        }
+        
         $em  = $this->getDoctrine()->getManager();
 
         foreach($user->getLogs() as $log)
@@ -373,9 +388,14 @@ class UsuarioController extends Controller
     
     private function validarEdicionUsuario($usuario)
     {
-        if($this->getUser()->mismoMunicipio($usuario))
+        if(!$this->getUser()->mismoMunicipio($usuario))
         {
-            
+            return false;
+        }
+        
+        if(!$usuario->hasRole('ROLE_INSCRIPTOR') || $usuario->hasRole('ROLE_ADMIN'))
+        {
+            return false;            
         }
         
         return true;
