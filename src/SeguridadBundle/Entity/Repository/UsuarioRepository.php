@@ -76,7 +76,8 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                       JOIN u.perfil f
                                       JOIN f.roles r
                                       JOIN p.municipio m
-                                     WHERE $where ")
+                                     WHERE $where
+                                     GROUP BY u.id")
                     ->setParameter(1,'%'.$request->get('search')['value'].'%')
                     ->getSingleScalarResult();
     }
@@ -97,7 +98,8 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                       JOIN u.perfil f
                                       JOIN f.roles r
                                       JOIN p.municipio m
-                                     WHERE $where ")
+                                     WHERE $where
+                                     GROUP BY u.id")
                     ->getSingleScalarResult();
     } 
 }
