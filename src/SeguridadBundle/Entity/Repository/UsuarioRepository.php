@@ -10,87 +10,95 @@ namespace SeguridadBundle\Entity\Repository;
  */
 class UsuarioRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function dataTable($request,$user,$canViewAll)
+    //->isGranted('ROLE_USER_LIST_ALL')
+    public function dataTable($request,$user,$auth_checker)
     {
         return array(
-                      "total"    => $this->getTotalRows($user,$canViewAll),
-                      "filtered" => $this->getFilteredRows($request,$user,$canViewAll),
-                      "rows"     => $this->getRows($request,$user,$canViewAll)
-            );
+                        "total"    => $this->getTotalRows($user,$auth_checker),
+                        "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
+                        "rows"     => $this->getRows($request,$user,$auth_checker)
+                    );
     }
     
-    public function getRows($request,$user,$canViewAll)
+    private function getAdmins()
+    {
+         $admins = $this->getEntityManager()
+                        ->createQuery(" SELECT u.id
+                                          FROM SeguridadBundle:Usuario u
+                                          JOIN u.perfil f
+                                          JOIN f.roles r
+                                         WHERE r.name = 'ROLE_ADMIN'
+                                    ")
+                        ->getArrayResult();
+     
+        return implode(',',array_map('current',$admins));
+     
+    }
+    
+    public function getRows($request,$user,$auth_checker)
     {
         $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","u.isActive","info","pass","actions"];
-        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
-                
-        if (!$canViewAll){
-            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ")";
+        $where   = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
+            
+        if(!$auth_checker->isGranted('ROLE_ADMIN'))
+        {
+            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ") AND (r.name = 'ROLE_INSCRIPTOR') AND (u.id NOT IN (" . $this->getAdmins() . "))";
         }
+        
         return $this->getEntityManager()
-                        ->createQuery(" SELECT u
-                                        FROM SeguridadBundle:Usuario u
-                                        JOIN u.persona p
-                                        JOIN p.municipio m
-                                        WHERE $where
-                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->setMaxResults($request->get('length'))
-                        ->setFirstResult($request->get('start'))
-                        ->getResult();
+                    ->createQuery(" SELECT u
+                                      FROM SeguridadBundle:Usuario u
+                                      JOIN u.persona p
+                                      JOIN u.perfil f
+                                      JOIN f.roles r
+                                      JOIN p.municipio m
+                                     WHERE $where
+                                  ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->setMaxResults($request->get('length'))
+                    ->setFirstResult($request->get('start'))
+                    ->getResult();
     }
     
-    public function getFilteredRows($request,$user,$canViewAll)
+    public function getFilteredRows($request,$user,$auth_checker)
     {
         $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
                 
-        if (!$canViewAll){
-            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ")";
+        if(!$auth_checker->isGranted('ROLE_ADMIN'))
+        {
+            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ") AND (r.name = 'ROLE_INSCRIPTOR') AND (u.id NOT IN (" . $this->getAdmins() . "))";
         }
+        
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(u)
-                                        FROM SeguridadBundle:Usuario u
-                                        JOIN u.persona p
-                                        JOIN p.municipio m
-                                        WHERE $where ")
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->getSingleScalarResult();
+                    ->createQuery(" SELECT COUNT(u)
+                                      FROM SeguridadBundle:Usuario u
+                                      JOIN u.persona p
+                                      JOIN u.perfil f
+                                      JOIN f.roles r
+                                      JOIN p.municipio m
+                                     WHERE $where ")
+                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->getSingleScalarResult();
     }
     
-    public function getTotalRows($user,$canViewAll)
+    public function getTotalRows($user,$auth_checker)
     {
         $where = "1 = 1";
-        if (!$canViewAll){
-            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ")";
+        
+        if(!$auth_checker->isGranted('ROLE_ADMIN'))
+        {
+            $where .= " AND (m.id = " . $user->getPersona()->getMunicipio()->getId() . ") AND (r.name = 'ROLE_INSCRIPTOR') AND (u.id NOT IN (" . $this->getAdmins() . "))";
         }
+        
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(u)
-                                        FROM SeguridadBundle:Usuario u
-                                        JOIN u.persona p
-                                        JOIN p.municipio m
-                                        WHERE $where ")
-                        ->getSingleScalarResult();
-    }
-    
-    //
-    //public function countActivos()
-    //{
-    //    return $this->getEntityManager()
-    //                ->createQuery(" SELECT COUNT(u)
-    //                                FROM SeguridadBundle:Usuario u
-    //                                WHERE u.activo = ?1")
-    //                ->setParameter(1,true)
-    //                ->getSingleScalarResult();        
-    //}
-    //
-    //public function countInactivos()
-    //{
-    //    return $this->getEntityManager()
-    //                ->createQuery(" SELECT COUNT(u)
-    //                                FROM SeguridadBundle:Usuario u
-    //                                WHERE u.activo = ?1")
-    //                ->setParameter(1,false)
-    //                ->getSingleScalarResult();        
-    //}    
+                    ->createQuery(" SELECT COUNT(u)
+                                      FROM SeguridadBundle:Usuario u
+                                      JOIN u.persona p
+                                      JOIN u.perfil f
+                                      JOIN f.roles r
+                                      JOIN p.municipio m
+                                     WHERE $where ")
+                    ->getSingleScalarResult();
+    } 
 }
 

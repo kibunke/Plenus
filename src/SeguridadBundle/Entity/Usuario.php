@@ -181,18 +181,21 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         $roles = array();
         //Agrega los roles del perfil
-        if ($this->getPerfil()){
+        if ($this->getPerfil())
+        {
             foreach($this->getPerfil()->getRoles() as $rol)
             {
                 if ($rol->getIsActive())
                     $roles[] = $rol->getName(); 
             }
         }
+        
         //Agrega los roles asignados especificamente al usuario
         foreach($this->roles as $rol)
         {
            $roles[] = $rol->getName(); 
         }        
+        
         return $roles;
     }
     
@@ -727,5 +730,10 @@ class Usuario implements AdvancedUserInterface, \Serializable
         $this->persona = NULL;
         
         return $this;
+    }
+    
+    public function hasRole($role = '')
+    {
+        return in_array($role,$this->getRoles());
     }
 }

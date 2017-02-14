@@ -1,7 +1,7 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
-    <a href="{{path("user_edit",{"user": entity.id})}}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-    {% if not entity.isActive %}<a href="#1" class="btn btn-xs btn-green tooltips" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check" title="Activar"></i></a>{% endif %}
-    {% if not entity.lastActivity %}<a href="#1" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Elimianr" onclick="$.Usuario.eliminar('{{path("user_eliminar",{"user": entity.id})}}')"><i class="fa fa-trash" title="Eliminar"></i></a>{% endif %}
+    {% if is_granted('ROLE_USER_EDIT') %} <a href="{{path("user_edit",{"user": entity.id})}}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a> {% endif %}
+    {% if is_granted('ROLE_USER_ACTIVATE') and not entity.isActive %}<a href="#1" class="btn btn-xs btn-green tooltips" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check" title="Activar"></i></a>{% endif %}
+    {% if is_granted('ROLE_USER_DELETE') and not entity.lastActivity %}<a href="#1" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Elimianr" onclick="$.Usuario.eliminar('{{path("user_eliminar",{"user": entity.id})}}')"><i class="fa fa-trash" title="Eliminar"></i></a>{% endif %}
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">
     <div class="btn-group">
@@ -9,17 +9,19 @@
             <i class="fa fa-cog"></i> <span class="caret"></span>
         </a>
         <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-            <li>
-                <a role="menuitem" tabindex="-1"  href="{{path("user_edit",{"user": entity.id})}}" >
-                    <i class="fa fa-edit"></i> Editar
-                </a>
-            </li>
-            {% if not entity.isActive %}
+            {% if is_granted('ROLE_USER_EDIT')%}
+                <li>
+                    <a role="menuitem" tabindex="-1"  href="{{path("user_edit",{"user": entity.id})}}" >
+                        <i class="fa fa-edit"></i> Editar
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_USER_ACTIVATE') and not entity.isActive %}
             <li>
                 <a href="#1" role="menuitem" tabindex="-1" onclick="$.Usuario.activar('{{path("user_activar",{"user": entity.id})}}')"><i class="fa fa-check" title="Activar"></i> Activar</a>
             </li>
             {% endif %}
-            {% if not entity.lastActivity %}
+            {% if is_granted('ROLE_USER_DELETE') and not entity.lastActivity %}
             <li>
                 <a href="#1" role="menuitem" tabindex="-1" onclick="$.Usuario.eliminar('{{path("user_eliminar",{"user": entity.id})}}')"><i class="fa fa-trash" title="Eliminar"></i> Eliminar</a>
             </li>
