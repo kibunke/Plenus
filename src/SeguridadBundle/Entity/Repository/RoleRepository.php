@@ -22,13 +22,17 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
         $where = "(u.name LIKE ?1) ";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT u.id,u.name,u.description,u.isActive, p.id as perfiles
-                                        FROM SeguridadBundle:Role u LEFT JOIN u.perfiles p
+                        //->createQuery(" SELECT u.id,u.name,u.description,u.isActive, p.id as perfiles
+                        //                FROM SeguridadBundle:Role u LEFT JOIN u.perfiles p
+                        //                WHERE $where
+                        //                GROUP BY u.id
+                        //                ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir']
+                        //                )
+                        ->createQuery(" SELECT u.id,u.name,u.description,u.isActive
+                                        FROM SeguridadBundle:Role u
                                         WHERE $where
-                                        GROUP BY u.id
                                         ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir']
-                                        )
-                        
+                                        )                        
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
                         ->setFirstResult($request->get('start'))
