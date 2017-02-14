@@ -80,7 +80,7 @@ class UsuarioController extends Controller
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
         
-        $filter = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker'));
+        $filter   = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker'));
         $sessions = $em->getRepository('SeguridadBundle:Sessions')->findAll();
 
         $data=array(

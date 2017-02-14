@@ -68,14 +68,15 @@
 					 <tr>
 					    <td>{{role.name}}</td>
 						<td>{{role.description}}</td>
-						<td><div class="checkbox"><input id="perfil_roles_{{role.id}}" name="perfil[roles][]" value="{{role.id}}" type="checkbox" {% if entity.hasRole(role) %}checked="checked"{% endif %}></div></td>
+						<td><div class="checkbox"><input onclick="$.PerfilesRoles.actualizar(this.id,{{role.id}})" id="dummy_perfil_roles_{{role.id}}" name="dummy_perfil[roles][]" type="checkbox" {% if entity.hasRole(role) %}checked="checked"{% endif %}></div></td>
 					 </tr>
 				 {% endfor %}
 			 </tbody>
 		</table>
 		<button type="submit" class="btn btn-success col-md-4 pull-right">Listo</button>
 		{{form_widget(form._token)}}</div>
-		</form>
+		<div class="hide">{{form_widget(form.roles)}}</div>
+		{{form_end(form)}}
      </div>
    </div>
 {% endblock %}
@@ -92,6 +93,10 @@
                     }
 				}
 			);
+		 },
+		 $.PerfilesRoles.actualizar = function(checkbox,role)
+		 {
+			 $('#perfil_roles_' + role).attr('checked',$('#'+checkbox).is(':checked'));
 		 }
 	 })(jQuery);
 	$(document).ready(function(){$.PerfilesRoles.init();});
