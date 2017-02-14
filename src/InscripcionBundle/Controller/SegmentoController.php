@@ -52,7 +52,7 @@ class SegmentoController extends Controller
     public function listDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Segmento')->datatable($request->request);
+        $filter = $em->getRepository('InscripcionBundle:Segmento')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'));
 
         $data = array(
                     "draw"            => $request->request->get('draw'),

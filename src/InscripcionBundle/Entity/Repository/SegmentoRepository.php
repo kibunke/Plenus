@@ -12,16 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class SegmentoRepository extends EntityRepository
 {
-    public function dataTable($request)
+    public function dataTable($request,$user,$auth_checker)
     {
         return array(
-                      "total"    => $this->getTotalRows(),
-                      "filtered" => $this->getFilteredRows($request),
-                      "rows"     => $this->getRows($request)
+                      "total"    => $this->getTotalRows($user,$auth_checker),
+                      "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
+                      "rows"     => $this->getRows($request,$user,$auth_checker)
             );
     }
     
-    public function getRows($request)
+    public function getRows($request,$user,$auth_checker)
     {
         $columns = ["s.id",
                     "d.nombreRecursivo ".$request->get('order')[0]['dir'].
@@ -40,7 +40,10 @@ class SegmentoRepository extends EntityRepository
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)";
-                
+        
+        if(!$auth_checker->isGranted('ROLE_ADMIN')){
+            $where .= " AND (u.id = " . $user->getId() . ")";
+        }
         return $this->getEntityManager()
                         ->createQuery(" SELECT s, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, 0 as HIDDEN inscriptos
                                         FROM InscripcionBundle:Segmento s
@@ -60,7 +63,7 @@ class SegmentoRepository extends EntityRepository
                         ->getResult();
     }
     
-    public function getFilteredRows($request)
+    public function getFilteredRows($request,$user,$auth_checker)
     {
         $where = "( s.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
@@ -70,10 +73,13 @@ class SegmentoRepository extends EntityRepository
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)";
-                
+        if(!$auth_checker->isGranted('ROLE_ADMIN')){
+            $where .= " AND (u.id = " . $user->getId() . ")";
+        }
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
                                         FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
                                         JOIN s.categoria c
@@ -84,11 +90,17 @@ class SegmentoRepository extends EntityRepository
                         ->getSingleScalarResult();
     }
     
-    public function getTotalRows()
+    public function getTotalRows($user,$auth_checker)
     {
+        $where = "1 = 1";
+        if(!$auth_checker->isGranted('ROLE_ADMIN')){
+            $where .= " AND u.id = " . $user->getId();
+        }        
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
-                                        FROM InscripcionBundle:Segmento s")
+                                        FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores u
+                                        WHERE $where ")
                         ->getSingleScalarResult();
     }
 }

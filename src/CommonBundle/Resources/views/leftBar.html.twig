@@ -80,47 +80,51 @@
 									</ul>
 								</li>
 						    {% endif %}
-							{% if is_granted('ROLE_ADMIN') %}
+							{% if is_granted('ROLE_COORDINADOR') %}
 								<li>
 									<a href="javascript:;">
 										<i class="fa fa-trophy"></i>
 										Final <i class="icon-arrow"></i>
 									</a>
 									<ul class="sub-menu">
-										<li>
-											<a href="{{ path('evento') }}">
-												<i class="fa fa-bullseye"></i>
-												<span class="title"> Eventos </span>
-											</a>
-										</li>
-										{#% if is_granted('ROLE_SEGMENTO') %#}	
-										<li>
-											<a href="{{ path('segmento_list') }}">
-												<i class="fa fa-bullseye"></i>
-												<span class="title"> Segmentos </span>
-											</a>
-										</li>
-										{#% endif %#}
-										<li>
-											<a href="javascript:;">
-												<i class="fa fa-puzzle-piece"></i>
-												Dimensiones <i class="icon-arrow"></i>
-											</a>
-											<ul class="sub-menu">
-												<li>
-													<a href="{{ path('disciplina') }}">
-														<i class="fa fa-list-alt"></i>
-														<span class="title"> Disciplinas </span>
-													</a>
-												</li>
-												<li>
-													<a href="{{ path('dimension') }}">
-														<i class="fa fa-list-alt"></i>
-														<span class="title" title="Torneo,Modalida,Categoría y Género"> Otras </span>
-													</a>
-												</li>
-											</ul>
-										</li>									
+										{% if is_granted('ROLE_ADMIN') %}
+											<li>
+												<a href="{{ path('evento') }}">
+													<i class="fa fa-bullseye"></i>
+													<span class="title"> Eventos </span>
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('ROLE_SEGMENTO') %}	
+											<li>
+												<a href="{{ path('segmento_list') }}">
+													<i class="fa fa-bullseye"></i>
+													<span class="title"> Segmentos </span>
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('ROLE_ADMIN') %}
+											<li>
+												<a href="javascript:;">
+													<i class="fa fa-puzzle-piece"></i>
+													Dimensiones <i class="icon-arrow"></i>
+												</a>
+												<ul class="sub-menu">
+													<li>
+														<a href="{{ path('disciplina') }}">
+															<i class="fa fa-list-alt"></i>
+															<span class="title"> Disciplinas </span>
+														</a>
+													</li>
+													<li>
+														<a href="{{ path('dimension') }}">
+															<i class="fa fa-list-alt"></i>
+															<span class="title" title="Torneo,Modalida,Categoría y Género"> Otras </span>
+														</a>
+													</li>
+												</ul>
+											</li>
+										{% endif %}
 									</ul>
 								</li>							
 								
@@ -129,39 +133,29 @@
 										<i class="fa fa-map-marker"></i>
 										<span class="title"> Escenarios </span>
 									</a>
-								</li>							
-								<li>
-									<a href="{{ path('municipio_list') }}">
-										<i class="fa fa-building-o"></i>
-										<span class="title"> Municipios </span>
-									</a>
 								</li>
-								<li>
-									<a href="javascript:;">
-										<i class="fa fa-question-circle"></i>
-										Consultas <i class="icon-arrow"></i>
-									</a>
-									<ul class="sub-menu">
-										<li>
-											<a href="#1">
-												<i class="fa fa-play"></i>
-												Sample Link 1
-											</a>
-										</li>
-										<li>
-											<a href="#1">
-												<i class="fa fa-play"></i>
-												Sample Link 2
-											</a>
-										</li>
-										<li>
-											<a href="#1">
-												<i class="fa fa-play"></i>
-												Sample Link 3
-											</a>
-										</li>
-									</ul>
-								</li>
+								{% if is_granted('ROLE_ADMIN') %}
+									<li>
+										<a href="{{ path('municipio_list') }}">
+											<i class="fa fa-building-o"></i>
+											<span class="title"> Municipios </span>
+										</a>
+									</li>
+									<li>
+										<a href="javascript:;">
+											<i class="fa fa-question-circle"></i>
+											Consultas <i class="icon-arrow"></i>
+										</a>
+										<ul class="sub-menu">
+											<li>
+												<a href="#1">
+													<i class="fa fa-play"></i>
+													Sample Link 1
+												</a>
+											</li>
+										</ul>
+									</li>
+								{% endif %}
 						   {% endif %}
 						</ul>
 					</li>
