@@ -1,8 +1,14 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
     <button disabled class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></button>
-    <button onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
-    <button {% if entity.eventos | length %}disabled title="El segmento no debe tener eventos asociados"{% endif %} onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
-    <button title="Crear evento a partir de este segmento" onclick="$.Segmento.openAjaxModal('{{ path('evento_new_from_segmento', { 'id': entity.id }) }}','Nuevo Evento')" href="#" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-trophy fa fa-white"></i></button>
+    {% if is_granted('ROLE_SEGMENTO_EDIT') %}
+        <button onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
+    {% endif %}
+    {% if is_granted('ROLE_SEGMENTO_DELETE') %}
+        <button {% if entity.eventos | length %}disabled title="El segmento no debe tener eventos asociados"{% endif %} onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <button title="Crear evento a partir de este segmento" onclick="$.Segmento.openAjaxModal('{{ path('evento_new_from_segmento', { 'id': entity.id }) }}','Nuevo Evento')" href="#" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-trophy fa fa-white"></i></button>
+    {% endif %}
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">
     <div class="btn-group">
@@ -14,22 +20,28 @@
                 <a disabled role="menuitem" tabindex="-1" href="#1">
                     <i class="fa fa-eye"></i> Ver
                 </a>
-            </li> 
+            </li>
+            {% if is_granted('ROLE_SEGMENTO_EDIT') %}
             <li>
                 <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')">
                     <i class="fa fa-edit"></i> Editar
                 </a>
             </li>
+            {% endif %}
+            {% if is_granted('ROLE_SEGMENTO_DELETE') %}
             <li>
                 <a onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" role="menuitem" tabindex="-1" href="#">
                     <i class="fa fa-times"></i> Eliminar
                 </a>
             </li>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
             <li>
                 <a onclick="$.Segmento.openAjaxModal('{{ path('evento_new_from_segmento', { 'id': entity.id }) }}','Nuevo Evento')" role="menuitem" tabindex="-1" href="#">
                     <i class="fa fa-trophy"></i> Crear evento
                 </a>
-            </li>            
+            </li>
+            {% endif %}
         </ul>
     </div>
 </div>
