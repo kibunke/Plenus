@@ -36,3 +36,8 @@ services:
         arguments: ["@doctrine.orm.entity_manager","@security.token_storage"]
         tags:
             - { name: form.type }
+    app.type.segmento:
+        class: InscripcionBundle\Form\SegmentoType
+        arguments: ["@doctrine.orm.entity_manager","@security.token_storage"]
+        tags:
+            - { name: form.type }

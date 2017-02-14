@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Doctrine\Common\Persistence\ObjectManager;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -18,17 +20,42 @@ use CommonBundle\Form\PersonaType;
 
 class SegmentoType extends AbstractType
 {
+    private $manager;
+    private $tokenStorage;
+
+    public function __construct(ObjectManager $manager,TokenStorage $tokenStorage)
+    {
+        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $disabled = !$user->hasRole('ROLE_SEGMENTO_EDIT_ALL');
         $builder
-            ->add('nombre', TextType::class, array("attr" => array('placeholder' => 'Ingrese el nombre del segmento')))
-            ->add('descripcion', TextareaType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
+            ->add('nombre', TextType::class, array(
+                                                   "attr" => array(
+                                                                   'placeholder' => 'Ingrese el nombre del segmento'
+                                                                ),
+                                                   "disabled" => $disabled
+                                                )
+                  )
+            ->add('descripcion', TextareaType::class, array(
+                                                            "attr" => array(
+                                                                            'placeholder' => 'Ingrese la descripción del segmento'
+                                                                            ),
+                                                            "disabled" => $disabled
+                                                            )
+                  )
             ->add('torneo', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Torneo',
                                                 'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
-                                                'empty_data'  => null
+                                                'empty_data'  => null,
+                                                "disabled" => $disabled
                                             )
                   )
             ->add('disciplina', EntityType::class, array(
@@ -36,7 +63,8 @@ class SegmentoType extends AbstractType
                                                 'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
-                                                'empty_data'  => null
+                                                'empty_data'  => null,
+                                                "disabled" => $disabled
                                             )
                   )            
             ->add('categoria', EntityType::class, array(
@@ -44,7 +72,8 @@ class SegmentoType extends AbstractType
                                                 'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
-                                                'empty_data'  => null
+                                                'empty_data'  => null,
+                                                "disabled" => $disabled
                                             )
                   )
             ->add('genero', EntityType::class, array(
@@ -52,7 +81,8 @@ class SegmentoType extends AbstractType
                                                 'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
-                                                'empty_data'  => null
+                                                'empty_data'  => null,
+                                                "disabled" => $disabled
                                             )
                   )            
             ->add('modalidad', EntityType::class, array(
@@ -60,7 +90,8 @@ class SegmentoType extends AbstractType
                                                 'choice_label' => 'nombre',
                                                 'multiple' => false,
                                                 'required' => true,
-                                                'empty_data'  => null
+                                                'empty_data'  => null,
+                                                "disabled" => $disabled
                                             )
                   )            
             ->add('maxIntegrantes', IntegerType::class, array(
@@ -117,7 +148,8 @@ class SegmentoType extends AbstractType
                                                                     },
                                                 'multiple' => true,
                                                 'required' => false,
-                                                'empty_data'  => null
+                                                'empty_data'  => null,
+                                                "disabled" => $disabled
                                             )
                   )            
         ;
