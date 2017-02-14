@@ -50,7 +50,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                       FROM SeguridadBundle:Usuario u
                                       JOIN u.persona p
                                       JOIN u.perfil f
-                                      JOIN f.roles r
+                                      LEFT JOIN f.roles r
                                       JOIN p.municipio m
                                      WHERE $where
                                   ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
@@ -70,14 +70,13 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
         }
         
         return $this->getEntityManager()
-                    ->createQuery(" SELECT COUNT(u)
+                    ->createQuery(" SELECT COUNT(DISTINCT(u))
                                       FROM SeguridadBundle:Usuario u
                                       JOIN u.persona p
                                       JOIN u.perfil f
-                                      JOIN f.roles r
+                                      LEFT JOIN f.roles r
                                       JOIN p.municipio m
-                                     WHERE $where
-                                     GROUP BY u.id")
+                                     WHERE $where ")
                     ->setParameter(1,'%'.$request->get('search')['value'].'%')
                     ->getSingleScalarResult();
     }
@@ -92,14 +91,13 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
         }
         
         return $this->getEntityManager()
-                    ->createQuery(" SELECT COUNT(u)
+                    ->createQuery(" SELECT COUNT(DISTINCT(u))
                                       FROM SeguridadBundle:Usuario u
                                       JOIN u.persona p
                                       JOIN u.perfil f
-                                      JOIN f.roles r
+                                      LEFT JOIN f.roles r
                                       JOIN p.municipio m
-                                     WHERE $where
-                                     GROUP BY u.id")
+                                     WHERE $where ")
                     ->getSingleScalarResult();
     } 
 }
