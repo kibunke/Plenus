@@ -736,4 +736,9 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return in_array($role,$this->getRoles());
     }
+    
+    public function mismoMunicipio(Usuario $user)
+    {
+        return $this->getPersona()->mismoMunicipio($user->getPersona());
+    }
 }

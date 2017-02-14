@@ -714,4 +714,9 @@ class Persona
         
         return $this;
     }
+    
+    public function mismoMunicipio(Persona $persona)
+    {
+        return $this->getMunicipio()->mismoMunicipio($persona->getMunicipio());
+    }
 }
