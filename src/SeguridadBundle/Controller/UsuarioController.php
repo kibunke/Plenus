@@ -79,7 +79,8 @@ class UsuarioController extends Controller
     {
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker')->isGranted('ROLE_USER_LIST_ALL'));
+        
+        $filter = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker'));
         $sessions = $em->getRepository('SeguridadBundle:Sessions')->findAll();
 
         $data=array(
@@ -187,11 +188,12 @@ class UsuarioController extends Controller
     
     /**
      * @Route("/{user}/edit", name="user_edit", defaults={"user":"__00__"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER_EDIT')")
      * @Template("SeguridadBundle:Usuario:edit.html.twig")
      */
     public function editAction(Request $request,Usuario $user)
     {
+        
         $form = $this->createForm(UsuarioAdminType::class, $user,
                                   array(
                                         'action' => $this->generateUrl('user_edit', array('user' => $user->getId())),
@@ -245,7 +247,7 @@ class UsuarioController extends Controller
    
     /**
      * @Route("/{user}/activar", name="user_activar", condition="request.isXmlHttpRequest()")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER_ACTIVATE')")
      * @Method({"POST"})
      * 
      */
@@ -339,7 +341,7 @@ class UsuarioController extends Controller
     
      /**
      * @Route("/{user}/eliminar", name="user_eliminar", condition="request.isXmlHttpRequest()")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER_DELETE')")
      * @Method({"POST"})
      * 
      */
@@ -367,5 +369,15 @@ class UsuarioController extends Controller
         catch(\Exception $e ){
              return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al eliminar el usuario' . $e->getMessage()));
         }
+    }
+    
+    private function validarEdicionUsuario($usuario)
+    {
+        if($this->getUser()->mismoMunicipio($usuario))
+        {
+            
+        }
+        
+        return true;
     }
 }
