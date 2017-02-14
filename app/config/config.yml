@@ -39,7 +39,7 @@ services:
         public:    false
         arguments:
             - 'mysql:dbname=plenus_admin'
-            - { db_table: Sessions, db_username: "%database_user%", db_password: "%database_password%" }
+            - { db_table: Sessions, db_username: "%database_user%", db_password: "%database_password%",lock_mode: 0 }
 
 # Twig Configuration
 twig:
