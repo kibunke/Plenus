@@ -71,7 +71,7 @@ class Disciplina
      /**
      * @var string
      *
-     * @ORM\Column(name="nombreRecursivo", type="string", length=100)
+     * @ORM\Column(name="nombreRecursivo", type="string", length=100, nullable=true)
      */
     private $nombreRecursivo;
     
