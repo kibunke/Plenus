@@ -71,6 +71,20 @@ class UsuarioController extends Controller
         return array();
     }
     
+    private function getUserIdFromStream($datos)
+    {
+        $haystak = 'haveUser";i:';
+        $length_haystak = strlen($haystak);
+        if($pos = stripos($datos,$haystak))
+        {
+            $inicio = $pos + $length_haystak;
+            $fin    = stripos($datos,';',$inicio);
+            return intval(substr($datos,$inicio,$fin - $inicio));
+        }
+        
+        return 0;
+    }
+    
     /**
      * @Route("/list/datatable", name="user_list_datatable")
      * @Security("has_role('ROLE_USER_LIST') and has_role('ROLE_ORGANIZADOR')")
@@ -80,14 +94,22 @@ class UsuarioController extends Controller
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
         
-        $filter   = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker'));
-        $sessions = $em->getRepository('SeguridadBundle:Sessions')->findAll();
-
+        $filter     = $em->getRepository('SeguridadBundle:Usuario')->datatable($request->request,$user,$this->get('security.authorization_checker'));
+        $sesiones   = $em->getRepository('SeguridadBundle:Sessions')->findAll();
+        $logueados  = array();
+        $anonimos   = array();
+        foreach($sesiones as $sesion)
+        {
+            $id    = $this->getUserIdFromStream(stream_get_contents($sesion->getSessData()));
+            ($id > 0 )? $logueados[] = $id : $anonimos[]=1;
+        }
+        
         $data=array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
-                    "sessions"        => count($sessions),
+                    "logueados"       => count($logueados),
+                    "anonimos"        => count($anonimos),
                     "data"            => array()
         );
         
@@ -111,7 +133,7 @@ class UsuarioController extends Controller
                                     "lastop"  => $user->getLastActivity()
                                  ),
                 "pass"    => $user->getChangePassword(),
-                "actions" => $this->renderView('SeguridadBundle:Usuario:actions.html.twig', array('entity' => $user)),
+                "actions" => $this->renderView('SeguridadBundle:Usuario:actions.html.twig', array('entity' => $user,'logueados' => $logueados)),
             );
         }
         return new JsonResponse($data);

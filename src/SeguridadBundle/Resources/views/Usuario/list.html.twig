@@ -34,11 +34,13 @@
                         </div>
                         <!-- end: SEARCH POPOVER -->
                     </li>#}
-                    <li class="dropdown">
-                        <a  href="{{ path('logout_all_users')}}">
-                            <i class="fa fa-user-times"></i> LOGOUT ALL
-                        </a>
-                    </li>
+                    {% if is_granted('ROLE_ADMIN')%}
+                        <li class="dropdown">
+                            <a  href="{{ path('logout_all_users')}}">
+                                <i class="fa fa-user-times"></i> LOGOUT ALL
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -65,11 +67,18 @@
     <div class="panel-heading border-light">
         <h4 class="panel-title">Tabla <span class="text-bold">de usuarios</span></h4>
         <ul class="panel-heading-tabs border-light">
+            {% if is_granted('ROLE_ADMIN') %}
             <li>
                 <div class="pull-right" style="font-size: 18px;font-weight: 800;" title="Cantidad de Usuarios on-line">
-                    <i class="fa fa-user-circle-o text-yellow"></i> <span id="ses_cant"></span>
+                    <i class="fa fa-user text-yellow"></i> <span id="logueados_cant"></span>
                 </div>
-            </li>                     
+            </li>
+             <li>
+                <div class="pull-right" style="font-size: 18px;font-weight: 800;" title="Cantidad de Usuarios Anónimos">
+                    <i class="fa fa-user-o text-blue"></i> <span id="anonimos_cant"></span>
+                </div>
+            </li>
+            {% endif %}
             <li class="panel-tools">
                 {{ include('CommonBundle::dropdownTables.html.twig') }}
             </li>            
@@ -212,7 +221,8 @@
                         return nRow;
                     },
                     "fnDrawCallback": function(oSettings, json) {
-                        $('#ses_cant').html(_table.ajax.json().sessions);
+                        $('#logueados_cant').html(_table.ajax.json().logueados);
+                        $('#anonimos_cant').html(_table.ajax.json().anonimos);
                         $('[data-toggle="popover"]').popover();
                         $input = $('#list_users_filter input');
                         if ($input.val().length>0) {
