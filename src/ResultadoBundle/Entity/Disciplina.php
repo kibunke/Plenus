@@ -427,9 +427,9 @@ class Disciplina
                 return $this->getPadre()->getNombreCompleto()." ".$this->nombre;
             return $this->getPadre()->getNombreCompleto();
         }
-        if ($this->getNombreRecursivo())
+        //if ($this->getNombreRecursivo())
             return $this->nombre;
-        return;
+        //return;
     }
     
     /**
