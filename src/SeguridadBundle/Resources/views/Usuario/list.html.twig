@@ -321,6 +321,53 @@
                              );
                       }
                     );
+                },
+                $.Usuario.desloguear = function(url){
+                swal({
+                        title: "Desloguear Usuario",
+                        text: "Desea Desloguear al Usuario",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "red",
+                        confirmButtonText: "Desloguear",
+                        closeOnConfirm: false
+                      },
+                      function(){
+                            $.post(url,
+                                   null,
+                                   function(data)
+                                   {
+                                       if(data.resultado == 0)
+                                       {
+                                         swal({
+                                         title: "Resultado",
+                                         text: data.mensaje,
+                                         type: "success",
+                                         showCancelButton: false,
+                                         confirmButtonColor: "#DD6B55",
+                                         confirmButtonText: "Aceptar",
+                                         closeOnConfirm: true
+                                        },
+                                        function(){
+                                          _table.ajax.reload( null, false );
+                                        });
+                                          
+                                       }else{
+                                         swal({
+                                         title: "Resultado",
+                                         text: data.mensaje,
+                                         type: "error",
+                                         showCancelButton: false,
+                                         confirmButtonColor: "#DD6B55",
+                                         confirmButtonText: "Aceptar",
+                                         closeOnConfirm: true
+                                             },
+                                             function(){});
+                                           }
+                                    }
+                             );
+                      }
+                    );
                 }
         })(jQuery);
         $(document).ready(function(){$.Usuario.init();});

@@ -42,11 +42,71 @@ class SecurityController extends Controller
      * @Route("/system/users/logout", name="logout_all_users")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function logoutAllAction()
+    public function logoutAllAction(Request $request)
     {
-       $this->getDoctrine()->getManager()->createQuery('DELETE FROM SeguridadBundle:Sessions')->execute();
+        $em = $this->getDoctrine()->getManager();
+        $sesiones = $em->getRepository('SeguridadBundle:Sessions')->findAll();
        
-       return $this->redirectToRoute('_login');
+        foreach($sesiones as $sesion)
+        {
+            $datos = stream_get_contents($sesion->getSessData());
+            $idUserSession = $this->getUserIdFromStream($datos);
+            if( $idUserSession !=  $this->getUser()->getId() )
+            {
+                $em->remove($sesion);
+            }
+        }
+        try{
+            $em->flush();
+            $this->addFlash('success','Usuarios Deslogueados con éxito');
+        }catch(\Exception $e)
+        {
+            $this->addFlash('error','No pudieron ser deslogueados los usuarios');
+        }
+        
+        return $this->redirectToRoute('user_list');
+    }
+    
+    private function getUserIdFromStream($datos)
+    {
+        $haystak = 'haveUser";i:';
+        $length_haystak = strlen($haystak);
+        if($pos = stripos($datos,$haystak))
+        {
+            $inicio = $pos + $length_haystak;
+            $fin    = stripos($datos,';',$inicio);
+            return intval(substr($datos,$inicio,$fin - $inicio));
+        }
+        
+        return 0;
+    }
+    
+    /**
+     * @Route("/system/force/{user}/logout", name="force_logout_user", defaults={"user":"__00__"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function forceLogoutUserAction(Request $request,Usuario $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sesiones = $em->getRepository('SeguridadBundle:Sessions')->findAll();
+       
+        foreach($sesiones as $sesion)
+        {
+            $datos = stream_get_contents($sesion->getSessData());
+            $idUserSession = $this->getUserIdFromStream($datos);
+            if( $idUserSession ==  $user->getId() )
+            {
+                $em->remove($sesion);
+            }
+        }
+        
+        try{
+            $em->flush();
+            return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario deslogueado con éxito'));
+        }
+        catch(\Exception $e ){
+             return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al desloguear el usuario' . $e->getMessage()));
+        }
     }
     
     /**
