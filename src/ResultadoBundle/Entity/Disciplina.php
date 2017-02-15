@@ -461,7 +461,7 @@ class Disciplina
      * @param boolean $armarNombreRecursivo
      * @return Disciplina
      */
-    public function setrmarNombreRecursivo($armarNombreRecursivo)
+    public function setArmarNombreRecursivo($armarNombreRecursivo)
     {
         $this->armarNombreRecursivo = $armarNombreRecursivo;
 
