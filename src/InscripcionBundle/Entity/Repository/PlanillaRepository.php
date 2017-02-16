@@ -40,7 +40,7 @@ class PlanillaRepository extends EntityRepository
                     m.nombre LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT p, COUNT(e.id) AS HIDDEN eventos
+                        ->createQuery(" SELECT p,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos
                                         FROM InscripcionBundle:Planilla p
                                         JOIN p.segmento s
                                         JOIN s.disciplina d
