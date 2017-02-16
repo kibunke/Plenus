@@ -17,8 +17,29 @@
         background: #eee;
         color: #999;
     }
+    .planillaFooter .col-sm-3{
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    .firmaysello{
+        height: 70px;
+    }
+    .planillaFooter th{
+        width: 100px;
+    }
+    .table-not-allowed{
+        cursor: not-allowed !important;
+        opacity: .5;
+        background: #eee;
+    }
+    .planillaInscripcion {
+        padding: 0px 20px 0px 45px
+    }
+    .planillaInscripcion p{
+        font-size: 11px;
+    }    
 </style>
-<div class="col-sm-12" style="padding: 0px 20px 0px 45px">
+<div class="col-sm-12 planillaInscripcion">
     {{ form_start(form) }}
     <div class="row">
         <div class="col-sm-6">
@@ -70,19 +91,22 @@
             </table>
         </div>
     </div>
-    <div class="row">
+    <div class="row planillaFooter">
         <h4> Tipo inscripción : 
-            <div class="btn-group" data-toggle="buttons">
+            <div class="btn-group" data-toggle="buttons" id="tipoInscripcionButtons">
                 <label class="btn btn-default active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Municipal
+                    <input type="radio" name="tipoInscripcion" id="inscripcionMunicipal" autocomplete="off" checked> Municipal
                 </label>
                 <label class="btn btn-default">
-                    <input type="radio" name="options" id="option2" autocomplete="off"> Institucional <small>(Escuela/Club)</small>
+                    <input type="radio" name="tipoInscripcion" id="inscripcionInstitucionalEscuela" autocomplete="off"> Escolar <small></small>
                 </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="tipoInscripcion" id="inscripcionInstitucionalClub" autocomplete="off"> Otra <small>(Club)</small>
+                </label>                
             </div>
         </h4>
         <div class="table-responsive col-sm-3">
-            <table id="" class="table table-bordered">
+            <table id="datosDirectorTecnico" class="table table-bordered">
                 <thead>
                     <tr>
                         <th class="text-center" colspan="2">Director técnico</th>
@@ -95,43 +119,70 @@
                     </tr>
                     <tr>
                         <th>Nombre</th>
-                        <td ></td>
-                    </tr>
-                    <tr>
-                        <th>Firma</th>
                         <td></td>
+                    </tr>
+                    <tr class="firmaysello">
+                        <th>Firma</th>
+                        <td class="validate-no-edit-td"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="table-responsive col-sm-3">
-            <table id="" class="table table-bordered">
+            <table id="datosInstitucion" class="table table-bordered table-not-allowed">
                 <thead>
                     <tr>
-                        <th class="text-center" colspan="2">Director técnico</th>
+                        <th class="text-center" colspan="2">Institución a la que representa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Nombre</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr>
+                        <th>Disciplina</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr>
+                        <th>Telefono</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr>
+                        <th>Municipio</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="datosResponsableInstitucion" class="table table-bordered table-not-allowed">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Responsable Institución</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th>Apellido</th>
-                        <td></td>
+                        <td class="validate-no-edit-td validate-change"></td>
                     </tr>
                     <tr>
                         <th>Nombre</th>
-                        <td ></td>
+                        <td class="validate-no-edit-td validate-change"></td>
                     </tr>
-                    <tr>
-                        <th>Firma</th>
-                        <td></td>
+                    <tr class="firmaysello">
+                        <th>Firma y Sello</th>
+                        <td class="validate-no-edit-td"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="table-responsive col-sm-3">
-            <table id="" class="table table-bordered">
+            <table id="datosResponsableMunicipio" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center" colspan="2">Director técnico</th>
+                        <th class="text-center" colspan="2">Responsable Municipio</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,37 +194,21 @@
                         <th>Nombre</th>
                         <td ></td>
                     </tr>
-                    <tr>
-                        <th>Firma</th>
-                        <td></td>
+                    <tr class="firmaysello">
+                        <th>Firma y Sello</th>
+                        <td class="validate-no-edit-td"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="table-responsive col-sm-3">
-            <table id="" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="text-center" colspan="2">Director técnico</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>Apellido</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Nombre</th>
-                        <td ></td>
-                    </tr>
-                    <tr>
-                        <th>Firma</th>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="hidden">
+            {{ form_rest(form) }}
         </div>
-    </div>    
+    </div>
+    <p><i class="fa fa-info" aria-hidden="true"></i> Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.</p>
+    <p><i class="fa fa-info" aria-hidden="true"></i> Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.</p>
+    <p><i class="fa fa-info" aria-hidden="true"></i> La presente planilla debe ser confeccionada a máquina o con letra tipo imprenta, consignándose la totalidad de los datos solicitados, que se consideran como DECLARACION JURADA.</p>
+    <p><i class="fa fa-info" aria-hidden="true"></i> Acepto que los datos proporcionados sean utilizados por el Gobierno de la provincia de Buenos Aires para envíos de información Institucional.</p>
     {{ form_end(form) }}
  </div>
 
@@ -253,8 +288,22 @@
                 }else{
                     $('#planillaBuenaFe tfoot').append($tr);
                 }
-            })
+            });
             $('#planillaBuenaFe').editableTableWidget().addFunctions().find('td:first').focus();
+            $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget().addFunctions();
+            $('#tipoInscripcionButtons :input').change(function() {
+                if (this.id == 'inscripcionMunicipal') {
+                    $('#datosResponsableInstitucion,#datosInstitucion')
+                        .addClass('table-not-allowed')
+                        .find('.validate-change').removeClass('validate-no-edit-td');
+                }
+                else{
+                    $('#datosResponsableInstitucion,#datosInstitucion')
+                        .removeClass('table-not-allowed')
+                        .find('.validate-change').removeClass('validate-no-edit-td');
+                }                
+            });
+            
         }
     })(jQuery);
     $(document).ready(function(){$.Planilla.init();});

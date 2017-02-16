@@ -4,21 +4,25 @@
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
-                <h1><i class="fa fa-list-ol"></i> Listado de Eventos <small>Todo lo referido a los inscriptos de los eventos</small></h1>
+                <h1><i class="fa fa-list-ol"></i> Listado de Segmentos <small>Busque y acceda al segmento donde quiere inscribir participantes.</small></h1>
+                <h1 class="no-display"><i class="fa fa-edit"></i> Nueva planilla de buena fe <small>Llene el formulario para crear una nueva planillas de buena fe</small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
+            <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews ">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>            
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
-                    {% if is_granted('ROLE_INSCRIPCION_NEW') %}
+                    {#% if is_granted('ROLE_INSCRIPCION_NEW') %}
                         <li class="dropdown">
                             <a  href="#1" onclick="$.Default.inscripto.newModal('{{ path('inscripto_new') }}')">
                                 <i class="fa fa-user"></i> NUEVO
                             </a>
                         </li>
-                    {% endif %}
+                    {% endif %#}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -35,7 +39,7 @@
                     </a>
                 </li>                 
                 <li>
-                    <a href="{{ path('inscripcion') }}">
+                    <a href="{{ path('inscripcion_list_segmento') }}">
                         Inscripción
                     </a>
                 </li>
@@ -48,297 +52,115 @@
 {% endblock %}
 {% block contenidoData %}
     <div class="panel-heading">
-        <h4 class="panel-title">Tabla <span class="text-bold">de eventos en los que puede inscribir participantes</span></h4>
+        <h4 class="panel-title">Tabla <span class="text-bold">de segmentos habilitados para inscripción</span></h4>
         <div class="panel-tools">
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cloud-download"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a href="#1" class="export-csv">
-                            <i class="fa fa-file-text-o"></i> Guardar como CSV
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-txt">
-                            <i class="fa fa-file-text-o"></i> Guardar como TXT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-sql">
-                            <i class="fa fa-file-text-o"></i> Guardar como SQL
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-json">
-                            <i class="fa fa-file-text-o"></i> Guardar como JSON
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-excel">
-                            <i class="fa fa-file-text-o"></i> Exportar como Excel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-doc">
-                            <i class="fa fa-file-text-o"></i> Exportar como Word
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cog"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a class="panel-collapse collapses" href="#">
-                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-refresh" href="#">
-                            <i class="fa fa-refresh"></i> <span>Recargar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-expand" href="#">
-                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            {{ include('CommonBundle::dropdownTables.html.twig') }}
         </div>
     </div>
-    <style>
-        #inscripcionTable .masculinos{
-            background: #f0aa7b;
-            text-align: center;
-        }
-        #inscripcionTable .femeninos{
-            background: #a0db8e;
-            text-align: center;
-        }
-        #inscripcionTable .totales{
-            background: #8ec4d0;
-            text-align: center;
-        }
-    </style>
     <div class="panel-body">
-        <table id="inscripcionTable" class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Ord</th>
-                    <th>Evento</th>
-                    <th class="masculinos" title="Masculino"><i class="fa fa-male"><span class="sr-only">Masculino</span></i></th>
-                    <th class="femeninos" title="Femenino"><i class="fa fa-female"><span class="sr-only">Femenino</span></i></th>
-                    <th class="totales">Total</th>
-                    <th style="min-width: 95px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for evento in eventos %}
+        <div class="table-responsive">
+            <table id="segmentoTable" class="table table-striped table-hover">
+                <thead>
                     <tr>
-                        <td>{{ evento.orden }}</td>
-                        <td>{{ evento.nombreCompleto | replace({'-':' - '}) }}</td>
-                        {#<td >{{ evento.disciplina.getNombreCompleto }}</td>
-                        <td>{{ evento.categoria.getNombre }}</td>
-                        <td>{{ evento.genero }}</td>
-                        <td>{{ evento.modalidad }}</td>#}
-                        <td class="masculinos">{{ evento.getTotalInscriptos['masculinos'] }}</td>
-                        <td class="femeninos">{{ evento.getTotalInscriptos['femeninos'] }}</td>
-                        <td class="totales">{{ evento.getTotalInscriptos['total'] }}</td>
-                        <td class="center">
-                            <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                {% if is_granted('ROLE_INSCRIPCION_NEW') %}
-                                    <a href="#1" onclick="$.Default.inscripto.newModal('{{ path('inscripto_new', { 'id': evento.id }) }}')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Agregar inscrpito"><i class="fa fa-user-plus"></i></a>
-                                {% endif %}
-                                <a href="{{ path('inscripto', { 'id': evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Ver inscrpitos"><i class="fa fa-arrow-right"></i></a>
-                            </div>
-                            <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                <div class="btn-group">
-                                    <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                        <i class="fa fa-cog"></i> <span class="caret"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="#1" onclick="$.Default.inscripto.newModal('{{ path('inscripto_new', { 'id': evento.id }) }}')">
-                                                <i class="fa fa-user-plus"></i> Agregar inscriptos
-                                            </a>                                            
-                                            <a role="menuitem" tabindex="-1" href="{{ path('inscripto', { 'id': evento.id }) }}">
-                                                <i class="fa fa-arrow-right"></i> Ver inscriptos
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
+                        <th>#</th>
+                        <th>Segmento</th>
+                        <th title="Planillas en el segmento"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
+                        <th title="Inscriptos en el segmento"><i class="fa fa-users" aria-hidden="true"></i></th>
+                        <th class="hidden-sm hidden-xs">Parámetros</th>
+                        <th style="min-width: 110px"></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
-{% endblock %}
-{% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/common/css/hackjQueryUi.css' ) }}" />
 {% endblock %}
 
 {% block otherJavascripts %}
-    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
-    
-    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>    
     <script>
         (function ($) {
-            var instituciones={{instituciones | raw}};        
+            /* var instituciones=; */
             // no se sobreescribe el namespace, si ya existe
-            var table;
+            var _table,
+                _pathPlanillaNew = "{{ path('planilla_new', {'id' : '__XX__'}) }}";
             $.Default = $.Default || {};
             $.Default.init = function() {
-                $('#okButton').on('click',function(){
-                    var ok=true;
-                    $('#panel-config [required="required"]').each(function(){
-                        if (typeof $(this).val()=='undefinded' || $(this).val()=='' || $(this).val()==null)
-                        {
-                            $(this).parents('.form-group').addClass('has-error');
-                            ok=false;
-                        }
-                    })
-                    if (ok) {
-                        /* Realiza la peticon */
-                        $('#juegosba_inscripcionbundle_inscripto_origen').val(
-                            $('#juegosba_inscripcionbundle_inscripto_origen').val()+"-"+
-                            $('#juegosba_inscripcionbundle_inscripto_tipoOrigen').val()+"-"+
-                            $('#juegosba_inscripcionbundle_inscripto_municipio').val()
-                        )
-                        $form=$("#panel-config form");
-                        var $btn = $(this).button('loading')
-                        jQuery.post($form.attr('action'), $form.serialize(), function(data){
-                            if (data.success){
-                                swal({
-                                    title: "Excelente!<br>N° planilla asignado : "+data.id,
-                                    text: "Click en OK para continuar",
-                                    type: "success",
-                                    html: true
-                                },
-                                function () {
-                                    location.reload();
-                                });  
-                            }else if(data.reload){
-                                location.reload();
-                            }else{
-                                $("#panel-config .modal-body").html(data);
-                            }
-                            $btn.button('reset');
-                        });                    
-                        //$('#panel-config [type="submit"]').trigger('click');
-                    }else{
-                        toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado');
-                        $('#panel-config .modal-error-content').html('<p class="text-danger">*Complete los campos obligatorios antes de continuar.</p>')
-                    }
-                });                
-                table=$('#inscripcionTable').dataTable( {
-                    "language": {
-                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                _table = $('#segmentoTable').dataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('inscripcion_list_segmento_datatable') }}',
+                        "type": 'POST'
                     },
-                    "columnDefs": [ {
-                        "searchable": false,
-                        "orderable": false,
-                        "targets": [5]
-                    } ],
-                    "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]], // change per page values here
-                    "order": [[ 0, 'asc' ]]            
-                });     
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "id", "className": "text-center" },
+                        { "data": "segmento" },
+                        { "data": "planillas", "className": "text-center" },
+                        { "data": "inscriptos", "className": "text-center" },
+                        { "data": "parametros", "className": "hidden-sm hidden-xs" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [4,5]
+                        },
+                        {
+                            "targets": 4,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    '<div>'+
+                                                        '  <i title="Cantidad máxima de participantes" class="fa fa-arrow-circle-o-up text-success" aria-hidden="true"></i> '+ data.max +
+                                                        '  <i title="Cantidad mínima de participantes" class="fa fa-arrow-circle-o-down text-success" aria-hidden="true"></i> '+ data.min +
+                                                        '  <i title="Cantidad máxima de reemplazos" class="fa fa-arrow-circle-o-right text-danger" aria-hidden="true"></i> '+ data.reemplazos +
+                                                    '</div><div>'+
+                                                        '<i title="Fecha máxima de nacimiento" class="fa fa-calendar-plus-o text-info" aria-hidden="true"></i> '+ data.maxFecha +
+                                                    '</div><div>'+
+                                                        '<i title="Fecha mínima de nacimiento" class="fa fa-calendar-minus-o text-info" aria-hidden="true"></i> '+ data.minFecha +
+                                                    '</div>'
+                                                :'';
+                                        }
+                        }
+                    ],
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        $(nRow).attr( 'id', 'row_'+aData.id );
+                        return nRow;
+                    },
+                    "fnDrawCallback": function(oSettings, json) {}       
+                });   
             }
-            $.Default.inscripto = function(){}
-            $.Default.inscripto.newModal = function(url){
-                $('#okButton').button('reset');
-                $('#panel-config .modal-footer').show();
-                $('#panel-config .modal-title').html("Nuevo Inscripto");
-                $('#panel-config .modal-body').html("");
-                $('#panel-config .modal-body').load(url)
-                $('#panel-config').modal();                 
+            $.Default.planilla = {},
+            $.Default.planilla.add = function(id){
+                console.log(1);
+                $.subview();
+                $('.page-header h1').toggle();
+                setTimeout(()=>{
+                    $('#globalSubView .subviews-container').load(_pathPlanillaNew.replace('__XX__',id));
+                },100);                
+//                customOptions.content = subViewElement.attr('href');
+//		customOptions.startFrom = subViewElement.data("startfrom"), customOptions.onShow = subViewElement.data("onshow"), customOptions.onHide = subViewElement.data("onhide"), customOptions.onClose = subViewElement.data("onclose");
+		
             }
-            $.Default.autocomplete = function(){}
-            $.Default.autocomplete.getData = function(municipio,tipo){
-                try {
-                    return instituciones[municipio][tipo];
-                }
-                catch(err) {
-                    return null
-                }
-            }
+            //$.Default.autocomplete = function(){}
+            //$.Default.autocomplete.getData = function(municipio,tipo){
+            //    try {
+            //        return instituciones[municipio][tipo];
+            //    }
+            //    catch(err) {
+            //        return null
+            //    }
+            //}
         })(jQuery);
-        $(document).ready(function(){$.Default.init();$.TableExport.init()});
-        
-        (function ($) {
-            var exportTable = "#inscripcionTable";
-            var ignoreColumn = 5;
-            // no se sobreescribe el namespace, si ya existe
-            $.TableExport = $.TableExport || {};
-            $.TableExport.init = function() {
-                $(".export-pdf").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'pdf',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});
-				$(".export-excel").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'excel',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});
-				$(".export-doc").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'doc',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});
-				$(".export-csv").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'csv',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});
-				$(".export-txt").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'txt',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});
-				$(".export-sql").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'sql',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});
-				$(".export-json").on("click", function(e) {
-					e.preventDefault();
-					$(exportTable).tableExport({
-						type: 'json',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-				});                
-            }
-        })(jQuery);
+        $(document).ready(function(){$.Default.init();});
     </script>
 {% endblock %}

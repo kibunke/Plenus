@@ -5,22 +5,15 @@
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
                 <h1><i class="fa fa-list-ol"></i> Listado de Planillas <small>Aquí encontrara sus planillas de buena fe</small></h1>
-                <h1 class="no-display"><i class="fa fa-edit"></i> Nueva planilla de buena fe <small>Llene el formulario para crear una nueva planillas de buena fe</small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
-            <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews ">
+            <!--<a href="#" class="close-subviews ">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a>
+            </a>-->
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
-                    <!-- start: TO-DO DROPDOWN -->
-                    <li class="dropdown">
-                        <a  href="#1" class="show-sv" onclick="$('.page-header h1').toggle();$.Planilla.add('{{ path('planilla_new') }}')" href="#globalSubView" data-startFrom="right"">
-                            <i class="fa fa-plus"></i> NUEVA
-                        </a>
-                    </li>
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -52,33 +45,7 @@
     <div class="panel-heading">
         <h4 class="panel-title">Mis <span class="text-bold">planillas </span></h4>
         <div class="panel-tools">
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cloud-download"></i>
-                </a>
-            </div>
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cog"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a class="panel-collapse collapses" href="#">
-                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-refresh" href="#">
-                            <i class="fa fa-refresh"></i> <span>Recargar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-expand" href="#">
-                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            {{ include('CommonBundle::dropdownTables.html.twig') }}
         </div>
     </div>
     <div class="panel-body">
@@ -137,15 +104,14 @@
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {},
                     "fnDrawCallback": function(oSettings, json) {}
                 });
-
             }
             //$.Default.inscripto = function(){}
-            $.Planilla.add = function(url){
-                setTimeout(()=>{
-                    $('#globalSubView .subviews-container').load(url);
-                },100);
-                
-            }
+            //$.Planilla.add = function(url){
+            //    setTimeout(()=>{
+            //        $('#globalSubView .subviews-container').load(url);
+            //    },100);
+            //    
+            //}
             //$.Segmento.editModal = function(url){
             //    $.Segmento.openAjaxModal(url,'Editar Segmento');
             //}

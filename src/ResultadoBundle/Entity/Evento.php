@@ -208,14 +208,25 @@ class Evento
      */
     public function getNombreCompletoRaw()
     {
+        $nomAux = '';
+        if ($this->nombre)
+            $nomAux = " - <small>".$this->getNombre()."</small>";
         $nom =  "<div title='".$this->getNombreCompleto()."'>".
                     "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
                     "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
-                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>";
-        if ($this->nombre)
-            $nom .= "-<small>".$this->getNombre()."</small>";
-        $nom .= "</div>";
+                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>".$nomAux.
+                "</div>";
+
         return $nom;
+    
+        //$nom =  "<div title='".$this->getNombreCompleto()."'>".
+        //            "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
+        //            "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
+        //            "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>";
+        //if ($this->nombre)
+        //    $nom .= "-<small>".$this->getNombre()."</small>";
+        //$nom .= "</div>";
+        //return $nom;
     }
 
     /**
@@ -763,17 +774,14 @@ class Evento
      */
     public function setDimensionesFromSegmento($segmento)
     {
-        //if ($segmento->getTorneo())
-            $this->setTorneo($segmento->getTorneo());
-        //if ($segmento->setDisciplina())
-            $this->setDisciplina($segmento->getDisciplina());
-        //if ($segmento->setCategoria())
-            $this->setCategoria($segmento->getCategoria());
-        //if ($segmento->setGenero())
-            $this->setGenero($segmento->getGenero());
-        //if ($segmento->setModalidad())
-            $this->setModalidad($segmento->getModalidad());
+        $this->setTorneo($segmento->getTorneo());
+        $this->setDisciplina($segmento->getDisciplina());
+        $this->setCategoria($segmento->getCategoria());
+        $this->setGenero($segmento->getGenero());
+        $this->setModalidad($segmento->getModalidad());
+        $this->setNombre($segmento->getNombre());
         $this->setSegmento($segmento);
+        
         return $this;
     }    
 }

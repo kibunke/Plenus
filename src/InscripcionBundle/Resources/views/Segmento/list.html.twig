@@ -55,65 +55,7 @@
     <div class="panel-heading">
         <h4 class="panel-title">Tabla <span class="text-bold">de segmentos </span></h4>
         <div class="panel-tools">
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cloud-download"></i>
-                </a>
-                <!--<ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a href="#1" class="export-csv">
-                            <i class="fa fa-file-text-o"></i> Guardar como CSV
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-txt">
-                            <i class="fa fa-file-text-o"></i> Guardar como TXT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-sql">
-                            <i class="fa fa-file-text-o"></i> Guardar como SQL
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-json">
-                            <i class="fa fa-file-text-o"></i> Guardar como JSON
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-excel">
-                            <i class="fa fa-file-text-o"></i> Exportar como Excel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-doc">
-                            <i class="fa fa-file-text-o"></i> Exportar como Word
-                        </a>
-                    </li>
-                </ul>-->
-            </div>
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cog"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a class="panel-collapse collapses" href="#">
-                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-refresh" href="#">
-                            <i class="fa fa-refresh"></i> <span>Recargar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-expand" href="#">
-                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            {{ include('CommonBundle::dropdownTables.html.twig') }}
         </div>
     </div>
     <div class="panel-body">

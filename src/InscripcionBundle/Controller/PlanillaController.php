@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use InscripcionBundle\Entity\Planilla;
 use InscripcionBundle\Form\PlanillaType;
+use InscripcionBundle\Entity\Segmento;
 
 /**
  * Planilla controller.
@@ -74,16 +75,17 @@ class PlanillaController extends Controller
     }
     
     /**
-     * @Route("/new", name="planilla_new", condition="request.isXmlHttpRequest()")
+     * @Route("/new/{id}", name="planilla_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_INSCRIPCION_PLANILLA_NEW')")
      * @Template("InscripcionBundle:Planilla:new.html.twig")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, Segmento $segmento)
     {        
         $em = $this->getDoctrine()->getManager();
         $planilla = new Planilla();
         
-        $segmento = $em->getRepository('InscripcionBundle:Segmento')->find(13);
+        //$segmento = $em->getRepository('InscripcionBundle:Segmento')->find(13);
         $planilla->setSegmento($segmento);
         
         

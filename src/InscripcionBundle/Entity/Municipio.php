@@ -29,7 +29,7 @@ class Municipio extends Origen
      */
     public function getLabel()
     {
-        return "Munipal";
+        return "Municipal";
     }
     
     /**
