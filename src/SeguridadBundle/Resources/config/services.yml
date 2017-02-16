@@ -1,3 +1,8 @@
 parameters:
 
 services:
+    seguridad.bundle.usuario.admin:
+        class: SeguridadBundle\Form\UsuarioAdminType
+        arguments: ["@security.token_storage"]
+        tags:
+            - { name: form.type }            

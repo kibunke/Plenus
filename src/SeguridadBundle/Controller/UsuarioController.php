@@ -224,7 +224,7 @@ class UsuarioController extends Controller
         $form = $this->createForm(UsuarioAdminType::class, $user,
                                   array(
                                         'action' => $this->generateUrl('user_edit', array('user' => $user->getId())),
-                                        'method' => 'POST'
+                                        'method' => 'POST',
                                        )
                                  );
         
