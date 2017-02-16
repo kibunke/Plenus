@@ -1,0 +1,28 @@
+<div class="visible-md visible-lg hidden-sm hidden-xs">
+    <button disabled class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></button>
+    {% if is_granted('ROLE_INSCRIPCION_PLANILLA_NEW') %}
+        {#<a  href="#1" class="show-sv" onclick="$('.page-header h1').toggle();$.Planilla.add('{{ path('planilla_new') }}')" href="#globalSubView" data-startFrom="right"">#}
+        <button title="Agregar un planillade buena fe en el segmento" onclick="$.Default.planilla.add('{{ entity.id }}')" class="btn btn-xs btn-green"><i class="fa fa-plus fa-white"></i></button>
+    {% endif %}
+</div>
+<div class="visible-xs visible-sm hidden-md hidden-lg">
+    <div class="btn-group">
+        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </a>
+        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+            <li>
+                <a disabled role="menuitem" tabindex="-1" href="#1">
+                    <i class="fa fa-eye"></i> Ver
+                </a>
+            </li>
+            {#% if is_granted('ROLE_INSCRIPCION_PLANILLA_NEW') %}
+            <li>
+                <a onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" role="menuitem" tabindex="-1" href="#">
+                    <i class="fa fa-times"></i> Eliminar
+                </a>
+            </li>
+            {% endif %#}
+        </ul>
+    </div>
+</div>
