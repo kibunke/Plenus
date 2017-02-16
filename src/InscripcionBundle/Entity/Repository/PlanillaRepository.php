@@ -40,7 +40,7 @@ class PlanillaRepository extends EntityRepository
                     m.nombre LIKE ?1)";
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT p,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos
+                        ->createQuery(" SELECT p
                                         FROM InscripcionBundle:Planilla p
                                         JOIN p.segmento s
                                         JOIN s.disciplina d
@@ -50,7 +50,6 @@ class PlanillaRepository extends EntityRepository
                                         JOIN s.genero g
                                         LEFT JOIN s.eventos e
                                         WHERE $where
-                                        GROUP BY s.id
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
