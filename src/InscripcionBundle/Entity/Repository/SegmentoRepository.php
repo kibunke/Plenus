@@ -45,7 +45,7 @@ class SegmentoRepository extends EntityRepository
             $where .= " AND (u.id = " . $user->getId() . ")";
         }
         return $this->getEntityManager()
-                        ->createQuery(" SELECT s, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, 0 as HIDDEN inscriptos
+                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, 0 as HIDDEN inscriptos
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
