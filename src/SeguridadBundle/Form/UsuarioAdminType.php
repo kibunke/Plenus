@@ -33,7 +33,7 @@ class UsuarioAdminType extends AbstractType
                                                 $query->where('p.availableForNewUsers = 1');
                                             return $query->orderBy('p.name', 'ASC');
                                         },
-                                        'choice_label' => 'legend',
+                                        'choice_label' => 'name',
                                         'placeholder'  => 'para que vas a usar Plenus?'
                                     )
                 )
