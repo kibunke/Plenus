@@ -350,4 +350,9 @@ class Cargo
     {
         return $this->usuarios;
     }
+    
+    public function hasPerfil(Perfil $perfil)
+    {
+        return (in_array($perfil,$this->getPerfiles()->toArray()));
+    }
 }

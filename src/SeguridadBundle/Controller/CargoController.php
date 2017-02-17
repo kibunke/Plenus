@@ -69,9 +69,9 @@ class CargoController extends Controller
      */
     public function editAction(Request $request,Cargo $cargo)
     {
-        $em     = $this->getDoctrine()->getManager();
-        $roles  = $em->getRepository('SeguridadBundle:Role')->findBy(array('isActive'=>true));
-        $form   = $this->createEditForm($cargo);
+        $em       = $this->getDoctrine()->getManager();
+        $perfiles = $em->getRepository('SeguridadBundle:Perfil')->findBy(array('isActive'=>true));
+        $form     = $this->createEditForm($cargo);
         $form->handleRequest($request);
      
         if ($form->isSubmitted() && $form->isValid())
@@ -80,16 +80,16 @@ class CargoController extends Controller
             try{
                 $em->flush();
                 $this->addFlash('success', "Cargo ". $cargo->getName() . " modificado con éxito");
-                return $this->redirectToRoute('cargo_edit',array('perfil' => $cargo->getId()));
+                return $this->redirectToRoute('cargo_edit',array('cargo' => $cargo->getId()));
             }catch(\Exception $e ){
                 $this->addFlash('error', "El Cargo no pudo ser modificado");
-                return $this->redirectToRoute('cargo_edit',array('perfil' => $cargo->getId()));
+                return $this->redirectToRoute('cargo_edit',array('cargo' => $cargo->getId()));
             }
         }
         return array(
-            'entity' => $cargo,
-            'form'   => $form->createView(),
-            'roles'  => $roles
+            'entity'   => $cargo,
+            'form'     => $form->createView(),
+            'perfiles' => $perfiles
         );
     }
     
@@ -100,10 +100,10 @@ class CargoController extends Controller
      */
     public function newAction(Request $request)
     {
-        $entity = new Cargo();
-        $form   = $this->createCreateForm($entity);
-        $em     = $this->getDoctrine()->getManager();
-        $roles  = $em->getRepository('SeguridadBundle:Role')->findBy(array('isActive'=>true));
+        $entity   = new Cargo();
+        $form     = $this->createCreateForm($entity);
+        $em       = $this->getDoctrine()->getManager();
+        $perfiles = $em->getRepository('SeguridadBundle:Perfil')->findBy(array('isActive'=>true));
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid())
@@ -122,9 +122,9 @@ class CargoController extends Controller
             }
         }
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-            'roles'  => $roles
+            'entity'   => $entity,
+            'form'     => $form->createView(),
+            'perfiles' => $perfiles
         );
     }
 
@@ -135,12 +135,12 @@ class CargoController extends Controller
      */
     public function deleteAction(Request $request,Cargo $cargo)
     {
-        $form          = $this->createDeleteForm($cargo);
+        $form = $this->createDeleteForm($cargo);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid())
         {
-            if(($cargo->getRoles()->count() > 0)||($cargo->getUsuarios()->count() > 0))
+            if($cargo->getPerfiles()->count() > 0)
             {
                 return new JsonResponse(array('resultado' => 2, 'mensaje' => 'No pudo ser eliminado el Cargo porque tiene Roles y/o Usuarios asignados'));
             }
@@ -187,7 +187,7 @@ class CargoController extends Controller
     {
         $form = $this->createForm(CargoType::class, $entity,
                                   array(
-                                        'action' => $this->generateUrl('cargo_edit', array('perfil' => $entity->getId())),
+                                        'action' => $this->generateUrl('cargo_edit', array('cargo' => $entity->getId())),
                                         'method' => 'POST'
                                        )
                                   );

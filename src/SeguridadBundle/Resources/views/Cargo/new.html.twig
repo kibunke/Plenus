@@ -28,7 +28,7 @@
             <ol class="breadcrumb">
                 <li>
                     <a href="{{ path('cargo_list') }}">
-                        Perfil
+                        Cargo
                     </a>
                 </li>
                 <li class="active">
@@ -73,7 +73,7 @@
 		</table>
 		<button type="submit" class="btn btn-success col-md-4 pull-right">Listo</button>
 		{{form_widget(form._token)}}</div>
-		<div class="hide">{{form_widget(form.roles)}}</div>
+		<div class="hide">{{form_widget(form.perfiles)}}</div>
 		{{form_end(form)}}
      </div>
    </div>
@@ -92,12 +92,11 @@
 				}
 			);
 		 },
-		 $.PerfilesCargos.actualizar = function(checkbox,role)
+		 $.PerfilesCargos.actualizar = function(checkbox,perfil)
 		 {
-			 $('#cargo_perfiles_' + role).attr('checked',$('#'+checkbox).is(':checked'));
+			 $('#cargo_perfiles_' + perfil).attr('checked',$('#'+checkbox).is(':checked'));
 		 }
 	 })(jQuery);
 	$(document).ready(function(){$.PerfilesCargos.init();});
 </script>
-{% endblock %}    
-
+{% endblock %}

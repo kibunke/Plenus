@@ -27,7 +27,8 @@ class UsuarioType extends AbstractType
                                                 ->orderBy('p.name', 'ASC');
                                         },
                                         'choice_label' => 'legend',
-                                        'placeholder'  => 'para que vas a usar Plenus?'
+                                        'placeholder'  => 'para que vas a usar Plenus?',
+                                        'attr'         => array('onchange' => 'Login.validarMunicipio(this.value);')
                                     )
                 )
             ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))            

@@ -169,7 +169,7 @@
                                         
                                         url_delete  = "'" + _path_delete_cargo.replace('__00__',row.id) + "'";
                                         
-                                        if(!row.roles && !row.usuarios)
+                                        if(!row.perfiles)
                                         {
                                             resultado += '<a href="#2" onclick="$.Cargos.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
                                         }
@@ -249,10 +249,10 @@
                 $('#panel-config').modal();  
             },
             $.Cargos.editar = function(url){
-                $.Cargos.crearModal(url,"Editar Perfil");
+                $.Cargos.crearModal(url,"Editar Cargo");
             },
             $.Cargos.borrar = function(url){
-                $.Cargos.crearModal(url,"Eliminar Perfil");
+                $.Cargos.crearModal(url,"Eliminar Cargo");
             }
         })(jQuery);
         $(document).ready(function(){$.Cargos.init();});

@@ -58,6 +58,13 @@ class Perfil
     private $usuarios;
     
     /**
+     * @var integer $orden
+     *
+     * @ORM\Column(name="orden", type="integer")
+     */
+    private $orden;
+
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -100,14 +107,33 @@ class Perfil
     private $isActive;
     
     /**
+     * @var boolean $muestraMunicipio
+     *
+     * @ORM\Column(name="muestraMunicipio", type="boolean")
+     */
+    private $muestraMunicipio;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
+     */
+    private $municipio;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Cargo", mappedBy="perfiles")
+     */
+    private $cargos;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->isActive  = true;
-        $this->createdAt = new \DateTime();
-        $this->roles     = new ArrayCollection();
-        $this->usuarios  = new ArrayCollection();
+        $this->isActive         = true;
+        $this->createdAt        = new \DateTime();
+        $this->roles            = new ArrayCollection();
+        $this->usuarios         = new ArrayCollection();
+        $this->orden            = 0;
+        $this->muestraMunicipio = true;
     }
 
     /**
@@ -417,5 +443,98 @@ class Perfil
     public function hasRole($role)
     {
         return (in_array($role,$this->getRoles()->toArray()));
+    }
+
+    /**
+     * Set orden
+     *
+     * @param integer $orden
+     *
+     * @return Perfil
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
+
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return integer
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * Set muestraMunicipio
+     *
+     * @param boolean $muestraMunicipio
+     *
+     * @return Perfil
+     */
+    public function setMuestraMunicipio($muestraMunicipio)
+    {
+        $this->muestraMunicipio = $muestraMunicipio;
+
+        return $this;
+    }
+
+    /**
+     * Get muestraMunicipio
+     *
+     * @return boolean
+     */
+    public function getMuestraMunicipio()
+    {
+        return $this->muestraMunicipio;
+    }
+
+    /**
+     * Set municipio
+     *
+     * @param \CommonBundle\Entity\Municipio $municipio
+     *
+     * @return Perfil
+     */
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
+    {
+        $this->municipio = $municipio;
+
+        return $this;
+    }
+
+    /**
+     * Get municipio
+     *
+     * @return \CommonBundle\Entity\Municipio
+     */
+    public function getMunicipio()
+    {
+        return $this->municipio;
+    }
+    
+    public function getMunicipioId()
+    {
+        if ($this->municipio)
+        {
+            return $this->municipio->getId();
+        }
+        
+        return 0;
+    }
+    
+    public function toArray()
+    {
+        return array(
+                 'id'               => $this->id,
+                 'name'             => $this->name,
+                 'legend'           => $this->legend,
+                 'muestraMunicipio' => $this->muestraMunicipio,
+                 'municipio'        => $this->getMunicipioId()
+                );
     }
 }

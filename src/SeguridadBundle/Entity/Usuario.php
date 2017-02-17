@@ -94,7 +94,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     /**
      * @var User $cargo
      * 
-     * @ORM\ManyToOne(targetEntity="Cargo")
+     * @ORM\ManyToOne(targetEntity="Cargo", inversedBy="usuarios")
      */   
     private $cargo;
     

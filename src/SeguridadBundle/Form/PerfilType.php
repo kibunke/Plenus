@@ -19,22 +19,30 @@ class PerfilType extends AbstractType
             ->add('legend', TextType::class, array('label' => 'Leyenda'))
             ->add('description', TextType::class, array('label' => 'Descripción'))
             ->add('roles', EntityType::class, array(
-                                                        // query choices from this entity
                                                         'class' => 'SeguridadBundle:Role',
                                                         'query_builder' => function (EntityRepository $er) {
                                                             return $er->createQueryBuilder('u')
                                                                       ->where('u.isActive = 1')
                                                                       ->orderBy('u.name', 'ASC');
                                                         },
-                                                        // use the User.username property as the visible option string
                                                         'choice_label' => 'name',
-                                                    
-                                                        // used to render a select box, check boxes or radios
-                                                         'multiple' => true,
-                                                         'expanded' => true,
+                                                        'multiple' => true,
+                                                        'expanded' => true,
                                                     )
                  )
             ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))
+            ->add('muestraMunicipio', CheckboxType::class, array('label' => 'Muestra Municipio?', 'required' => false))
+            ->add('municipio', EntityType::class, array(
+                                                        'label' => 'Municipio por defecto',
+                                                        'class' => 'CommonBundle:Municipio',
+                                                        'query_builder' => function (EntityRepository $er) {
+                                                            return $er->createQueryBuilder('u')
+                                                                      ->orderBy('u.nombre', 'ASC');
+                                                        },
+                                                        // use the User.username property as the visible option string
+                                                        'choice_label' => 'nombre',
+                                                    )
+                 )
             ->add('availableForNewUsers', CheckboxType::class, array('label' => 'Disponible para Nuevos Usuarios', 'required' => false))
             
         ;
