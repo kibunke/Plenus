@@ -25,7 +25,7 @@ class SegmentoType extends AbstractType
 
     public function __construct(ObjectManager $manager,TokenStorage $tokenStorage)
     {
-        $this->manager = $manager;
+        $this->manager      = $manager;
         $this->tokenStorage = $tokenStorage;
     }
     

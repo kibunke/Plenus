@@ -1,0 +1,260 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1>Listado de Cargos <small>Todo lo referido a los cargos del sistema</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{path('cargo_new')}}">
+                            <i class="fa fa-id-card"></i> NUEVO
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('cargo_list') }}">
+                        Cargos
+                    </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoData %}
+    <div class="panel-heading">
+        <h4 class="panel-title">Tabla <span class="text-bold">de cargos</span></h4>
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-collapse collapses" href="#">
+                           <i class="fa fa-angle-up"></i> <span>Minimizar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-refresh" href="#">
+                           <i class="fa fa-refresh"></i> <span>Recargar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-expand" href="#">
+                           <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <style>
+        .popover-content{
+            overflow: hidden;
+        }
+    </style>
+    <div class="panel-body">
+        <table id="list_cargos" class="table table-striped table-hover" width="100%">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="">Nombre</th>
+                    <th class="">Descripción</th>
+                    <th class="text-center">Activo</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script type="text/javascript">
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var _table;
+            var _path_edit_cargo   = "{{path('cargo_edit')}}";
+            var _path_delete_cargo = "{{path('cargo_delete')}}";
+            $.Cargos = $.Cargos || {};
+            $.Cargos.init = function() {
+                 _table  = $('#list_cargos').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('cargo_list_datatable') }}',
+                        "type": 'POST',
+                        "error": function (xhr, jqAjaxerror, thrown) {
+                           if ((xhr.status == 403) || (xhr.status == 302)) {
+                               swal({
+                                    title: "Sesión Expirada",
+                                    text: "Debe reiniciar sesión para continuar",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: false
+                                  },
+                                  function(){
+                                    document.location.reload();
+                                  });
+                               }
+                           }
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data":"id" },
+                        { "data":"name" },
+                        { "data":"description" },
+                        { "data":"isActive" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 0, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [0,3,4]
+                        },
+                        {
+                            "targets": 0,
+                            "data": false,
+                            "className" :'text-center',
+                        },
+                        {
+                        "targets": 3,
+                        "data": false,
+                        "className" :'text-center',
+                        "render":   function ( data, type, row, meta ) {
+                                        return type === 'display' && !row.isActive ?
+                                            '<i class="fa fa-square-o fa-lg text-success" title="Inactivo"></i>' :
+                                            '<i class="fa fa-check-square-o fa-lg text-success" title="Activo"></i>'
+                                            ;
+                                    }
+                       },
+                       {
+                        "targets": 4,
+                        "data": false,
+                        "className" :'text-justified',
+                        "render":   function ( data, type, row, meta ) {
+                                        url_edit  = "'" + _path_edit_cargo.replace('__00__',row.id) + "'";
+                                        resultado = '';
+                                        if(row.id > 0)
+                                        {
+                                            resultado += '<a href='+ url_edit + ' title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
+                                        }
+                                        
+                                        url_delete  = "'" + _path_delete_cargo.replace('__00__',row.id) + "'";
+                                        
+                                        if(!row.roles && !row.usuarios)
+                                        {
+                                            resultado += '<a href="#2" onclick="$.Cargos.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+                                        }
+                                        
+                                        return resultado;
+                                    }
+                       }
+                       
+                    ],
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('[data-toggle="popover"]').popover();
+                        $input = $('#list_cargos_filter input');
+                        if ($input.val().length>0) {
+                            $('#list_cargos tbody td').each(function(){
+                                $td=$(this);
+                                if ($td.text().toUpperCase().indexOf($input.val().toUpperCase())>-1) {
+                                    $td.html($td.text().toUpperCase().replace($input.val().toUpperCase(),'<span class="occurrence">'+$input.val().toUpperCase()+'</span>'))
+                                }
+                            });
+                        }
+                       // $.Cargos.charts(_table.ajax.json().cantPerfiles);
+                    }
+                });
+                //Comportamiento del boton 'Listo' del modal -> manda el formulario del modal-
+                $('#okButton').on('click',function(){
+                    $('#panel-config form').submit();
+                });
+            },
+            $.Cargos.charts = function(){},
+            $.Cargos.crearModal = function(url,title)
+            {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').show();
+                $('#panel-config .modal-title').html(title);
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url,function(){
+                $('#panel-config form').submit(function(event){
+                        event.preventDefault();
+                        $.post(url,
+                               $('#panel-config form').serialize(),
+                               function(data){
+                                  if(data.resultado == 0)
+                                  {
+                                    swal({
+                                    title: "Resultado",
+                                    text: data.mensaje,
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: true
+                                  },
+                                  function(){
+                                    _table.ajax.reload( null, false );
+                                    $('#panel-config').modal('toggle');
+                                  });
+                                    
+                                  }else{
+                                    swal({
+                                    title: "Resultado",
+                                    text: data.mensaje,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Aceptar",
+                                    closeOnConfirm: true
+                                        },
+                                        function(){});
+                                      }
+                               }
+                        );
+                        //$.Evento.etapa.competencia.request($('#panel-config form'),'zona');
+                        //setTimeout(function(){$("#reload-parcial-fixture").load($("#reload-parcial-fixture").data("update"));},500);
+                        //return false;
+                    });
+                });
+                $('#panel-config').modal();  
+            },
+            $.Cargos.editar = function(url){
+                $.Cargos.crearModal(url,"Editar Perfil");
+            },
+            $.Cargos.borrar = function(url){
+                $.Cargos.crearModal(url,"Eliminar Perfil");
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Cargos.init();});
+    </script>
+{% endblock %} 

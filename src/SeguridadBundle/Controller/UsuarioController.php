@@ -276,7 +276,6 @@ class UsuarioController extends Controller
      * @Route("/{user}/activar", name="user_activar", condition="request.isXmlHttpRequest()")
      * @Security("has_role('ROLE_USER_ACTIVATE')")
      * @Method({"POST"})
-     * 
      */
     public function activarAction(Request $request,Usuario $user)
     {

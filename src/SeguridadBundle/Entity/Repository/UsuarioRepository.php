@@ -10,7 +10,6 @@ namespace SeguridadBundle\Entity\Repository;
  */
 class UsuarioRepository extends \Doctrine\ORM\EntityRepository
 {
-    //->isGranted('ROLE_USER_LIST_ALL')
     public function dataTable($request,$user,$auth_checker)
     {
         return array(
@@ -102,4 +101,3 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                     ->getSingleScalarResult();
     } 
 }
-
