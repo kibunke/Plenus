@@ -263,14 +263,18 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Fecha de Nacimiento</label>
-											<strong>{% if entity.persona.fNacimiento%} {{entity.persona.fNacimiento|date('d/m/Y')}}{% endif %}</strong>
+											{% if entity.persona.fNacimiento%}
+												<input disabled type="text" class="form-control" value="{{ entity.persona.fNacimiento|date('d/m/Y') }}">
+											{% else %}
+												<input disabled type="text" class="form-control" value="Aún no cargada">
+											{% endif %}
 											{{form_widget(form.isActive)}}
 										</div>
 									</div>
 									<div class="col-md-8">
 										<div class="form-group">
 											<label class="control-label">Municipio</label>
-											<strong>{{entity.persona.municipio}}</strong>
+											<input disabled type="text" class="form-control" value="{{entity.persona.municipio}}">
 										</div>
 									</div>
 								</div>

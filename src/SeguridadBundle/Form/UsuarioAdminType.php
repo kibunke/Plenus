@@ -29,13 +29,14 @@ class UsuarioAdminType extends AbstractType
                                         'class' => 'SeguridadBundle:Perfil',
                                         'query_builder' => function (EntityRepository $er) use($user) {
                                             $query = $er->createQueryBuilder('p');
-                                            if(!$user->hasRole('ROLE_ADMIN'))
+                                            //if(!$user->hasRole('ROLE_ADMIN'))
                                                 $query->where('p.availableForNewUsers = 1');
                                             return $query->orderBy('p.name', 'ASC');
                                         },
                                         'choice_label' => 'name',
-                                        'placeholder'  => 'para que vas a usar Plenus?',
-                                        'attr'         => array('onchange' => '$.UsuarioEdit.actualizarCargos(this.value);')
+                                        'placeholder'  => 'Seleccione el perfil del usuario',
+                                        'attr'         => array('onchange' => '$.UsuarioEdit.actualizarCargos(this.value);'),
+                                        'disabled' => !$user->hasRole('ROLE_ADMIN')
                                     )
                   
                 )

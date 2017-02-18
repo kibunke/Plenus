@@ -122,7 +122,7 @@ class SegmentoType extends AbstractType
             ->add('maxEquiposPorPlanilla', IntegerType::class, array(
                                                              "attr" => array(
                                                                                 'min' => 0,
-                                                                                'placeholder' => 'Máximo reemplazos'
+                                                                                'placeholder' => 'Máximo quipos por planilla'
                                                                         ),
                                                              
                                                              "label" => "Equipos por planilla"
