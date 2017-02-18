@@ -1,5 +1,12 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
     <button disabled class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></button>
+    {% if is_granted('ROLE_SEGMENTO_ACTIVE') %}
+        {% if entity.isActive %}
+            <button title="Cerrar inscripción en este segmento" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle', { 'id': entity.id }) }}','La inscripción al segmento será cerrada!')" class="btn btn-xs btn-dark-red tooltips"><i class="fa fa-lock fa fa-white"></i></button>
+        {% else %}
+            <button title="Abrir inscripción en este segmento" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle', { 'id': entity.id }) }}','La inscripción al segmento será abierta!')" class="btn btn-xs btn-dark-green tooltips"><i class="fa fa-unlock fa fa-white"></i></button>
+        {% endif %}
+    {% endif %}
     {% if is_granted('ROLE_SEGMENTO_EDIT') %}
         <button onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
     {% endif %}
@@ -21,6 +28,19 @@
                     <i class="fa fa-eye"></i> Ver
                 </a>
             </li>
+            {% if is_granted('ROLE_SEGMENTO_ACTIVE') %}
+                <li>
+                    {% if entity.isActive %}
+                        <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle', { 'id': entity.id }) }}','La inscripción al segmento será cerrada!')" title="Cerrar inscripción en este segmento">
+                            <i class="fa fa-lock fa fa-white"></i> Cerrar inscripción
+                        </a>
+                    {% else %}
+                        <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle', { 'id': entity.id }) }}','La inscripción al segmento será abierta!')" title="Abrir inscripción en este segmento">
+                            <i class="fa fa-unlock fa fa-white"></i> Abrir inscripción
+                        </a>
+                    {% endif %}
+                </li>
+            {% endif %}            
             {% if is_granted('ROLE_SEGMENTO_EDIT') %}
             <li>
                 <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')">

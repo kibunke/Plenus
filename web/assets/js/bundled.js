@@ -38725,16 +38725,16 @@ var Main = function() {
 									width: "100%"
 								}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
 
-									$(this).off();
-									if($(subview_id[0]).length) {
-										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
-											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
-												show_functions[show_functions.length - 1].call($this);
-											}
-										});
-									} else {
-										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
-									}
+									//$(this).off();
+									//if($(subview_id[0]).length) {
+									//	$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+									//		if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+									//			show_functions[show_functions.length - 1].call($this);
+									//		}
+									//	});
+									//} else {
+									//	$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									//}
 
 								});
 							});
@@ -38747,16 +38747,16 @@ var Main = function() {
 
 								}).on('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function() {
 
-									$(this).off();
-									if($(subview_id[0]).length) {
-										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
-											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
-												show_functions[show_functions.length - 1].call($this);
-											}
-										});
-									} else {
-										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
-									}
+									//$(this).off();
+									//if($(subview_id[0]).length) {
+									//	$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+									//		if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+									//			show_functions[show_functions.length - 1].call($this);
+									//		}
+									//	});
+									//} else {
+									//	$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									//}
 								});
 							});
 							break;
@@ -38804,15 +38804,15 @@ var Main = function() {
 									width: "100%"
 								}, 300, function() {
 
-									if($(subview_id[0]).length) {
-										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
-											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
-												show_functions[show_functions.length - 1].call($this);
-											}
-										});
-									} else {
-										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
-									}
+									//if($(subview_id[0]).length) {
+									//	$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+									//		if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+									//			show_functions[show_functions.length - 1].call($this);
+									//		}
+									//	});
+									//} else {
+									//	$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									//}
 
 								});
 							});
@@ -38825,16 +38825,16 @@ var Main = function() {
 
 								}, 300, function() {
 
-									$(this).off();
-									if($(subview_id[0]).length) {
-										$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
-											if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
-												show_functions[show_functions.length - 1].call($this);
-											}
-										});
-									} else {
-										$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
-									}
+									//$(this).off();
+									//if($(subview_id[0]).length) {
+									//	$(subview_id[0]).appendTo(".subviews-container").show(0, function() {
+									//		if(jQuery.isFunction(show_functions[show_functions.length - 1])) {
+									//			show_functions[show_functions.length - 1].call($this);
+									//		}
+									//	});
+									//} else {
+									//	$(".subviews-container").html("<h3 class='center'>Sorry this page is not available</h3>");
+									//}
 								});
 							});
 							break;

@@ -119,6 +119,15 @@ class SegmentoType extends AbstractType
                                                              "label" => "Reemplazos"
                                                             )
                   )
+            ->add('maxEquiposPorPlanilla', IntegerType::class, array(
+                                                             "attr" => array(
+                                                                                'min' => 0,
+                                                                                'placeholder' => 'Máximo reemplazos'
+                                                                        ),
+                                                             
+                                                             "label" => "Equipos por planilla"
+                                                            )
+                  )
             ->add('minFechaNacimiento', DateType::class, array(
                 "label" => "Fecha de nacimiento inicio",
                 'widget' => 'single_text',

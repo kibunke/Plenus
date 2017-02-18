@@ -55,7 +55,10 @@
 
             <!-- start: FORGOT BOX -->
             <div class="box-forgot">
-                <h3><i class="fa fa-comments-o fa-lg"></i> Olvidó su contraseña?</h3>
+                <h3>
+                    <i class="fa fa-comments-o fa-lg"></i> Olvidó su contraseña?
+                    <i class="fa fa-spinner fa-pulse fa-lg fa-checking hide pull-right" aria-hidden="true"></i>
+                </h3>
                 <p>
                     Ingrese su e-mail para resetear la constraseña.
                 </p>
@@ -195,7 +198,27 @@
                     });
                     $('.box-forgot').show().addClass("animated bounceInLeft").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
                         $(this).show().removeClass("animated bounceInLeft");
-                        $(this).find('.form').load("{{ path('_reset_password_step1') }}");
+                        $(this).find('.form').load("{{ path('_reset_password_step1') }}", function (){
+                            $(this).find('form').submit(function (event) {
+                                let $form = $(this);
+                                $('.fa-checking').removeClass('hide');
+                                event.preventDefault();
+                                $.post($form.attr('action'),$form.serialize())
+                                    .done((data)=> {
+                                        if (data.success){
+                                            $('.box-register .form').html('<div class="alert alert-success">'+data.message+'</div>');
+                                        }else{
+                                            toastr['warning'](data.message, 'Atención!');
+                                        }
+                                    })
+                                    .fail(()=> {
+                                        toastr['error']('Ocurrio un error de Red. Intentelo más tarde.','Error!');
+                                    }).always(()=>{
+                                        _newAccountFormProcessing = false;
+                                        $('.fa-checking').addClass('hide');
+                                    });
+                            });
+                        });
                     });
                     
                 });

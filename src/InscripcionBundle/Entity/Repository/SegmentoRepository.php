@@ -17,7 +17,8 @@ class SegmentoRepository extends EntityRepository
         return array(
                       "total"    => $this->getTotalRows($user,$auth_checker),
                       "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
-                      "rows"     => $this->getRows($request,$user,$auth_checker)
+                      "rows"     => $this->getRows($request,$user,$auth_checker),
+                      "actives"   => $this->getActives($user,$auth_checker)
             );
     }
     
@@ -39,11 +40,9 @@ class SegmentoRepository extends EntityRepository
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)";
-        
-        if(!$auth_checker->isGranted('ROLE_ADMIN')){
-            $where .= " AND (u.id = " . $user->getId() . ")";
-        }
+                    m.nombre LIKE ?1)"
+                    . $this->applyRoleFilter($user,$auth_checker);
+                    
         return $this->getEntityManager()
                         ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, 0 as HIDDEN inscriptos
                                         FROM InscripcionBundle:Segmento s
@@ -72,10 +71,8 @@ class SegmentoRepository extends EntityRepository
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)";
-        if(!$auth_checker->isGranted('ROLE_ADMIN')){
-            $where .= " AND (u.id = " . $user->getId() . ")";
-        }
+                    m.nombre LIKE ?1)"
+                    . $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
                                         FROM InscripcionBundle:Segmento s
@@ -92,15 +89,37 @@ class SegmentoRepository extends EntityRepository
     
     public function getTotalRows($user,$auth_checker)
     {
-        $where = "1 = 1";
-        if(!$auth_checker->isGranted('ROLE_ADMIN')){
-            $where .= " AND u.id = " . $user->getId();
-        }        
+        $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.coordinadores u
                                         WHERE $where ")
                         ->getSingleScalarResult();
+    }
+
+    public function getActives($user,$auth_checker)
+    {
+        $where = "s.isActive = 1". $this->applyRoleFilter($user,$auth_checker);
+        
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(s)
+                                        FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores u
+                                        WHERE $where")
+                        ->getSingleScalarResult();
+    }
+    
+    private function applyRoleFilter($user,$auth_checker)
+    {
+        $where = '';
+        if(!$auth_checker->isGranted('ROLE_ADMIN')){
+            if($auth_checker->isGranted('ROLE_COORDINADOR')){
+                $where .= " AND (u.id = " . $user->getId() . ")";
+            }else{
+                $where .= " AND (s.isActive = 1)";
+            }
+        }
+        return $where;
     }
 }

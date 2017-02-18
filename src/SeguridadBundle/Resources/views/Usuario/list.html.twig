@@ -40,6 +40,39 @@
                                 <i class="fa fa-user-times"></i> LOGOUT ALL
                             </a>
                         </li>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+                                <span class="messages-count badge badge-default hide">3</span> <i class="fa fa-eye"></i> TEMPLATE
+                            </a>
+                            <ul class="dropdown-menu dropdown-light dropdown-messages">
+                                <li>
+                                    <div class="drop-down-wrapper ps-container">
+                                        <ul>
+                                            <li class="">
+                                                <a href="#1" onclick="$.Usuario.showTemplateEmail('{{ path('_show_email_template', {'item' : 'emailPaso1'})}}')">
+                                                    <i class="fa fa-envelope"></i> Recuperar contraseña paso 1
+                                                </a>
+                                            </li>
+                                            <li class="unread">
+                                                <a  href="#1" onclick="$.Usuario.showTemplateEmail('{{ path('_show_email_template', {'item' : 'emailPaso12'})}}')">
+                                                    <i class="fa fa-envelope"></i> Recuperar contraseña paso 2
+                                                </a>
+                                            </li>                    
+                                            <li class="unread">
+                                                <a  href="#1" onclick="$.Usuario.showTemplateEmail('{{ path('_show_email_template', {'item' : 'nuevaCuenta'})}}')">
+                                                    <i class="fa fa-envelope"></i> Nueva cuenta
+                                                </a>
+                                            </li>
+                                            <li class="unread">
+                                                <a  href="#1" onclick="$.Usuario.showTemplateEmail('{{ path('_show_email_template', {'item' : 'activacionDeCuenta'})}}')">
+                                                    <i class="fa fa-envelope"></i> Activación cuenta
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
                     {% endif %}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
@@ -123,7 +156,12 @@
                     "serverSide": true,
                     "ajax": {
                         "url": '{{ path('user_list_datatable') }}',
-                        "type": 'POST'
+                        "type": 'POST',
+                        "dataSrc": function(json){
+                            $('#logueados_cant').html(json.logueados);
+                            $('#anonimos_cant').html(json.anonimos);                            
+                            return json.data;
+                        }
                     },
                     "language" : {
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
@@ -220,9 +258,7 @@
                             
                         return nRow;
                     },
-                    "fnDrawCallback": function(oSettings, json) {
-                        $('#logueados_cant').html(_table.ajax.json().logueados);
-                        $('#anonimos_cant').html(_table.ajax.json().anonimos);
+                    "fnDrawCallback": function(oSettings) {
                         $('[data-toggle="popover"]').popover();
                         $input = $('#list_users_filter input');
                         if ($input.val().length>0) {
@@ -238,6 +274,14 @@
                 });
             },
             $.Usuario.charts = function(){},
+            $.Usuario.showTemplateEmail = function(url){
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-title').html('Template de email');
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(url);
+                $('#panel-config').modal();                
+            }
             $.Usuario.activar = function(url){
                 swal({
                         title: "Activar Usuario",

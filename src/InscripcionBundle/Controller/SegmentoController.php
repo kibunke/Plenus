@@ -58,7 +58,8 @@ class SegmentoController extends Controller
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
-                    "data"            => array()
+                    "data"            => array(),
+                    "state"           => array('actives' => $filter['actives'], 'inactives' => $filter['total']-$filter['actives'])
         );
         
         foreach ($filter['rows'] as $segmento){
@@ -92,14 +93,11 @@ class SegmentoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $segmento = new Segmento();
         $form = $this->createForm(SegmentoType::class, $segmento);
-        //$form = $this->createNewAccountForm($user);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {            
             try {
                 $segmento->setCreatedBy($this->getUser());
-                //foreach($segmento->getEventos() as $evento){
-                //    $segmento->addEvento($evento);
-                //}
                 $em->persist($segmento);
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' => 'Se creo el Segmento'));
@@ -116,11 +114,14 @@ class SegmentoController extends Controller
     /**
      * @Route("/{id}/edit", name="segmento_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
-     * * @Security("has_role('ROLE_SEGMENTO_EDIT')")
+     * @Security("has_role('ROLE_SEGMENTO_EDIT')")
      * @Template("InscripcionBundle:Segmento:edit.html.twig")
      */
     public function editAction(Request $request,Segmento $segmento)
     {
+        if (!$this->canEdit($segmento)){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'No puede modificar este segmento!'));
+        }        
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(SegmentoType::class, $segmento);
 
@@ -129,9 +130,6 @@ class SegmentoController extends Controller
             try {
                 $segmento->setUpdatedAt(new \DateTime());
                 $segmento->setUpdatedBy($this->getUser());
-                //foreach($segmento->getEventos() as $evento){
-                //    $segmento->addEvento($evento);
-                //}
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' => 'Se modifico el Segmento'));
             }
@@ -142,6 +140,49 @@ class SegmentoController extends Controller
         return array(
                 'form' => $form->createView(),
             );
+    }
+    
+    /**
+     * @Route("/{id}/toggleState", name="segmento_state_toggle", condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
+     * @Security("has_role('ROLE_SEGMENTO_ACTIVE')")
+     */
+    public function stateToggleAction(Request $request,Segmento $entity)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if ($entity){
+            try {
+                $entity->stateToggle();
+                $em->flush();
+                return new JsonResponse(array('success' => true, 'message' => 'Se cambió el estado'));
+            }
+            catch(\Exception $e ){
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
+            }
+        }
+        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
+    }
+    
+    /**
+     * @Route("/{state}/toggleState/all", name="segmento_state_toggle_all", condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function toggleStateAllAction(Request $request, $state)
+    {
+        $state = $state == '1';
+        $em = $this->getDoctrine()->getManager();
+        $segmentos = $em->getRepository('InscripcionBundle:Segmento')->findAll();
+        foreach ($segmentos as $segmento){
+            $segmento->setIsActive($state);
+        }
+        try {
+            $em->flush();
+            return new JsonResponse(array('success' => true, 'message' => 'Se cambio el estado a todos los segmentos'));
+        }
+        catch(\Exception $e ){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
+        }
     }
     
     /**
@@ -167,5 +208,16 @@ class SegmentoController extends Controller
             }
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
+    }
+    
+    private function canEdit($segmento)
+    {
+        if ($this->isGranted('ROLE_ADMIN')){
+            return true;
+        }elseif ($segmento->esCoordinador($this->getUser())){
+            return true;
+        }
+        
+        return false;
     }
 }

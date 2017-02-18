@@ -395,11 +395,10 @@ class UsuarioController extends Controller
         {
             $em->remove($log);
         }
-        $em->flush();
-        
-        $em->remove($user);
         
         try{
+            $em->flush();        
+            $em->remove($user);            
             $em->flush();
             return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario eliminado con éxito'));
         }

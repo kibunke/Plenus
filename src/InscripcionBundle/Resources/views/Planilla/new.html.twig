@@ -21,11 +21,14 @@
         padding-left: 5px !important;
         padding-right: 5px !important;
     }
+    .sello{
+        height: 40px;
+    }    
     .firmaysello{
-        height: 70px;
+        height: 110px;
     }
     .planillaFooter th{
-        width: 100px;
+        width: 85px;
     }
     .table-not-allowed{
         cursor: not-allowed !important;
@@ -37,7 +40,10 @@
     }
     .planillaInscripcion p{
         font-size: 11px;
-    }    
+    }
+    .no-borderTop td,.no-borderTop th{
+        border-top: none !important;
+    }
 </style>
 <div class="col-sm-12 planillaInscripcion">
     {{ form_start(form) }}
@@ -48,7 +54,7 @@
         </div>
         <div class="col-sm-6">
             <table class="table header-planilla">
-                <tr>
+                <tr class="no-borderTop">
                     <th>Disciplina</th>
                     <td>{{ planilla.segmento.disciplina.nombreCompleto }}</td>
                 </tr>
@@ -141,7 +147,7 @@
                         <td class="validate-no-edit-td validate-change"></td>
                     </tr>
                     <tr>
-                        <th>Disciplina</th>
+                        <th>Domicilio</th>
                         <td class="validate-no-edit-td validate-change"></td>
                     </tr>
                     <tr>
@@ -151,6 +157,10 @@
                     <tr>
                         <th>Municipio</th>
                         <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr class="sello">
+                        <th>Sello</th>
+                        <td class="validate-no-edit-td"></td>
                     </tr>                    
                 </tbody>
             </table>
@@ -172,7 +182,7 @@
                         <td class="validate-no-edit-td validate-change"></td>
                     </tr>
                     <tr class="firmaysello">
-                        <th>Firma y Sello</th>
+                        <th>Firma y Aclaración</th>
                         <td class="validate-no-edit-td"></td>
                     </tr>
                 </tbody>
@@ -276,19 +286,24 @@
     (function ($) {
         "use strict";
         // no se sobreescribe el namespace, si ya existe
-        var _inscriptos = JSON.parse('{{ planilla.getInscriptos() | json_encode() | raw }}'),
+        var _equipos = JSON.parse('{{ planilla.getEquipos() | json_encode() | raw }}'),
             _tr = $('<tr><td class="text-center"></td><td></td><td></td><td class="text-center"></td><td class="text-center"></td><td></td><td></td><td class="text-center"></td></tr>');
         $.Planilla = $.Planilla || {};
         $.Planilla.init = function() {
-            $.map(_inscriptos,(data)=>{
-                let $tr = _tr.clone();
-                $tr.find(':nth-child(1)').html(data.order)
-                if (data.type == 'inscripto'){
-                    $('#planillaBuenaFe tbody').append($tr);
-                }else{
-                    $('#planillaBuenaFe tfoot').append($tr);
-                }
+            $.map(_equipos,(equipo)=>{
+                $.map(equipo.integrantes,(integrante)=>{
+                    let $tr = _tr.clone();
+                    $tr.find(':nth-child(1)').html(integrante.order)
+                    if (integrante.type == 'inscripto'){
+                        $('#planillaBuenaFe tbody').append($tr);
+                    }else{
+                        $('#planillaBuenaFe tfoot').append($tr);
+                    }
+                });
             });
+            if ($('#planillaBuenaFe tfoot td').length < 2){
+                $('#planillaBuenaFe tfoot').remove();
+            }
             $('#planillaBuenaFe').editableTableWidget().addFunctions().find('td:first').focus();
             $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget().addFunctions();
             $('#tipoInscripcionButtons :input').change(function() {

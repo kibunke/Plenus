@@ -12,18 +12,25 @@
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
-                    <!--<li class="dropdown">
-                        <a  href="{{ path('inscripcion')}}" >
-                            <i class="fa fa-arrow-left"></i> VOLVER
-                        </a>
-                    </li>-->
-                    {#% if is_granted('ROLE_INSCRIPCION_NEW') %#}
+                    {% if is_granted('ROLE_SEGMENTO_NEW') %}
                         <li class="dropdown">
                             <a  href="#1" onclick="$.Segmento.newModal('{{path('segmento_new')}}')">
                                 <i class="fa fa-user"></i> NUEVO
                             </a>
                         </li>
-                    {#% endif %#}
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="dropdown" title="Abrir la inscripción de TODOS los segmentos">
+                            <a  href="#1" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle_all', { 'state': 1 }) }}','La inscripción a TODOS los segmentos será abierta!')">
+                                <i class="fa fa-unlock"></i> TODOS
+                            </a>
+                        </li>
+                        <li class="dropdown" title="Cerrar la inscripción de TODOS los segmentos">
+                            <a  href="#1" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle_all', { 'state': 0 }) }}','La inscripción a TODOS los segmento será cerrada!')">
+                                <i class="fa fa-lock"></i> TODOS
+                            </a>
+                        </li>                        
+                    {% endif %}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -52,11 +59,23 @@
     </div>
 {% endblock %}
 {% block contenidoData %}
-    <div class="panel-heading">
+    <div class="panel-heading border-light">
         <h4 class="panel-title">Tabla <span class="text-bold">de segmentos </span></h4>
-        <div class="panel-tools">
-            {{ include('CommonBundle::dropdownTables.html.twig') }}
-        </div>
+        <ul class="panel-heading-tabs border-light">
+            <li>
+                <div class="pull-right" style="font-size: 18px;font-weight: 800;" title="Segmentos activos">
+                    <i class="fa fa-unlock text-green" aria-hidden="true"></i> <span id="activos_cant"></span>
+                </div>
+            </li>
+             <li>
+                <div class="pull-right" style="font-size: 18px;font-weight: 800;" title="Segmentos inactivos">
+                    <i class="fa fa-lock text-orange"></i> <span id="inactivos_cant"></span>
+                </div>
+            </li>
+            <li class="panel-tools">
+                {{ include('CommonBundle::dropdownTables.html.twig') }}
+            </li>
+        </ul>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -92,7 +111,13 @@
                     "serverSide": true,
                     "ajax": {
                         "url": '{{ path('segmento_list_datatable') }}',
-                        "type": 'POST'
+                        "type": 'POST',
+                        "dataSrc": function(json){
+                            $('#activos_cant').html(json.state.actives);
+                            $('#inactivos_cant').html(json.state.inactives);
+                            
+                            return json.data;
+                        }
                     },
                     "language" : {
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
@@ -136,10 +161,9 @@
                         }
                     ],
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                        $(nRow).attr( 'id', 'row_'+aData.id );
+                        $(nRow).attr( 'id', 'row_' + aData.id );
                         return nRow;
-                    },
-                    "fnDrawCallback": function(oSettings, json) {}       
+                    }
                 });
             }
             $.Segmento.initDatePicker = function(){
@@ -182,6 +206,29 @@
                         swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
                     })
                 })
+            }
+            $.Segmento.stateToggleConfirm = function(url,txt){
+                swal({
+                    title: 'Esta seguro?',
+                    text: txt,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, cambiar!'
+                },function () {
+                    $.post(url,{})
+                    .done((data)=>{
+                        if (data.success){
+                            swal('Excelente!','El segmento cambió de estado con exito.','success')
+                            _table.fnDraw(true);
+                        }else{
+                            swal('Cuidado!',data.message,'error')
+                        }
+                    }).fail(()=>{
+                        swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                    })
+                })
             }            
             $.Segmento.openAjaxModal = function(url,title){
                 $.Main.openFormModal(url,title, function(){
@@ -191,7 +238,8 @@
                             $('#segmentoTable').parents('panel').block($.Main.defaultBlockConf());
                             $('#okButton').button('loading')
                             event.preventDefault();
-                            $.post(url, $('#panel-config form').serialize(), function(data){
+                            $.post(url, $('#panel-config form').serialize())
+                            .done((data)=>{
                                 if(data.success){
                                     toastr['success'](data.message, 'Excelente!');
                                     _table.fnDraw(true);
@@ -206,7 +254,9 @@
                                 }
                                 $('#okButton').button('reset');
                                 $('#segmentoTable').parents('panel').unblock();
-                            });
+                            }).fail(()=>{
+                                swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                            })
                         });
                     }
                 );

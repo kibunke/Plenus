@@ -29,6 +29,7 @@
 						<a href="{#{ path('dashboard') }#}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
 					</li>
 				{% endif %}
+				{% if is_granted('ROLE_COORDINADOR') or is_granted('ROLE_ORGANIZADOR') %}
 					<li class="" >
 						<a href="javascript:void(0)"><i class="fa fa-cogs"></i> <span class="title"> Gestión </span><i class="icon-arrow"></i> </a>
 						
@@ -159,6 +160,7 @@
 						   {% endif %}
 						</ul>
 					</li>
+				{% endif %}
 				{% if is_granted('ROLE_INSCRIPCION') %}
 					<li>
 						<a href="javascript:void(0)"><i class="fa fa-pencil-square-o"></i> <span class="title"> Inscripción </span><i class="icon-arrow"></i> </a>

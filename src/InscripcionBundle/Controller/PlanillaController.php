@@ -10,7 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use InscripcionBundle\Entity\Planilla;
+use InscripcionBundle\Entity\Individual;
+use InscripcionBundle\Entity\Equipo;
 use InscripcionBundle\Form\PlanillaType;
 use InscripcionBundle\Entity\Segmento;
 
@@ -18,7 +19,7 @@ use InscripcionBundle\Entity\Segmento;
  * Planilla controller.
  *
  * @Route("/planilla")
- * @Security("has_role('ROLE_INSCRIPCION') and has_role('ROLE_SEGMENTO')")
+ * @Security("has_role('ROLE_INSCRIPCION')")
  */
 class PlanillaController extends Controller
 {
@@ -83,11 +84,17 @@ class PlanillaController extends Controller
     public function newAction(Request $request, Segmento $segmento)
     {        
         $em = $this->getDoctrine()->getManager();
-        $planilla = new Planilla();
+        if (!$this->canEdit($segmento)){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
+        }        
         
-        //$segmento = $em->getRepository('InscripcionBundle:Segmento')->find(13);
+        if ($segmento->getMaxIntegrantes() == 1){
+            $planilla = new Individual();
+        }else{
+            $planilla = new Equipo();
+        }
+        
         $planilla->setSegmento($segmento);
-        
         
         $form = $this->createForm(PlanillaType::class, $planilla);
         //$form = $this->createNewAccountForm($user);
@@ -120,6 +127,9 @@ class PlanillaController extends Controller
     public function editAction(Request $request,Segmento $segmento)
     {
         $em = $this->getDoctrine()->getManager();
+        if (!$this->canEdit($segmento)){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
+        }
         $form = $this->createForm(SegmentoType::class, $segmento);
 
         $form->handleRequest($request);
@@ -164,5 +174,16 @@ class PlanillaController extends Controller
             }
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
-    }    
+    }
+    
+    private function canEdit($segmento)
+    {
+        if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO')){
+            return true;
+        }elseif ($segmento->getIsActive()){
+            return true;
+        }
+        
+        return false;
+    }
 }

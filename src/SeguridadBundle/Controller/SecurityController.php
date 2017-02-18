@@ -162,6 +162,28 @@ class SecurityController extends Controller
     {
         // The security layer will intercept this request
     }
+
+    /**
+     * @Route("/show/template/{item}/email", name="_show_email_template")
+     */
+    public function showEmailTemplatesAction(Request $request, $item)
+    {
+        switch ($item){
+            case 'emailPaso1':
+                    return new Response($this->renderView('SeguridadBundle:Security:resetPasswordStep1.email.html.twig', array('link' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')));
+                break;
+            case 'emailPaso2':
+                    return new Response($this->renderView('SeguridadBundle:Security:resetPasswordStep2.email.html.twig', array('pass' => 'xxxxxxxx')));
+                break;
+            case 'nuevaCuenta':
+                    return new Response($this->renderView('SeguridadBundle:Security:newAccount.email.html.twig', array('pass' => 'xxxxxxxxx')));
+                break;
+            case 'activacionDeCuenta':
+                    return new Response($this->renderView('SeguridadBundle:Usuario:cuenta.activada.email.html.twig', array()));
+                break;            
+        }
+        return new Response($this->renderView('SeguridadBundle:Security:resetPasswordStep1.email.html.twig', array('link' => 'xxxxxxxx')));
+    }
     
     /**
      * @Route("/resetPassword/{salt}/{user}", name="_reset_password_step2")
@@ -292,19 +314,19 @@ class SecurityController extends Controller
                         $em->persist($log);
                         $em->flush();
                         $this->get('mailer')->send($message);
-                        return new JsonResponse(array('success' => true));
+                        return new JsonResponse(array('success' => true, 'message' => '<h4>Excelente!</h4><p>Su <strong>contraseña</strong> fue reseteada con éxito. Se envió una <strong>e-mail</strong> con las instrucciones para <strong>completar el proceso</strong>.</p><p> Gracias por utilizar Plenus!.</p>'));
                     }
                     catch(\Exception $e )
                     {
                         //echo $e->getMessage();die;
-                        $error = "Ocurrio un error al intentar enviar el email.";
+                        $error = "Ocurrio un error al intentar enviar el email. Disculpe las molestias.";
                     }                    
                 }
             }else if($form->isSubmitted()){
                 $error = "Los datos no son válidos";
             }
             if ($error)
-                $this->addFlash('error', $error);
+                return new JsonResponse(array('success' => false, 'message' => $error));
             return $this->render("SeguridadBundle:Security:renderResetPasswordForm.html.twig",
                 array(
                     'form' => $form->createView(),

@@ -50,9 +50,9 @@ class Segmento
      * @var integer $maxIntegrantes
      * @Assert\NotNull()
      * @Assert\Range(
-     *      max = 50
+     *      max = 24
      * )
-     * @ORM\Column(name="maxIntegrantes", type="integer", nullable=true)
+     * @ORM\Column(name="maxIntegrantes", type="integer")
      */
     protected $maxIntegrantes;
 
@@ -62,7 +62,7 @@ class Segmento
      * @Assert\Range(
      *      min = 0
      * )
-     * @ORM\Column(name="minIntegrantes", type="integer", nullable=true)
+     * @ORM\Column(name="minIntegrantes", type="integer")
      */
     protected $minIntegrantes;
     
@@ -71,11 +71,22 @@ class Segmento
      * @Assert\NotNull()
      * @Assert\Range(
      *      min = 0,
-     *      max = 10
+     *      max = 5
      * )
-     * @ORM\Column(name="maxReemplazos", type="integer", nullable=true)
+     * @ORM\Column(name="maxReemplazos", type="integer")
      */
     protected $maxReemplazos;
+
+    /**
+     * @var integer $maxEquiposPorPlanilla
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 12
+     * )
+     * @ORM\Column(name="maxEquiposPorPlanilla", type="integer", options={"default" : 1})
+     */
+    protected $maxEquiposPorPlanilla;
     
     /**
      * @var datetime $minFechaNacimiento
@@ -154,6 +165,13 @@ class Segmento
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
+    
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean", options={"default" : false})
+     */
+    protected $isActive;
     
     /**
      * Constructor
@@ -372,6 +390,31 @@ class Segmento
         return $this->maxReemplazos;
     }
 
+
+    /**
+     * Set maxEquiposPorPlanilla
+     *
+     * @param integer $maxEquiposPorPlanilla
+     *
+     * @return Segmento
+     */
+    public function setMaxEquiposPorPlanilla($maxEquiposPorPlanilla)
+    {
+        $this->maxEquiposPorPlanilla = $maxEquiposPorPlanilla;
+
+        return $this;
+    }
+
+    /**
+     * Get maxEquiposPorPlanilla
+     *
+     * @return integer
+     */
+    public function getMaxEquiposPorPlanilla()
+    {
+        return $this->maxEquiposPorPlanilla;
+    }
+    
     /**
      * Set minFechaNacimiento
      *
@@ -701,5 +744,56 @@ class Segmento
     public function getCoordinadores()
     {
         return $this->coordinadores;
+    }
+/**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return Usuario
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+    
+    /**
+     * stateToggle
+     *
+     * @return Segmento
+     */
+    public function stateToggle()
+    {
+        $this->isActive = !$this->isActive;
+        
+        return $this;
+    }
+    
+    /**
+     * esCoordinador
+     *
+     * @return Boolean
+     */
+    public function esCoordinador()
+    {
+        foreach ($this->coordinadores as $coodinador){
+            if ($coodinador->getId() == $user->getId()){
+                return true;
+            }
+        }
+        
+        return false;
     }    
 }
