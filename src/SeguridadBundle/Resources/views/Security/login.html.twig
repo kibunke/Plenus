@@ -235,7 +235,7 @@
                                 $.post($form.attr('action'),$form.serialize())
                                     .done((data)=> {
                                         if (data.success){
-                                            $('.box-register .form').html('<div class="alert alert-success">'+data.message+'</div>');
+                                            $('.box-forgot .form').html('<div class="alert alert-success">'+data.message+'</div>');
                                         }else{
                                             toastr['warning'](data.message, 'Atención!');
                                         }
