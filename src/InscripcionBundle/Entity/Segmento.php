@@ -181,6 +181,7 @@ class Segmento
         $this->createdAt = new \DateTime();
         $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->isActive = false;
     }
 
     /**

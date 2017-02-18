@@ -48,7 +48,7 @@ class PlanillaType extends AbstractType
                                                 'multiple' => false,
                                                 'required' => true,
                                                 'placeholder' => 'Seleccione',
-                                                'disabled' => true,
+                                                'disabled' => !$user->hasRole('ROLE_COORDINADOR') || !$user->hasRole('ROLE_ADMIN'),
                                                 'data' => $user->getPersona()->getMunicipio()
                                             )
                   )

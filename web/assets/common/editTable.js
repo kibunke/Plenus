@@ -1,4 +1,11 @@
-/*global $, window*/
+/*
+ * Lightweight table editor, inspired by and adapted from
+ * https://github.com/mindmup/editable-table
+ * Primary difference: allows you to specify a callback that can change what
+ * type of edit control to use for the given field.
+ * Marquez Germán - gmarquez@witapp.com.ar
+*/
+
 $.fn.editableTableWidget = function (options) {
     'use strict';
     return $(this).each(function () {
@@ -11,10 +18,16 @@ $.fn.editableTableWidget = function (options) {
             ARROW_LEFT = 37, ARROW_UP = 38, ARROW_RIGHT = 39, ARROW_DOWN = 40, ENTER = 13, ESC = 27, TAB = 9,
             element = $(this),
             editor = activeOptions.editor.css('position', 'absolute').hide().appendTo(element.parent()),
+            changeEditor = activeOptions.changeEditorFunction,
             active,
             showEditor = function (select) {
                 active = element.find('td:focus');
                 if (active.length) {
+                    if (changeEditor && typeof changeEditor == "function") {
+                        element.siblings('.editorTemp').remove();
+                        editor = changeEditor(active).addClass('editorTemp').css('position', 'absolute').hide().appendTo(element.parent());
+                    }
+
                     editor.val(active.text())
                         .removeClass('error')
                         .show()
@@ -125,5 +138,6 @@ $.fn.editableTableWidget.defaultOptions = {
     cloneProperties: ['padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
                       'text-align', 'font', 'font-size', 'font-family', 'font-weight',
                       'border', 'border-top', 'border-bottom', 'border-left', 'border-right'],
-    editor: $('<input>')
+    editor: $('<input>'),
+    changeEditorFunction : false
 };

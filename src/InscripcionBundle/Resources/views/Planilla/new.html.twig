@@ -22,10 +22,10 @@
         padding-right: 5px !important;
     }
     .sello{
-        height: 40px;
+        height: 60px;
     }    
     .firmaysello{
-        height: 110px;
+        height: 95px;
     }
     .planillaFooter th{
         width: 85px;
@@ -68,7 +68,12 @@
                 </tr>
                 <tr>
                     <th>Modalidad</th>
-                    <td>{{ planilla.segmento.modalidad.nombre }}</td>
+                    <td>
+                        {{ planilla.segmento.modalidad.nombre }}
+                        {% if planilla.segmento.nombre %}
+                           - {{ planilla.segmento.nombre }}
+                        {% endif %}
+                    </td>
                 </tr>
             </table>
         </div>
@@ -84,7 +89,7 @@
                         <th class="text-center validate-number">N° documento</th>
                         <th class="text-center validate-date">F. nacimiento</th>
                         <th class="validate-text">Domicilio</th>
-                        <th class="validate-text">Localidad</th>
+                        <th class="validate-municipio">Localidad</th>
                         <th class="text-center validate-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></th>
                     </tr>
                 </thead>
@@ -154,10 +159,10 @@
                         <th>Telefono</th>
                         <td class="validate-no-edit-td validate-change"></td>
                     </tr>
-                    <tr>
+                    <!--<tr>
                         <th>Municipio</th>
                         <td class="validate-no-edit-td validate-change"></td>
-                    </tr>
+                    </tr>-->
                     <tr class="sello">
                         <th>Sello</th>
                         <td class="validate-no-edit-td"></td>
@@ -182,7 +187,7 @@
                         <td class="validate-no-edit-td validate-change"></td>
                     </tr>
                     <tr class="firmaysello">
-                        <th>Firma y Aclaración</th>
+                        <th>Firma y sello</th>
                         <td class="validate-no-edit-td"></td>
                     </tr>
                 </tbody>
@@ -261,10 +266,13 @@
                 column = cell.index();
             if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-no-edit')){
                 cell.addClass('validate-no-edit-td');
-            }                
+            }
         }).on('focus', function (evt, value) {
             var cell = $(this),
                 column = cell.index();
+            if (cell.hasClass('validate-municipio')) {
+                element.editor = $('<select>')
+            }
             if (cell.hasClass('validate-no-edit-td')) {
                 cell.trigger('blur');
             }
@@ -304,8 +312,23 @@
             if ($('#planillaBuenaFe tfoot td').length < 2){
                 $('#planillaBuenaFe tfoot').remove();
             }
-            $('#planillaBuenaFe').editableTableWidget().addFunctions().find('td:first').focus();
-            $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget().addFunctions();
+            $('#planillaBuenaFe').editableTableWidget({
+                changeEditorFunction : function(obj){
+                    var 
+                        thead = $('#planillaBuenaFe').find('thead tr'),
+                        cell = $(obj),
+                        column = cell.index();
+                    if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-municipio')){
+                        if (cell.text() == '')
+                            cell.text($('#planilla_municipio option:selected').text());
+                        let $select = $('#planilla_municipio').clone();
+                        $select.removeAttr('id').removeAttr('required').find('option').removeAttr('value');
+                        return $select;
+                    }
+                    return $('<input/>')
+                }
+            }).addFunctions();
+            $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget();
             $('#tipoInscripcionButtons :input').change(function() {
                 if (this.id == 'inscripcionMunicipal') {
                     $('#datosResponsableInstitucion,#datosInstitucion')
@@ -318,7 +341,6 @@
                         .find('.validate-change').removeClass('validate-no-edit-td');
                 }                
             });
-            
         }
     })(jQuery);
     $(document).ready(function(){$.Planilla.init();});

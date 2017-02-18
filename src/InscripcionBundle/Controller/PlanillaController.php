@@ -86,7 +86,7 @@ class PlanillaController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$this->canEdit($segmento)){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
-        }        
+        }
         
         if ($segmento->getMaxIntegrantes() == 1){
             $planilla = new Individual();
