@@ -183,6 +183,7 @@
                         null,
                         function(data)
                         {
+                           Login.actualizarCargos(data.cargos); 
                            if(data.muestraMunicipio)
                            {
                               contenedor.parent().removeClass('hide');
@@ -192,6 +193,14 @@
                            }
                         }
                        );
+            }
+            Login.actualizarCargos = (cargos) =>
+            {
+                var select = $('#usuario_cargo');
+                select.empty().append('<option value="">Seleccionar Cargo..</option>');
+                $.each(cargos, function(pos,cargo){
+                    select.append('<option value="'+cargo.id+'">'+cargo.name+'</option>');
+                });
             }
             Login.sugerirUsername = () =>
             {
@@ -228,7 +237,7 @@
                         /*
                          * Load form and catch submit event !
                          */
-                        $(this).find('.form').load("{{ path('_new_account') }}", function (){
+                        $(this).find('.form').load("{{ path('_new_account') }}", {},function (){
                             $(this).find('form').submit(function (event) {
                                 let $form = $(this);
                                 event.preventDefault();
@@ -253,6 +262,7 @@
                                     toastr['info']('El formulario se está procesando. Espere la respuesta para continuar.', 'Atención!');
                                 }
                             });
+                            
                             $('#usuario_persona_nombre,#usuario_persona_apellido').on("keyup",() => {
                                 var username = Login.sugerirUsername();
                                 $('#usuario_username').val(username);
@@ -271,6 +281,7 @@
                                     }
                                 }
                             });
+                           
                         });
                     });
                 });
