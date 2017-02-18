@@ -5,9 +5,9 @@
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
 				{% if not entity.id %}
-                   <h1>Nuevo Perfil <small>Todo los datos del perfil</small></h1>
+                   <h1>Nuevo Cargo <small>Todo los datos del cargo</small></h1>
 				{% else %}
-					<h1>Editar Perfil <small>Todo los datos del perfil "{{entity.name}}"</small></h1>
+					<h1>Editar Cargo <small>Todo los datos del cargo"{{entity.name}}"</small></h1>
 				{% endif %}
             </div>
         </div>
@@ -27,17 +27,17 @@
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li>
-                    <a href="{{ path('perfil_list') }}">
-                        Perfil
+                    <a href="{{ path('cargo_list') }}">
+                        Cargo
                     </a>
                 </li>
                 <li class="active">
 					{% if not entity.id %}
-                    <a href="{{ path('perfil_new') }}">
+                    <a href="{{ path('cargo_new') }}">
                         Nuevo
                     </a>
 				   {% else %}
-					 <a href="{{ path('perfil_edit',{'perfil':entity.id}) }}">
+					 <a href="{{ path('cargo_edit',{'cargo':entity.id}) }}">
                         {{entity.name}}
                      </a>
 				   {% endif %}
@@ -51,13 +51,9 @@
    <div class="panel">
 	<div class="panel-body">
 		{{form_row(form.name)}}
-		{{form_row(form.legend)}}
 		{{form_row(form.description)}}
-		{{form_row(form.municipio)}}
-		{{form_row(form.muestraMunicipio)}}
 		{{form_row(form.isActive)}}
-		{{form_row(form.availableForNewUsers)}}
-		<table id="list_roles_perfil" class="table table-striped table-hover" width="100%">
+		<table id="list_perfiles_cargo" class="table table-striped table-hover" width="100%">
 			 <thead>
 				 <tr>
 					<th>Nombre</th>
@@ -66,18 +62,18 @@
 				 </tr>
 			 </thead>
 			 <tbody>
-				 {%for role in roles %}
+				 {%for perfil in perfiles %}
 					 <tr>
-					    <td>{{role.name}}</td>
-						<td>{{role.description}}</td>
-						<td><div class="checkbox"><input onclick="$.PerfilesRoles.actualizar(this.id,{{role.id}})" id="dummy_perfil_roles_{{role.id}}" name="dummy_perfil[roles][]" type="checkbox" {% if entity.hasRole(role) %}checked="checked"{% endif %}></div></td>
+					    <td>{{perfil.name}}</td>
+						<td>{{perfil.description}}</td>
+						<td><div class="checkbox"><input onclick="$.PerfilesCargos.actualizar(this.id,{{perfil.id}})" id="dummy_cargo_perfiles_{{perfil.id}}" name="dummy_cargo[roles][]" type="checkbox" {% if entity.hasPerfil(perfil) %}checked="checked"{% endif %}></div></td>
 					 </tr>
 				 {% endfor %}
 			 </tbody>
 		</table>
 		<button type="submit" class="btn btn-success col-md-4 pull-right">Listo</button>
 		{{form_widget(form._token)}}</div>
-		<div class="hide">{{form_widget(form.roles)}}</div>
+		<div class="hide">{{form_widget(form.perfiles)}}</div>
 		{{form_end(form)}}
      </div>
    </div>
@@ -86,9 +82,9 @@
 <script type="text/javascript">
 	 (function ($) {
 		var _table;
-		 $.PerfilesRoles = $.PerfilesRoles || {};
-         $.PerfilesRoles.init = function() {
-			$('#list_roles_perfil').DataTable(
+		 $.PerfilesCargos = $.PerfilesCargos || {};
+         $.PerfilesCargos.init = function() {
+			$('#list_perfiles_cargo').DataTable(
 				{
 					"language" : {
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
@@ -96,12 +92,11 @@
 				}
 			);
 		 },
-		 $.PerfilesRoles.actualizar = function(checkbox,role)
+		 $.PerfilesCargos.actualizar = function(checkbox,perfil)
 		 {
-			 $('#perfil_roles_' + role).attr('checked',$('#'+checkbox).is(':checked'));
+			 $('#cargo_perfiles_' + perfil).attr('checked',$('#'+checkbox).is(':checked'));
 		 }
 	 })(jQuery);
-	$(document).ready(function(){$.PerfilesRoles.init();});
+	$(document).ready(function(){$.PerfilesCargos.init();});
 </script>
-{% endblock %}    
-
+{% endblock %}

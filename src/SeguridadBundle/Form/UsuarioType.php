@@ -27,7 +27,8 @@ class UsuarioType extends AbstractType
                                                 ->orderBy('p.name', 'ASC');
                                         },
                                         'choice_label' => 'legend',
-                                        'placeholder'  => 'Seleccione su perfil de usuario'
+                                        'placeholder'  => 'Seleccione su perfil de usuario',
+                                        'attr'         => array('onchange' => 'Login.validarMunicipio(this.value);')
                                     )
                 )
             ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))            

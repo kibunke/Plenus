@@ -10,7 +10,6 @@ namespace SeguridadBundle\Entity\Repository;
  */
 class UsuarioRepository extends \Doctrine\ORM\EntityRepository
 {
-    //->isGranted('ROLE_USER_LIST_ALL')
     public function dataTable($request,$user,$auth_checker)
     {
         return array(
@@ -37,7 +36,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     
     public function getRows($request,$user,$auth_checker)
     {
-        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","u.isActive","info","pass","actions"];
+        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","f.name","u.isActive","info","pass","actions"];
         $where   = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
             
         if(!$auth_checker->isGranted('ROLE_ADMIN'))
@@ -102,4 +101,3 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                     ->getSingleScalarResult();
     } 
 }
-

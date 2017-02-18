@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use SeguridadBundle\Entity\Log;
 use SeguridadBundle\Entity\Usuario;
+use SeguridadBundle\Entity\Perfil;
 use SeguridadBundle\Form\UsuarioType;
 use CommonBundle\Entity\Persona;
 use CommonBundle\Entity\Email;
@@ -483,5 +484,14 @@ class SecurityController extends Controller
     public function error403Action()
     {
         return array();
-    }    
+    }
+    
+    /**
+     * @Route("perfil/{perfil}/data", name="perfil_data", defaults={"perfil":"__00__"})
+     * @Method({"POST"})
+     */
+    public function dataAction(Request $request,Perfil $perfil)
+    {
+       return  new JsonResponse($perfil->toArray());
+    }
 }

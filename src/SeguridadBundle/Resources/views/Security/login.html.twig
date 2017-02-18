@@ -110,6 +110,7 @@
         (()=> {
             "use strict";
             var _pathCheckUsername = "{{ path('_new_account_check_data') }}",
+                _path_perfil_data  = "{{path('perfil_data')}}",
                 _username,
                 _dni,
                 _email,
@@ -175,6 +176,25 @@
                     .always(()=>{
                         $('.fa-checking').addClass('hide');
                     });                
+            }
+            Login.validarMunicipio = (idPerfil) =>
+            {
+                var url =  _path_perfil_data.replace('__00__',idPerfil);
+                var contenedor = $('#usuario_persona_municipio');
+                contenedor.parent().addClass('hide');
+                $.post( url,
+                        null,
+                        function(data)
+                        {
+                           if(data.muestraMunicipio)
+                           {
+                              contenedor.parent().removeClass('hide');
+                           }else{
+                              contenedor.parent().addClass('hide');
+                              contenedor.val(data.municipio);
+                           }
+                        }
+                       );
             }
             Login.sugerirUsername = () =>
             {
