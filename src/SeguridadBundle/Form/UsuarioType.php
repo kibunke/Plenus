@@ -39,7 +39,8 @@ class UsuarioType extends AbstractType
                                                 ->orderBy('p.name', 'ASC');
                                         },
                                         'choice_label' => 'name',
-                                        'placeholder' => 'Seleccionar Cargo...',
+                                        'label' => 'Cargo/Función',
+                                        'placeholder' => 'Seleccione su Cargo/Función',
                                     )
                 )
             ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))
