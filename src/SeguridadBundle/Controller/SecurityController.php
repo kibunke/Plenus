@@ -279,7 +279,7 @@ class SecurityController extends Controller
     {
         if ($this->get('app.plenusConfig')->isResetPasswordActive()){
             $em = $this->getDoctrine()->getManager();
-            $error = "";
+            $error = "Los datos no son válidos!";
     
             $form = $this->createResetPasswordForm();
             $form->handleRequest($request);
@@ -323,11 +323,9 @@ class SecurityController extends Controller
                         $error = "Ocurrio un error al intentar enviar el email. Disculpe las molestias.";
                     }                    
                 }
-            }else if($form->isSubmitted()){
-                $error = "Los datos no son válidos";
-            }
-            if ($error)
                 return new JsonResponse(array('success' => false, 'message' => $error));
+            }
+                
             return $this->render("SeguridadBundle:Security:renderResetPasswordForm.html.twig",
                 array(
                     'form' => $form->createView(),
