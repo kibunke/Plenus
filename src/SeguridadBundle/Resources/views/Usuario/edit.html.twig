@@ -158,6 +158,10 @@
 													<td><a href="#panel_edit_account" class="show-tab"><i class="fa fa-pencil edit-user-info"></i></a></td>
 												</tr>
 												<tr>
+													<td>Cargo</td>
+													<td colspan="2">{{entity.cargo}}</td>
+												</tr>
+												<tr>
 													<td>Última Actividad</td>
 													<td colspan="2"><small>{{entity.lastActivity|date('d/m/Y [H:i:s]')}}</small></td>
 												</tr>
@@ -243,6 +247,11 @@
 										{{form_widget(form.perfil)}}
 										{{form_errors(form.perfil)}}
 									</div>
+									<div class="form-group">
+										<label class="control-label">Cargo</label>
+										{{form_widget(form.cargo)}}
+										{{form_errors(form.cargo)}}
+									</div>
 								</div>
 								<div class="col-sm-6 padding-horizontal-20">
 									<div class="form-group">
@@ -286,12 +295,35 @@
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
             var _table;
-
+            var _path_perfil_data  = "{{path('perfil_data')}}";
+			var cargoOriginal = true;
             $.UsuarioEdit = $.UsuarioEdit || {};
-            $.UsuarioEdit.charts = function(){}
+            $.UsuarioEdit.charts = function(){},
+            $.UsuarioEdit.actualizarCargos = function (idPerfil)
+            {
+				var url =  _path_perfil_data.replace('__00__',idPerfil);
+				var select = $('#{{form.cargo.vars.id}}');
+				select.empty();
+				select.append('<option value="">Seleccionar Cargo..</option>');
+				$.post( url,
+                        null,
+                        function(data)
+                        {
+							$.each(data.cargos, function(pos,cargo){
+								select.append('<option value="'+cargo.id+'">'+cargo.name+'</option>');
+							});
+						    if(cargoOriginal)	
+							{
+								select.val({{entity.cargo.id}});
+								cargoOriginal = false;
+							}
+                        }
+                       );
+            }
 			
         })(jQuery);
         $(document).ready(function(){
+			$('#{{form.perfil.vars.id}}').change();
 			$('#form_user_edit').submit(function(){
 				if($('#password').val() != $('#password_confirm').val())
 				{

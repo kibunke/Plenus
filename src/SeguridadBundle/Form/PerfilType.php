@@ -18,6 +18,7 @@ class PerfilType extends AbstractType
             ->add('name', TextType::class, array('label' => 'Nombre'))
             ->add('legend', TextType::class, array('label' => 'Leyenda'))
             ->add('description', TextType::class, array('label' => 'Descripción'))
+            ->add('orden', TextType::class, array('label' => 'Orden'))
             ->add('roles', EntityType::class, array(
                                                         'class' => 'SeguridadBundle:Role',
                                                         'query_builder' => function (EntityRepository $er) {

@@ -355,4 +355,12 @@ class Cargo
     {
         return (in_array($perfil,$this->getPerfiles()->toArray()));
     }
+    
+    public function toArray()
+    {
+        return array(
+                       'id'   => $this->getId(),
+                       'name' => $this->getName()
+                    );
+    }
 }

@@ -527,6 +527,17 @@ class Perfil
         return 0;
     }
     
+    public function getArrayCargos()
+    {
+        $resultado = array();
+        foreach($this->cargos as $cargo)
+        {
+            $resultado[] = $cargo->toArray();
+        }
+        
+        return $resultado;
+    }
+    
     public function toArray()
     {
         return array(
@@ -534,7 +545,8 @@ class Perfil
                  'name'             => $this->name,
                  'legend'           => $this->legend,
                  'muestraMunicipio' => $this->muestraMunicipio,
-                 'municipio'        => $this->getMunicipioId()
+                 'municipio'        => $this->getMunicipioId(),
+                 'cargos'           => $this->getArrayCargos()
                 );
     }
 }

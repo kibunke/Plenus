@@ -31,7 +31,19 @@ class UsuarioType extends AbstractType
                                         'attr'         => array('onchange' => 'Login.validarMunicipio(this.value);')
                                     )
                 )
-            ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))            
+            ->add('cargo', EntityType::class, array(
+                                        'class' => 'SeguridadBundle:Cargo',
+                                        'query_builder' => function (EntityRepository $er) {
+                                            return $er->createQueryBuilder('p')
+                                                ->where('p.isActive = 1')
+                                                ->orderBy('p.name', 'ASC');
+                                        },
+                                        'choice_label' => 'name',
+                                        'placeholder' => 'Seleccionar Cargo...',
+                                    )
+                )
+            ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))
+            
         ;
     }
 

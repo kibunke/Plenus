@@ -34,7 +34,20 @@ class UsuarioAdminType extends AbstractType
                                             return $query->orderBy('p.name', 'ASC');
                                         },
                                         'choice_label' => 'name',
-                                        'placeholder'  => 'para que vas a usar Plenus?'
+                                        'placeholder'  => 'para que vas a usar Plenus?',
+                                        'attr'         => array('onchange' => '$.UsuarioEdit.actualizarCargos(this.value);')
+                                    )
+                  
+                )
+            ->add('cargo', EntityType::class, array(
+                                        'class' => 'SeguridadBundle:Cargo',
+                                        'query_builder' => function (EntityRepository $er) {
+                                            return $er->createQueryBuilder('p')
+                                                ->where('p.isActive = 1')
+                                                ->orderBy('p.name', 'ASC');
+                                        },
+                                        'choice_label' => 'name',
+                                        'placeholder' => 'Seleccionar Cargo...',
                                     )
                 )
             ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))            
