@@ -32,7 +32,7 @@ class PerfilType extends AbstractType
                                                     )
                  )
             ->add('isActive', CheckboxType::class, array('label' => 'Activo', 'required' => false))
-            ->add('muestraMunicipio', CheckboxType::class, array('label' => 'Muestra Municipio?', 'required' => false))
+            ->add('muestraMunicipio', CheckboxType::class, array('label' => 'Obligar a seleccionar Municipio', 'required' => false))
             ->add('municipio', EntityType::class, array(
                                                         'label' => 'Municipio por defecto',
                                                         'class' => 'CommonBundle:Municipio',
@@ -40,6 +40,7 @@ class PerfilType extends AbstractType
                                                             return $er->createQueryBuilder('u')
                                                                       ->orderBy('u.nombre', 'ASC');
                                                         },
+                                                        //'placeholder'  => 'Cualquiera',
                                                         // use the User.username property as the visible option string
                                                         'choice_label' => 'nombre',
                                                     )

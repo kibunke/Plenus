@@ -314,7 +314,7 @@
 							});
 						    if(cargoOriginal)	
 							{
-								select.val({{entity.cargo.id}});
+								select.val({% if entity.cargo %}{{ entity.cargo.id }}{% endif %});
 								cargoOriginal = false;
 							}
                         }

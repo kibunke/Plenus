@@ -50,12 +50,14 @@
    {{form_start(form)}}
    <div class="panel">
 	<div class="panel-body">
+		<h4><i class="fa fa-edit"></i> Datos del perfil</h3>
 		{{form_row(form.name)}}
-		{{form_row(form.legend)}}
 		{{form_row(form.description)}}
+		{{form_row(form.isActive)}}
+		<h4><i class="fa fa-edit"></i> Configuración de formulario nueva cuenta</h3>
+		{{form_row(form.legend)}}
 		{{form_row(form.municipio)}}
 		{{form_row(form.muestraMunicipio)}}
-		{{form_row(form.isActive)}}
 		{{form_row(form.availableForNewUsers)}}
 		{{form_row(form.orden)}}
 		<table id="list_roles_perfil" class="table table-striped table-hover" width="100%">

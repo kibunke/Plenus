@@ -24,7 +24,7 @@ class UsuarioType extends AbstractType
                                         'query_builder' => function (EntityRepository $er) {
                                             return $er->createQueryBuilder('p')
                                                 ->where('p.availableForNewUsers = 1')
-                                                ->orderBy('p.name', 'ASC');
+                                                ->orderBy('p.orden', 'ASC');
                                         },
                                         'choice_label' => 'legend',
                                         'placeholder'  => 'Seleccione su perfil de usuario',
