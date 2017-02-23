@@ -270,9 +270,9 @@ class PlanillaController extends Controller
                 }
             }
         }catch(\Exception $e){
-            if(strpos($e->getMessage(), 'Plenus:') !== false){
+            //if(strpos($e->getMessage(), 'Plenus:') !== false){
                 throw $e;
-            }
+            //}
             throw new \Exception('Plenus: Datos del Participante inválidos o incompletos.');
         }
         
