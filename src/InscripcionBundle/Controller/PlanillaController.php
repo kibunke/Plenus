@@ -183,6 +183,7 @@ class PlanillaController extends Controller
                 if (is_object($json->tipoDocumento) && strlen($json->nombre) > 2 && strlen($json->apellido) > 2 ){
                     $tecnico = new DirectorTecnico($this->getUser());
                     $tecnico->loadFromJson($json);
+                    $tecnico->setMunicipio($planilla->getMunicipio());
                     try {
                         $em->persist($tecnico);
                         $em->flush();
@@ -211,6 +212,7 @@ class PlanillaController extends Controller
             $institucion = $em->getRepository('InscripcionBundle:Institucion')->findOneBy(array('nombre' => $json->nombre));
             if (!$institucion){
                 $institucion = Institucion::getInstance($this->getUser(),$json);
+                $institucion->setMunicipio($planilla->getMunicipio());
             }    
         }catch(\Exception $e){
             //if(strpos($e->getMessage(), 'Plenus:') !== false){

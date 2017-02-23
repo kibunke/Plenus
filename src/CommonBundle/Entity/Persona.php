@@ -731,7 +731,7 @@ class Persona
                 'tipoDocumento' => $this->getTipoDocumento()->getNombre(),
                 'dni' => $this->getDni(),
                 'fNacimiento' => $this->getFNacimiento()->format('d/m/Y'),
-                //'domicilio' => $this->getDomicilio(),
+                'telefono' => $this->getTelefono(),
                 'municipio' => $this->getMunicipio()->getNombre(),
                 'email' => $this->getEmail()
             );
