@@ -1,0 +1,415 @@
+<style>
+    .header-planilla th{
+        width: 25%;
+        text-align: right;
+    }
+    .header-planilla td{
+        text-align: left;
+    }
+    
+    input.error {
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;	
+        outline: thin auto red;
+    }
+    .validate-no-edit-td{
+        background: #eee;
+        color: #999;
+    }
+    .planillaFooter .col-sm-3{
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    .sello{
+        height: 60px;
+    }    
+    .firmaysello{
+        height: 95px;
+    }
+    .planillaFooter th{
+        width: 85px;
+    }
+    .table-not-allowed{
+        cursor: not-allowed !important;
+        opacity: .5;
+        background: #eee;
+    }
+    .planillaInscripcion {
+        padding: 0px 20px 0px 45px
+    }
+    .planillaInscripcion p{
+        font-size: 11px;
+    }
+    .no-borderTop td,.no-borderTop th{
+        border-top: none !important;
+    }
+</style>
+<div class="col-sm-12 planillaInscripcion">
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class="text-center">Solicitud de inscripción<br>Lista de buena fe EQUIPO</h3>
+            {{ form_row(form.municipio) }}
+        </div>
+        <div class="col-sm-6">
+            <table class="table header-planilla">
+                <tr class="no-borderTop">
+                    <th>Disciplina</th>
+                    <td>{{ planilla.segmento.disciplina.nombreCompleto }}</td>
+                </tr>
+                <tr>
+                    <th>Genero</th>
+                    <td>{{ planilla.segmento.genero.nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Categoria</th>
+                    <td>{{ planilla.segmento.categoria.nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Modalidad</th>
+                    <td>
+                        {{ planilla.segmento.modalidad.nombre }}
+                        {% if planilla.segmento.nombre %}
+                           - {{ planilla.segmento.nombre }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table id="planillaBuenaFe" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center validate-no-edit"><i class="fa fa-hashtag" aria-hidden="true"></i></th>
+                        <th class="validate-text">Apellido</th>
+                        <th class="validate-text">Nombres</th>
+                        <th class="text-center validate-number">N° documento</th>
+                        <th class="text-center validate-date">F. nacimiento</th>
+                        <th class="validate-text">Domicilio</th>
+                        <th class="validate-municipio">Localidad</th>
+                        <th class="text-center validate-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">Sustitutos</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row planillaFooter">
+        <h4> Tipo inscripción : 
+            <div class="btn-group" data-toggle="buttons" id="tipoInscripcionButtons">
+                <label class="btn btn-default active">
+                    <input type="radio" name="tipoInscripcion" id="inscripcionMunicipal" autocomplete="off" checked> Municipal
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="tipoInscripcion" id="inscripcionInstitucionalEscuela" autocomplete="off"> Escolar <small></small>
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="tipoInscripcion" id="inscripcionInstitucionalClub" autocomplete="off"> Otra <small>(Club)</small>
+                </label>                
+            </div>
+        </h4>
+        <div class="table-responsive col-sm-3">
+            <table id="datosDirectorTecnico" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Director técnico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td></td>
+                    </tr>
+                    <tr class="firmaysello">
+                        <th>Firma</th>
+                        <td class="validate-no-edit-td"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="datosInstitucion" class="table table-bordered table-not-allowed">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Institución a la que representa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Nombre</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr>
+                        <th>Domicilio</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr>
+                        <th>Telefono</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <!--<tr>
+                        <th>Municipio</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>-->
+                    <tr class="sello">
+                        <th>Sello</th>
+                        <td class="validate-no-edit-td"></td>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="datosResponsableInstitucion" class="table table-bordered table-not-allowed">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Responsable Institución</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td class="validate-no-edit-td validate-change"></td>
+                    </tr>
+                    <tr class="firmaysello">
+                        <th>Firma y sello</th>
+                        <td class="validate-no-edit-td"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive col-sm-3">
+            <table id="datosResponsableMunicipio" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="2">Responsable Municipio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Apellido</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td ></td>
+                    </tr>
+                    <tr class="firmaysello">
+                        <th>Firma y Sello</th>
+                        <td class="validate-no-edit-td"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="hidden">
+            {{ form_rest(form) }}
+        </div>
+        <button type="button" class="btn btn-defaut" onclick="$.Planilla.save()">Guardar</button>
+    </div>
+    <p><i class="fa fa-info" aria-hidden="true"></i> Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.</p>
+    <p><i class="fa fa-info" aria-hidden="true"></i> Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.</p>
+    <p><i class="fa fa-info" aria-hidden="true"></i> La presente planilla debe ser confeccionada a máquina o con letra tipo imprenta, consignándose la totalidad de los datos solicitados, que se consideran como DECLARACION JURADA.</p>
+    <p><i class="fa fa-info" aria-hidden="true"></i> Acepto que los datos proporcionados sean utilizados por el Gobierno de la provincia de Buenos Aires para envíos de información Institucional.</p>
+    {{ form_end(form) }}
+ </div>
+
+<script>
+    $.fn.addFunctions = function () {
+        'use strict';
+        var element = $(this),
+            tfoot = element.find('tfoot tr'),
+            thead = element.find('thead tr'),
+            dataRows = element.find('tbody tr'),
+            dateStart = new Date('{{ planilla.segmento.minFechaNacimiento | date ('Y-n-j') }}'),
+            dateEnd = new Date('{{ planilla.segmento.maxFechaNacimiento | date ('Y-n-j') }}'),
+            formatDate = (date) => {
+                return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+            },
+            validateNumber = (value)=>{
+                return !isNaN(parseFloat(value))
+                        && isFinite(value)
+                        && value > 1000000 && value < 100000000;
+            },
+            validateDate = (value)=>{
+                let f = value.split('/'),
+                    d = new Date(f[2],f[1]-1,f[0]);
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)
+                        && f[0]>0 && f[0]<=31
+                        && f[1]>0 && f[1]<=12
+                        && !isNaN(d)){
+                    if (d.getTime() >= dateStart.getTime() && d.getTime() <= dateEnd.getTime()){
+                        return true;
+                    }
+                    toastr['warning']('La fecha ingresada esta fuera del rango permitido para este segmento.<br>Fechas validas entre: <b>'+formatDate(dateStart)+'</b> y <b>' +formatDate(dateEnd)+'</b>','Cuidado!')
+                }
+                return  false;
+            },
+            validateEmail = (value)=>{
+                return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(value);
+            };            
+        element.find('td').each(function (evt) {
+            var cell = $(this),
+                column = cell.index();
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-no-edit')){
+                cell.addClass('validate-no-edit-td');
+            }
+        }).on('focus', function (evt, value) {
+            var cell = $(this),
+                column = cell.index();
+            if (cell.hasClass('validate-municipio')) {
+                element.editor = $('<select>')
+            }
+            if (cell.hasClass('validate-no-edit-td')) {
+                cell.trigger('blur');
+            }
+            //console.log(cell.parent().data());
+        }).on('validate', function (evt, value) {
+            var cell = $(this),
+                column = cell.index();
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-number')){
+                return validateNumber(value);
+            }
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-date')){
+                return validateDate(value);
+            }
+            if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-email')){
+                return validateEmail(value);
+            }
+        });
+        return this;
+    };
+    (function ($) {
+        "use strict";
+        // no se sobreescribe el namespace, si ya existe
+        var _equipos = JSON.parse('{{ planilla.getEquiposJson() | json_encode() | raw }}'),
+            _tr = $('<tr><td class="text-center"></td><td></td><td></td><td class="text-center"></td><td class="text-center"></td><td></td><td></td><td class="text-center"></td></tr>');
+        $.Planilla = $.Planilla || {};
+        $.Planilla.init = function() {
+            console.log(_planilla);
+            $.map(_planilla.equipos,(equipo)=>{
+                $.map(equipo.integrantes,(integrante)=>{
+                    let $tr = _tr.clone();
+                    $tr.data({'idEquipo':equipo.id,'idIntegrante': integrante.id}).find(':nth-child(1)').html(integrante.order)
+                    if (integrante.type == 'inscripto'){
+                        $('#planillaBuenaFe tbody').append($tr);
+                    }else{
+                        $('#planillaBuenaFe tfoot').append($tr);
+                    }
+                });
+            });
+            let cantTbodyRows = $('#planillaBuenaFe tbody tr').length;
+            let cantTfootRows = $('#planillaBuenaFe tfoot tr').length;
+            console.log(cantTbodyRows);
+            for (let i = cantTbodyRows; i < _planilla.parametros.maxIntegrantes; i++) {
+                let $tr = _tr.clone();
+                $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(i+1)
+                $('#planillaBuenaFe tbody').append($tr);
+            }
+            
+            if (_planilla.parametros.maxReemplazos > 0){
+                for (let j = cantTfootRows; j < _planilla.parametros.maxReemplazos; j++) {
+                    let $tr = _tr.clone();
+                    $('#planillaBuenaFe tfoot').append($tr);
+                }
+            }else{
+                $('#planillaBuenaFe tfoot').remove();
+            }
+            $('#planillaBuenaFe').editableTableWidget({
+                changeEditorFunction : function(obj){
+                    var 
+                        thead = $('#planillaBuenaFe').find('thead tr'),
+                        cell = $(obj),
+                        column = cell.index();
+                    if (thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-municipio')){
+                        if (cell.text() == '')
+                            cell.text($('#planilla_municipio option:selected').text());
+                        let $select = $('#planilla_municipio').clone();
+                        $select.removeAttr('id').removeAttr('required').find('option').removeAttr('value');
+                        return $select;
+                    }
+                    return $('<input/>')
+                }
+            }).addFunctions();
+            $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget();
+            $('#tipoInscripcionButtons :input').change(function() {
+                if (this.id == 'inscripcionMunicipal') {
+                    $('#datosResponsableInstitucion,#datosInstitucion')
+                        .addClass('table-not-allowed')
+                        .find('.validate-change').removeClass('validate-no-edit-td');
+                }
+                else{
+                    $('#datosResponsableInstitucion,#datosInstitucion')
+                        .removeClass('table-not-allowed')
+                        .find('.validate-change').removeClass('validate-no-edit-td');
+                }                
+            });
+            //$('#planillaBuenaFe').on('change', ()=>{
+            //    console.log(1);
+            //})
+        },
+        $.Planilla.save = function(){
+            let planilla = {
+                    id : '',
+                    equipos : [],
+                    tipo : '',
+                    institucion: {
+                        nombre : '',
+                        domicilio : '',
+                        telefono : '',
+                        responsable : {
+                            nombre : '',
+                            apellido : ''
+                        }
+                    },
+                    municipio: {
+                        nombre : '',
+                        apellido : ''
+                    }
+                };
+            let integrantes = [];
+            let idEquipo;
+            console.log($('#planillaBuenaFe tbody tr').length);
+            $('#planillaBuenaFe tbody tr').each(function(){
+                let $tr=$(this);
+                idEquipo = $tr.data('idIntegrante');
+                integrantes.push({
+                    id : $tr.data('idIntegrante'),
+                    apellido : $tr.find(':nth-child(2)').text(),
+                    nombre : $tr.find(':nth-child(3)').text(),
+                    tipoDocumento : 'DNI',
+                    documento : $tr.find(':nth-child(4)').text(),
+                    nacimiento : $tr.find(':nth-child(5)').text(),
+                    domicilio : $tr.find(':nth-child(6)').text(),
+                    municipio : $tr.find(':nth-child(7)').text(),
+                    email : $tr.find(':nth-child(8)').text()
+                });
+            });
+            planilla.equipos.push({
+                    id : idEquipo,
+                    nombre : '',
+                    integrantes : integrantes,
+                    tecnico: {
+                        nombre : '',
+                        apellido : ''
+                    },
+                })
+            console.log(planilla);
+        }
+    })(jQuery);
+    $(document).ready(function(){$.Planilla.init();});
+</script>
