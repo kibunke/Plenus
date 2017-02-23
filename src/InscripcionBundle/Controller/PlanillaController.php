@@ -135,7 +135,7 @@ class PlanillaController extends Controller
         if(strpos($e->getMessage(), 'unique_email') !== false){
             $aux = explode("Duplicate entry '", $e->getMessage())[1];
             $aux = explode("'",$aux)[0];
-            $error = 'El email '.$aux.' ya está registrado' . $e->getMessage();
+            $error = 'El email '.$aux.' ya está registrado';
         }elseif(strpos($e->getMessage(), 'unique_dni') !== false){
             $aux = explode("Duplicate entry '", $e->getMessage())[1];
             $aux = explode("'",$aux)[0];
