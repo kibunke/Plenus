@@ -513,7 +513,8 @@ abstract class Planilla
                     "institucion" => $this->getInstitucion() ? $this->getInstitucion()->getJson() : [],
                     "responsableMunicipio" => array(
                         "nombre" => $this->getResponsableMunicipioNombre(),
-                        "apellido" => $this->getResponsableMunicipioApellido()
+                        "apellido" => $this->getResponsableMunicipioApellido(),
+                        "dni" => $this->getResponsableMunicipioDni(),
                     )
                 );
     }

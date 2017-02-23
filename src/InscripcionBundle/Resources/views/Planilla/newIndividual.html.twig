@@ -314,6 +314,19 @@
         $.Planilla = $.Planilla || {};
         $.Planilla.init = function() {
             _planilla = JSON.parse($('#planilla_data').text());
+            $('#tipoInscripcionButtons :input').change(function() {
+                if (this.value == 'inscripcionMunicipal') {
+                    $('#datosResponsableInstitucion,#datosInstitucion')
+                        .addClass('table-not-allowed')
+                        .find('.validate-change').removeClass('validate-no-edit-td');
+                    _planilla.tipo = 'municipal';
+                }
+                else{
+                    $('#datosResponsableInstitucion,#datosInstitucion')
+                        .removeClass('table-not-allowed')
+                        .find('.validate-change').removeClass('validate-no-edit-td');
+                }                
+            });            
             $.map(_planilla.equipos,(equipo, index)=>{
                 $.map(equipo.integrantes,(integrante)=>{
                     let $tr = _tr.clone();
@@ -334,19 +347,25 @@
                 $('#datosDirectorTecnico .apellido').text(equipo.tecnico.apellido),
                 $('#datosDirectorTecnico .dni').text(equipo.tecnico.dni)
             });
-            $('#tipoInscripcionButtons input').val(_planilla.tipo);
             $('#datosResponsableMunicipio .nombre').text(_planilla.responsableMunicipio.nombre);
             $('#datosResponsableMunicipio .apellido').text(_planilla.responsableMunicipio.apellido);
-            $('#datosDirectorTecnico .dni').text(_planilla.responsableMunicipio.dni);
+            $('#datosResponsableMunicipio .dni').text(_planilla.responsableMunicipio.dni);
             if (_planilla.inscripcionInstitucional){
+                console.log(_planilla.institucion.tipo);
+                //$('#tipoInscripcionButtons input:checked').prop( "checked", false );
+                //$("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").prop( "checked", true );
+                //$("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").attr( "checked", true );
+                $("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").trigger('click');
+                console.log($("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']"))
+                //$('#tipoInscripcionButtons input').val(_planilla.institucion.tipo);
                 $('#datosInstitucion').data('id',_planilla.institucion.id);
                 $('#datosInstitucion .nombre').text(_planilla.institucion.nombre);
                 $('#datosInstitucion .domicilio').text(_planilla.institucion.domicilio);
                 $('#datosInstitucion .telefono').text(_planilla.institucion.telefono);
                     
                 $('#datosResponsableInstitucion .nombre').text(_planilla.institucion.responsable.nombre);
-                $('#datosResponsableInstitucion .apellido').text(_planilla.institucion.responsablea.pellido);
-                $('#datosDirectorTecnico .dni').text(_planilla.institucion.responsable.dni);
+                $('#datosResponsableInstitucion .apellido').text(_planilla.institucion.responsable.apellido);
+                $('#datosResponsableInstitucion .dni').text(_planilla.institucion.responsable.dni);
             }
             
             let cantTbodyRows = $('#planillaBuenaFe tbody tr').length;
@@ -371,20 +390,7 @@
                     return $('<input/>')
                 }
             }).addFunctions();
-            $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget().addFunctions();;
-            $('#tipoInscripcionButtons :input').change(function() {
-                if (this.value == 'inscripcionMunicipal') {
-                    $('#datosResponsableInstitucion,#datosInstitucion')
-                        .addClass('table-not-allowed')
-                        .find('.validate-change').removeClass('validate-no-edit-td');
-                    _planilla.tipo = 'municipal';
-                }
-                else{
-                    $('#datosResponsableInstitucion,#datosInstitucion')
-                        .removeClass('table-not-allowed')
-                        .find('.validate-change').removeClass('validate-no-edit-td');
-                }                
-            });
+            $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget().addFunctions();
         },
         $.Planilla.save = function(){
             _planilla.inscripcionInstitucional = ($('#tipoInscripcionButtons input:checked').val() != 'inscripcionMunicipal');
@@ -392,7 +398,7 @@
                 nombre : $('#datosResponsableMunicipio .nombre').text(),
                 apellido : $('#datosResponsableMunicipio .apellido').text(),
                 tipoDocumento : 'DNI',
-                dni : $('#datosDirectorTecnico .dni').text()
+                dni : $('#datosResponsableMunicipio .dni').text()
             };
             _planilla.institucion = {
                 id : $('#datosInstitucion').data('id'),
@@ -404,7 +410,7 @@
                     nombre : $('#datosResponsableInstitucion .nombre').text(),
                     apellido : $('#datosResponsableInstitucion .apellido').text(),
                     tipoDocumento : 'DNI',
-                    dni : $('#datosDirectorTecnico .dni').text()                        
+                    dni : $('#datosResponsableInstitucion .dni').text()                        
                 }
             };
             _planilla.equipos = [];
@@ -437,7 +443,6 @@
             });
             $('#planilla_data').text(JSON.stringify(_planilla));
             let path = '{{ path('planilla_new', {'id': planilla.segmento.id}) }}';
-            console.log(_planilla.id > 0);
             if (_planilla.id > 0){
                 path = '{{ path('planilla_edit', {'id': '__XX__'}) }}'.replace('__XX__',_planilla.id);
             }

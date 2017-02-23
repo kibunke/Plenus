@@ -154,6 +154,7 @@ class PlanillaController extends Controller
         if ($json->responsableMunicipio && strlen($json->responsableMunicipio->nombre)>2 && strlen($json->responsableMunicipio->apellido)>2){
             $planilla->setResponsableMunicipioNombre($json->responsableMunicipio->nombre);
             $planilla->setResponsableMunicipioApellido($json->responsableMunicipio->apellido);
+            $planilla->setResponsableMunicipioDni($json->responsableMunicipio->dni);
             foreach($json->equipos as $jsonEquipo){
                 $equipo = $this->loadEquipo($jsonEquipo,$planilla);
                 if ($equipo){
