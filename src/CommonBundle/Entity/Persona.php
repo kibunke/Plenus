@@ -766,7 +766,7 @@ class Persona
         if (isset($json->email) && strlen($json->email))
             $this->setEmail($json->email);
         if (isset($json->observacion))
-            $this->setEmail($json->observacion);            
+            $this->setObservacion($json->observacion);            
     }    
 
     /**
