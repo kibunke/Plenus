@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity()
  */
 
-class Escuela extends Origen
+class Escuela extends Institucion
 {
     /**
      * Get icono
@@ -33,6 +33,16 @@ class Escuela extends Origen
     }
 
     /**
+     * Get Discr
+     *
+     * @return string 
+     */
+    public function getDiscr()
+    {
+        return "inscripcionInstitucionalEscuela";
+    }
+    
+    /**
      * Get class
      *
      * @return string 
@@ -41,4 +51,52 @@ class Escuela extends Origen
     {
         return "Escuela";
     }    
+
+    /**
+     * Set responsableNombre
+     *
+     * @param string $responsableNombre
+     *
+     * @return Escuela
+     */
+    public function setResponsableNombre($responsableNombre)
+    {
+        $this->responsableNombre = $responsableNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableNombre
+     *
+     * @return string
+     */
+    public function getResponsableNombre()
+    {
+        return $this->responsableNombre;
+    }
+
+    /**
+     * Set responsableApellido
+     *
+     * @param string $responsableApellido
+     *
+     * @return Escuela
+     */
+    public function setResponsableApellido($responsableApellido)
+    {
+        $this->responsableApellido = $responsableApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableApellido
+     *
+     * @return string
+     */
+    public function getResponsableApellido()
+    {
+        return $this->responsableApellido;
+    }
 }

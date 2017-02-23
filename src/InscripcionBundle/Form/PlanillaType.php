@@ -35,7 +35,7 @@ class PlanillaType extends AbstractType
         $entity = $builder->getData();
         $builder
             //->add('nombre', TextType::class, array("attr" => array('placeholder' => 'Ingrese el nombre del segmento')))
-            ->add('descripcion', TextareaType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
+            //->add('descripcion', TextareaType::class, array("attr" => array('placeholder' => 'Ingrese la descripción del segmento')))
             ->add('municipio', EntityType::class, array(
                                                 'class' => 'CommonBundle:Municipio',
                                                 'choice_label' => 'nombre',
@@ -52,21 +52,22 @@ class PlanillaType extends AbstractType
                                                 'data' => $user->getPersona()->getMunicipio()
                                             )
                   )
-            ->add('tipoOrigen', ChoiceType::class, array(
-                                            'choices'  => array('' => 'Seleccione',
-                                                                'Municipio' => 'Municipio',
-                                                                'Escuela' => 'Escuela',
-                                                                'Otro' => 'Otra Institución'),
-                                            'required' => true,
-                                            'mapped' => false,
-                                            'data' => $entity->getOrigen()?$entity->getOrigen()->getClass():'',
-                                            'disabled' => false,
-                                    )
-                  )
-            ->add('origen', TextType::class,array())
+            ->add('data', TextareaType::class, array("mapped" => false,"data" => json_encode($entity->getJson())))
+            //->add('tipoOrigen', ChoiceType::class, array(
+            //                                'choices'  => array('' => 'Seleccione',
+            //                                                    'Municipio' => 'Municipio',
+            //                                                    'Escuela' => 'Escuela',
+            //                                                    'Otro' => 'Otra Institución'),
+            //                                'required' => true,
+            //                                'mapped' => false,
+            //                                'data' => $entity->getOrigen()?$entity->getOrigen()->getClass():'',
+            //                                'disabled' => false,
+            //                        )
+            //      )
+            //->add('origen', TextType::class,array())
         ;
-        $builder->get('origen')
-            ->addModelTransformer(new OrigenToTextTransformer($this->manager));
+        //$builder->get('origen')
+        //    ->addModelTransformer(new OrigenToTextTransformer($this->manager));
     }
 
     public function configureOptions(OptionsResolver $resolver)

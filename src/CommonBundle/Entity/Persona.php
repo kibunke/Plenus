@@ -11,15 +11,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="Persona", uniqueConstraints={
  *          @ORM\UniqueConstraint(name="unique_dni", columns={"tipoDocumento_id", "dni"}),
- *          @ORM\UniqueConstraint(name="unique_email", columns={"email"})
+ *          @ORM\UniqueConstraint(  name="unique_email", columns={"email"})
  *      }
  * )
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
+ *
  * @ORM\DiscriminatorMap({
  *                          "persona"       = "Persona",
- *                          "participante"    = "ResultadoBundle\Entity\Participante",
+ *                          "competidor"    = "ResultadoBundle\Entity\Competidor",
+ *                          "tecnico"       = "ResultadoBundle\Entity\DirectorTecnico",
  *                      })
  *                        "competitor"= "TournamentBundle\Entity\Competitor",
  *                        "coach"     = "TournamentBundle\Entity\Coach",
@@ -719,4 +721,42 @@ class Persona
     {
         return $this->getMunicipio()->mismoMunicipio($persona->getMunicipio());
     }
+    
+    public function getJson()
+    {
+        return array(
+                'id' => $this->getId(),
+                'apellido' => $this->getApellido(),
+                'nombre' => $this->getNombre(),
+                'tipoDocumento' => $this->getTipoDocumento()->getNombre(),
+                'dni' => $this->getDni(),
+                'fNacimiento' => $this->getFNacimiento()->format('d/m/Y'),
+                //'domicilio' => $this->getDomicilio(),
+                'municipio' => $this->getMunicipio()->getNombre(),
+                'email' => $this->getEmail()
+            );
+    }
+    
+    /**
+     * Load
+     */
+    public function loadFromJson($json)
+    {
+        if (isset($json->nombre))
+            $this->setNombre($json->nombre);
+        if (isset($json->apellido))
+            $this->setApellido($json->apellido);
+        if (isset($json->dni))
+            $this->setDni($json->dni);
+        if (isset($json->tipoDocumento) && is_object($json->tipoDocumento))
+            $this->setTipoDocumento($json->tipoDocumento);            
+        if (isset($json->fNacimiento) && is_object($json->fNacimiento))
+            $this->setFNacimiento($json->fNacimiento);
+        if (isset($json->telefono))
+            $this->setTelefono($json->telefono);
+        if (isset($json->municipio) && is_object($json->municipio))
+            $this->setMunicipio($json->municipio);
+        if (isset($json->email) && strlen($json->email))
+            $this->setEmail($json->email);
+    }    
 }

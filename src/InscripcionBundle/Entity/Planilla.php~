@@ -10,8 +10,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * InscripcionBundle\Entity\Planilla
  * @ORM\Table(name="Planilla")
  * @ORM\Entity(repositoryClass="InscripcionBundle\Entity\Repository\PlanillaRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *                          "Individual" = "Individual",
+ *                          "Equipo"   = "Equipo"
+ *                      })
  */
-class Planilla
+abstract class Planilla
 {
     /**
      * @var integer $id
@@ -30,15 +36,15 @@ class Planilla
     private $descripcion;
     
     /**
-     * @ORM\OneToMany(targetEntity="ResultadoBundle\Entity\Equipo", mappedBy="planilla")
+     * @ORM\OneToMany(targetEntity="ResultadoBundle\Entity\Equipo", mappedBy="planilla", cascade={"persist"})
      */
-    private $competidores;
+    private $equipos;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Origen", cascade={"persist"})
-     * @ORM\JoinColumn(name="origen", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Institucion", cascade={"persist"})
+     * @ORM\JoinColumn(name="institucion", referencedColumnName="id")
      */       
-    private $origen;    
+    private $institucion;    
     
     /**
      * @ORM\ManyToOne(targetEntity="Segmento", inversedBy="planillas")
@@ -53,8 +59,29 @@ class Planilla
     private $municipio;
     
     /**
+     * @var string $responsableMunicipioNombre
+     *
+     * @ORM\Column(name="responsableMunicipioNombre", type="string", length=100)
+     */
+    protected $responsableMunicipioNombre;
+    
+    /**
+     * @var string $responsableMunicipioApellido
+     *
+     * @ORM\Column(name="responsableMunicipioApellido", type="string", length=100)
+     */
+    protected $responsableMunicipioApellido;
+    
+    /**
+     * @var string $responsableMunicipioDni
+     *
+     * @ORM\Column(name="responsableMunicipioDni", type="string", length=100)
+     */
+    protected $responsableMunicipioDni;
+    
+    /**
      * this is OneToMany because the historial is important
-     * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla")
+     * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla", cascade={"persist"})
      */
     private $estados;
     
@@ -90,6 +117,7 @@ class Planilla
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();        
     }
 
     /**
@@ -183,61 +211,62 @@ class Planilla
     }
 
     /**
-     * Add competidore
+     * Add equipo
      *
-     * @param \ResultadoBundle\Entity\Equipo $competidore
+     * @param \ResultadoBundle\Entity\Equipo $equipo
      *
      * @return Planilla
      */
-    public function addCompetidore(\ResultadoBundle\Entity\Equipo $competidore)
+    public function addEquipo(\ResultadoBundle\Entity\Equipo $equipo)
     {
-        $this->competidores[] = $competidore;
+        $this->equipos[] = $equipo;
+        $equipo->setPlanilla($this);
 
         return $this;
     }
 
     /**
-     * Remove competidore
+     * Remove equipo
      *
-     * @param \ResultadoBundle\Entity\Equipo $competidore
+     * @param \ResultadoBundle\Entity\Equipo $equipo
      */
-    public function removeCompetidore(\ResultadoBundle\Entity\Equipo $competidore)
+    public function removeCompetidore(\ResultadoBundle\Entity\Equipo $equipo)
     {
-        $this->competidores->removeElement($competidore);
+        $this->equipos->removeElement($equipo);
     }
 
     /**
-     * Get competidores
+     * Get equipo
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getCompetidores()
+    public function getEquipos()
     {
-        return $this->competidores;
+        return $this->equipos;
     }
 
     /**
-     * Set origen
+     * Set institucion
      *
-     * @param \InscripcionBundle\Entity\Origen $origen
+     * @param \InscripcionBundle\Entity\Institucion $institucion
      *
      * @return Planilla
      */
-    public function setOrigen(\InscripcionBundle\Entity\Origen $origen = null)
+    public function setInstitucion(\InscripcionBundle\Entity\Institucion $institucion = null)
     {
-        $this->origen = $origen;
+        $this->institucion = $institucion;
 
         return $this;
     }
 
     /**
-     * Get origen
+     * Get institucion
      *
-     * @return \InscripcionBundle\Entity\Origen
+     * @return \InscripcionBundle\Entity\Institucion
      */
-    public function getOrigen()
+    public function getInstitucion()
     {
-        return $this->origen;
+        return $this->institucion;
     }
 
     /**
@@ -298,7 +327,7 @@ class Planilla
     public function addEstado(\InscripcionBundle\Entity\PlanillaEstado $estado)
     {
         $this->estados[] = $estado;
-
+        $estado->setPlanilla($this);
         return $this;
     }
 
@@ -320,6 +349,16 @@ class Planilla
     public function getEstados()
     {
         return $this->estados;
+    }
+
+    /**
+     * Get estados
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEstado()
+    {
+        return $this->estados->last();
     }
 
     /**
@@ -368,5 +407,151 @@ class Planilla
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+    
+    /**
+     * Set responsableMunicipioNombre
+     *
+     * @param string $responsableMunicipioNombre
+     *
+     * @return Planilla
+     */
+    public function setResponsableMunicipioNombre($responsableMunicipioNombre)
+    {
+        $this->responsableMunicipioNombre = $responsableMunicipioNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableMunicipioNombre
+     *
+     * @return string
+     */
+    public function getResponsableMunicipioNombre()
+    {
+        return $this->responsableMunicipioNombre;
+    }
+
+    /**
+     * Set responsableMunicipioApellido
+     *
+     * @param string $responsableMunicipioApellido
+     *
+     * @return Planilla
+     */
+    public function setResponsableMunicipioApellido($responsableMunicipioApellido)
+    {
+        $this->responsableMunicipioApellido = $responsableMunicipioApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableMunicipioApellido
+     *
+     * @return string
+     */
+    public function getResponsableMunicipioApellido()
+    {
+        return $this->responsableMunicipioApellido;
+    }
+
+    /**
+     * Remove equipo
+     *
+     * @param \ResultadoBundle\Entity\Equipo $equipo
+     */
+    public function removeEquipo(\ResultadoBundle\Entity\Equipo $equipo)
+    {
+        $this->equipos->removeElement($equipo);
+    }
+
+    /**
+     * isTecnicoRequired
+     *
+     * @return boolean
+     */
+    public function IsTecnicoRequired()
+    {
+        //Por negocion los Juveniles tiene DT obligatorio
+        return !$this->getSegmento()->getTorneo()->getIsAdultosMayores();
+    }
+
+    /**
+     * isOnDateRange
+     *
+     * @return boolean
+     */
+    public function isOnDateRange($integrante)
+    {
+        //Por negocion los Juveniles tiene DT obligatorio
+        return  $this->getSegmento()->getMinFechaNacimiento() <= $integrante->getFNacimiento() &&
+                $this->getSegmento()->getMaxFechaNacimiento() >= $integrante->getFNacimiento();
+    }    
+    
+    /**
+     * Get equipos
+     *
+     * @return json
+     */
+    public function getJson()
+    {
+        $segmento = $this->getSegmento();
+        return array(
+                    "id" => $this->getId(),
+                    "parametros" => array(
+                        "maxEqPlanilla" => $segmento->getMaxEquiposPorPlanilla(),
+                        "maxIntegrantes" => $segmento->getMaxIntegrantes(),
+                        "minIntegrantes" => $segmento->getMinIntegrantes(),
+                        "maxReemplazos" => $segmento->getMaxReemplazos(),
+                        "fechaMin" => $segmento->getMinFechaNacimiento(),
+                        "fechaMax" => $segmento->getMaxFechaNacimiento(),
+                    ),
+                    "equipos" => $this->getEquiposJson(),
+                    "inscripcionInstitucional" => $this->getInstitucion() ? true : false,
+                    "institucion" => $this->getInstitucion() ? $this->getInstitucion()->getJson() : [],
+                    "responsableMunicipio" => array(
+                        "nombre" => $this->getResponsableMunicipioNombre(),
+                        "apellido" => $this->getResponsableMunicipioApellido()
+                    )
+                );
+    }
+    private function getEquiposJson()
+    {
+        $equipos = array();
+        foreach ($this->getEquipos() as $equipo){
+            $equipos[] = $equipo->getJson();
+        }
+        return $equipos;        
+    }
+    
+    /**
+     * validarInscripcion
+     */
+    public function inscripcionValida($planilla)
+    {
+        //Chequea que el participante no este inscripto en el segmento 
+        if ($this->getSegmento() == $planilla->getSegmento()){
+            throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en este segmento pero en otro equipo!');
+        }
+        //Chequea que el participante siempre represente al mismo municipio
+        if ($this->getMunicipio() != $planilla->getMunicipio()){
+            throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en otro equipo por el municipio de '.$this->getMunicipio()->getNombre());
+        }
+        
+        return true;
+    }
+    
+    /**
+     * getTotalInscriptos
+     */
+    public function getTotalInscriptos()
+    {
+        $sum = 0;
+        foreach ($this->getEquipos() as $equipo){
+            $sum += count($equipo->getCompetidores());
+        }
+        return $sum;
     }
 }

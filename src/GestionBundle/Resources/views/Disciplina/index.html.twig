@@ -123,6 +123,8 @@
                     "columns": [
                         { "data": "disciplina.id", "className": "text-center" },
                         { "data": "disciplina" },
+                        { "data": "disciplina.parametros", "className": "text-center" },
+                        { "data": "disciplina.segmentos", "className": "text-center" },
                         { "data": "disciplina.eventos", "className": "text-center" },
                         { "data": "actions" }
                     ],
@@ -143,6 +145,15 @@
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
                                                 '<div title="'+ data.descripcion +'">'+ data.nombre +'</div>':'';
+                                        }
+                        },
+                        {
+                            "targets": 2,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' && data != null?
+                                                '<i class="fa fa-check-circle-o text-green" aria-hidden="true"></i>':'';
                                         }
                         }
                     ],

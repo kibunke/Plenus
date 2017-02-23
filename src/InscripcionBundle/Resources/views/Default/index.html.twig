@@ -140,27 +140,19 @@
                 });   
             }
             $.Default.planilla = {},
+            $.Default.reloadTable = function(){
+                _table.fnDraw(true);
+            }
             $.Default.planilla.add = function(id){
-                $.get(_pathPlanillaNew.replace('__XX__',id)).done((data)=>{
-                    if(data.success){
-                        toastr['success'](data.message, 'Excelente!');
-                        _table.fnDraw(true);
-                        $.Main.closeFormModal();
-                    }else if(data.error){
-                        toastr['error'](data.message, 'Cuidado!');
-                    }else{
+                $.get(_pathPlanillaNew.replace('__XX__',id))
+                    .done((data)=>{
+                        $('.planillaInscripcion').remove();
                         $('#globalSubView .subviews-container').html(data);
                         $.subview();
                         $('.page-header h1').toggle();
-                    }
-                }).fail(()=>{
-                    toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
-                })
-                
-                //$('#globalSubView .subviews-container').load();
-//                customOptions.content = subViewElement.attr('href');
-//		customOptions.startFrom = subViewElement.data("startfrom"), customOptions.onShow = subViewElement.data("onshow"), customOptions.onHide = subViewElement.data("onhide"), customOptions.onClose = subViewElement.data("onclose");
-		
+                    }).fail(()=>{
+                        toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
+                    });		
             }
             //$.Default.autocomplete = function(){}
             //$.Default.autocomplete.getData = function(municipio,tipo){

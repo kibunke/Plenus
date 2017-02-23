@@ -45,7 +45,7 @@ class Evento
     
     /**
      * @var integer $orden
-     *
+     * @Assert\NotNull()
      * @ORM\Column(name="orden", type="integer")
      */
     private $orden;
@@ -93,14 +93,9 @@ class Evento
     /**
      * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Segmento", inversedBy="eventos")
      * @ORM\JoinColumn(name="segmento", referencedColumnName="id")
+     * @Assert\NotNull()
      */       
     private $segmento;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
-     * @ORM\JoinTable(name="usuarios_coordina_eventos")
-     **/    
-    private $coordinadores;
     
     /**
      * @ORM\ManyToMany(targetEntity="Cronograma", mappedBy="eventos")
@@ -213,14 +208,25 @@ class Evento
      */
     public function getNombreCompletoRaw()
     {
+        $nomAux = '';
+        if ($this->nombre)
+            $nomAux = " - <small>".$this->getNombre()."</small>";
         $nom =  "<div title='".$this->getNombreCompleto()."'>".
                     "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
                     "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
-                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>".
+                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>".$nomAux.
                 "</div>";
-        if ($this->nombre)
-            $nom = $nom."-".$this->getNombre();
+
         return $nom;
+    
+        //$nom =  "<div title='".$this->getNombreCompleto()."'>".
+        //            "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
+        //            "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
+        //            "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>";
+        //if ($this->nombre)
+        //    $nom .= "-<small>".$this->getNombre()."</small>";
+        //$nom .= "</div>";
+        //return $nom;
     }
 
     /**
@@ -304,39 +310,6 @@ class Evento
     public function getUpdatedAt()
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * Add inscriptos
-     *
-     * @param \InscripcionBundle\Entity\Inscripto $inscriptos
-     * @return Evento
-     */
-    public function addInscripto(\InscripcionBundle\Entity\Inscripto $inscriptos)
-    {
-        $this->inscriptos[] = $inscriptos;
-
-        return $this;
-    }
-
-    /**
-     * Remove inscriptos
-     *
-     * @param \InscripcionBundle\Entity\Inscripto $inscriptos
-     */
-    public function removeInscripto(\InscripcionBundle\Entity\Inscripto $inscriptos)
-    {
-        $this->inscriptos->removeElement($inscriptos);
-    }
-
-    /**
-     * Get inscriptos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getInscriptos()
-    {
-        return $this->inscriptos;
     }
 
     /**
@@ -455,36 +428,13 @@ class Evento
     }
 
     /**
-     * Add coordinadores
-     *
-     * @param \SeguridadBundle\Entity\Usuario $coordinadores
-     * @return Evento
-     */
-    public function addCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
-    {
-        $this->coordinadores[] = $coordinadores;
-
-        return $this;
-    }
-
-    /**
-     * Remove coordinadores
-     *
-     * @param \SeguridadBundle\Entity\Usuario $coordinadores
-     */
-    public function removeCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
-    {
-        $this->coordinadores->removeElement($coordinadores);
-    }
-
-    /**
      * Get coordinadores
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
     public function getCoordinadores()
     {
-        return $this->coordinadores;
+        return $this->getSegmento()->getCoordinadores();
     }
 
     /**
@@ -756,7 +706,6 @@ class Evento
     {
         $this->etapas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cronogramas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->createdAt = new \DateTime();
     }
@@ -793,4 +742,46 @@ class Evento
     function getPlazasMedallero(){
         return $this->getEtapas()->last()->getCompetencia()->getPlazas();
     }
+
+    /**
+     * Set segmento
+     *
+     * @param \InscripcionBundle\Entity\Segmento $segmento
+     *
+     * @return Evento
+     */
+    public function setSegmento(\InscripcionBundle\Entity\Segmento $segmento = null)
+    {
+        $this->segmento = $segmento;
+
+        return $this;
+    }
+
+    /**
+     * Get segmento
+     *
+     * @return \InscripcionBundle\Entity\Segmento
+     */
+    public function getSegmento()
+    {
+        return $this->segmento;
+    }
+    
+    /**
+     * Set DimensionesFromSegmento
+     *
+     * @return Evento
+     */
+    public function setDimensionesFromSegmento($segmento)
+    {
+        $this->setTorneo($segmento->getTorneo());
+        $this->setDisciplina($segmento->getDisciplina());
+        $this->setCategoria($segmento->getCategoria());
+        $this->setGenero($segmento->getGenero());
+        $this->setModalidad($segmento->getModalidad());
+        $this->setNombre($segmento->getNombre());
+        $this->setSegmento($segmento);
+        
+        return $this;
+    }    
 }

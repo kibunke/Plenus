@@ -71,6 +71,14 @@ class Torneo
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
+    
+    /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isAdultosMayores", type="boolean", options={"default" : false})
+     */
+    protected $isAdultosMayores;
+    
     /**
      * Constructor
      */
@@ -289,5 +297,63 @@ class Torneo
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+
+    /**
+     * Set isAdultosMayores
+     *
+     * @param boolean $isAdultosMayores
+     *
+     * @return Torneo
+     */
+    public function setIsAdultosMayores($isAdultosMayores)
+    {
+        $this->isAdultosMayores = $isAdultosMayores;
+
+        return $this;
+    }
+
+    /**
+     * Get isAdultosMayores
+     *
+     * @return boolean
+     */
+    public function getIsAdultosMayores()
+    {
+        return $this->isAdultosMayores;
+    }
+
+    /**
+     * Add segmento
+     *
+     * @param \InscripcionBundle\Entity\Segmento $segmento
+     *
+     * @return Torneo
+     */
+    public function addSegmento(\InscripcionBundle\Entity\Segmento $segmento)
+    {
+        $this->segmentos[] = $segmento;
+
+        return $this;
+    }
+
+    /**
+     * Remove segmento
+     *
+     * @param \InscripcionBundle\Entity\Segmento $segmento
+     */
+    public function removeSegmento(\InscripcionBundle\Entity\Segmento $segmento)
+    {
+        $this->segmentos->removeElement($segmento);
+    }
+
+    /**
+     * Get segmentos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSegmentos()
+    {
+        return $this->segmentos;
     }
 }

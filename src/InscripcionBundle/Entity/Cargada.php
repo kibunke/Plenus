@@ -17,8 +17,8 @@ class Cargada extends PlanillaEstado
      */
     public function __construct()
     {
-        $this->nombre = "Cargada";
-        $this->createdAt = new \DateTime();
+        $this->setNombre("Cargada");
+        $this->setCreatedAt(new \DateTime());
     }
 
     /**
@@ -28,4 +28,20 @@ class Cargada extends PlanillaEstado
     {
         return "Estado ".$this->getNombre();
     }
+    
+    /**
+     * get Class
+     */    
+    public function getClass()
+    {
+        return "badge badge-teal";
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getAbr()
+    {
+        return "Ca";
+    }       
 }

@@ -70,8 +70,8 @@
             "use strict";
             // no se sobreescribe el namespace, si ya existe
             var _table;
-            $.Planilla = $.Planilla || {};
-            $.Planilla.init = function() {
+            $.Default = $.Default || {};
+            $.Default.init = function() {
                 //$(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
                 _table = $('#planillaTable').dataTable( {
                     "processing": true,
@@ -86,8 +86,8 @@
                     "columns": [
                         { "data": "id" },
                         { "data": "segmento" },
-                        { "data": "eventos" },
                         { "data": "inscriptos" },
+                        { "data": "estado" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -106,168 +106,21 @@
                 });
             }
             //$.Default.inscripto = function(){}
-            //$.Planilla.add = function(url){
-            //    setTimeout(()=>{
-            //        $('#globalSubView .subviews-container').load(url);
-            //    },100);
-            //    
-            //}
-            //$.Segmento.editModal = function(url){
-            //    $.Segmento.openAjaxModal(url,'Editar Segmento');
-            //}
-            //$.Segmento.deleteConfirm = function(url){
-            //    swal({
-            //        title: 'Esta seguro?',
-            //        text: "El segmento será borrado!",
-            //        type: 'warning',
-            //        showCancelButton: true,
-            //        confirmButtonColor: '#3085d6',
-            //        cancelButtonColor: '#d33',
-            //        confirmButtonText: 'Si, borrar!'
-            //    },function () {
-            //        $.post(url,{})
-            //        .done((data)=>{
-            //            if (data.success){
-            //                swal('Borrado!','El segmento fue borrado con exito.','success')
-            //                _table.fnDraw(true);
-            //            }else{
-            //                swal('Cuidado!',data.message,'error')
-            //            }
-            //        }).fail(()=>{
-            //            swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
-            //        })
-            //    })
-            //}            
-            //$.Segmento.openAjaxModal = function(url,title){
-            //    $.Main.openFormModal(url,title, function(){
-            //            $('#panel-config form').submit(function(event){
-            //                $('#segmentoTable').parents('panel').block($.Main.defaultBlockConf());
-            //                $('#okButton').button('loading')
-            //                event.preventDefault();
-            //                $.post(url, $('#panel-config form').serialize(), function(data){
-            //                    if(data.success){
-            //                        toastr['success'](data.message, 'Excelente!');
-            //                        _table.fnDraw(true);
-            //                        $.Main.closeFormModal();
-            //                    }else if(data.error){
-            //                        toastr['error'](data.message, 'Cuidado!');
-            //                    }else{
-            //                        $("#panel-config form").html($(data).find('form').html());
-            //                        toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
-            //                    }
-            //                    $('#okButton').button('reset');
-            //                    $('#segmentoTable').parents('panel').unblock();
-            //                });
-            //            });
-            //        }
-            //    );                
-            //    //$.Main.openModal(url,"Nuevo Segmento");
-            //}
-            //$.Default.inscripto.editModal = function(url){
-            //    $('#okButton').button('reset');
-            //    $('#panel-config .modal-footer').show();
-            //    $('#panel-config .modal-title').html("Editar Inscripto");
-            //    $('#panel-config .modal-body').html("");
-            //    $('#panel-config .modal-body').load(url)
-            //    $('#panel-config').modal();                 
-            //}            
-            //$.Default.inscripto.deleteModal = function(url){
-            //    jQuery.get(url, function(data){
-            //        swal({
-            //            title: "Seguro quiere eliminar la planilla?",
-            //            text: "Los cambios serán permanetes!<div id='deleteFormAux' class='hidden'>"+data+"</div>",
-            //            type: "warning",
-            //            showCancelButton: true,
-            //            confirmButtonColor: "#DD6B55",
-            //            confirmButtonText: "Si, eliminar!",
-            //            cancelButtonText: "No, cancelar!",
-            //            closeOnConfirm: false,
-            //            closeOnCancel: true,
-            //            html: true
-            //        },
-            //        function (isConfirm) {
-            //            if (isConfirm) {
-            //                $('#deleteFormAux form').submit();
-            //                swal("Excelente!", "La planilla de inscripto fue borrada.", "success");
-            //            }
-            //        });
-            //    });
-            //}            
-            //$.Default.autocomplete = function(){}
-            //$.Default.autocomplete.getData = function(municipio,tipo){
-            //    try {
-            //        return instituciones[municipio][tipo];
-            //    }
-            //    catch(err) {
-            //        return null
-            //    }
-            //}
+            $.Default.edit = function(url){
+                $.get(url)
+                    .done((data)=>{
+                        $('.planillaInscripcion').remove();
+                        $('#globalSubView .subviews-container').html(data);
+                        $.subview();
+                        $('.page-header h1').toggle();
+                    }).fail(()=>{
+                        toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
+                    });
+            }
+            $.Default.reloadTable = function(){
+                _table.fnDraw(true);
+            }
         })(jQuery);
-        $(document).ready(function(){$.Planilla.init();/*$.TableExport.init()*/});
-        
-//        (function ($) {
-//            var exportTable = "#inscripcionTable";
-//            var ignoreColumn = 6;
-//            // no se sobreescribe el namespace, si ya existe
-//            $.TableExport = $.TableExport || {};
-//            $.TableExport.init = function() {
-//                $(".export-pdf").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'pdf',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-excel").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'excel',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-doc").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'doc',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-csv").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'csv',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-txt").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'txt',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-sql").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'sql',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});
-//				$(".export-json").on("click", function(e) {
-//					e.preventDefault();
-//					$(exportTable).tableExport({
-//						type: 'json',
-//						escape: 'false',
-//						ignoreColumn: '['+ignoreColumn+']'
-//					});
-//				});                
-//            }
-//        })(jQuery);  
+        $(document).ready(function(){$.Default.init();});
     </script>
 {% endblock %}

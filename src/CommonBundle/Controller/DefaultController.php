@@ -28,6 +28,6 @@ class DefaultController extends Controller
         //$gConfig = $this->get('app.plenusConfig')->setConfiguracion();
         //var_dump($gConfig->isNewAccountActive());
         //die;
-        return array('numFrase1'=>rand(1,5));
+        return array('numFrase1'=>rand(1,3));
     }
 }

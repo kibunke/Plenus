@@ -37024,14 +37024,54 @@ $.fn.editableTableWidget = function (options) {
             editor = activeOptions.editor.css('position', 'absolute').hide().appendTo(element.parent()),
             changeEditor = activeOptions.changeEditorFunction,
             active,
+            activeEditor = function(){
+                editor.blur(function () {
+                    setActiveText();
+                    editor.hide();
+                }).keydown(function (e) {
+                    if (e.which === ENTER) {
+                        setActiveText();
+                        editor.hide();
+                        active.focus();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    } else if (e.which === ESC) {
+                        editor.val(active.text());
+                        e.preventDefault();
+                        e.stopPropagation();
+                        editor.hide();
+                        active.focus();
+                    } else if (e.which === TAB) {
+                        active.focus();
+                    } else if (this.selectionEnd - this.selectionStart === this.value.length) {
+                        var possibleMove = movement(active, e.which);
+                        if (possibleMove.length > 0) {
+                            possibleMove.focus();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    }
+                })
+                .on('input paste', function () {
+                    var evt = $.Event('validate');
+                    active.trigger(evt, editor.val());
+                    if (evt.result === false) {
+                        editor.addClass('error');
+                    } else {
+                        editor.removeClass('error');
+                    }
+                });
+            },            
             showEditor = function (select) {
                 active = element.find('td:focus');
                 if (active.length) {
                     if (changeEditor && typeof changeEditor == "function") {
                         element.siblings('.editorTemp').remove();
                         editor = changeEditor(active).addClass('editorTemp').css('position', 'absolute').hide().appendTo(element.parent());
+                    }else{
+                        editor = activeOptions.editor.css('position', 'absolute').hide().appendTo(element.parent());
                     }
-
+                    activeEditor();
                     editor.val(active.text())
                         .removeClass('error')
                         .show()
@@ -37070,42 +37110,6 @@ $.fn.editableTableWidget = function (options) {
                 }
                 return [];
             };
-        editor.blur(function () {
-            setActiveText();
-            editor.hide();
-        }).keydown(function (e) {
-            if (e.which === ENTER) {
-                setActiveText();
-                editor.hide();
-                active.focus();
-                e.preventDefault();
-                e.stopPropagation();
-            } else if (e.which === ESC) {
-                editor.val(active.text());
-                e.preventDefault();
-                e.stopPropagation();
-                editor.hide();
-                active.focus();
-            } else if (e.which === TAB) {
-                active.focus();
-            } else if (this.selectionEnd - this.selectionStart === this.value.length) {
-                var possibleMove = movement(active, e.which);
-                if (possibleMove.length > 0) {
-                    possibleMove.focus();
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            }
-        })
-        .on('input paste', function () {
-            var evt = $.Event('validate');
-            active.trigger(evt, editor.val());
-            if (evt.result === false) {
-                editor.addClass('error');
-            } else {
-                editor.removeClass('error');
-            }
-        });
         element.on('click keypress dblclick', showEditor)
         .css('cursor', 'pointer')
         .keydown(function (e) {

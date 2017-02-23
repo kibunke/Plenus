@@ -7,9 +7,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * ResultadoBundle\Entity\Equipo
+ * ResultadoBundle\Entity\Equipos
  * @ORM\Table(name="Equipo")
  * @ORM\Entity()
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *                          "Equipo"       = "Equipo",
+ *                          "Individual"   = "Individual"
+ *                      })
  */
 class Equipo
 {
@@ -21,7 +27,7 @@ class Equipo
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
+    
     /**
      * @var string $nombre
      *
@@ -37,6 +43,17 @@ class Equipo
     private $descripcion;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Competidor", mappedBy="equipos", cascade={"persist"})
+     */
+    private $competidores;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="DirectorTecnico", inversedBy="equipos", cascade={"persist"})
+     * @ORM\JoinColumn(name="tecnico", referencedColumnName="id")
+     */       
+    private $directorTecnico;
+    
+    /**
      * @var boolean
      *
      * @ORM\Column(name="sortea", type="boolean", nullable=true)
@@ -47,14 +64,9 @@ class Equipo
      * @ORM\OneToMany(targetEntity="Plaza", mappedBy="equipo")
      */
     private $plazas;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Participante", mappedBy="equipos", cascade={"persist"})
-     */
-    private $participantes;
    
     /**
-     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", inversedBy="competidores", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", inversedBy="equipos", cascade={"persist"})
      * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
      */       
     private $planilla;
@@ -64,12 +76,6 @@ class Equipo
      * @ORM\JoinColumn(name="evento", referencedColumnName="id")
      */       
     private $evento;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="\CommonBundle\Entity\Municipio")
-     * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
-     */       
-    private $municipio;
     
     /**
      * @var datetime $createdAt
@@ -104,14 +110,14 @@ class Equipo
     /*
      * Construct
      */
-    public function __construct($user = NULL,$evento = NULL)
+    public function __construct($user = NULL)
     {
         $this->createdAt = new \DateTime();
         $this->createdBy = $user;
-        $this->setEvento($evento);
-        $this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
+        //$this->setEvento($evento);
+        //$this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
+        $this->competidores = new \Doctrine\Common\Collections\ArrayCollection();        
         $this->plazas = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->participantes = new \Doctrine\Common\Collections\ArrayCollection();        
     }    
 
     /**
@@ -121,7 +127,7 @@ class Equipo
      */
     public function __toString()
     {
-
+        return "lal";
         if ($this->nombre != '')
             return $this->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre()." - ".$this->nombre;
         else
@@ -402,37 +408,59 @@ class Equipo
     }    
     
     /**
-     * Add participante
+     * Add Competidor
      *
-     * @param \ResultadoBundle\Entity\Participante $participante
+     * @param \ResultadoBundle\Entity\Competidor $competidor
      * @return Equipo
      */
-    public function addParticipante(\ResultadoBundle\Entity\Participante $participante)
+    public function addCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
     {
-        $this->participantes[] = $participante;
-        $participante->addEquipo($this);
+        $this->competidores[] = $competidor;
+        $competidor->addEquipo($this);
 
         return $this;
     }
 
     /**
-     * Remove participante
+     * Add Integrante
      *
-     * @param \ResultadoBundle\Entity\Participante $participante
+     * @param \ResultadoBundle\Entity\Competidor $integrante
+     * @return Equipo
      */
-    public function removeParticipante(\ResultadoBundle\Entity\Participante $participante)
+    public function addIntegrante($integrante)
     {
-        $this->participantes->removeElement($participante);
+        return $this->addCompetidor($integrante);
+    }
+    
+    /**
+     * get Integrante
+     *
+     * @param \ResultadoBundle\Entity\Competidor $integrante
+     * @return Equipo
+     */
+    public function getIntegrantes()
+    {
+        return $this->getCompetidores() ;
+    }
+    
+    /**
+     * Remove Competidor
+     *
+     * @param \ResultadoBundle\Entity\Competidor $competidor
+     */
+    public function removeCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
+    {
+        $this->competidores->removeElement($competidor);
     }
 
     /**
-     * Get participantes
+     * Get competidores
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getParticipantes()
+    public function getCompetidores()
     {
-        return $this->participantes;
+        return $this->competidores;
     }
     
     /**
@@ -472,5 +500,95 @@ class Equipo
             }
         }
         return false;
+    }
+
+    /**
+     * Add competidore
+     *
+     * @param \ResultadoBundle\Entity\Competidor $competidore
+     *
+     * @return Equipo
+     */
+    public function addCompetidore(\ResultadoBundle\Entity\Competidor $competidore)
+    {
+        $this->competidores[] = $competidore;
+
+        return $this;
+    }
+
+    /**
+     * Remove competidore
+     *
+     * @param \ResultadoBundle\Entity\Competidor $competidore
+     */
+    public function removeCompetidore(\ResultadoBundle\Entity\Competidor $competidore)
+    {
+        $this->competidores->removeElement($competidore);
+    }
+
+    /**
+     * Set directorTecnico
+     *
+     * @param \ResultadoBundle\Entity\DirectorTecnico $directorTecnico
+     *
+     * @return Equipo
+     */
+    public function setDirectorTecnico(\ResultadoBundle\Entity\DirectorTecnico $directorTecnico = null)
+    {
+        $this->directorTecnico = $directorTecnico;
+
+        return $this;
+    }
+
+    /**
+     * Get directorTecnico
+     *
+     * @return \ResultadoBundle\Entity\DirectorTecnico
+     */
+    public function getDirectorTecnico()
+    {
+        return $this->directorTecnico;
+    }
+
+    /**
+     * Set planilla
+     *
+     * @param \InscripcionBundle\Entity\Planilla $planilla
+     *
+     * @return Equipo
+     */
+    public function setPlanilla(\InscripcionBundle\Entity\Planilla $planilla = null)
+    {
+        $this->planilla = $planilla;
+
+        return $this;
+    }
+
+    /**
+     * Get planilla
+     *
+     * @return \InscripcionBundle\Entity\Planilla
+     */
+    public function getPlanilla()
+    {
+        return $this->planilla;
+    }
+    
+    public function getJson()
+    {
+        return array(
+                "id" => $this->getId(),
+                "nombre" => $this->getNombre(),
+                "integrantes" => $this->getIntegrantesJson(),
+                "tecnico"=> $this->getDirectorTecnico() ? $this->getDirectorTecnico()->getJson() : []
+        );
+    }
+    public function getIntegrantesJson()
+    {
+        $integrantes = [];
+        foreach($this->getIntegrantes() as $integrante){
+            $integrantes[] = $integrante->getJson();
+        }
+        return $integrantes;
     }    
 }

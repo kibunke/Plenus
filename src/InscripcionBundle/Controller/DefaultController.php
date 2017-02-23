@@ -62,8 +62,8 @@ class DefaultController extends Controller
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
-                "planillas"   => count($segmento->getEventos()),
-                "coordinadores" => count($segmento->getCoordinadores()),
+                "planillas"   => count($segmento->getPlanillas()),
+                //"coordinadores" => count($segmento->getPlanillas()),
                 "inscriptos"=> 0,//$user->getUsername(),
                 "parametros"=> array(
                     "max" => $segmento->getMaxIntegrantes(),

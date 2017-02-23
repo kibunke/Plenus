@@ -1,14 +1,21 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Equipo
- * @ORM\Table(name="services_juegosba_final.Equipo")
+ * ResultadoBundle\Entity\Equipos
+ * @ORM\Table(name="Equipo")
  * @ORM\Entity()
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *                          "Equipo"       = "Equipo",
+ *                          "Individual"   = "Individual"
+ *                      })
  */
 class Equipo
 {
@@ -20,7 +27,7 @@ class Equipo
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
+    
     /**
      * @var string $nombre
      *
@@ -36,6 +43,17 @@ class Equipo
     private $descripcion;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Competidor", mappedBy="equipos", cascade={"persist"})
+     */
+    private $competidores;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="DirectorTecnico", inversedBy="equipos")
+     * @ORM\JoinColumn(name="tecnico", referencedColumnName="id")
+     */       
+    private $directorTecnico;
+    
+    /**
      * @var boolean
      *
      * @ORM\Column(name="sortea", type="boolean", nullable=true)
@@ -46,23 +64,18 @@ class Equipo
      * @ORM\OneToMany(targetEntity="Plaza", mappedBy="equipo")
      */
     private $plazas;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Participante", mappedBy="equipos", cascade={"persist"})
-     */
-    private $participantes;
    
+    /**
+     * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", inversedBy="equipos", cascade={"persist"})
+     * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
+     */       
+    private $planilla;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Evento", inversedBy="equipos")
      * @ORM\JoinColumn(name="evento", referencedColumnName="id")
      */       
     private $evento;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="\JuegosBA\CommonBundle\Entity\Partido")
-     * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
-     */       
-    private $municipio;
     
     /**
      * @var datetime $createdAt
@@ -72,9 +85,9 @@ class Equipo
     private $createdAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @var SeguridadBundle\Entity\Usuario $createdBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
@@ -87,9 +100,9 @@ class Equipo
     private $updatedAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -97,14 +110,14 @@ class Equipo
     /*
      * Construct
      */
-    public function __construct($user = NULL,$evento = NULL)
+    public function __construct($user = NULL)
     {
         $this->createdAt = new \DateTime();
         $this->createdBy = $user;
-        $this->setEvento($evento);
-        $this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
+        //$this->setEvento($evento);
+        //$this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
+        $this->competidores = new \Doctrine\Common\Collections\ArrayCollection();        
         $this->plazas = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->participantes = new \Doctrine\Common\Collections\ArrayCollection();        
     }    
 
     /**
@@ -114,7 +127,11 @@ class Equipo
      */
     public function __toString()
     {
-        return $this->nombre?$this->getMunicipio()." - ".$this->nombre:$this->getMunicipio();
+        return "lal";
+        if ($this->nombre != '')
+            return $this->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre()." - ".$this->nombre;
+        else
+            return $this->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre();
     }
     
     /**
@@ -257,10 +274,10 @@ class Equipo
     /**
      * Add plaza
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Plaza $plaza
+     * @param \ResultadoBundle\Entity\Plaza $plaza
      * @return Equipo
      */
-    public function addPlaza(\JuegosBA\ResultadoBundle\Entity\Plaza $plaza)
+    public function addPlaza(\ResultadoBundle\Entity\Plaza $plaza)
     {
         $this->plazas[] = $plaza;
         $plaza->setEquipo($this);
@@ -271,9 +288,9 @@ class Equipo
     /**
      * Remove plaza
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Plaza $plaza
+     * @param \ResultadoBundle\Entity\Plaza $plaza
      */
-    public function removePlaza(\JuegosBA\ResultadoBundle\Entity\Plaza $plaza)
+    public function removePlaza(\ResultadoBundle\Entity\Plaza $plaza)
     {
         $this->plazas->removeElement($plaza);
     }
@@ -291,10 +308,10 @@ class Equipo
     /**
      * Set evento
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Evento $evento
+     * @param \ResultadoBundle\Entity\Evento $evento
      * @return Equipo
      */
-    public function setEvento(\JuegosBA\ResultadoBundle\Entity\Evento $evento = null)
+    public function setEvento(\ResultadoBundle\Entity\Evento $evento = null)
     {
         $this->evento = $evento;
 
@@ -304,7 +321,7 @@ class Equipo
     /**
      * Get evento
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Evento 
+     * @return \ResultadoBundle\Entity\Evento 
      */
     public function getEvento()
     {
@@ -314,10 +331,10 @@ class Equipo
     /**
      * Set municipio
      *
-     * @param \JuegosBA\CommonBundle\Entity\Partido $municipio
+     * @param \CommonBundle\Entity\Municipio $municipio
      * @return Equipo
      */
-    public function setMunicipio(\JuegosBA\CommonBundle\Entity\Partido $municipio = null)
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
     {
         $this->municipio = $municipio;
 
@@ -327,7 +344,7 @@ class Equipo
     /**
      * Get municipio
      *
-     * @return \JuegosBA\CommonBundle\Entity\Partido 
+     * @return \CommonBundle\Entity\Municipio 
      */
     public function getMunicipio()
     {
@@ -337,10 +354,10 @@ class Equipo
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Equipo
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -350,7 +367,7 @@ class Equipo
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -360,10 +377,10 @@ class Equipo
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Equipo
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -373,7 +390,7 @@ class Equipo
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -391,37 +408,115 @@ class Equipo
     }    
     
     /**
-     * Add participante
+     * Add Competidor
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Participante $participante
+     * @param \ResultadoBundle\Entity\Competidor $competidor
      * @return Equipo
      */
-    public function addParticipante(\JuegosBA\ResultadoBundle\Entity\Participante $participante)
+    public function addCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
     {
-        $this->participantes[] = $participante;
-        $participante->addEquipo($this);
+        $this->competidores[] = $competidor;
+        $competidor->addEquipo($this);
 
         return $this;
     }
 
     /**
-     * Remove participante
+     * Add Integrante
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Participante $participante
+     * @param \ResultadoBundle\Entity\Competidor $integrante
+     * @return Equipo
      */
-    public function removeParticipante(\JuegosBA\ResultadoBundle\Entity\Participante $participante)
+    public function addIntegrante($integrante)
     {
-        $this->participantes->removeElement($participante);
+        return $this->addCompetidor($integrante);
+    }
+    
+    /**
+     * get Integrante
+     *
+     * @param \ResultadoBundle\Entity\Competidor $integrante
+     * @return Equipo
+     */
+    public function getIntegrantes()
+    {
+        return $this->getCompetidores() ;
+    }
+    
+    /**
+     * Remove Competidor
+     *
+     * @param \ResultadoBundle\Entity\Competidor $competidor
+     */
+    public function removeCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
+    {
+        $this->competidores->removeElement($competidor);
     }
 
     /**
-     * Get participantes
+     * Get competidores
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getParticipantes()
+    public function getCompetidores()
     {
-        return $this->participantes;
+        return $this->competidores;
     }
     
+    /**
+     * Get mejorResultado
+     *
+     * @return string
+     */
+    public function getMejorResultado()
+    {
+        $mejor = null;
+        foreach ($this->getPlazas() as $plaza){
+            if (!$mejor){
+                $mejor = $plaza;
+            }else{
+                if ($mejor->getCompetencia()->getEtapa()->getTipoValor() < $plaza->getCompetencia()->getEtapa()->getTipoValor()){
+                    $mejor = $plaza;
+                }
+            }
+        }
+        if ($mejor){
+            return $mejor->getCompetencia()->getPerformance($mejor);
+        }else{
+            return "No participó.";
+        }
+    }
+    
+    /**
+     * Get hasMedalla
+     *
+     * @return array
+     */
+    public function hasMedalla()
+    {
+        foreach ($this->getPlazas() as $plaza){
+            if ($plaza->hasMedalla()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function getJson()
+    {
+        return array(
+                "id" => $this->getId(),
+                "nombre" => $this->getNombre(),
+                "integrantes" => $this->getIntegrantesJson(),
+                "tecnico"=> $this->getDirectorTecnico()->getJson()
+        );
+    }
+    public function getIntegrantesJson()
+    {
+        $integrantes = [];
+        foreach($this->getIntegrantes() as $integrante){
+            $integrantes[] = $integrante->getJson();
+        }
+        return $integrantes;
+    }
 }

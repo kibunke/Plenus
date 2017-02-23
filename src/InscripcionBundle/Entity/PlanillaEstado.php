@@ -163,4 +163,12 @@ abstract class PlanillaEstado
     {
         return $this->planilla;
     }
+    
+    /**
+     * get NombreRaw
+     */    
+    public function getNombreRaw()
+    {
+        return "<span title='".$this->getNombre()."' class='".$this->getClass()."'>".$this->getAbr()."</span>";
+    }        
 }

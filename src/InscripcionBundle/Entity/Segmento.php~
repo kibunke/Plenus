@@ -48,35 +48,58 @@ class Segmento
     
     /**
      * @var integer $maxIntegrantes
-     *
-     * @ORM\Column(name="maxIntegrantes", type="integer", nullable=true)
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      max = 24
+     * )
+     * @ORM\Column(name="maxIntegrantes", type="integer")
      */
     protected $maxIntegrantes;
 
     /**
      * @var integer $minIntegrantes
-     *
-     * @ORM\Column(name="minIntegrantes", type="integer", nullable=true)
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 0
+     * )
+     * @ORM\Column(name="minIntegrantes", type="integer")
      */
     protected $minIntegrantes;
     
     /**
      * @var integer $maxReemplazos
-     *
-     * @ORM\Column(name="maxReemplazos", type="integer", nullable=true)
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 5
+     * )
+     * @ORM\Column(name="maxReemplazos", type="integer")
      */
     protected $maxReemplazos;
+
+    /**
+     * @var integer $maxEquiposPorPlanilla
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 12
+     * )
+     * @ORM\Column(name="maxEquiposPorPlanilla", type="integer", options={"default" : 1})
+     */
+    protected $maxEquiposPorPlanilla;
     
     /**
      * @var datetime $minFechaNacimiento
-     *
+     * @Assert\NotNull()
+     * @Assert\Date()
      * @ORM\Column(name="minFechaNacimiento", type="datetime")
      */
     private $minFechaNacimiento;
     
     /**
      * @var datetime $maxFechaNacimiento
-     *
+     * @Assert\NotNull()
+     * @Assert\Date()
      * @ORM\Column(name="maxFechaNacimiento", type="datetime")
      */
     private $maxFechaNacimiento;
@@ -110,6 +133,12 @@ class Segmento
      * @ORM\JoinColumn(name="disciplina", referencedColumnName="id")
      */       
     private $disciplina;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
+     * @ORM\JoinTable(name="usuario_coordina_segmento")
+     **/    
+    private $coordinadores;
     
     /**
      * @var datetime $createdAt
@@ -138,12 +167,21 @@ class Segmento
     private $updatedBy;
     
     /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isActive", type="boolean", options={"default" : false})
+     */
+    protected $isActive;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->isActive = false;
     }
 
     /**
@@ -177,16 +215,49 @@ class Segmento
      */
     public function getNombre()
     {
-        if (count($this->eventos)){
-            $evento = $this->eventos->first();
-            
-            return  $evento->getTorneo()->getNombre()."-".
-                    $evento->getDisciplina()->getNombre()."-".
-                    $evento->getCategoria()->getNombre()."-".
-                    $evento->getGenero()->getNombre()."-".
-                    $this->nombre;
-        }
         return $this->nombre;
+    }
+
+    /**
+     * Get nombreCompleto
+     *
+     * @return string
+     */
+    public function getNombreCompleto()
+    {
+        $name = "";
+        if ($this->getTorneo())
+            $name .= $this->getTorneo()->getNombre();
+        if ($this->getDisciplina())
+            $name .= " - ".$this->getDisciplina()->getNombreCompleto();
+        if ($this->getCategoria())
+            $name .= " - ".$this->getCategoria()->getNombre();
+        if ($this->getGenero())
+            $name .= " - ".$this->getGenero()->getNombre();
+        if ($this->getModalidad())
+            $name .= " - ".$this->getModalidad()->getNombre();
+        if ($this->getNombre())
+            $name." - ".$this->getNombre();
+        return $name;
+    }    
+
+    /**
+     * Get nombreCompletoRaw
+     *
+     * @return string 
+     */
+    public function getNombreCompletoRaw()
+    {
+        $nomAux = '';
+        if ($this->nombre)
+            $nomAux = " - <small>".$this->getNombre()."</small>";
+        $nom =  "<div title='".$this->getNombreCompleto()."'>".
+                    "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
+                    "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
+                    "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>".$nomAux.
+                "</div>";
+
+        return $nom;
     }
 
     /**
@@ -320,6 +391,31 @@ class Segmento
         return $this->maxReemplazos;
     }
 
+
+    /**
+     * Set maxEquiposPorPlanilla
+     *
+     * @param integer $maxEquiposPorPlanilla
+     *
+     * @return Segmento
+     */
+    public function setMaxEquiposPorPlanilla($maxEquiposPorPlanilla)
+    {
+        $this->maxEquiposPorPlanilla = $maxEquiposPorPlanilla;
+
+        return $this;
+    }
+
+    /**
+     * Get maxEquiposPorPlanilla
+     *
+     * @return integer
+     */
+    public function getMaxEquiposPorPlanilla()
+    {
+        return $this->maxEquiposPorPlanilla;
+    }
+    
     /**
      * Set minFechaNacimiento
      *
@@ -497,4 +593,208 @@ class Segmento
     {
         return $this->updatedBy;
     }
+
+    /**
+     * Set torneo
+     *
+     * @param \ResultadoBundle\Entity\Torneo $torneo
+     *
+     * @return Segmento
+     */
+    public function setTorneo(\ResultadoBundle\Entity\Torneo $torneo = null)
+    {
+        $this->torneo = $torneo;
+
+        return $this;
+    }
+
+    /**
+     * Get torneo
+     *
+     * @return \ResultadoBundle\Entity\Torneo
+     */
+    public function getTorneo()
+    {
+        return $this->torneo;
+    }
+
+    /**
+     * Set categoria
+     *
+     * @param \ResultadoBundle\Entity\Categoria $categoria
+     *
+     * @return Segmento
+     */
+    public function setCategoria(\ResultadoBundle\Entity\Categoria $categoria = null)
+    {
+        $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    /**
+     * Get categoria
+     *
+     * @return \ResultadoBundle\Entity\Categoria
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * Set modalidad
+     *
+     * @param \ResultadoBundle\Entity\Modalidad $modalidad
+     *
+     * @return Segmento
+     */
+    public function setModalidad(\ResultadoBundle\Entity\Modalidad $modalidad = null)
+    {
+        $this->modalidad = $modalidad;
+
+        return $this;
+    }
+
+    /**
+     * Get modalidad
+     *
+     * @return \ResultadoBundle\Entity\Modalidad
+     */
+    public function getModalidad()
+    {
+        return $this->modalidad;
+    }
+
+    /**
+     * Set genero
+     *
+     * @param \ResultadoBundle\Entity\Genero $genero
+     *
+     * @return Segmento
+     */
+    public function setGenero(\ResultadoBundle\Entity\Genero $genero = null)
+    {
+        $this->genero = $genero;
+
+        return $this;
+    }
+
+    /**
+     * Get genero
+     *
+     * @return \ResultadoBundle\Entity\Genero
+     */
+    public function getGenero()
+    {
+        return $this->genero;
+    }
+
+    /**
+     * Set disciplina
+     *
+     * @param \ResultadoBundle\Entity\Disciplina $disciplina
+     *
+     * @return Segmento
+     */
+    public function setDisciplina(\ResultadoBundle\Entity\Disciplina $disciplina = null)
+    {
+        $this->disciplina = $disciplina;
+
+        return $this;
+    }
+
+    /**
+     * Get disciplina
+     *
+     * @return \ResultadoBundle\Entity\Disciplina
+     */
+    public function getDisciplina()
+    {
+        return $this->disciplina;
+    }
+
+    /**
+     * Add coordinadores
+     *
+     * @param \SeguridadBundle\Entity\Usuario $coordinadores
+     * @return Evento
+     */
+    public function addCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
+    {
+        $this->coordinadores[] = $coordinadores;
+
+        return $this;
+    }
+
+    /**
+     * Remove coordinadores
+     *
+     * @param \SeguridadBundle\Entity\Usuario $coordinadores
+     */
+    public function removeCoordinadore(\SeguridadBundle\Entity\Usuario $coordinadores)
+    {
+        $this->coordinadores->removeElement($coordinadores);
+    }
+
+    /**
+     * Get coordinadores
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCoordinadores()
+    {
+        return $this->coordinadores;
+    }
+/**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return Usuario
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+    
+    /**
+     * stateToggle
+     *
+     * @return Segmento
+     */
+    public function stateToggle()
+    {
+        $this->isActive = !$this->isActive;
+        
+        return $this;
+    }
+    
+    /**
+     * esCoordinador
+     *
+     * @return Boolean
+     */
+    public function esCoordinador()
+    {
+        foreach ($this->coordinadores as $coodinador){
+            if ($coodinador->getId() == $user->getId()){
+                return true;
+            }
+        }
+        
+        return false;
+    }    
 }

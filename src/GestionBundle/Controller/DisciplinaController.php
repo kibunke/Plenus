@@ -75,6 +75,8 @@ class DisciplinaController extends Controller
                 "disciplina"  => array(
                                     "id" => $disciplina->getId(),
                                     "nombre" => $disciplina->getNombreCompleto(),
+                                    "parametros" => json_decode($disciplina->getParametros()),
+                                    "segmentos" => count($disciplina->getSegmentos()),
                                     "eventos" => count($disciplina->getEventos()),
                                     "descripcion"  => $disciplina->getDescripcion()
                             ),

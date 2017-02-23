@@ -12,29 +12,88 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Individual extends Planilla
 {
+    public function getTemplate(){
+        return "InscripcionBundle:Planilla:newIndividual.html.twig";
+    }
+    
+    public function getNewEquipo(){
+        return new \ResultadoBundle\Entity\Individual();
+    }
+    
     /**
      * Get equipos
      *
      * @return json
      */
-    public function getEquipos()
+    public function getJson()
     {
-        $equipos = array();
-        for ($x=0; $x < $this->getSegmento()->getMaxEquiposPorPlanilla();$x++){
-            $equipos[$x]= array(
-                "id" => '',
-                "nombre" => '',
-                "integrantes" => array()
-            );
-            for ($i=0; $i<$this->getSegmento()->getMaxIntegrantes();$i++){
-                $equipos[$x]['integrantes'][] = array(
-                                        'order' => $x +1 ,
-                                        'type' => 'inscripto',
-                                        'persona' => array(),
-                                );
-            }
-            //No se contemplan los sustitutos para los individuales
-        }
+        $equipos = parent::getJson();
+        //foreach ($equipos as $key => $equipo){
+        //    $equipos[$key]['integrantes'][] = array(
+        //                            'id' => '',
+        //                            'order' => $equipo['orden'],
+        //                            'type' => 'inscripto',
+        //                            'persona' => array(
+        //                                'id' => '',
+        //                                'apellido' => '',
+        //                                'nombre' => '',
+        //                                'documento' => '',
+        //                                'nacimiento' => '',
+        //                                'domicilio' => '',
+        //                                'localidad' => '',
+        //                                'email' => ''
+        //                            ),
+        //                    );
+        //    //No se contemplan los sustitutos para los individuales
+        //}
         return $equipos;
-    }         
+    }
+
+    /**
+     * Set responsableMunicipioNombre
+     *
+     * @param string $responsableMunicipioNombre
+     *
+     * @return Individual
+     */
+    public function setResponsableMunicipioNombre($responsableMunicipioNombre)
+    {
+        $this->responsableMunicipioNombre = $responsableMunicipioNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableMunicipioNombre
+     *
+     * @return string
+     */
+    public function getResponsableMunicipioNombre()
+    {
+        return $this->responsableMunicipioNombre;
+    }
+
+    /**
+     * Set responsableMunicipioApellido
+     *
+     * @param string $responsableMunicipioApellido
+     *
+     * @return Individual
+     */
+    public function setResponsableMunicipioApellido($responsableMunicipioApellido)
+    {
+        $this->responsableMunicipioApellido = $responsableMunicipioApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableMunicipioApellido
+     *
+     * @return string
+     */
+    public function getResponsableMunicipioApellido()
+    {
+        return $this->responsableMunicipioApellido;
+    }
 }

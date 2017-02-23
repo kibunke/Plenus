@@ -17,6 +17,7 @@ class TorneoType extends AbstractType
         $builder
             ->add('nombre')
             ->add('descripcion')
+            ->add('isAdultosMayores')
         ;
     }
     

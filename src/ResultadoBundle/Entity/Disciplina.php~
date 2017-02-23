@@ -1,15 +1,16 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Disciplina
+ * ResultadoBundle\Entity\Disciplina
  *
- * @ORM\Entity(repositoryClass="JuegosBA\ResultadoBundle\Entity\Repository\DisciplinaRepository")
- * @ORM\Table(name="services_juegosba_final.Disciplina")
+ * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\DisciplinaRepository")
+ * @ORM\Table(name="Disciplina")
  */
 class Disciplina
 {
@@ -24,7 +25,7 @@ class Disciplina
 
     /**
      * @var string $nombre
-     *
+     * @Assert\NotNull()
      * @ORM\Column(name="nombre", type="string", length=100)
      */
     protected $nombre;
@@ -53,18 +54,24 @@ class Disciplina
     /**
      * @ORM\OneToMany(targetEntity="Evento", mappedBy="disciplina")
      */
-    private $eventos;   
+    private $eventos;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Cronograma")
-     * @ORM\JoinColumn(name="cronograma_id", referencedColumnName="id")
-     **/
-    private $cronograma;
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="disciplina")
+     */
+    private $segmentos;    
 
      /**
      * @var boolean
      *
-     * @ORM\Column(name="nombreRecursivo", type="boolean", nullable=true)
+     * @ORM\Column(name="armarNombreRecursivo", type="boolean", nullable=true)
+     */
+    private $armarNombreRecursivo;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="nombreRecursivo", type="string", length=100, nullable=true)
      */
     private $nombreRecursivo;
     
@@ -76,7 +83,7 @@ class Disciplina
     private $createdAt;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */       
     private $createdBy;
@@ -89,7 +96,7 @@ class Disciplina
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -114,7 +121,7 @@ class Disciplina
         $this->coordinadores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->hijos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->createdAt = new \DateTime();
-        $this->nombreRecursivo = TRUE;
+        $this->armarNombreRecursivo = TRUE;
     }
     
     /**
@@ -134,6 +141,21 @@ class Disciplina
     {
         return $this->id;
     }
+    
+    /**
+     * Get idRecursivo
+     *
+     * @return array 
+     */
+    public function getIdRecursivo()
+    {
+        if ($this->getPadre()){
+            $aux = $this->getPadre()->getIdRecursivo();
+            $aux[]=$this->getId();
+            return $aux;
+        }
+        return [$this->id];
+    }    
 
     /**
      * Set descripcion
@@ -178,8 +200,13 @@ class Disciplina
      */
     public function getParametros()
     {
-        if (!$this->parametros)
-            return $this->getPadre()->getParametros();
+        if (!$this->parametros){
+            if ($this->getPadre()){
+                return $this->getPadre()->getParametros();
+            }else{
+                return "";
+            }
+        }
         return $this->parametros;
     }
     
@@ -232,10 +259,10 @@ class Disciplina
     /**
      * Add eventos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Evento $eventos
+     * @param \ResultadoBundle\Entity\Evento $eventos
      * @return Disciplina
      */
-    public function addEvento(\JuegosBA\ResultadoBundle\Entity\Evento $eventos)
+    public function addEvento(\ResultadoBundle\Entity\Evento $eventos)
     {
         $this->eventos[] = $eventos;
 
@@ -245,9 +272,9 @@ class Disciplina
     /**
      * Remove eventos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Evento $eventos
+     * @param \ResultadoBundle\Entity\Evento $eventos
      */
-    public function removeEvento(\JuegosBA\ResultadoBundle\Entity\Evento $eventos)
+    public function removeEvento(\ResultadoBundle\Entity\Evento $eventos)
     {
         $this->eventos->removeElement($eventos);
     }
@@ -263,35 +290,12 @@ class Disciplina
     }
 
     /**
-     * Set cronograma
-     *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma
-     * @return Disciplina
-     */
-    public function setCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma = null)
-    {
-        $this->cronograma = $cronograma;
-
-        return $this;
-    }
-
-    /**
-     * Get cronograma
-     *
-     * @return \JuegosBA\ResultadoBundle\Entity\Cronograma 
-     */
-    public function getCronograma()
-    {
-        return $this->cronograma;
-    }
-
-    /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Disciplina
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -301,7 +305,7 @@ class Disciplina
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -311,10 +315,10 @@ class Disciplina
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Disciplina
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -324,7 +328,7 @@ class Disciplina
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -334,10 +338,10 @@ class Disciplina
     /**
      * Set padre
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Disciplina $padre
+     * @param \ResultadoBundle\Entity\Disciplina $padre
      * @return Disciplina
      */
-    public function setPadre(\JuegosBA\ResultadoBundle\Entity\Disciplina $padre = null)
+    public function setPadre(\ResultadoBundle\Entity\Disciplina $padre = null)
     {
         $this->padre = $padre;
 
@@ -347,7 +351,7 @@ class Disciplina
     /**
      * Get padre
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Disciplina 
+     * @return \ResultadoBundle\Entity\Disciplina 
      */
     public function getPadre()
     {
@@ -357,10 +361,10 @@ class Disciplina
     /**
      * Add hijos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Disciplina $hijos
+     * @param \ResultadoBundle\Entity\Disciplina $hijos
      * @return Disciplina
      */
-    public function addHijo(\JuegosBA\ResultadoBundle\Entity\Disciplina $hijos)
+    public function addHijo(\ResultadoBundle\Entity\Disciplina $hijos)
     {
         $this->hijos[] = $hijos;
 
@@ -370,9 +374,9 @@ class Disciplina
     /**
      * Remove hijos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Disciplina $hijos
+     * @param \ResultadoBundle\Entity\Disciplina $hijos
      */
-    public function removeHijo(\JuegosBA\ResultadoBundle\Entity\Disciplina $hijos)
+    public function removeHijo(\ResultadoBundle\Entity\Disciplina $hijos)
     {
         $this->hijos->removeElement($hijos);
     }
@@ -423,9 +427,9 @@ class Disciplina
                 return $this->getPadre()->getNombreCompleto()." ".$this->nombre;
             return $this->getPadre()->getNombreCompleto();
         }
-        if ($this->getNombreRecursivo())
+        //if ($this->getNombreRecursivo())
             return $this->nombre;
-        return;
+        //return;
     }
     
     /**
@@ -452,9 +456,32 @@ class Disciplina
     }
     
     /**
+     * Set armarNombreRecursivo
+     *
+     * @param boolean $armarNombreRecursivo
+     * @return Disciplina
+     */
+    public function setArmarNombreRecursivo($armarNombreRecursivo)
+    {
+        $this->armarNombreRecursivo = $armarNombreRecursivo;
+
+        return $this;
+    }
+
+    /**
+     * Get armarNombreRecursivo
+     *
+     * @return boolean
+     */
+    public function getArmarNombreRecursivo()
+    {
+        return $this->armarNombreRecursivo;
+    }
+    
+    /**
      * Set nombreRecursivo
      *
-     * @param boolean $nombreRecursivo
+     * @param string $nombreRecursivo
      * @return Disciplina
      */
     public function setNombreRecursivo($nombreRecursivo)
@@ -465,9 +492,9 @@ class Disciplina
     }
 
     /**
-     * Get nombreRecursivo
+     * Get nombre
      *
-     * @return boolean
+     * @return string 
      */
     public function getNombreRecursivo()
     {

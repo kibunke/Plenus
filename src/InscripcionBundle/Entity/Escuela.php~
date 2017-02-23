@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity()
  */
 
-class Escuela extends Origen
+class Escuela extends Institucion
 {
     /**
      * Get icono
