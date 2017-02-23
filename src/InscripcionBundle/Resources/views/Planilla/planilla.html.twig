@@ -248,8 +248,8 @@
             tfoot = element.find('tfoot tr'),
             thead = element.find('thead tr'),
             dataRows = element.find('tbody tr'),
-            dateStart = new Date('{{ planilla.segmento.minFechaNacimiento | date ('Y-n-j') }}'),
-            dateEnd = new Date('{{ planilla.segmento.maxFechaNacimiento | date ('Y-n-j') }}'),
+            dateStart = new Date('{{ planilla.segmento.minFechaNacimiento | date ('Y,n,j') }}'),
+            dateEnd = new Date('{{ planilla.segmento.maxFechaNacimiento | date ('Y,n,j') }}'),
             formatDate = (date) => {
                 return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
             },
@@ -259,7 +259,6 @@
                         && value > 1000000 && value < 100000000;
             },
             validateDate = (value)=>{
-                console.log(dateEnd)
                 let f = value.split('/'),
                     d = new Date(f[2],f[1]-1,f[0]);
                 if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)
