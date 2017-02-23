@@ -172,6 +172,12 @@ class Persona
     private $avatar;
     
     /**
+     * @var text $observacion
+     * @ORM\Column(name="observacion", type="text", nullable=true)
+     **/
+    private $observacion;
+    
+    /**
      * @ORM\OneToOne(targetEntity="SeguridadBundle\Entity\Usuario", mappedBy="persona")
      */
     private $usuario;
@@ -758,5 +764,7 @@ class Persona
             $this->setMunicipio($json->municipio);
         if (isset($json->email) && strlen($json->email))
             $this->setEmail($json->email);
+        if (isset($json->observacion))
+            $this->setEmail($json->observacion);            
     }    
 }

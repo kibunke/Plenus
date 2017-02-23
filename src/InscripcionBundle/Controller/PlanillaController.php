@@ -151,7 +151,7 @@ class PlanillaController extends Controller
         $em = $this->getDoctrine()->getManager();
         if ($json->inscripcionInstitucional)
             $this->loadInstitucion($planilla,$json->institucion);
-        if ($json->responsableMunicipio && strlen($json->responsableMunicipio->nombre)>2 && strlen($json->responsableMunicipio->apellido)>2){
+        if ($json->responsableMunicipio && strlen($json->responsableMunicipio->nombre) > 2 && strlen($json->responsableMunicipio->apellido) > 2 && strlen($json->responsableMunicipio->dni) > 6){
             $planilla->setResponsableMunicipioNombre($json->responsableMunicipio->nombre);
             $planilla->setResponsableMunicipioApellido($json->responsableMunicipio->apellido);
             $planilla->setResponsableMunicipioDni($json->responsableMunicipio->dni);
@@ -180,7 +180,7 @@ class PlanillaController extends Controller
 
             if (!$tecnico){
                 
-                if (is_object($json->tipoDocumento) && strlen($json->nombre) > 2 && strlen($json->apellido) > 2 ){
+                if (is_object($json->tipoDocumento) && strlen($json->nombre) > 2 && strlen($json->apellido) > 2 && strlen($json->dni) > 6){
                     $tecnico = new DirectorTecnico($this->getUser());
                     $tecnico->loadFromJson($json);
                     $tecnico->setMunicipio($planilla->getMunicipio());

@@ -91,6 +91,7 @@
                         <th class="validate-text">Teléfono</th>
                         <th class="validate-municipio">Localidad</th>
                         <th class="text-center validate-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></th>
+                        <th class="text-center validate-text"><i class="fa fa-comment-o" aria-hidden="true"></i></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -339,6 +340,7 @@
                     $tr.find(':nth-child(6)').html(integrante.persona.telefono)
                     $tr.find(':nth-child(7)').html(integrante.persona.municipio)
                     $tr.find(':nth-child(8)').html(integrante.persona.email)
+                    $tr.find(':nth-child(9)').html(integrante.persona.observacion)
                     if (integrante.rol == 'inscripto'){
                         $('#planillaBuenaFe tbody').append($tr);
                     }
@@ -438,7 +440,8 @@
                             fNacimiento : fNacimiento,
                             telefono : $tr.find(':nth-child(6)').text(),
                             municipio : $tr.find(':nth-child(7)').text(),
-                            email : $tr.find(':nth-child(8)').text()
+                            email : $tr.find(':nth-child(8)').text(),
+                            observaciones : $tr.find(':nth-child(9)').text()
                         }
                     }]
                 });               
