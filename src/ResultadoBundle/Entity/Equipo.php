@@ -454,6 +454,14 @@ class Equipo
     }
 
     /**
+     * clean Competidores
+     */
+    public function cleanCompetidores()
+    {
+        $this->competidores = [];
+    }
+
+    /**
      * Get competidores
      *
      * @return \Doctrine\Common\Collections\Collection 

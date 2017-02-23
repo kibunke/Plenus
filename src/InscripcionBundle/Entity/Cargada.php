@@ -43,5 +43,15 @@ class Cargada extends PlanillaEstado
     public function getAbr()
     {
         return "Ca";
-    }       
+    }
+    
+    /**
+     * Get isRemovable
+     *
+     * @return boolean
+     */
+    public function isRemovable()
+    {
+        return true;
+    }     
 }

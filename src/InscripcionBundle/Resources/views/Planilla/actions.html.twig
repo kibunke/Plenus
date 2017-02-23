@@ -5,6 +5,9 @@
     {#
     <button {% if entity.eventos | length %}disabled title="El segmento no debe tener eventos asociados"{% endif %} onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
     #}
+    {% if entity.isRemovable() %}
+        <button onclick="$.Default.deleteConfirm('{{ path('planilla_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
+    {% endif %}    
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">
     <div class="btn-group">

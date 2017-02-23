@@ -88,17 +88,17 @@ class PlanillaController extends Controller
     public function newAction(Request $request, Segmento $segmento)
     {        
         $em = $this->getDoctrine()->getManager();
-        if (!$this->canEdit($segmento)){
-            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
-        }
-        
         if ($segmento->getMaxIntegrantes() == 1){
             $planilla = new Individual();
         }else{
             $planilla = new Equipo();
         }
-        
         $planilla->setSegmento($segmento);
+        
+        if (!$this->canEdit($planilla)){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
+        }
+        
         $form = $this->createForm(PlanillaType::class, $planilla);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -124,7 +124,7 @@ class PlanillaController extends Controller
         if ($form->isSubmitted()){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Faltan datos en la planilla! '.(string) $form->getErrors(true, false)));
         }
-        return $this->render($planilla->getTemplate(), array(
+        return $this->render("InscripcionBundle:Planilla:planilla.html.twig", array(
             'form' => $form->createView(),
             'planilla' => $planilla
         ));
@@ -325,41 +325,42 @@ class PlanillaController extends Controller
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
             }
         }
-        return $this->render($planilla->getTemplate(), array(
+        return $this->render("InscripcionBundle:Planilla:planilla.html.twig", array(
             'form' => $form->createView(),
             'planilla' => $planilla
         ));
     }
     
     /**
-     * @Route("/{id}/delete", name="segmento_delete", condition="request.isXmlHttpRequest()")
+     * @Route("/{id}/delete", name="planilla_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
      */
-    public function deleteAction(Request $request,Segmento $segmento)
+    public function deleteAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($segmento){
-            if(!count($segmento->getEventos())){
+        if ($planilla){
+            if ($planilla->isRemovable()){
                 try {
-                    $em->remove($segmento);
+                    $planilla->prepareToDelete();
+                    $em->remove($planilla);
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Se eliminó el Segmento'));
+                    return new JsonResponse(array('success' => true, 'message' => 'Se eliminó la planilla!'));
                 }
                 catch(\Exception $e ){
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
                 }
             }else{
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no debe terner evenos asociados'));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no ouede eliminarse en su estado actual.'));
             }
         }
-        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
+        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no está registrada en el sistema.'));
     }
     
-    private function canEdit($segmento)
+    private function canEdit($planilla)
     {
         if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO')){
             return true;
-        }elseif ($segmento->getIsActive()){
+        }elseif ($planilla->getSegmento()->getIsActive()){
             return true;
         }
         

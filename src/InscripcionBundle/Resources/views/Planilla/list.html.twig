@@ -121,6 +121,29 @@
             $.Default.reloadTable = function(){
                 _table.fnDraw(true);
             }
+            $.Default.deleteConfirm = function(url){
+                swal({
+                    title: 'Esta seguro?',
+                    text: "La planilla será borrada!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, borrar!'
+                },function () {
+                    $.post(url,{})
+                    .done((data)=>{
+                        if (data.success){
+                            swal('Borrado!','La planilla fue borrado con exito.','success')
+                            _table.fnDraw(true);
+                        }else{
+                            swal('Cuidado!',data.message,'error')
+                        }
+                    }).fail(()=>{
+                        swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                    })
+                })
+            }            
         })(jQuery);
         $(document).ready(function(){$.Default.init();});
     </script>

@@ -194,7 +194,7 @@ class SegmentoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if ($entity){
-            if(!count($entity->getEventos())){
+            if(!count($entity->getEventos()) && !count($entity->getPlanillas())){
                 try {
                     $em->remove($entity);
                     $em->flush();
@@ -204,7 +204,7 @@ class SegmentoController extends Controller
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
                 }
             }else{
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no debe terner evenos asociados'));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no debe terner evenos ni planillas de buena fe asociados'));
             }
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));

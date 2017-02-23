@@ -36,7 +36,7 @@ abstract class Planilla
     private $descripcion;
     
     /**
-     * @ORM\OneToMany(targetEntity="ResultadoBundle\Entity\Equipo", mappedBy="planilla", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ResultadoBundle\Entity\Equipo", mappedBy="planilla", cascade={"persist","remove"})
      */
     private $equipos;
     
@@ -81,7 +81,7 @@ abstract class Planilla
     
     /**
      * this is OneToMany because the historial is important
-     * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla", cascade={"persist","remove"})
      */
     private $estados;
     
@@ -579,4 +579,30 @@ abstract class Planilla
     {
         return $this->responsableMunicipioDni;
     }
+
+    /**
+     * Get isRemovable
+     *
+     * @return boolean
+     */
+    public function isRemovable()
+    {
+        return $this->getEstado()->isRemovable();
+    }
+
+    /**
+     * Get prepareToDelete
+     *
+     * @return boolean
+     */
+    public function prepareToDelete()
+    {
+        foreach ($this->getEquipos() as $equipo){
+            $equipo->cleanCompetidores();
+            $equipo->setDirectorTecnico = NULL;
+        }
+        $this->setInstitucion = NULL;
+    }    
+    
+    
 }

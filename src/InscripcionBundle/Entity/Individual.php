@@ -11,42 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 
 class Individual extends Planilla
-{
-    public function getTemplate(){
-        return "InscripcionBundle:Planilla:newIndividual.html.twig";
-    }
-    
+{    
     public function getNewEquipo(){
         return new \ResultadoBundle\Entity\Individual();
-    }
-    
-    /**
-     * Get equipos
-     *
-     * @return json
-     */
-    public function getJson()
-    {
-        $equipos = parent::getJson();
-        //foreach ($equipos as $key => $equipo){
-        //    $equipos[$key]['integrantes'][] = array(
-        //                            'id' => '',
-        //                            'order' => $equipo['orden'],
-        //                            'type' => 'inscripto',
-        //                            'persona' => array(
-        //                                'id' => '',
-        //                                'apellido' => '',
-        //                                'nombre' => '',
-        //                                'documento' => '',
-        //                                'nacimiento' => '',
-        //                                'domicilio' => '',
-        //                                'localidad' => '',
-        //                                'email' => ''
-        //                            ),
-        //                    );
-        //    //No se contemplan los sustitutos para los individuales
-        //}
-        return $equipos;
     }
 
     /**

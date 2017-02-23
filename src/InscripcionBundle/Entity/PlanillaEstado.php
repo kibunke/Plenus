@@ -170,5 +170,15 @@ abstract class PlanillaEstado
     public function getNombreRaw()
     {
         return "<span title='".$this->getNombre()."' class='".$this->getClass()."'>".$this->getAbr()."</span>";
-    }        
+    }
+    
+    /**
+     * Get isRemovable
+     *
+     * @return boolean
+     */
+    public function isRemovable()
+    {
+        return false;
+    }
 }
