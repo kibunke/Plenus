@@ -416,6 +416,8 @@
             _planilla.equipos = [];
             $('#planillaBuenaFe tbody tr').each(function(){
                 let $tr=$(this);
+                let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
+                fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
                 _planilla.equipos.push ({
                     id : $tr.data('idEquipo'),
                     nombre : '',
@@ -433,7 +435,7 @@
                             nombre : $tr.find(':nth-child(3)').text(),
                             tipoDocumento : 'DNI',
                             dni : $tr.find(':nth-child(4)').text(),
-                            fNacimiento : $tr.find(':nth-child(5)').text(),
+                            fNacimiento : fNacimiento,
                             domicilio : $tr.find(':nth-child(6)').text(),
                             municipio : $tr.find(':nth-child(7)').text(),
                             email : $tr.find(':nth-child(8)').text()
