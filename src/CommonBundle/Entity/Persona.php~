@@ -10,14 +10,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  * CommonBundle\Entity\Persona
  *
  * @ORM\Table(name="Persona", uniqueConstraints={
- *          @ORM\UniqueConstraint(name="unique_index", columns={"tipoDocumento_id", "dni"})
+ *          @ORM\UniqueConstraint(name="unique_dni", columns={"tipoDocumento_id", "dni"}),
+ *          @ORM\UniqueConstraint(  name="unique_email", columns={"email"})
  *      }
  * )
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
+ *
  * @ORM\DiscriminatorMap({
- *                          "persona"    = "Persona"
+ *                          "persona"       = "Persona",
+ *                          "competidor"    = "ResultadoBundle\Entity\Competidor",
+ *                          "tecnico"       = "ResultadoBundle\Entity\DirectorTecnico",
  *                      })
  *                        "competitor"= "TournamentBundle\Entity\Competitor",
  *                        "coach"     = "TournamentBundle\Entity\Coach",
@@ -66,7 +70,7 @@ class Persona
      * 
      * @ORM\Column(name="fNacimiento", type="date", nullable=true)
      * @Assert\NotBlank(
-     *      message="birthdate missing!"
+     *      message="Falta la fecha de Nacimiento!"
      * )
      * @Assert\Date()
      */
@@ -99,7 +103,7 @@ class Persona
     /**
      * @var string $email
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      * @Assert\Email(
      *     message = "Dirección de correo electrónico no válida.",
      *     checkMX = true,
@@ -109,7 +113,7 @@ class Persona
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Partido")
+     * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
      */       
     private $municipio;
@@ -163,14 +167,20 @@ class Persona
     
     /**
      * @var text $avatar
-     * @ORM\Column(name="avatar", type="text")
+     * @ORM\Column(name="avatar", type="text", nullable=true)
      **/
     private $avatar;
     
     /**
-     * @ORM\OneToOne(targetEntity="UserControlBundle\Entity\User", mappedBy="person")
+     * @var text $observacion
+     * @ORM\Column(name="observacion", type="text", nullable=true)
+     **/
+    private $observacion;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="SeguridadBundle\Entity\Usuario", mappedBy="persona")
      */
-    private $user;
+    private $usuario;
     
     /**
      * @var datetime $createdAt
@@ -181,9 +191,9 @@ class Persona
     private $createdAt;
     
     /**
-     * @var UserControlBundle\Entity\User $createdBy
+     * @var SeguridadBundle\Entity\Usuario $createdBy
      * 
-     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
@@ -197,9 +207,9 @@ class Persona
     private $updatedAt;
 
     /**
-     * @var UserControlBundle\Entity\User $updatedBy
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
      * 
-     * @ORM\ManyToOne(targetEntity="UserControlBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -226,7 +236,7 @@ class Persona
      */    
     function __toString()
     {
-        return $this->dni;
+        return (String)$this->dni;
     }
 
     /**
@@ -286,7 +296,17 @@ class Persona
     {
         return $this->apellido;
     }
-
+    
+    /**
+     * Get nombreCompleto
+     *
+     * @return string
+     */
+    public function getNombreCompleto()
+    {
+        return $this->apellido.", ".$this->nombre;
+    }
+    
     /**
      * Set fNacimiento
      *
@@ -476,7 +496,9 @@ class Persona
      */
     public function getAvatar()
     {
-        return $this->avatar;
+        if (!is_null($this->avatar))
+            return $this->avatar;
+        return "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gOTAK/9sAQwADAgIDAgIDAwMDBAMDBAUIBQUEBAUKBwcGCAwKDAwLCgsLDQ4SEA0OEQ4LCxAWEBETFBUVFQwPFxgWFBgSFBUU/9sAQwEDBAQFBAUJBQUJFA0LDRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU/8AAEQgAlgCWAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A++SKMEe1OxjvS496AGYNJjFPxRjpQAwrml24p233o2+9ADCKNpp+Md6XbjvQAzbSbcVJj3pNuR1oAZtpdtO20u33oAj280YJp+33oC+9ADNppdtO20uPcUAM2mjaadijHvQA3Bop4H0ooAftFG0elSbTQVoAjCe1G0elSbelG05FAEW0Y6UbRzxUu2jFAEW0VBeXttp8JluZo7eMdWkYAVxfjz4o2/h1nstP2XWoDhj1SL6+p9q8Y1fXr/XZzNe3Mk7E5wx4H0FAHuN98V/DlkSBctcEf88kJH51QX406EWx5NyB67K8OpOlAH0RpvxM8Pak4Vb0Qse0wK108MkVxGHidZEPRlOQa+USMitrw94x1TwzMr2dy3lg8wvyjD0xQB9MbRRtB7VzHgnx/ZeL4Ngxb3yDL27Hr7r6iurxQBHtHYUbR6VJtNGD9KAI9go2j0qXFJt7UAR7B6UVJgiigCTbRszU2z2oC0AQ7KNlTBfajb7UAQhfWuE+KfjY+GdOFlZuBqFyOGHWNO5+vpXfTyJbQSSv8qIpYn2FfL/irW5PEWvXd9KeHfCD0UcAflQBjOWkYsx3MxySepNN2c1NgDtRgUAQ7aAtSkUAD0oAj2Um2pRzxijA9KAH2N5caXdxXVrI0M8Z3K619HeBvFcfi7RY7kAJcp8k8Y7N6/Q183AcV2fwp8QnRPFMMLPi2u/3TjtnsfzoA+gNlGyptuT0FG32FAEOylKVKVx2o20AQ7KKm257UUATbfak2VMU9BRsoAh2e1BTiptmKNlAHK/Ea8OneDNUlU4do9i/UnFfNIQ+lfR3xdhZ/At9tH3WRj9M186YoAZs/CkC+1S7TSbTQAzZ7UbPan4NGKAIylLsz2p+DS7fegCMpipLZmt7iKVeGRgwP0NG2gISQPegD6u02b7Zp9tcd5I1Y/iKsbB6VT8NRFPD+nK3UQJ1+laWzFAEOygJ7VNtz6UbPpQBCVxRU2wUUATbPpSbMGp9oo2igCAKPSjZ7VPto2CgDC8W6X/bHhrUrQDLSwsFHuOR/Kvlh4zG7IwwynBFfYmwGvnT4r+EW8O+I5J40K2V4TJGR0B/iX86AOFwKMewqTZRs96AI8AUVIY/ejZQBGfpRwak2e9Gz3oAjrQ0HTn1fWbKzRctLKq/hnmqeyvWPgf4Raa7l1u4T91FmODI+83c/hQB7BDAsMKRqPlRQo+gFOKfjU+0Yo2igCDZS7OamC0bRmgCHZ9KKmCCigCYL6UbKl2UeXxQBFs+tG2ptlJs56UARbKyPFXhe18V6PLYXK4DcpIByjdiK3NntRs9qAPk/wATeFr/AMKak9pexkcnZIB8rj1BrI619ba54csPEVk1rqFss8R6E/eU+oPavH/EvwKvrR5JdHmF5DnIhlO2QD0z0NAHlIBowa2L/wAK6tprstzp1xER6xmqI0+4J2i2lJ9NhoAq4PpRg1v6Z4J1vV5Alrps75/iZdoH4mvSPC3wIKSJca5OGA5+ywHr9W/woA4PwH4Au/GV+uFaHT4z+9nI/Qepr6O07TINKsobS1jEUEShFUegqex063021jt7WBIIEGFjjGAKnKe1AEWygpxUvl0eXQBFso2dKl8vFATHagCLaKKl2elFAE2zNGypdvtRt9qAItuO1G3A6VLto2n0oAi2UbKl28Vl614k0zw9F5l9eRW/orN8x/DrQBf2c0mzHWvLta+PVjbMyabYyXbf89JTsX8utcdqPxt8SXhIga3sk9Io8n8zmgD6CMQbqAR70wWkWc+Umf8AdFfMVx8QvEt0SZNZu/oj7f5YqsPGOvBs/wBs3+f+vh/8aAPqkJjgDApdnFfMNt8RvE9owKazdEejsGH61v6d8cPEVoQLlba9UddybT+Y/wAKAPf9tGzIrzPRPjtpl4ypqNpLYt/fU70/xr0PSdb0/XIBLY3UVynfY2SPqO1AFgpS7KlxntRtoAhCUuz2qXbRt9qAIglFSge1FAE2z2o247VJso289KAI9ue1UtX1az0Kye7vp0toE6s5xn2HqazPGvjew8F2BlnbzLlx+6twfmY/0FfOfijxZqPi2/NzfSlgP9XEvCRj0A/rQB2/jD423d8ZLbRUNpAePPcfO30HavMru5nv52muZXnlbq8jZNR4pQDQAzZ7UbPanYNHOelADdvoKNvtT8H0oANADNnHAo2+1Pwe9GPagCPb7Va0/UbvSbgTWdxJbyj+KNsZqDFKKAPXPB3xweMx2uvR70yALuMcj3Yd/wAK9hsb221O1S5tZkuIHGVkjbINfIWDXReDfHOo+DLwPbuZLVjmW3c/K309D70AfUe32o2+1ZPhXxVYeLtNW7spMno8RPzIfQitrbQBFtz2oqbZj1ooAk2nFc7438YWvgvR3upyJJ3ysEOeXbH8vWtzUL2HTLKa6uHCQxKWZj2Ar5c8ceLZ/GGuy3cpIhX5YY88ItAGZretXviLUpb2+lMk0h/BR6D2qjtpRQM0ANK8UbadRQA3bRt9adSUAIFNAWnGkoATbRsIpaWgBu2gLTulJ3oATbRtp30pKANfwr4ovfCOrR3tm/Q4kiP3ZF7g19OeGfEdp4q0iG/s5AVfhoz95G7g18mA12Hwz8bSeD9cTzHJ0+4ISZOw9G/CgD6Z24oohljuIkkjYPG4DKwPBFFAHkvx78Ry21vaaPFuRJwZZWHcA4A/OvEgvFFFAABxSlcUUUAGBQQKKKAE2g0EYoooAUqKMADNFFACYpdtFFABtoCiiigA20mMUUUAGOM0beKKKAPoX4G6/PrPhmW1nJZrFxGjk8lSMgfhRRRQB//Z";
     }
 
     /**
@@ -576,37 +598,37 @@ class Persona
     }
 
     /**
-     * Set user
+     * Set usuario
      *
-     * @param \UserControlBundle\Entity\User $user
+     * @param \SeguridadBundle\Entity\Usuario $usuario
      *
      * @return Persona
      */
-    public function setUser(\UserControlBundle\Entity\User $user = null)
+    public function setUsuario(\SeguridadBundle\Entity\Usuario $usuario = null)
     {
-        $this->user = $user;
+        $this->usuario = $usuario;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get usuario
      *
-     * @return \UserControlBundle\Entity\User
+     * @return \SeguridadBundle\Entity\Usuario
      */
-    public function getUser()
+    public function getUsuario()
     {
-        return $this->user;
+        return $this->usuario;
     }
 
     /**
      * Set createdBy
      *
-     * @param \UserControlBundle\Entity\User $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      *
      * @return Persona
      */
-    public function setCreatedBy(\UserControlBundle\Entity\User $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -616,7 +638,7 @@ class Persona
     /**
      * Get createdBy
      *
-     * @return \UserControlBundle\Entity\User
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -626,11 +648,11 @@ class Persona
     /**
      * Set updatedBy
      *
-     * @param \UserControlBundle\Entity\User $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      *
      * @return Persona
      */
-    public function setUpdatedBy(\UserControlBundle\Entity\User $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -640,7 +662,7 @@ class Persona
     /**
      * Get updatedBy
      *
-     * @return \UserControlBundle\Entity\User
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -650,10 +672,10 @@ class Persona
     /**
      * Set municipio
      *
-     * @param \CommonBundle\Entity\Partido $municipio
+     * @param \CommonBundle\Entity\Municipio $municipio
      * @return Persona
      */
-    public function setMunicipio(\CommonBundle\Entity\Partido $municipio = null)
+    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
     {
         $this->municipio = $municipio;
 
@@ -663,10 +685,87 @@ class Persona
     /**
      * Get municipio
      *
-     * @return \CommonBundle\Entity\Partido
+     * @return \CommonBundle\Entity\Municipio
      */
     public function getMunicipio()
     {
         return $this->municipio;
+    }    
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Persona
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    
+    public function clearUsuario()
+    {
+        $this->usuario = NULL;
+        
+        return $this;
+    }
+    
+    public function mismoMunicipio(Persona $persona)
+    {
+        return $this->getMunicipio()->mismoMunicipio($persona->getMunicipio());
+    }
+    
+    public function getJson()
+    {
+        return array(
+                'id' => $this->getId(),
+                'apellido' => $this->getApellido(),
+                'nombre' => $this->getNombre(),
+                'tipoDocumento' => $this->getTipoDocumento()->getNombre(),
+                'dni' => $this->getDni(),
+                'fNacimiento' => $this->getFNacimiento()->format('d/m/Y'),
+                'telefono' => $this->getTelefono(),
+                'municipio' => $this->getMunicipio()->getNombre(),
+                'email' => $this->getEmail(),
+                'observacion' => $this->getObservacion()
+            );
+    }
+    
+    /**
+     * Load
+     */
+    public function loadFromJson($json)
+    {
+        if (isset($json->nombre))
+            $this->setNombre($json->nombre);
+        if (isset($json->apellido))
+            $this->setApellido($json->apellido);
+        if (isset($json->dni))
+            $this->setDni($json->dni);
+        if (isset($json->tipoDocumento) && is_object($json->tipoDocumento))
+            $this->setTipoDocumento($json->tipoDocumento);            
+        if (isset($json->fNacimiento) && is_object($json->fNacimiento))
+            $this->setFNacimiento($json->fNacimiento);
+        if (isset($json->telefono))
+            $this->setTelefono($json->telefono);
+        if (isset($json->municipio) && is_object($json->municipio))
+            $this->setMunicipio($json->municipio);
+        if (isset($json->email) && strlen($json->email))
+            $this->setEmail($json->email);
+        if (isset($json->observacion))
+            $this->setEmail($json->observacion);            
     }    
 }

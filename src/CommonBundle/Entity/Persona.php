@@ -739,7 +739,8 @@ class Persona
                 'fNacimiento' => $this->getFNacimiento()->format('d/m/Y'),
                 'telefono' => $this->getTelefono(),
                 'municipio' => $this->getMunicipio()->getNombre(),
-                'email' => $this->getEmail()
+                'email' => $this->getEmail(),
+                'observacion' => $this->getObservacion()
             );
     }
     
@@ -767,4 +768,28 @@ class Persona
         if (isset($json->observacion))
             $this->setEmail($json->observacion);            
     }    
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     *
+     * @return Persona
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+
+        return $this;
+    }
+
+    /**
+     * Get observacion
+     *
+     * @return string
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
+    }
 }
