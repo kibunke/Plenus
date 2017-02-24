@@ -17,15 +17,33 @@ class EnRevision extends PlanillaEstado
      */
     public function __construct()
     {
-        $this->nombre = "EnRevision";
-        $this->createdAt = new \DateTime();
+        $this->setNombre("En Revisión");
+        parent::__construct();
     }
 
-    /**
-     * __toString
-     */    
-    public function __toString()
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-        return "Estado ".$this->getNombre();
+        if($usuario->hasRole('ROLE_INSCRIPTOR'))
+        {
+            return array(new Cargada());
+        }
+        
+        return parent::getProximosEstados($usuario);
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getClass()
+    {
+        return "badge badge-teal";
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getAbr()
+    {
+        return "Re.";
     }
 }

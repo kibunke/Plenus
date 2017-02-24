@@ -17,15 +17,23 @@ class Aprobada extends PlanillaEstado
      */
     public function __construct()
     {
-        $this->nombre = "Aprobada";
-        $this->createdAt = new \DateTime();
+        $this->setNombre("Aprobada");
+        parent::__construct();
     }
-
+    
     /**
-     * __toString
+     * get Class
      */    
-    public function __toString()
+    public function getClass()
     {
-        return "Estado ".$this->getNombre();
+        return "badge badge-teal";
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getAbr()
+    {
+        return "Ap.";
     }
 }

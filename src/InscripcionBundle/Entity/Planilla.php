@@ -117,7 +117,9 @@ abstract class Planilla
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();        
+        $this->equipos   = new ArrayCollection();
+        $this->estados   = new ArrayCollection();
+        $this->addEstado(new Cargada());
     }
 
     /**
@@ -499,31 +501,33 @@ abstract class Planilla
     {
         $segmento = $this->getSegmento();
         return array(
-                    "id" => $this->getId(),
-                    "parametros" => array(
-                        "maxEqPlanilla" => $segmento->getMaxEquiposPorPlanilla(),
-                        "maxIntegrantes" => $segmento->getMaxIntegrantes(),
-                        "minIntegrantes" => $segmento->getMinIntegrantes(),
-                        "maxReemplazos" => $segmento->getMaxReemplazos(),
-                        "fechaMin" => $segmento->getMinFechaNacimiento(),
-                        "fechaMax" => $segmento->getMaxFechaNacimiento(),
-                    ),
-                    "equipos" => $this->getEquiposJson(),
-                    "inscripcionInstitucional" => $this->getInstitucion() ? true : false,
-                    "institucion" => $this->getInstitucion() ? $this->getInstitucion()->getJson() : [],
-                    "responsableMunicipio" => array(
-                        "nombre" => $this->getResponsableMunicipioNombre(),
-                        "apellido" => $this->getResponsableMunicipioApellido(),
-                        "dni" => $this->getResponsableMunicipioDni(),
-                    )
+                      "id"         => $this->getId(),
+                      "parametros" => array(
+                                                "maxEqPlanilla"  => $segmento->getMaxEquiposPorPlanilla(),
+                                                "maxIntegrantes" => $segmento->getMaxIntegrantes(),
+                                                "minIntegrantes" => $segmento->getMinIntegrantes(),
+                                                "maxReemplazos"  => $segmento->getMaxReemplazos(),
+                                                "fechaMin"       => $segmento->getMinFechaNacimiento(),
+                                                "fechaMax"       => $segmento->getMaxFechaNacimiento(),
+                                            ),
+                      "equipos"                  => $this->getEquiposJson(),
+                      "inscripcionInstitucional" => $this->getInstitucion() ? true : false,
+                      "institucion"              => $this->getInstitucion() ? $this->getInstitucion()->getJson() : [],
+                      "responsableMunicipio" => array(
+                                                        "nombre"   => $this->getResponsableMunicipioNombre(),
+                                                        "apellido" => $this->getResponsableMunicipioApellido(),
+                                                        "dni"      => $this->getResponsableMunicipioDni(),
+                                                      )
                 );
     }
     private function getEquiposJson()
     {
         $equipos = array();
-        foreach ($this->getEquipos() as $equipo){
+        foreach ($this->getEquipos() as $equipo)
+        {
             $equipos[] = $equipo->getJson();
         }
+        
         return $equipos;        
     }
     
@@ -533,11 +537,13 @@ abstract class Planilla
     public function inscripcionValida($planilla)
     {
         //Chequea que el participante no este inscripto en el segmento 
-        if ($this->getSegmento() == $planilla->getSegmento()){
+        if ($this->getSegmento() == $planilla->getSegmento())
+        {
             throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en este segmento pero en otro equipo!');
         }
         //Chequea que el participante siempre represente al mismo municipio
-        if ($this->getMunicipio() != $planilla->getMunicipio()){
+        if ($this->getMunicipio() != $planilla->getMunicipio())
+        {
             throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en otro equipo por el municipio de '.$this->getMunicipio()->getNombre());
         }
         
@@ -550,7 +556,8 @@ abstract class Planilla
     public function getTotalInscriptos()
     {
         $sum = 0;
-        foreach ($this->getEquipos() as $equipo){
+        foreach ($this->getEquipos() as $equipo)
+        {
             $sum += count($equipo->getCompetidores());
         }
         return $sum;
@@ -597,12 +604,20 @@ abstract class Planilla
      */
     public function prepareToDelete()
     {
-        foreach ($this->getEquipos() as $equipo){
+        foreach ($this->getEquipos() as $equipo)
+        {
             $equipo->cleanCompetidores();
             $equipo->setDirectorTecnico = NULL;
         }
         $this->setInstitucion = NULL;
+        
+        return $this;
     }    
     
+    
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
+    {
+       return $this->getEstado()->getProximosEstados($usuario); 
+    }
     
 }
