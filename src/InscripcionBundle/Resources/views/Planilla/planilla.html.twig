@@ -327,59 +327,9 @@
                         .removeClass('table-not-allowed')
                         .find('.validate-change').removeClass('validate-no-edit-td');
                 }                
-            });            
-            $.map(_planilla.equipos,(equipo, index)=>{
-                $.map(equipo.integrantes,(integrante)=>{
-                    let $tr = _tr.clone();
-                    $tr.data({'idEquipo':equipo.id,'idIntegrante': integrante.persona.id});
-                    $tr.find(':nth-child(1)').html(index + 1);
-                    $tr.find(':nth-child(2)').html(integrante.persona.apellido)
-                    $tr.find(':nth-child(3)').html(integrante.persona.nombre)
-                    $tr.find(':nth-child(4)').html(integrante.persona.dni)
-                    $tr.find(':nth-child(5)').html(integrante.persona.fNacimiento)
-                    $tr.find(':nth-child(6)').html(integrante.persona.telefono)
-                    $tr.find(':nth-child(7)').html(integrante.persona.municipio)
-                    $tr.find(':nth-child(8)').html(integrante.persona.email)
-                    $tr.find(':nth-child(9)').html(integrante.persona.observacion)
-                    if (integrante.rol == 'inscripto'){
-                        $('#planillaBuenaFe tbody').append($tr);
-                    }else{
-                        $('#planillaBuenaFe tfoot').append($tr);
-                    }
-                });
-                $('#datosDirectorTecnico .nombre').text(equipo.tecnico.nombre),
-                $('#datosDirectorTecnico .apellido').text(equipo.tecnico.apellido),
-                $('#datosDirectorTecnico .dni').text(equipo.tecnico.dni)
             });
-            $('#datosResponsableMunicipio .nombre').text(_planilla.responsableMunicipio.nombre);
-            $('#datosResponsableMunicipio .apellido').text(_planilla.responsableMunicipio.apellido);
-            $('#datosResponsableMunicipio .dni').text(_planilla.responsableMunicipio.dni);
-            if (_planilla.inscripcionInstitucional){
-                $("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").trigger('click');
-                $('#datosInstitucion').data('id',_planilla.institucion.id);
-                $('#datosInstitucion .nombre').text(_planilla.institucion.nombre);
-                $('#datosInstitucion .domicilio').text(_planilla.institucion.domicilio);
-                $('#datosInstitucion .telefono').text(_planilla.institucion.telefono);
-                    
-                $('#datosResponsableInstitucion .nombre').text(_planilla.institucion.responsable.nombre);
-                $('#datosResponsableInstitucion .apellido').text(_planilla.institucion.responsable.apellido);
-                $('#datosResponsableInstitucion .dni').text(_planilla.institucion.responsable.dni);
-            }
-            
-            let cantTbodyRows = $('#planillaBuenaFe tbody tr').length;
-            for (let i = cantTbodyRows; i < _planilla.parametros.maxEqPlanilla; i++) {
-                let $tr = _tr.clone();
-                $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(i+1)
-                $('#planillaBuenaFe tbody').append($tr);
-            }
-            if (_planilla.parametros.maxReemplazos > 0){
-                for (let j = cantTfootRows; j < _planilla.parametros.maxReemplazos; j++) {
-                    let $tr = _tr.clone();
-                    $('#planillaBuenaFe tfoot').append($tr);
-                }
-            }else{
-                $('#planillaBuenaFe tfoot').remove();
-            }            
+            $.Planilla.loadPlanillaFooter();
+            $.Planilla.loadEquipos();
             $('#planillaBuenaFe').editableTableWidget({
                 changeEditorFunction : function(obj){
                     var 
@@ -404,30 +354,68 @@
             }).addFunctions();
             $('#datosResponsableMunicipio,#datosDirectorTecnico,#datosResponsableInstitucion,#datosInstitucion').editableTableWidget().addFunctions();
         },
-        $.Planilla.save = function(){
-            _planilla.inscripcionInstitucional = ($('#tipoInscripcionButtons input:checked').val() != 'inscripcionMunicipal');
-            _planilla.responsableMunicipio = {
-                nombre : $('#datosResponsableMunicipio .nombre').text(),
-                apellido : $('#datosResponsableMunicipio .apellido').text(),
-                tipoDocumento : 'DNI',
-                dni : $('#datosResponsableMunicipio .dni').text()
-            };
-            _planilla.institucion = {
-                id : $('#datosInstitucion').data('id'),
-                tipo : $('#tipoInscripcionButtons input:checked').val(),
-                nombre : $('#datosInstitucion .nombre').text(),
-                domicilio : $('#datosInstitucion .domicilio').text(),
-                telefono : $('#datosInstitucion .telefono').text(),
-                responsable : {
-                    nombre : $('#datosResponsableInstitucion .nombre').text(),
-                    apellido : $('#datosResponsableInstitucion .apellido').text(),
-                    tipoDocumento : 'DNI',
-                    dni : $('#datosResponsableInstitucion .dni').text()                        
+        $.Planilla.loadEquipos = ()=>{
+            $.map(_planilla.equipos,(equipo, index)=>{
+                $.map(equipo.integrantes,(integrante)=>{
+                    let $tr = _tr.clone();
+                    $tr.data({'idEquipo':equipo.id,'idIntegrante': integrante.persona.id});
+                    $tr.find(':nth-child(1)').html(index + 1);
+                    $tr.find(':nth-child(2)').html(integrante.persona.apellido)
+                    $tr.find(':nth-child(3)').html(integrante.persona.nombre)
+                    $tr.find(':nth-child(4)').html(integrante.persona.dni)
+                    $tr.find(':nth-child(5)').html(integrante.persona.fNacimiento)
+                    $tr.find(':nth-child(6)').html(integrante.persona.telefono)
+                    $tr.find(':nth-child(7)').html(integrante.persona.municipio)
+                    $tr.find(':nth-child(8)').html(integrante.persona.email)
+                    $tr.find(':nth-child(9)').html(integrante.persona.observacion)
+                    if (integrante.rol == 'inscripto'){
+                        $('#planillaBuenaFe tbody').append($tr);
+                    }else{
+                        $('#planillaBuenaFe tfoot').append($tr);
+                    }
+                });
+                $('#datosDirectorTecnico .nombre').text(equipo.tecnico.nombre),
+                $('#datosDirectorTecnico .apellido').text(equipo.tecnico.apellido),
+                $('#datosDirectorTecnico .dni').text(equipo.tecnico.dni)
+            });
+            
+            let cantTbodyRows = $('#planillaBuenaFe tbody tr').length;
+            for (let i = cantTbodyRows; i < _planilla.parametros.maxEqPlanilla; i++) {
+                let $tr = _tr.clone();
+                $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(i + 1)
+                $('#planillaBuenaFe tbody').append($tr);
+            }
+            if (_planilla.parametros.maxReemplazos > 0){
+                let cantTfootRows = $('#planillaBuenaFe tfoot tr').length;
+                for (let j = cantTfootRows; j < _planilla.parametros.maxReemplazos; j++) {
+                    let $tr = _tr.clone();
+                    $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(j)
+                    $('#planillaBuenaFe tfoot').append($tr);
                 }
-            };
+            }else{
+                $('#planillaBuenaFe tfoot').remove();
+            }            
+        }
+        $.Planilla.loadPlanillaFooter = ()=>{
+            $('#datosResponsableMunicipio .nombre').text(_planilla.responsableMunicipio.nombre);
+            $('#datosResponsableMunicipio .apellido').text(_planilla.responsableMunicipio.apellido);
+            $('#datosResponsableMunicipio .dni').text(_planilla.responsableMunicipio.dni);
+            if (_planilla.inscripcionInstitucional){
+                $("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").trigger('click');
+                $('#datosInstitucion').data('id',_planilla.institucion.id);
+                $('#datosInstitucion .nombre').text(_planilla.institucion.nombre);
+                $('#datosInstitucion .domicilio').text(_planilla.institucion.domicilio);
+                $('#datosInstitucion .telefono').text(_planilla.institucion.telefono);
+                    
+                $('#datosResponsableInstitucion .nombre').text(_planilla.institucion.responsable.nombre);
+                $('#datosResponsableInstitucion .apellido').text(_planilla.institucion.responsable.apellido);
+                $('#datosResponsableInstitucion .dni').text(_planilla.institucion.responsable.dni);
+            }            
+        }
+        $.readEquiposIndividuales = ()=>{
             _planilla.equipos = [];
             $('#planillaBuenaFe tbody tr').each(function(){
-                let $tr=$(this);
+                let $tr = $(this);
                 let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
                 fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
                 _planilla.equipos.push ({
@@ -455,7 +443,89 @@
                         }
                     }]
                 });               
+            });            
+        }
+        $.readEquipos = ()=>{
+            $row = $('#planillaBuenaFe tbody tr')[0];
+            _planilla.equipos = [{
+                    id : $row.data('idEquipo'),
+                    nombre : '',
+                    tecnico: {
+                        nombre : $('#datosDirectorTecnico .nombre').text(),
+                        apellido : $('#datosDirectorTecnico .apellido').text(),
+                        tipoDocumento : 'DNI',
+                        dni : $('#datosDirectorTecnico .dni').text()
+                    },
+                    integrantes : []
+                ];
+            $('#planillaBuenaFe tbody tr').each(function(){
+                let $tr = $(this);
+                let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
+                fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
+                _planilla.equipos.integrantes.push ({
+                    rol : 'inscripto',
+                    persona : {
+                        id : $tr.data('idIntegrante'),
+                        apellido : $tr.find(':nth-child(2)').text(),
+                        nombre : $tr.find(':nth-child(3)').text(),
+                        tipoDocumento : 'DNI',
+                        dni : $tr.find(':nth-child(4)').text(),
+                        fNacimiento : fNacimiento,
+                        telefono : $tr.find(':nth-child(6)').text(),
+                        municipio : $tr.find(':nth-child(7)').text(),
+                        email : $tr.find(':nth-child(8)').text(),
+                        observacion : $tr.find(':nth-child(9)').text()
+                    }
+                });
             });
+            $('#planillaBuenaFe tfoot tr').each(function(){
+                let $tr = $(this);
+                let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
+                fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
+                _planilla.equipos.integrantes.push ({
+                    rol : 'sustituto',
+                    persona : {
+                        id : $tr.data('idIntegrante'),
+                        apellido : $tr.find(':nth-child(2)').text(),
+                        nombre : $tr.find(':nth-child(3)').text(),
+                        tipoDocumento : 'DNI',
+                        dni : $tr.find(':nth-child(4)').text(),
+                        fNacimiento : fNacimiento,
+                        telefono : $tr.find(':nth-child(6)').text(),
+                        municipio : $tr.find(':nth-child(7)').text(),
+                        email : $tr.find(':nth-child(8)').text(),
+                        observacion : $tr.find(':nth-child(9)').text()
+                    }
+                });
+            });
+        }
+        $.Planilla.save = function(){
+            _planilla.inscripcionInstitucional = ($('#tipoInscripcionButtons input:checked').val() != 'inscripcionMunicipal');
+            _planilla.responsableMunicipio = {
+                nombre : $('#datosResponsableMunicipio .nombre').text(),
+                apellido : $('#datosResponsableMunicipio .apellido').text(),
+                tipoDocumento : 'DNI',
+                dni : $('#datosResponsableMunicipio .dni').text()
+            };
+            _planilla.institucion = {
+                id : $('#datosInstitucion').data('id'),
+                tipo : $('#tipoInscripcionButtons input:checked').val(),
+                nombre : $('#datosInstitucion .nombre').text(),
+                domicilio : $('#datosInstitucion .domicilio').text(),
+                telefono : $('#datosInstitucion .telefono').text(),
+                responsable : {
+                    nombre : $('#datosResponsableInstitucion .nombre').text(),
+                    apellido : $('#datosResponsableInstitucion .apellido').text(),
+                    tipoDocumento : 'DNI',
+                    dni : $('#datosResponsableInstitucion .dni').text()                        
+                }
+            };
+            if (_planilla.parametros.maxEqPlanilla > 1){
+                $.Planilla.readEquiposIndividuales();
+            }else{
+                $.Planilla.readEquipos();
+            }            
+            $.
             $('#planilla_data').text(JSON.stringify(_planilla));
             let path = '{{ path('planilla_new', {'id': planilla.segmento.id}) }}';
             if (_planilla.id > 0){
