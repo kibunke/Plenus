@@ -93,7 +93,6 @@ class SegmentoRepository extends EntityRepository
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
                                         FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.coordinadores u
                                         WHERE $where ")
                         ->getSingleScalarResult();
     }
@@ -105,7 +104,6 @@ class SegmentoRepository extends EntityRepository
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(s)
                                         FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.coordinadores u
                                         WHERE $where")
                         ->getSingleScalarResult();
     }
