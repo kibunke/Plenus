@@ -58,5 +58,5 @@ class Equipo extends Planilla
     public function getResponsableMunicipioApellido()
     {
         return $this->responsableMunicipioApellido;
-    }
+    }    
 }

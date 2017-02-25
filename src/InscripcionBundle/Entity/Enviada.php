@@ -18,14 +18,32 @@ class Enviada extends PlanillaEstado
     public function __construct()
     {
         $this->nombre = "Enviada";
-        $this->createdAt = new \DateTime();
+        parent::__construct();
     }
-
-    /**
-     * __toString
-     */    
-    public function __toString()
+    
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-        return "Estado ".$this->getNombre();
+        if($usuario->hasRole('ROLE_ORGANIZADOR'))
+        {
+            return array(new Presentada());
+        }
+        
+        return parent::getProximosEstados($usuario);
+    }
+    
+     /**
+     * get Class
+     */    
+    public function getClass()
+    {
+        return "badge badge-teal";
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getAbr()
+    {
+        return "En.";
     }
 }

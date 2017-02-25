@@ -18,17 +18,9 @@ class Cargada extends PlanillaEstado
     public function __construct()
     {
         $this->setNombre("Cargada");
-        $this->setCreatedAt(new \DateTime());
+        parent::__construct();
     }
 
-    /**
-     * __toString
-     */    
-    public function __toString()
-    {
-        return "Estado ".$this->getNombre();
-    }
-    
     /**
      * get Class
      */    
@@ -42,7 +34,7 @@ class Cargada extends PlanillaEstado
      */    
     public function getAbr()
     {
-        return "Ca";
+        return "Ca.";
     }
     
     /**
@@ -53,5 +45,25 @@ class Cargada extends PlanillaEstado
     public function isRemovable()
     {
         return true;
-    }     
+    }
+    
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
+    {
+        if($usuario->hasRole('ROLE_INSCRIPTOR'))
+        {
+            return array(new Enviada());
+        }
+        
+        if($usuario->hasRole('ROLE_ORGANIZADOR'))
+        {
+            return array(new Presentada());
+        }
+        
+        if($usuario->hasRole('ROLE_COORDINADOR'))
+        {
+            return array(new Aprobada());
+        }
+
+        return parent::getProximosEstados($usuario);
+    }
 }

@@ -13,12 +13,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *                          "Cargada"       = "Cargada",
- *                          "Enviada"       = "Enviada",
- *                          "Presentada"    = "Presentada",
- *                          "Aprobada"      = "Aprobada",
- *                          "Observada"     = "Observada",
- *                          "EnRevision"    = "EnRevision"
+ *                          "Cargada"    = "Cargada",
+ *                          "Enviada"    = "Enviada",
+ *                          "Presentada" = "Presentada",
+ *                          "Aprobada"   = "Aprobada",
+ *                          "Observada"  = "Observada",
+ *                          "EnRevision" = "EnRevision"
  *                      })
  */
 abstract class PlanillaEstado
@@ -164,6 +164,19 @@ abstract class PlanillaEstado
         return $this->planilla;
     }
     
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+    
+    /**
+     * __toString
+     */    
+    public function __toString()
+    {
+        return "Estado ".$this->getNombre();
+    }
+    
     /**
      * get NombreRaw
      */    
@@ -180,5 +193,10 @@ abstract class PlanillaEstado
     public function isRemovable()
     {
         return false;
+    }
+    
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
+    {
+        return array();    
     }
 }
