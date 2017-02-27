@@ -338,12 +338,14 @@ abstract class Institucion
     {
         return array(
                     "id" => $this->getId(),
+                    "tipo" => $this->getDiscr(),
                     "nombre" => $this->getNombre(),
                     "domicilio" => $this->getDomicilio(),
                     "telefono" => $this->getTelefono(),
                     "responsable" => array(
                         "nombre" => $this->getResponsableNombre(),
-                        "apellido" => $this->getResponsableApellido()
+                        "apellido" => $this->getResponsableApellido(),
+                        "dni" => $this->getResponsableDni()
                     )
                 );
     }
@@ -355,6 +357,7 @@ abstract class Institucion
      */
     static function getInstance($user,$json)
     {
+        //var_dump($json);
         if (strlen($json->nombre) > 2 && strlen($json->domicilio) > 2){
             if (strlen($json->responsable->nombre) > 2 && strlen($json->responsable->apellido) > 2 && strlen($json->responsable->dni) > 6){
                 if ($json->tipo == 'inscripcionInstitucionalEscuela')
@@ -366,7 +369,8 @@ abstract class Institucion
                 $institucion->setDomicilio($json->domicilio);
                 $institucion->setTelefono($json->telefono);
                 $institucion->setResponsableNombre($json->responsable->nombre);
-                $institucion->setResponsableApellido($json->responsable->nombre);
+                $institucion->setResponsableApellido($json->responsable->apellido);
+                $institucion->setResponsableDni($json->responsable->dni);
                 return $institucion;
             }else{
                 throw new \Exception('Plenus: La institucion no se pudo crear. Los datos del responsable estan incompletos o son erroneos.');
@@ -374,6 +378,7 @@ abstract class Institucion
         }else{
             throw new \Exception('Plenus: La institucion no se pudo crear. Los datos estan incompletos o son erroneos.');
         }
+        //return $institucion;
     }    
 
     /**
@@ -471,4 +476,28 @@ abstract class Institucion
     {
         return $this->responsableApellido;
     }  
+
+    /**
+     * Set responsableDni
+     *
+     * @param string $responsableDni
+     *
+     * @return Institucion
+     */
+    public function setResponsableDni($responsableDni)
+    {
+        $this->responsableDni = $responsableDni;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableDni
+     *
+     * @return string
+     */
+    public function getResponsableDni()
+    {
+        return $this->responsableDni;
+    }
 }

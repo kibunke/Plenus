@@ -74,7 +74,7 @@ class SegmentoRepository extends EntityRepository
                     m.nombre LIKE ?1)"
                     . $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(s)
+                        ->createQuery(" SELECT COUNT(DISTINCT(s))
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
@@ -82,7 +82,7 @@ class SegmentoRepository extends EntityRepository
                                         JOIN s.categoria c
                                         JOIN s.modalidad m
                                         JOIN s.genero g                                        
-                                        WHERE $where ")
+                                        WHERE $where")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }

@@ -124,7 +124,7 @@ class PlanillaController extends Controller
         if ($form->isSubmitted()){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Faltan datos en la planilla! '.(string) $form->getErrors(true, false)));
         }
-        return $this->render("InscripcionBundle:Planilla:planilla.html.twig", array(
+        return $this->render($planilla->getTemplate(), array(
             'form' => $form->createView(),
             'planilla' => $planilla
         ));
@@ -173,36 +173,13 @@ class PlanillaController extends Controller
     
     private function loadDirectorTecnico($planilla, $json)
     {
-        $em = $this->getDoctrine()->getManager();
-        try{
-            $json->tipoDocumento = $em->getRepository('CommonBundle:TipoDocumento')->findOneBy(array('nombre' => $json->tipoDocumento));
-            $tecnico = $em->getRepository('ResultadoBundle:DirectorTecnico')->findOneBy(array('tipoDocumento' => $json->tipoDocumento , 'dni' => $json->dni));
-
-            if (!$tecnico){
-                
-                if (is_object($json->tipoDocumento) && strlen($json->nombre) > 2 && strlen($json->apellido) > 2 && strlen($json->dni) > 6){
-                    $tecnico = new DirectorTecnico($this->getUser());
-                    $tecnico->loadFromJson($json);
-                    $tecnico->setMunicipio($planilla->getMunicipio());
-                    try {
-                        $em->persist($tecnico);
-                        $em->flush();
-                    }catch(\Exception $e ){
-                        throw new \Exception('Plenus: Los datos del Director Técnico no pudieron guardarse.'.$e->getMessage());
-                    }
-                }
-                
-                if ( !$tecnico && $planilla->isTecnicoRequired()){
-                    throw new \Exception('Plenus: El Director Técnico es obligatorio en este segmento.');
-                }
-            }
-        }catch(\Exception $e){
-            if(strpos($e->getMessage(), 'Plenus:') !== false){
-                throw $e;
-            }
-            throw new \Exception('Plenus: Datos del Director Tecnico inválidos o incompletos.');
+        if (strlen($json->nombre) > 2 && strlen($json->apellido) > 2 && strlen($json->dni) > 6){
+            $planilla->setDirectorTecnicoNombre($json->nombre);
+            $planilla->setDirectorTecnicoApellido($json->apellido);
+            $planilla->setDirectorTecnicoDni($json->dni);
+        }elseif($planilla->isTecnicoRequired()){
+            throw new \Exception('Plenus: El Director Técnico es obligatorio en este segmento.');
         }
-        return $tecnico;
     }
     
     private function loadInstitucion($planilla, $json)
@@ -227,10 +204,16 @@ class PlanillaController extends Controller
     private function loadEquipo($jsonEquipo,$planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $equipo = $planilla->getNewEquipo();
-        if ($tecnico = $this->loadDirectorTecnico($planilla, $jsonEquipo->tecnico)){
-            $equipo->setDirectorTecnico($tecnico);
+        if ($jsonEquipo->id > 0){
+            $equipo = $em->getRepository('ResultadoBundle:Equipo')->find($jsonEquipo->id);
+            $equipo->cleanCompetidores();
+            $em->persist($equipo);
+            $em->flush();
+        }else{
+            $equipo = $planilla->getNewEquipo();
         }
+        
+        $this->loadDirectorTecnico($planilla, $jsonEquipo->tecnico);
         try{
             foreach($jsonEquipo->integrantes as $jsonIntegrante){
                 if (strlen($jsonIntegrante->persona->dni) > 6){
@@ -243,14 +226,17 @@ class PlanillaController extends Controller
                         if (!$integrante){
                                 $integrante = new Competidor($this->getUser());
                                 $integrante->loadFromJson($jsonIntegrante);
-                        }else{
-                            /*
-                             * chequea que siempre represente al mismo municipio
-                             * chequea que no esta inscripto en el mismo segmento
-                             * Si no cumple algo genera una Exception
-                             */ 
-                            $integrante->inscripcionValida($planilla);
                         }
+                        /*
+                         * chequea que siempre represente al mismo municipio
+                         * chequea que el municipio del participante sea igual al de la planilla
+                         * si la inscripcion no es institucional.
+                         * chequea que no esta inscripto en el mismo segmento
+                         * Si no cumple algo genera una Exception en la clase planilla
+                         */
+                        $planilla->validarInscripcion($integrante);
+                        //$integrante->inscripcionValida($planilla);
+                        
                         if ($integrante){
                             if ($planilla->isOnDateRange($integrante)){
                                 $equipo->addIntegrante($integrante);
@@ -311,21 +297,24 @@ class PlanillaController extends Controller
         $form = $this->createForm(PlanillaType::class, $planilla);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {            
+        if ($form->isSubmitted() && $form->isValid()) {
+            $json = json_decode($form->get('data')->getData());
+            //var_dump($json);//die;
             try {
-                //$segmento->setUpdatedAt(new \DateTime());
-                //$segmento->setUpdatedBy($this->getUser());
-                //foreach($segmento->getEventos() as $evento){
-                //    $segmento->addEvento($evento);
-                //}
-                //$em->flush();
-                return new JsonResponse(array('success' => true, 'message' => 'Se modifico el Segmento'));
-            }
-            catch(\Exception $e ){
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
+                if ($this->loadPlanilla($planilla,$json)){
+                    $planilla->setUpdatedBy($this->getUser());
+                    $planilla->setUpdatedAt(new \DateTime());
+                    $em->flush();
+                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla'));
+                }else{
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
+                }
+            }catch(\Exception $e ){
+                $error = $this->processException($e);
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => $error, 'debug' => $e->getMessage()));
             }
         }
-        return $this->render("InscripcionBundle:Planilla:planilla.html.twig", array(
+        return $this->render($planilla->getTemplate(), array(
             'form' => $form->createView(),
             'planilla' => $planilla
         ));

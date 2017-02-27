@@ -458,6 +458,9 @@ class Equipo
      */
     public function cleanCompetidores()
     {
+        foreach($this->getCompetidores() as $competidor){
+            $competidor->removeEquipo($this);
+        }
         $this->competidores = [];
     }
 
@@ -588,7 +591,12 @@ class Equipo
                 "id" => $this->getId(),
                 "nombre" => $this->getNombre(),
                 "integrantes" => $this->getIntegrantesJson(),
-                "tecnico"=> $this->getDirectorTecnico() ? $this->getDirectorTecnico()->getJson() : []
+                //"tecnico"=> $this->getDirectorTecnico() ? $this->getDirectorTecnico()->getJson() : []
+                "tecnico" => array(
+                                    'nombre' => $this->getPlanilla()->getDirectorTecnicoNombre(),
+                                    'apellido' => $this->getPlanilla()->getDirectorTecnicoApellido(),
+                                    'dni' => $this->getPlanilla()->getDirectorTecnicoDni()
+                )
         );
     }
     public function getIntegrantesJson()

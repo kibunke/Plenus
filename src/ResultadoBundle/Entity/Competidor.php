@@ -216,21 +216,5 @@ class Competidor extends Persona
     {
         $this->setRol(isset($json->rol)?$json->rol:'integrante' );
         return parent::loadFromJson($json->persona);
-    }
-    
-    /**
-     * validarInscripcion
-     */
-    public function inscripcionValida($planilla)
-    {
-        try{
-            foreach ($this->getEquipos() as $equipo){
-                $equipo->getPlanilla()->inscripcionValida($planilla);
-            }
-        }catch(\Exception $e){
-            $message = $e->getMessage();
-            throw new \Exception(str_replace('%DNI%',$this->getDni(),$message));
-        }
-        return true;
-    }      
+    }  
 }

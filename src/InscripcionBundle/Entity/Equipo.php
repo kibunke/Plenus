@@ -12,6 +12,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Equipo extends Planilla
 {
+    public function getNewEquipo(){
+        return new \ResultadoBundle\Entity\Individual();
+    }
+    
+    public function getTemplate(){
+        return "InscripcionBundle:Planilla:planillaEquipo.html.twig";
+    }
+    
     /**
      * Set responsableMunicipioNombre
      *
@@ -58,5 +66,53 @@ class Equipo extends Planilla
     public function getResponsableMunicipioApellido()
     {
         return $this->responsableMunicipioApellido;
-    }    
+    }
+
+    /**
+     * Set directorTecnicoNombre
+     *
+     * @param string $directorTecnicoNombre
+     *
+     * @return Equipo
+     */
+    public function setDirectorTecnicoNombre($directorTecnicoNombre)
+    {
+        $this->directorTecnicoNombre = $directorTecnicoNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get directorTecnicoNombre
+     *
+     * @return string
+     */
+    public function getDirectorTecnicoNombre()
+    {
+        return $this->directorTecnicoNombre;
+    }
+
+    /**
+     * Set directorTecnicoApellido
+     *
+     * @param string $directorTecnicoApellido
+     *
+     * @return Equipo
+     */
+    public function setDirectorTecnicoApellido($directorTecnicoApellido)
+    {
+        $this->directorTecnicoApellido = $directorTecnicoApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get directorTecnicoApellido
+     *
+     * @return string
+     */
+    public function getDirectorTecnicoApellido()
+    {
+        return $this->directorTecnicoApellido;
+    }
 }

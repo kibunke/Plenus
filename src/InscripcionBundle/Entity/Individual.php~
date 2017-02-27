@@ -11,41 +11,60 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 
 class Individual extends Planilla
-{
-    public function getTemplate(){
-        return "InscripcionBundle:Planilla:newIndividual.html.twig";
-    }
-    
+{    
     public function getNewEquipo(){
         return new \ResultadoBundle\Entity\Individual();
     }
     
+    public function getTemplate(){
+        return "InscripcionBundle:Planilla:planillaIndividual.html.twig";
+    }
+    
     /**
-     * Get equipos
+     * Set responsableMunicipioNombre
      *
-     * @return json
+     * @param string $responsableMunicipioNombre
+     *
+     * @return Individual
      */
-    public function getJson()
+    public function setResponsableMunicipioNombre($responsableMunicipioNombre)
     {
-        $equipos = parent::getJson();
-        //foreach ($equipos as $key => $equipo){
-        //    $equipos[$key]['integrantes'][] = array(
-        //                            'id' => '',
-        //                            'order' => $equipo['orden'],
-        //                            'type' => 'inscripto',
-        //                            'persona' => array(
-        //                                'id' => '',
-        //                                'apellido' => '',
-        //                                'nombre' => '',
-        //                                'documento' => '',
-        //                                'nacimiento' => '',
-        //                                'domicilio' => '',
-        //                                'localidad' => '',
-        //                                'email' => ''
-        //                            ),
-        //                    );
-        //    //No se contemplan los sustitutos para los individuales
-        //}
-        return $equipos;
+        $this->responsableMunicipioNombre = $responsableMunicipioNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableMunicipioNombre
+     *
+     * @return string
+     */
+    public function getResponsableMunicipioNombre()
+    {
+        return $this->responsableMunicipioNombre;
+    }
+
+    /**
+     * Set responsableMunicipioApellido
+     *
+     * @param string $responsableMunicipioApellido
+     *
+     * @return Individual
+     */
+    public function setResponsableMunicipioApellido($responsableMunicipioApellido)
+    {
+        $this->responsableMunicipioApellido = $responsableMunicipioApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableMunicipioApellido
+     *
+     * @return string
+     */
+    public function getResponsableMunicipioApellido()
+    {
+        return $this->responsableMunicipioApellido;
     }
 }

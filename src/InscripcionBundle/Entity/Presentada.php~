@@ -17,15 +17,33 @@ class Presentada extends PlanillaEstado
      */
     public function __construct()
     {
-        $this->nombre = "Presentada";
-        $this->createdAt = new \DateTime();
+        $this->setNombre("Presentada");
+        parent::__construct();
     }
-
-    /**
-     * __toString
-     */    
-    public function __toString()
+    
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-        return "Estado ".$this->getNombre();
+        if($usuario->hasRole('ROLE_COORDINADOR'))
+        {
+            return array(new Observada(), new Aprobada());
+        }
+        
+        return parent::getProximosEstados($usuario);
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getClass()
+    {
+        return "badge badge-teal";
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getAbr()
+    {
+        return "Pr.";
     }
 }

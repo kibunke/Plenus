@@ -787,7 +787,7 @@ class Segmento
      *
      * @return Boolean
      */
-    public function esCoordinador()
+    public function esCoordinador($user)
     {
         foreach ($this->coordinadores as $coodinador){
             if ($coodinador->getId() == $user->getId()){

@@ -17,15 +17,53 @@ class Cargada extends PlanillaEstado
      */
     public function __construct()
     {
-        $this->nombre = "Cargada";
-        $this->createdAt = new \DateTime();
+        $this->setNombre("Cargada");
+        parent::__construct();
     }
 
     /**
-     * __toString
+     * get Class
      */    
-    public function __toString()
+    public function getClass()
     {
-        return "Estado ".$this->getNombre();
+        return "badge badge-teal";
+    }
+    
+    /**
+     * get Class
+     */    
+    public function getAbr()
+    {
+        return "Ca.";
+    }
+    
+    /**
+     * Get isRemovable
+     *
+     * @return boolean
+     */
+    public function isRemovable()
+    {
+        return true;
+    }
+    
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
+    {
+        if($usuario->hasRole('ROLE_INSCRIPTOR'))
+        {
+            return array(new Enviada());
+        }
+        
+        if($usuario->hasRole('ROLE_ORGANIZADOR'))
+        {
+            return array(new Presentada());
+        }
+        
+        if($usuario->hasRole('ROLE_COORDINADOR'))
+        {
+            return array(new Aprobada());
+        }
+
+        return parent::getProximosEstados($usuario);
     }
 }

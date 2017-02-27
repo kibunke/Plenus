@@ -80,6 +80,27 @@ abstract class Planilla
     protected $responsableMunicipioDni;
     
     /**
+     * @var string $directorTecnicoDni
+     *
+     * @ORM\Column(name="directorTecnicoDni", type="string", length=100, nullable=true)
+     */
+    protected $directorTecnicoDni;
+
+    /**
+     * @var string $directorTecnicoNombre
+     *
+     * @ORM\Column(name="directorTecnicoNombre", type="string", length=100, nullable=true)
+     */
+    protected $directorTecnicoNombre;
+    
+    /**
+     * @var string $directorTecnicoApellido
+     *
+     * @ORM\Column(name="directorTecnicoApellido", type="string", length=100, nullable=true)
+     */
+    protected $directorTecnicoApellido;
+    
+    /**
      * this is OneToMany because the historial is important
      * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla", cascade={"persist","remove"})
      */
@@ -520,6 +541,7 @@ abstract class Planilla
                                                       )
                 );
     }
+    
     private function getEquiposJson()
     {
         $equipos = array();
@@ -535,7 +557,7 @@ abstract class Planilla
      * validarInscripcion
      */
     public function inscripcionValida($planilla)
-    {
+    {    
         //Chequea que el participante no este inscripto en el segmento 
         if ($this->getSegmento() == $planilla->getSegmento())
         {
@@ -547,6 +569,28 @@ abstract class Planilla
             throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en otro equipo por el municipio de '.$this->getMunicipio()->getNombre());
         }
         
+        return true;
+    }
+    
+    /**
+     * validarInscripcion
+     */
+    public function validarInscripcion($inscripto)
+    {
+        try{
+            if (!$this->getInstitucion()){
+                if ($this->getMunicipio() != $inscripto->getMunicipio()){
+                    throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse en esta planilla porque pertenece al municipio de '.$inscripto->getMunicipio()->getNombre().'. En una inscripción MUNICIPAL todos los participantes deben pertenecer al municipio indicado en la planilla.');
+                }
+            }
+            foreach ($inscripto->getEquipos() as $equipo){
+                if ($this->id != $equipo->getPlanilla()->getId())
+                    $this->inscripcionValida($equipo->getPlanilla());
+            }
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            throw new \Exception(str_replace('%DNI%',$inscripto->getDni(),$message));
+        }
         return true;
     }
     
@@ -620,4 +664,76 @@ abstract class Planilla
        return $this->getEstado()->getProximosEstados($usuario); 
     }
     
+
+    /**
+     * Set directorTecnicoNombre
+     *
+     * @param string $directorTecnicoNombre
+     *
+     * @return Planilla
+     */
+    public function setDirectorTecnicoNombre($directorTecnicoNombre)
+    {
+        $this->directorTecnicoNombre = $directorTecnicoNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get directorTecnicoNombre
+     *
+     * @return string
+     */
+    public function getDirectorTecnicoNombre()
+    {
+        return $this->directorTecnicoNombre;
+    }
+
+    /**
+     * Set directorTecnicoApellido
+     *
+     * @param string $directorTecnicoApellido
+     *
+     * @return Planilla
+     */
+    public function setDirectorTecnicoApellido($directorTecnicoApellido)
+    {
+        $this->directorTecnicoApellido = $directorTecnicoApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get directorTecnicoApellido
+     *
+     * @return string
+     */
+    public function getDirectorTecnicoApellido()
+    {
+        return $this->directorTecnicoApellido;
+    }
+    
+    /**
+     * Get directorTecnicoDni
+     *
+     * @return string
+     */
+    public function getDirectorTecnicoDni()
+    {
+        return $this->directorTecnicoDni;
+    }
+    
+       /**
+     * Set directorTecnicoDni
+     *
+     * @param string $directorTecnicoDni
+     *
+     * @return Planilla
+     */
+    public function setDirectorTecnicoDni($directorTecnicoDni)
+    {
+        $this->directorTecnicoDni = $directorTecnicoDni;
+
+        return $this;
+    }
 }

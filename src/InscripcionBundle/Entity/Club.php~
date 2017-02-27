@@ -33,6 +33,16 @@ class Club extends Institucion
     }
     
     /**
+     * Get Discr
+     *
+     * @return string 
+     */
+    public function getDiscr()
+    {
+        return "inscripcionInstitucionalClub";
+    }
+    
+    /**
      * Get class
      *
      * @return string 
@@ -41,4 +51,52 @@ class Club extends Institucion
     {
         return "club";
     }    
+
+    /**
+     * Set responsableNombre
+     *
+     * @param string $responsableNombre
+     *
+     * @return Club
+     */
+    public function setResponsableNombre($responsableNombre)
+    {
+        $this->responsableNombre = $responsableNombre;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableNombre
+     *
+     * @return string
+     */
+    public function getResponsableNombre()
+    {
+        return $this->responsableNombre;
+    }
+
+    /**
+     * Set responsableApellido
+     *
+     * @param string $responsableApellido
+     *
+     * @return Club
+     */
+    public function setResponsableApellido($responsableApellido)
+    {
+        $this->responsableApellido = $responsableApellido;
+
+        return $this;
+    }
+
+    /**
+     * Get responsableApellido
+     *
+     * @return string
+     */
+    public function getResponsableApellido()
+    {
+        return $this->responsableApellido;
+    }
 }
