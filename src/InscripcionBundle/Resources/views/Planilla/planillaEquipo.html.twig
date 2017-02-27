@@ -1,0 +1,103 @@
+{% extends 'InscripcionBundle:Planilla:planilla.html.twig' %}
+{% block noExiste %}
+    <script>
+        {% block especiales %}
+            $.Planilla.loadEquipos = ()=>{
+                $.map(_planilla.equipos,(equipo, index)=>{
+                    $.map(equipo.integrantes,(integrante)=>{
+                        let $tr = _tr.clone();
+                        $tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.id});
+                        $tr.find(':nth-child(1)').html(index + 1);
+                        $tr.find(':nth-child(2)').html(integrante.persona.apellido)
+                        $tr.find(':nth-child(3)').html(integrante.persona.nombre)
+                        $tr.find(':nth-child(4)').html(integrante.persona.dni)
+                        $tr.find(':nth-child(5)').html(integrante.persona.fNacimiento)
+                        $tr.find(':nth-child(6)').html(integrante.persona.telefono)
+                        $tr.find(':nth-child(7)').html(integrante.persona.municipio)
+                        $tr.find(':nth-child(8)').html(integrante.persona.email)
+                        $tr.find(':nth-child(9)').html(integrante.persona.observacion)
+                        if (integrante.rol == 'inscripto'){
+                            $('#planillaBuenaFe tbody').append($tr);
+                        }else{
+                            $('#planillaBuenaFe tfoot').append($tr);
+                        }
+                    });
+                    $('#datosDirectorTecnico .nombre').text(equipo.tecnico.nombre),
+                    $('#datosDirectorTecnico .apellido').text(equipo.tecnico.apellido),
+                    $('#datosDirectorTecnico .dni').text(equipo.tecnico.dni)
+                });
+                let cantTbodyRows = $('#planillaBuenaFe tbody tr').length;
+                for (let i = cantTbodyRows; i < _planilla.parametros.maxIntegrantes; i++) {
+                    let $tr = _tr.clone();
+                    $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(i + 1)
+                    $('#planillaBuenaFe tbody').append($tr);
+                }
+                if (_planilla.parametros.maxReemplazos > 0){
+                    let cantTfootRows = $('#planillaBuenaFe tfoot tr').length;
+                    for (let j = cantTfootRows; j < _planilla.parametros.maxReemplazos; j++) {
+                        let $tr = _tr.clone();
+                        $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(j)
+                        $('#planillaBuenaFe tfoot').append($tr);
+                    }
+                }else{
+                    $('#planillaBuenaFe tfoot').remove();
+                }            
+            }
+            
+            $.Planilla.readEquipos = ()=>{
+                let $row = $('#planillaBuenaFe tbody tr:first');
+                _planilla.equipos = [{
+                        id : $row.data('idEquipo'),
+                        nombre : '',
+                        tecnico: {
+                            nombre : $('#datosDirectorTecnico .nombre').text(),
+                            apellido : $('#datosDirectorTecnico .apellido').text(),
+                            tipoDocumento : 'DNI',
+                            dni : $('#datosDirectorTecnico .dni').text()
+                        },
+                        integrantes : []
+                }];
+                $('#planillaBuenaFe tbody tr').each(function(){
+                    let $tr = $(this);
+                    let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
+                    fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
+                    _planilla.equipos[0].integrantes.push ({
+                        rol : 'inscripto',
+                        persona : {
+                            id : $tr.data('idIntegrante'),
+                            apellido : $tr.find(':nth-child(2)').text(),
+                            nombre : $tr.find(':nth-child(3)').text(),
+                            tipoDocumento : 'DNI',
+                            dni : $tr.find(':nth-child(4)').text(),
+                            fNacimiento : fNacimiento,
+                            telefono : $tr.find(':nth-child(6)').text(),
+                            municipio : $tr.find(':nth-child(7)').text(),
+                            email : $tr.find(':nth-child(8)').text(),
+                            observacion : $tr.find(':nth-child(9)').text()
+                        }
+                    });
+                });
+                $('#planillaBuenaFe tfoot tr').each(function(){
+                    let $tr = $(this);
+                    let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
+                    fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
+                    _planilla.equipos[0].integrantes.push ({
+                        rol : 'sustituto',
+                        persona : {
+                            id : $tr.data('idIntegrante'),
+                            apellido : $tr.find(':nth-child(2)').text(),
+                            nombre : $tr.find(':nth-child(3)').text(),
+                            tipoDocumento : 'DNI',
+                            dni : $tr.find(':nth-child(4)').text(),
+                            fNacimiento : fNacimiento,
+                            telefono : $tr.find(':nth-child(6)').text(),
+                            municipio : $tr.find(':nth-child(7)').text(),
+                            email : $tr.find(':nth-child(8)').text(),
+                            observacion : $tr.find(':nth-child(9)').text()
+                        }
+                    });
+                });
+            }
+        {% endblock %}
+    </script>
+{% endblock %}

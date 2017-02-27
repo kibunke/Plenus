@@ -1,0 +1,73 @@
+{% extends 'InscripcionBundle:Planilla:planilla.html.twig' %}
+{% block noExiste %}
+    <script>
+        {% block especiales %}
+            $.Planilla.loadEquipos = ()=>{
+                $.map(_planilla.equipos,(equipo, index)=>{
+                    $.map(equipo.integrantes,(integrante)=>{
+                        let $tr = _tr.clone();
+                        $tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.persona.id});
+                        $tr.find(':nth-child(1)').html(index + 1);
+                        $tr.find(':nth-child(2)').html(integrante.persona.apellido)
+                        $tr.find(':nth-child(3)').html(integrante.persona.nombre)
+                        $tr.find(':nth-child(4)').html(integrante.persona.dni)
+                        $tr.find(':nth-child(5)').html(integrante.persona.fNacimiento)
+                        $tr.find(':nth-child(6)').html(integrante.persona.telefono)
+                        $tr.find(':nth-child(7)').html(integrante.persona.municipio)
+                        $tr.find(':nth-child(8)').html(integrante.persona.email)
+                        $tr.find(':nth-child(9)').html(integrante.persona.observacion)
+                        if (integrante.rol == 'inscripto'){
+                            $('#planillaBuenaFe tbody').append($tr);
+                        }else{
+                            $('#planillaBuenaFe tfoot').append($tr);
+                        }
+                    });
+                    $('#datosDirectorTecnico .nombre').text(equipo.tecnico.nombre),
+                    $('#datosDirectorTecnico .apellido').text(equipo.tecnico.apellido),
+                    $('#datosDirectorTecnico .dni').text(equipo.tecnico.dni)
+                });
+                
+                for (let i = _planilla.equipos.length; i < _planilla.parametros.maxEqPlanilla; i++) {
+                    let $tr = _tr.clone();
+                    $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(i + 1)
+                    $('#planillaBuenaFe tbody').append($tr);
+                }
+                $('#planillaBuenaFe tfoot').remove();
+            }
+            $.Planilla.readEquipos = ()=>{
+                _planilla.equipos = [];
+                $('#planillaBuenaFe tbody tr').each(function(){
+                    let $tr = $(this);
+                    let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
+                    fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
+                    _planilla.equipos.push ({
+                        id : $tr.data('idEquipo'),
+                        nombre : '',
+                        tecnico: {
+                            nombre : $('#datosDirectorTecnico .nombre').text(),
+                            apellido : $('#datosDirectorTecnico .apellido').text(),
+                            tipoDocumento : 'DNI',
+                            dni : $('#datosDirectorTecnico .dni').text()
+                        },
+                        integrantes : [{
+                            rol : 'inscripto',
+                            persona : {
+                                id : $tr.data('idIntegrante'),
+                                apellido : $tr.find(':nth-child(2)').text(),
+                                nombre : $tr.find(':nth-child(3)').text(),
+                                tipoDocumento : 'DNI',
+                                dni : $tr.find(':nth-child(4)').text(),
+                                fNacimiento : fNacimiento,
+                                telefono : $tr.find(':nth-child(6)').text(),
+                                municipio : $tr.find(':nth-child(7)').text(),
+                                email : $tr.find(':nth-child(8)').text(),
+                                observacion : $tr.find(':nth-child(9)').text()
+                            }
+                        }]
+                    });               
+                });            
+            }
+            
+        {% endblock %}
+    </script>
+{% endblock %}
