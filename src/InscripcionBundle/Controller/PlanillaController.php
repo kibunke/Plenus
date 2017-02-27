@@ -70,7 +70,7 @@ class PlanillaController extends Controller
         
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
-                "id"        => $planilla->getId(),
+                "id"        => str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT),
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
                 "inscriptos"   => $planilla->getTotalInscriptos(),
                 "estado"  => $planilla->getEstado()->getNombreRaw(),
@@ -112,7 +112,7 @@ class PlanillaController extends Controller
                     $planilla->addEstado($estado);
                     $em->persist($planilla);
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla'));
+                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -305,7 +305,7 @@ class PlanillaController extends Controller
                     $planilla->setUpdatedBy($this->getUser());
                     $planilla->setUpdatedAt(new \DateTime());
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla'));
+                    return new JsonResponse(array('success' => true, 'message' => 'Se modificó la Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
