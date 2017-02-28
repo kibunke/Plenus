@@ -201,10 +201,10 @@ class SegmentoController extends Controller
                     return new JsonResponse(array('success' => true, 'message' => 'Se eliminó el Segmento'));
                 }
                 catch(\Exception $e ){
-                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar eliminar el segmento!', 'debug' => $e->getMessage()));
                 }
             }else{
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no debe terner evenos ni planillas de buena fe asociados'));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no debe tener evenos ni planillas de buena fe asociados'));
             }
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));

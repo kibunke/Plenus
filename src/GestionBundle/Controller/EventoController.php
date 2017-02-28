@@ -167,4 +167,28 @@ class EventoController extends Controller
             'form'   => $form->createView(),
         );
     }
+    
+    /**
+     * @Route("/{id}/delete", name="evento_delete", condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
+     */
+    public function deleteAction(Request $request,Evento $entity)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if ($entity){
+            if(!count($entity->getEtapas()) && !count($entity->getEquipos())){
+                try {
+                    $em->remove($entity);
+                    $em->flush();
+                    return new JsonResponse(array('success' => true, 'message' => 'Se eliminó el Evento'));
+                }
+                catch(\Exception $e ){
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar eliminar el evento!', 'debug' => $e->getMessage()));
+                }
+            }else{
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El evento no debe tener etapas ni equipos asociados'));
+            }
+        }
+        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El evento no exite'));
+    }    
 }
