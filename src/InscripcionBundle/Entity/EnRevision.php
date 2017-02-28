@@ -45,7 +45,7 @@ class EnRevision extends PlanillaEstado
     {
         if($usuario->hasRole('ROLE_INSCRIPTOR'))
         {
-            return array(new Cargada());
+            return array(new Enviada());
         }
         
         return parent::getProximosEstados($usuario);

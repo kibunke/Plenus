@@ -25,7 +25,7 @@ class Observada extends PlanillaEstado
     {
         if($usuario->hasRole('ROLE_ORGANIZADOR'))
         {
-            return array(new EnRevision());
+            return array(new EnRevision(),new Presentada());
         }
         
         return parent::getProximosEstados($usuario);
