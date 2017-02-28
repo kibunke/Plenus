@@ -351,7 +351,7 @@ class EventoRepository extends EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["e.id","d.nombre ".$request->get('order')[0]['dir'].", e.orden","e.nombre,d.nombreRecursivo,c.nombre,g.nombre,m.nombre"];
+        $columns = ["e.id","e.orden","d.nombre ".$request->get('order')[0]['dir'].", e.orden","e.nombre,d.nombreRecursivo,c.nombre,g.nombre,m.nombre"];
         $where = "( e.id LIKE ?1 OR
                     e.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
