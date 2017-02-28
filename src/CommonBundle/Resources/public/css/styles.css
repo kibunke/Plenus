@@ -6036,6 +6036,10 @@ div.timeline .column_center .timeline_element:before, div.timeline .column_cente
   background-color: #3D9400 !important;
   border-color: #3D9400 !important;
 }
+.badge-primary {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
 
 /* line 123, ../sass/partials/_calendar.scss */
 .fc-border-separate tr.fc-last th {

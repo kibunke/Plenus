@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class PersonalJuegosRepository extends EntityRepository {
 
     /**
-     * Retorna el listado de Personal de los Juegos BA que estan cargados en un area cuyo id se proporciona como parámetro
+     * Retorna el listado de Personal de los Juegos Bonaerenses que estan cargados en un area cuyo id se proporciona como parámetro
      */
     public function getAcreditadosAll($idArea) {
         return $this->createQueryBuilder('personal')

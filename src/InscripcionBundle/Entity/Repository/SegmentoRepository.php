@@ -44,7 +44,7 @@ class SegmentoRepository extends EntityRepository
                     . $this->applyRoleFilter($user,$auth_checker);
                     
         return $this->getEntityManager()
-                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, 0 as HIDDEN inscriptos
+                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, COUNT(com.id) as HIDDEN inscriptos
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
@@ -53,6 +53,9 @@ class SegmentoRepository extends EntityRepository
                                         JOIN s.modalidad m
                                         JOIN s.genero g
                                         LEFT JOIN s.eventos e
+                                        LEFT JOIN s.planillas p
+                                        LEFT JOIN p.equipos eq
+                                        LEFT JOIN eq.competidores com
                                         WHERE $where
                                         GROUP BY s.id
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
@@ -106,6 +109,31 @@ class SegmentoRepository extends EntityRepository
                                         FROM InscripcionBundle:Segmento s
                                         WHERE $where")
                         ->getSingleScalarResult();
+    }
+    
+    public function getTotalInscriptos($segmento)
+    {
+        $where = "s.id = ". $segmento->getId();
+        $estados = array_map('current',$this->getEntityManager()
+                        ->createQuery(" SELECT MAX(e.id)
+                                        FROM InscripcionBundle:Segmento s
+                                        JOIN s.planillas p
+                                        JOIN p.estados e
+                                        WHERE $where
+                                        GROUP BY p.id")
+                        ->getArrayResult());
+        $estados[]=0;
+        $where .= " AND e.id IN (".implode(",",$estados).")";
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(com.id) as cant, e.nombre,MAX(e.id) 
+                                        FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.planillas p
+                                        LEFT JOIN p.estados e
+                                        LEFT JOIN p.equipos eq
+                                        LEFT JOIN eq.competidores com
+                                        WHERE $where
+                                        GROUP BY s.id,e.nombre ")
+                        ->getScalarResult();
     }
     
     private function applyRoleFilter($user,$auth_checker)

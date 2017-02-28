@@ -794,7 +794,29 @@ class Segmento
                 return true;
             }
         }
-        
         return false;
+    }
+    
+    /**
+     * getTotalInscriptosFromQuery
+     *
+     * @return Boolean
+     */
+    public function getTotalInscriptosFromQuery($arr)
+    {
+        $result = array(
+            "aprobadas" => 0,
+            "total" => 0
+        );
+        //echo "#####";
+        foreach ($arr as $item){
+            //echo $item['nombre']."/".$item['cant']."-";
+            $result['total'] += $item['cant'];
+            if ($item['nombre'] == 'Aprobada'){
+                $result['aprobadas'] += $item['cant'];
+            }
+        }
+        return $result;
     }    
+    
 }
