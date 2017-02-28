@@ -44,14 +44,14 @@ class SegmentoRepository extends EntityRepository
                     . $this->applyRoleFilter($user,$auth_checker);
                     
         return $this->getEntityManager()
-                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(e.id) AS HIDDEN eventos, COUNT(u.id) AS HIDDEN coordinadores, COUNT(com.id) as HIDDEN inscriptos
+                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(DISTINCT(e)) AS HIDDEN eventos, COUNT(DISTINCT(u)) AS HIDDEN coordinadores, COUNT(DISTINCT(com)) as HIDDEN inscriptos
                                         FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
                                         JOIN s.categoria c
                                         JOIN s.modalidad m
                                         JOIN s.genero g
+                                        LEFT JOIN s.coordinadores u
                                         LEFT JOIN s.eventos e
                                         LEFT JOIN s.planillas p
                                         LEFT JOIN p.equipos eq
@@ -125,7 +125,7 @@ class SegmentoRepository extends EntityRepository
         $estados[]=0;
         $where .= " AND e.id IN (".implode(",",$estados).")";
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(com.id) as cant, e.nombre,MAX(e.id) 
+                        ->createQuery(" SELECT COUNT(com.id) as cant, e.nombre
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.planillas p
                                         LEFT JOIN p.estados e
