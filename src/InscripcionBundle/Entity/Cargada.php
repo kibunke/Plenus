@@ -26,7 +26,7 @@ class Cargada extends PlanillaEstado
      */    
     public function getClass()
     {
-        return "badge badge-teal";
+        return "badge badge-inverter";
     }
     
     /**
@@ -43,6 +43,16 @@ class Cargada extends PlanillaEstado
      * @return boolean
      */
     public function isRemovable()
+    {
+        return true;
+    }
+    
+    /**
+     * Get isEditable
+     *
+     * @return boolean
+     */
+    public function isEditable()
     {
         return true;
     }

@@ -267,6 +267,7 @@
                 $.Movimiento.fondo.update();
                     
                 _table=$('#personalTable').dataTable( {
+                "autoWidth": false,
                     "sDom":"tip",
                     "processing": true,
                     "serverSide": true,

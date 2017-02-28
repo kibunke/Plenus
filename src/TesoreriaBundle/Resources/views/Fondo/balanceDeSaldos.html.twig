@@ -110,6 +110,7 @@
             $.Fondo.init = function() {               
                 totales = [0,0,0];
                 _tableAreas=$('#balanceTable').dataTable( {
+                    "autoWidth": false,
                     "language" : {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },

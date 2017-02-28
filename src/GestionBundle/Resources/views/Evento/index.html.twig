@@ -104,6 +104,7 @@
             $.Default = $.Default || {};
             $.Default.init = function() {
                 _table = $('#eventoTable').dataTable( {
+                    "autoWidth": false,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {

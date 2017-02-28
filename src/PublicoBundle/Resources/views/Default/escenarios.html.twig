@@ -49,6 +49,7 @@
                     $.Default = $.Default || {};
                     $.Default.initTable = function() {
                             table=$('#escenarioTable').dataTable( {
+                                "autoWidth": false,
                                 "language": {
                                     "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                                 },                

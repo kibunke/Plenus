@@ -202,6 +202,7 @@
     <script>
         $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
         $('#userTable').dataTable( {
+            "autoWidth": false,
             "language": {
                 "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
             },                

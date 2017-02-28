@@ -73,6 +73,7 @@
         });
 
         table = $('table.acreditacionTablas').dataTable({
+            "autoWidth": false,
             "language": {
                 "url": urlJasonEsp
             },

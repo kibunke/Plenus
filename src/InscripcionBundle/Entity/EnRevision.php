@@ -21,6 +21,26 @@ class EnRevision extends PlanillaEstado
         parent::__construct();
     }
 
+    /**
+     * Get isRemovable
+     *
+     * @return boolean
+     */
+    public function isRemovable()
+    {
+        return true;
+    }
+    
+    /**
+     * Get isEditable
+     *
+     * @return boolean
+     */
+    public function isEditable()
+    {
+        return true;
+    }
+    
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
         if($usuario->hasRole('ROLE_INSCRIPTOR'))
@@ -36,7 +56,7 @@ class EnRevision extends PlanillaEstado
      */    
     public function getClass()
     {
-        return "badge badge-teal";
+        return "badge badge-default";
     }
     
     /**
@@ -46,4 +66,38 @@ class EnRevision extends PlanillaEstado
     {
         return "Re.";
     }
+    
+    /**
+     * get icon
+     */    
+    public function getIcon()
+    {
+        return "reply";
+    }
+    
+    /**
+     * Get getRoute
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return 'planilla_toggle_enrevision';
+    }
+    
+    /**
+     * get ClassButton
+     */    
+    public function getClassButton()
+    {
+        return "danger";
+    }
+
+    /**
+     * get Title
+     */    
+    public function getTitleBefore()
+    {
+        return "Revisar planilla";
+    }    
 }

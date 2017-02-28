@@ -361,7 +361,7 @@ class DatosTesoreria {
     /**
      * Get pagoProvincia
      *
-     * @return \TesoreriaBundle\Entity\JuegosBA/CommonBundle/Entity/Provincia 
+     * @return /CommonBundle/Entity/Provincia 
      */
     public function getPagoProvincia()
     {
@@ -373,7 +373,7 @@ class DatosTesoreria {
     /**
      * Get pagoPartido
      *
-     * @return \TesoreriaBundle\Entity\JuegosBA/CommonBundle/Entity/Partido 
+     * @return /CommonBundle/Entity/Partido 
      */
     public function getPagoPartido()
     {

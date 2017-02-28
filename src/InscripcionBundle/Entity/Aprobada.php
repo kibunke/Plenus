@@ -26,7 +26,7 @@ class Aprobada extends PlanillaEstado
      */    
     public function getClass()
     {
-        return "badge badge-teal";
+        return "badge badge-success";
     }
     
     /**
@@ -36,4 +36,38 @@ class Aprobada extends PlanillaEstado
     {
         return "Ap.";
     }
+    
+    /**
+     * get icon
+     */    
+    public function getIcon()
+    {
+        return "share";
+    }
+
+    /**
+     * Get getRoute
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return 'planilla_toggle_aprobada';
+    }
+    
+    /**
+     * get ClassButton
+     */    
+    public function getClassButton()
+    {
+        return "success";
+    }
+
+    /**
+     * get Title
+     */    
+    public function getTitleBefore()
+    {
+        return "Aprobar planilla";
+    }    
 }

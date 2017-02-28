@@ -223,6 +223,7 @@
                 $.Movimiento.fondo.update();
                 $.Movimiento.area.loadTable();
                 _tablePersonas = $('#personalTable').dataTable( {
+                    "autoWidth": false,
                     //"sDom":"tip",
                     //"dom":'<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
                     "dom":'<"top"<"col-sm-12"p><"clear">>rt<"bottom"ip<"clear">>',
@@ -439,6 +440,7 @@
                 $('#panel-area-list').block(_jDefaultBlock);
                 $('#cont_table').load('{{ path('tesoreria_movimiento_list_areas') }}',function(){
                     _tableAreas=$('#areaTable').dataTable( {
+                        "autoWidth": false,
                         //"sDom":"tip",
                         "dom":'<"top"fl<"col-sm-12"p><"clear">>rt<"bottom"ip<"clear">>',
                         "language" : {
@@ -763,6 +765,7 @@
             $.Movimiento.fondo.initTable = function() {
                 setTimeout(function(){
                     $("#tablaAux").dataTable( {
+                        "autoWidth": false,
                         "language": {
                             "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                         },                

@@ -166,6 +166,7 @@
             $.Dashboard.initTable = function() {
                 setTimeout(function(){
                     $("#tablaAux").dataTable( {
+                    "autoWidth": false,
                         "language": {
                             "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                         },                

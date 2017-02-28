@@ -107,6 +107,7 @@
             $.Segmento.init = function() {
                 //$(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
                 _table = $('#segmentoTable').dataTable( {
+                    "autoWidth": false,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {

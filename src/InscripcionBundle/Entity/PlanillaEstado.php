@@ -39,6 +39,13 @@ abstract class PlanillaEstado
      */
     private $nombre;
     
+     /**
+     * @var string $observacion
+     *
+     * @ORM\Column(name="observacion", type="text", nullable=true)
+     */
+    private $observacion;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Planilla", inversedBy="estados")
      * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
@@ -195,8 +202,57 @@ abstract class PlanillaEstado
         return false;
     }
     
+    /**
+     * Get isEditable
+     *
+     * @return boolean
+     */
+    public function isEditable()
+    {
+        return false;
+    }
+    
+    /**
+     * Get getRoute
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+    }
+    
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
         return array();    
+    }
+    /**
+     * get icon
+     */    
+    public function getIcon()
+    {
+    }    
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     *
+     * @return PlanillaEstado
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+
+        return $this;
+    }
+
+    /**
+     * Get observacion
+     *
+     * @return string
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
     }
 }

@@ -17,7 +17,7 @@ class Enviada extends PlanillaEstado
      */
     public function __construct()
     {
-        $this->nombre = "Enviada";
+        $this->setNombre("Enviada");
         parent::__construct();
     }
     
@@ -36,7 +36,7 @@ class Enviada extends PlanillaEstado
      */    
     public function getClass()
     {
-        return "badge badge-teal";
+        return "badge badge-info";
     }
     
     /**
@@ -45,5 +45,39 @@ class Enviada extends PlanillaEstado
     public function getAbr()
     {
         return "En.";
+    }
+
+    /**
+     * get icon
+     */    
+    public function getIcon()
+    {
+        return "share";
+    }
+    
+    /**
+     * Get getRoute
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return 'planilla_toggle_enviada';
+    }
+    
+    /**
+     * get ClassButton
+     */    
+    public function getClassButton()
+    {
+        return "info";
+    }
+
+    /**
+     * get Title
+     */    
+    public function getTitleBefore()
+    {
+        return "Enviar planilla";
     }
 }

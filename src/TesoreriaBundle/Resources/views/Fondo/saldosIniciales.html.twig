@@ -104,6 +104,7 @@
             $.Fondo.init = function() {               
                 total = 0;
                 _tableAreas=$('#saldosTable').dataTable( {
+                    "autoWidth": false,
                     "language" : {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },

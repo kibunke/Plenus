@@ -159,6 +159,7 @@
             }
             $.Default.initTable = function() {
                 table=$('#analiticalTable').dataTable( {
+                    "autoWidth": false,
                     "language": {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },                

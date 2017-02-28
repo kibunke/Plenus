@@ -68,6 +68,7 @@
             });
         });
         table = $('#acreditacionTable').dataTable({
+            "autoWidth": false,
             //paging: false,
             "language": {
                 "url": url

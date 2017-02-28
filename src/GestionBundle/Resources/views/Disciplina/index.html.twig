@@ -7,7 +7,7 @@
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
-                <h1><i class="fa fa-list-ol"></i> Listado de Disciplinas <small>Todo lo referido a las disciplinas de los JuegosBA</small></h1>
+                <h1><i class="fa fa-list-ol"></i> Listado de Disciplinas <small>Todo lo referido a las disciplinas de los Juegos Bonaerenses</small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -111,6 +111,7 @@
             $.Default = $.Default || {};
             $.Default.init = function() {
                 _table = $('#disciplinaTable').dataTable( {
+                    "autoWidth": false,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {

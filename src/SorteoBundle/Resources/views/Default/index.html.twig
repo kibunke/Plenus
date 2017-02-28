@@ -117,6 +117,7 @@
             $.Default = $.Default || {};
             $.Default.init = function() {              
                 table=$('#inscripcionTable').dataTable( {
+                    "autoWidth": false,
                     "language": {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },

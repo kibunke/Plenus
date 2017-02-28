@@ -243,6 +243,7 @@
             $.TableExport = $.TableExport || {};
             $.TableExport.init = function() {
                 table=$(exportTable).dataTable( {
+                    "autoWidth": false,
                     "language": {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },                

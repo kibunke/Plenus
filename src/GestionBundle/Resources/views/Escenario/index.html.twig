@@ -149,6 +149,7 @@
             $.Default = $.Default || {};
             $.Default.init = function() {        
                 table=$('#eventoTable').dataTable( {
+                    "autoWidth": false,
                     "language": {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },                

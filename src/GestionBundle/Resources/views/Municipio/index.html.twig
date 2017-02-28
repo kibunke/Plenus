@@ -59,6 +59,7 @@
             $.Municipio = $.Municipio || {};
             $.Municipio.init = function() {
                 _table = $('#municipioTable').dataTable( {
+                    "autoWidth": false,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {

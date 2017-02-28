@@ -233,6 +233,7 @@
             $.Equipo.init = function() {
                 $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
                 table=$('#participantesTable').dataTable( {
+                    "autoWidth": false,
                     "language": {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },

@@ -61,6 +61,7 @@
             });
         });
         table = $('#listadoTable').dataTable({
+            "autoWidth": false,
             //paging: false,
             "language": {
                 "url": url

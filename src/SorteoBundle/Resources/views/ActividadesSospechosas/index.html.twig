@@ -225,6 +225,7 @@
             $.Default = $.Default || {};
             $.Default.init = function() {
                 table=$('#irregularidadesTable').dataTable( {
+                    "autoWidth": false,
                     "language": {
                         "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
                     },

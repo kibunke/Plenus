@@ -642,6 +642,16 @@ abstract class Planilla
     }
 
     /**
+     * Get isEditable
+     *
+     * @return boolean
+     */
+    public function isEditable()
+    {
+        return $this->getEstado()->isEditable();
+    }
+    
+    /**
      * Get prepareToDelete
      *
      * @return boolean

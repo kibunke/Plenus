@@ -73,7 +73,10 @@ class PlanillaController extends Controller
                 "id"        => str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT),
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
                 "inscriptos"   => $planilla->getTotalInscriptos(),
-                "estado"  => $planilla->getEstado()->getNombreRaw(),
+                "estado"  => array(
+                        "nombre" => $planilla->getEstado()->getNombreRaw(),
+                        "observacion" => $planilla->getEstado()->getObservacion()
+                    ),
                 "actions"   => $this->renderView('InscripcionBundle:Planilla:actions.html.twig', array('entity' => $planilla)),
             );
         }
@@ -339,7 +342,7 @@ class PlanillaController extends Controller
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
                 }
             }else{
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no ouede eliminarse en su estado actual.'));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no puede eliminarse en su estado actual.'));
             }
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no está registrada en el sistema.'));

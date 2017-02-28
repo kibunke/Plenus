@@ -7,6 +7,7 @@
         var totales2 = [0, 0, 0, 0];
         urlExport = urlExp;
         table = $('#acreditacionTable').dataTable({
+            "autoWidth": false,
             "language": {
                 "url": url
             },

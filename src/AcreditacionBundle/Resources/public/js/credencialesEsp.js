@@ -71,6 +71,7 @@
         var totales2 = [0, 0, 0, 0];
         urlExport = urlExp;
         table = $('#credencialesEspTable').dataTable({
+            "autoWidth": false,
             "language": {
                 "url": url
             },
