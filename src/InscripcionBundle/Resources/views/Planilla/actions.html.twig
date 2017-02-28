@@ -1,10 +1,10 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
-    <a disabled href="#1" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+    <button onclick="$.Default.show('{{ path('planilla_show', { 'id': entity.id }) }}')" class="btn btn-xs btn-light-azure"><i class="fa fa-eye"></i></button>
     {% if entity.isEditable() %}
-        <button onclick="$.Default.edit('{{ path('planilla_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
+        <button onclick="$.Default.edit('{{ path('planilla_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green"><i class="fa fa-edit"></i></button>
     {% endif %}
     {% if entity.isRemovable() %}
-        <button onclick="$.Default.deleteConfirm('{{ path('planilla_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
+        <button onclick="$.Default.deleteConfirm('{{ path('planilla_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red"><i class="fa fa-times fa fa-white"></i></button>
     {% endif %}
     {% for estado in entity.getEstado().getProximosEstados(app.user) %}
         <button onclick="$.Default.changeStateConfirm('{{ path(estado.getRoute, { 'id': entity.id }) }}')" title="{{ estado.getTitleBefore() }}" class="btn btn-xs btn-{{estado.getClassButton()}}"><i class="fa fa-{{ estado.getIcon() }}"></i></button>

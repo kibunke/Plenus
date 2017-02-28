@@ -45,11 +45,12 @@ class PlanillaController extends Controller
      *
      * @Route("/{id}/show", name="planilla_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
-     * @Template()
      */
-    public function showAction()
+    public function showAction(Planilla $planilla)
     {
-        return array();
+        return $this->render($planilla->getTemplateShow(), array(
+            'planilla' => $planilla
+        ));
     }
     
     /**

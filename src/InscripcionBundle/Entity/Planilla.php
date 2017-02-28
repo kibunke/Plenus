@@ -746,4 +746,8 @@ abstract class Planilla
 
         return $this;
     }
+    
+    public function getTemplateShow(){
+        return "InscripcionBundle:Planilla:planillaShow.html.twig";
+    }    
 }
