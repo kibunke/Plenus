@@ -43,7 +43,7 @@ class EnRevision extends PlanillaEstado
     
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-        if($usuario->hasRole('ROLE_INSCRIPTOR'))
+        if($usuario->hasRole('ROLE_INSCRIPTOR') || $usuario->hasRole('ROLE_ADMIN'))
         {
             return array(new Enviada());
         }
