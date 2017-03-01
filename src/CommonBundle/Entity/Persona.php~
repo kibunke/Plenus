@@ -101,6 +101,14 @@ class Persona
     private $tipoDocumento;
     
     /**
+     * @var Genero $genero
+     * 
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Genero")
+     * @ORM\JoinColumn(name="genero_id", referencedColumnName="id")
+     */
+    private $genero;
+    
+    /**
      * @var string $email
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
@@ -766,6 +774,35 @@ class Persona
         if (isset($json->email) && strlen($json->email))
             $this->setEmail($json->email);
         if (isset($json->observacion))
-            $this->setEmail($json->observacion);            
+            $this->setObservacion($json->observacion);
+        if (isset($json->sexo) &&
+            is_object($json->sexo) &&
+            ($json->sexo->getNombre() == 'Masculino' || $json->sexo->getNombre() == 'Femenino')){
+            $this->setGenero($json->sexo);
+        }
     }    
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     *
+     * @return Persona
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+
+        return $this;
+    }
+
+    /**
+     * Get observacion
+     *
+     * @return string
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
+    }
 }

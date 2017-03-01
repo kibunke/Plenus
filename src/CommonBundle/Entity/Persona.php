@@ -101,6 +101,14 @@ class Persona
     private $tipoDocumento;
     
     /**
+     * @var Genero $genero
+     * 
+     * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Genero")
+     * @ORM\JoinColumn(name="genero_id", referencedColumnName="id")
+     */
+    private $genero;
+    
+    /**
      * @var string $email
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
@@ -734,6 +742,7 @@ class Persona
                 'id' => $this->getId(),
                 'apellido' => $this->getApellido(),
                 'nombre' => $this->getNombre(),
+                'sexo' => $this->getGenero() ? $this->getGenero()->getNombre() : '',
                 'tipoDocumento' => $this->getTipoDocumento()->getNombre(),
                 'dni' => $this->getDni(),
                 'fNacimiento' => $this->getFNacimiento()->format('d/m/Y'),
@@ -766,7 +775,12 @@ class Persona
         if (isset($json->email) && strlen($json->email))
             $this->setEmail($json->email);
         if (isset($json->observacion))
-            $this->setObservacion($json->observacion);            
+            $this->setObservacion($json->observacion);
+        if (isset($json->sexo) &&
+            is_object($json->sexo) &&
+            ($json->sexo->getNombre() == 'Masculino' || $json->sexo->getNombre() == 'Femenino')){
+            $this->setGenero($json->sexo);
+        }
     }    
 
     /**
@@ -791,5 +805,29 @@ class Persona
     public function getObservacion()
     {
         return $this->observacion;
+    }
+
+    /**
+     * Set genero
+     *
+     * @param \ResultadoBundle\Entity\Genero $genero
+     *
+     * @return Persona
+     */
+    public function setGenero(\ResultadoBundle\Entity\Genero $genero = null)
+    {
+        $this->genero = $genero;
+
+        return $this;
+    }
+
+    /**
+     * Get genero
+     *
+     * @return \ResultadoBundle\Entity\Genero
+     */
+    public function getGenero()
+    {
+        return $this->genero;
     }
 }

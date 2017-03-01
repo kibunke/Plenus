@@ -3,19 +3,20 @@
     <script>
         {% block especiales %}
             $.Planilla.loadEquipos = ()=>{
-                $.map(_planilla.equipos,(equipo, index)=>{
-                    $.map(equipo.integrantes,(integrante)=>{
+                $.map(_planilla.equipos,(equipo)=>{
+                    $.map(equipo.integrantes,(integrante, index)=>{
                         let $tr = _tr.clone();
                         $tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.id});
                         $tr.find(':nth-child(1)').html(index + 1);
-                        $tr.find(':nth-child(2)').html(integrante.persona.apellido)
-                        $tr.find(':nth-child(3)').html(integrante.persona.nombre)
-                        $tr.find(':nth-child(4)').html(integrante.persona.dni)
-                        $tr.find(':nth-child(5)').html(integrante.persona.fNacimiento)
-                        $tr.find(':nth-child(6)').html(integrante.persona.telefono)
-                        $tr.find(':nth-child(7)').html(integrante.persona.municipio)
-                        $tr.find(':nth-child(8)').html(integrante.persona.email)
-                        $tr.find(':nth-child(9)').html(integrante.persona.observacion)
+                        $tr.find(':nth-child(2)').html(integrante.persona.dni);
+                        $tr.find(':nth-child(3)').html(integrante.persona.apellido);
+                        $tr.find(':nth-child(4)').html(integrante.persona.nombre);
+                        $tr.find(':nth-child(5)').html(integrante.persona.sexo);
+                        $tr.find(':nth-child(6)').html(integrante.persona.fNacimiento);
+                        $tr.find(':nth-child(7)').html(integrante.persona.telefono);
+                        $tr.find(':nth-child(8)').html(integrante.persona.municipio);
+                        $tr.find(':nth-child(9)').html(integrante.persona.email);
+                        $tr.find(':nth-child(10)').html(integrante.persona.observacion);
                         if (integrante.rol == 'inscripto'){
                             $('#planillaBuenaFe tbody').append($tr);
                         }else{
@@ -59,42 +60,16 @@
                 }];
                 $('#planillaBuenaFe tbody tr').each(function(){
                     let $tr = $(this);
-                    let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
-                    fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
                     _planilla.equipos[0].integrantes.push ({
                         rol : 'inscripto',
-                        persona : {
-                            id : $tr.data('idIntegrante'),
-                            apellido : $tr.find(':nth-child(2)').text(),
-                            nombre : $tr.find(':nth-child(3)').text(),
-                            tipoDocumento : 'DNI',
-                            dni : $tr.find(':nth-child(4)').text(),
-                            fNacimiento : fNacimiento,
-                            telefono : $tr.find(':nth-child(6)').text(),
-                            municipio : $tr.find(':nth-child(7)').text(),
-                            email : $tr.find(':nth-child(8)').text(),
-                            observacion : $tr.find(':nth-child(9)').text()
-                        }
+                        persona : $.Planilla.getJsonPersona($tr)
                     });
                 });
                 $('#planillaBuenaFe tfoot tr').each(function(){
                     let $tr = $(this);
-                    let fNacimiento = $tr.find(':nth-child(5)').text().split('/');
-                    fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
                     _planilla.equipos[0].integrantes.push ({
                         rol : 'sustituto',
-                        persona : {
-                            id : $tr.data('idIntegrante'),
-                            apellido : $tr.find(':nth-child(2)').text(),
-                            nombre : $tr.find(':nth-child(3)').text(),
-                            tipoDocumento : 'DNI',
-                            dni : $tr.find(':nth-child(4)').text(),
-                            fNacimiento : fNacimiento,
-                            telefono : $tr.find(':nth-child(6)').text(),
-                            municipio : $tr.find(':nth-child(7)').text(),
-                            email : $tr.find(':nth-child(8)').text(),
-                            observacion : $tr.find(':nth-child(9)').text()
-                        }
+                        persona :  $.Planilla.getJsonPersona($tr)
                     });
                 });
             }

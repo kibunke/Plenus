@@ -84,9 +84,10 @@
                 <thead>
                     <tr>
                         <th class="text-center validate-no-edit"><i class="fa fa-hashtag" aria-hidden="true"></i></th>
+                        <th class="text-center validate-number">N° documento</th>
                         <th class="validate-text">Apellido</th>
                         <th class="validate-text">Nombres</th>
-                        <th class="text-center validate-number">N° documento</th>
+                        <th class="{% if planilla.segmento.genero.nombre != 'Mixto' %} validate-no-edit-td {% endif %} validate-sexo">Sexo</th>
                         <th class="text-center validate-date">F. nacimiento</th>
                         <th class="validate-text">Teléfono</th>
                         <th class="validate-municipio">Municipio</th>
@@ -97,7 +98,7 @@
                 <tbody></tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="9" class="text-center">Sustitutos</td>
+                        <td colspan="10" class="text-center">Sustitutos</td>
                     </tr>
                 </tfoot>
             </table>
@@ -253,12 +254,16 @@
             formatDate = (date) => {
                 return date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
             },
-            validateNumber = (value)=>{
-                return !isNaN(parseFloat(value))
+            validateNumber = (value) => {
+                if (!isNaN(parseFloat(value))
                         && isFinite(value)
-                        && value > 1000000 && value < 100000000;
+                        && value > 1000000 && value < 100000000){
+                    //$.Planilla.loadParticipante(value);
+                    return true;
+                }
+                return false;
             },
-            validateDate = (value)=>{
+            validateDate = (value) => {
                 let f = value.split('/'),
                     d = new Date(f[2],f[1]-1,f[0]);
                 if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)
@@ -272,7 +277,7 @@
                 }
                 return  false;
             },
-            validateEmail = (value)=>{
+            validateEmail = (value) => {
                 return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(value);
             };            
         element.find('td').each(function (evt) {
@@ -284,9 +289,6 @@
         }).on('focus', function (evt, value) {
             var cell = $(this),
                 column = cell.index();
-            if (cell.hasClass('validate-municipio')) {
-                element.editor = $('<select>')
-            }
             if (cell.hasClass('validate-no-edit-td')) {
                 cell.trigger('blur');
             }
@@ -310,7 +312,7 @@
         "use strict";
         // no se sobreescribe el namespace, si ya existe
         var _planilla,
-            _tr = $('<tr><td class="text-center"></td><td></td><td></td><td class="text-center"></td><td class="text-center"></td><td></td><td></td><td class="text-center"></td><td class="text-center"></td></tr>');
+            _tr = $('<tr><td class="text-center"></td><td class="text-center"></td><td class="validate-no-edit-td"></td><td class="validate-no-edit-td"></td><td class="text-center validate-no-edit-td"></td><td class="text-center validate-no-edit-td"></td><td class="validate-no-edit-td"></td><td class="validate-no-edit-td"></td><td class="text-center validate-no-edit-td"></td><td class="text-center validate-no-edit-td"></td></tr>');
         $.Planilla = $.Planilla || {};
         $.Planilla.init = function() {
             _planilla = JSON.parse($('#planilla_data').text());
@@ -347,6 +349,22 @@
                                 this.value = this.value + "/";
                             }
                         })
+                    }else if(thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-sexo')){
+                        let $select = null;
+                        {% if planilla.segmento.genero.nombre != 'Mixto' %}
+                            $select = $('<select class="form-control editorTemp"><option>{{ planilla.segmento.genero.nombre }}</option></select>');
+                            cell.text("{{ planilla.segmento.genero.nombre }}");
+                        {% else %}
+                            cell.text("Femenino");
+                            $select = $('<select class="form-control editorTemp"><option>Femenino</option><option>Masculino</option></select>');
+                        {% endif %}
+                        return $select;
+                    }else if(thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-number')){
+                        return $('<input/>').on('focusout', function(){
+                            cell.parent().find(':nth-child(n+3)').addClass('validate-no-edit-td');
+                            if (this.value.length > 6)
+                                $.Planilla.loadParticipante(this.value,cell);
+                        })
                     }
                     return $('<input/>')
                 }
@@ -369,7 +387,51 @@
                 $('#datosResponsableInstitucion .dni').text(_planilla.institucion.responsable.dni);
             }            
         }
-
+        $.Planilla.getJsonPersona = function($tr){
+            let fNacimiento = $tr.find(':nth-child(6)').text().split('/');
+            fNacimiento = fNacimiento[1] + "/" + fNacimiento[1] + "/" + fNacimiento[2];
+            return  {
+                        id : $tr.data('idIntegrante'),
+                        tipoDocumento : 'DNI',
+                        dni : $tr.find(':nth-child(2)').text(),
+                        apellido : $tr.find(':nth-child(3)').text(),
+                        nombre : $tr.find(':nth-child(4)').text(),
+                        sexo : $tr.find(':nth-child(5)').text(),
+                        fNacimiento : fNacimiento,
+                        telefono : $tr.find(':nth-child(7)').text(),
+                        municipio : $tr.find(':nth-child(8)').text(),
+                        email : $tr.find(':nth-child(9)').text(),
+                        observacion : $tr.find(':nth-child(10)').text()
+                    };
+        },
+        $.Planilla.loadParticipante = function(dni,$cell){
+            let $tr = $cell.parent('tr');
+            let $td = $tr.find(':nth-child(1)');
+            $td.data('pos',$td.text()).html('<i class="fa fa-spinner fa-pulse fa-fw"></i><span class="sr-only">Loading...</span>');
+            $.get('{{ path('planilla_load_participante', {'dni' : '__XX__'}) }}'.replace('__XX__', dni))
+                .done((data)=>{
+                    console.log(data);
+                    if(data.success){
+                        let persona = data.participante.persona;
+                        //$tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.persona.id});
+                        $tr.find(':nth-child(2)').html(persona.dni);
+                        $tr.find(':nth-child(3)').html(persona.apellido);
+                        $tr.find(':nth-child(4)').html(persona.nombre);
+                        $tr.find(':nth-child(5)').html(persona.sexo);
+                        $tr.find(':nth-child(6)').html(persona.fNacimiento);
+                        $tr.find(':nth-child(7)').html(persona.telefono);
+                        $tr.find(':nth-child(8)').html(persona.municipio);
+                        $tr.find(':nth-child(9)').html(persona.email);
+                        $tr.find(':nth-child(10)').html(persona.observacion);
+                    }else{
+                        $tr.find(':nth-child(n+2)').removeClass('validate-no-edit-td');
+                    }
+                }).fail(()=>{
+                    toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
+                }).always(() =>{
+                    $td.html($td.data('pos'));
+                });
+        },
         $.Planilla.save = function(){
             _planilla.inscripcionInstitucional = ($('#tipoInscripcionButtons input:checked').val() != 'inscripcionMunicipal');
             _planilla.responsableMunicipio = {

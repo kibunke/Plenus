@@ -160,6 +160,11 @@ class PlanillaEstadoController extends Controller
     
     private function canEdit($planilla, $back = false)
     {
+        if ($planilla->isEditable($this->getUser())){
+            if (!$planilla->isCompleted()){
+                return "La planilla no tiene el mínimo de participantes requerido.";
+            }
+        }
         if (!$this->isGranted('ROLE_COORDINADOR')){
             if ($this->getUser()->getMunicipio()->getId() != $planilla->getMunicipio()->getId())
                 return "Esta planilla no pertenece a su municipio.";

@@ -54,6 +54,22 @@ class PlanillaController extends Controller
     }
     
     /**
+     * load Participante entity.
+     *
+     * @Route("/{dni}/load/participante", name="planilla_load_participante", condition="request.isXmlHttpRequest()")
+     * @Method("GET")
+     */
+    public function loadParticipanteAction($dni)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $participante = $em->getRepository('ResultadoBundle:Competidor')->findOneBy(array('dni' => $dni));
+        if ($participante){
+            return new JsonResponse(array('success' => true, 'error' => false, 'participante' => $participante->getJson()));
+        }
+        return new JsonResponse(array('success' => false, 'error' => false, 'participante' => 'No se encontro el participante!'));
+    }
+    
+    /**
      * @Route("/list/datatable", name="planilla_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
@@ -273,9 +289,9 @@ class PlanillaController extends Controller
                 }
             }
         }catch(\Exception $e){
-            //if(strpos($e->getMessage(), 'Plenus:') !== false){
+            if(strpos($e->getMessage(), 'Plenus:') !== false){
                 throw $e;
-            //}
+            }
             throw new \Exception('Plenus: Datos del Participante inválidos o incompletos.');
         }
         
@@ -292,7 +308,11 @@ class PlanillaController extends Controller
             $json->persona->municipio = $em->getRepository('CommonBundle:Municipio')->findOneBy(array('nombre' => $json->persona->municipio));
             $json->persona->tipoDocumento = $em->getRepository('CommonBundle:TipoDocumento')->findOneBy(array('nombre' => $json->persona->tipoDocumento));
             $json->persona->fNacimiento = new \DateTime($json->persona->fNacimiento);
-            if (is_object($json->persona->municipio) && is_object($json->persona->tipoDocumento) && is_object($json->persona->fNacimiento)){
+            $json->persona->sexo = $em->getRepository('ResultadoBundle:Genero')->findOneBy(array('nombre' => $json->persona->sexo));
+            if (is_object($json->persona->municipio) &&
+                is_object($json->persona->tipoDocumento) &&
+                is_object($json->persona->fNacimiento) &&
+                is_object($json->persona->sexo)){
                 return $json;
             }
         }

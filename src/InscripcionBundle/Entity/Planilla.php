@@ -508,7 +508,6 @@ abstract class Planilla
      */
     public function isOnDateRange($integrante)
     {
-        //Por negocion los Juveniles tiene DT obligatorio
         return  $this->getSegmento()->getMinFechaNacimiento() <= $integrante->getFNacimiento() &&
                 $this->getSegmento()->getMaxFechaNacimiento() >= $integrante->getFNacimiento();
     }    
@@ -530,6 +529,7 @@ abstract class Planilla
                                                 "maxReemplazos"  => $segmento->getMaxReemplazos(),
                                                 "fechaMin"       => $segmento->getMinFechaNacimiento(),
                                                 "fechaMax"       => $segmento->getMaxFechaNacimiento(),
+                                                "genero"         => $segmento->getGenero()->getNombre(),
                                             ),
                       "equipos"                  => $this->getEquiposJson(),
                       "inscripcionInstitucional" => $this->getInstitucion() ? true : false,
@@ -641,6 +641,23 @@ abstract class Planilla
         return $this->getEstado()->isRemovable() && $user->getId() == $this->getCreatedBy()->getId();
     }
 
+    /**
+     * Get isCompleted
+     *
+     * @return boolean
+     */
+    public function isCompleted()
+    {
+        foreach ($this->getEquipos() as $equipo)
+        {
+            $cantCompetidores = count($equipo->getCompetidores());
+            if ( $cantCompetidores > $this->getSegmento()->getMaxIntegrantes() || $cantCompetidores < $this->getSegmento()->getMinIntegrantes())
+                return false;
+            
+        }
+        return true;
+    }
+    
     /**
      * Get isEditable
      *
