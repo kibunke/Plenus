@@ -425,7 +425,8 @@
                         $tr.find(':nth-child(9)').html(persona.email);
                         $tr.find(':nth-child(10)').html(persona.observacion);
                     }else{
-                        $tr.find(':nth-child(n+2)').removeClass('validate-no-edit-td');
+                        $tr.find(':nth-child(n+3)').removeClass('validate-no-edit-td');
+                        $tr.find(':nth-child(n+3)').html('');
                     }
                 }).fail(()=>{
                     toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
