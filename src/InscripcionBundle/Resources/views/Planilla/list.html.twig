@@ -55,9 +55,10 @@
                 <tr>
                     <th class="text-center">N°</th>
                     <th>Segmento</th>
-                    <th class="text-center">Inscriptos</th>
+                    <th class="text-center"><i class="fa fa-info-circle" aria-hidden="true"></i> Auditoría planilla</th>
+                    <th class="text-center" title="Inscriptos en la planilla"><i class="fa fa-users" aria-hidden="true"></i></th>
                     <th class="text-center">Estado</th>
-                    <th class="text-center"><i class="fa fa-comment-o" aria-hidden="true"></i></th>
+                    <th class="text-center"><i class="fa fa-info-circle" aria-hidden="true"></i> Auditoría estado</th>
                     <th style="width: 110px"></th>
                 </tr>
             </thead>
@@ -89,9 +90,10 @@
                     "columns": [
                         { "data": "id", "className": "text-center" },
                         { "data": "segmento" },
+                        { "data": "auditoria"},
                         { "data": "inscriptos", "className": "text-center" },
                         { "data": "estado.nombre", "className": "text-center" },
-                        { "data": "estado.observacion", "className": "text-center" },
+                        { "data": "estado" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -102,7 +104,39 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [4,5]
+                            "targets": [4,6]
+                        },
+                        {
+                            "targets": 2,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    '<div>'+
+                                                        '<i title="Planilla creada por '+ data.createdBy +'" class="fa fa-user text-info" aria-hidden="true"></i> '+ data.createdBy +
+                                                    '</div><small><div>'+
+                                                        '<i title="Planilla creada el '+ data.createdAt +'" class="fa fa-calendar-o text-success" aria-hidden="true"></i> '+ data.createdAt +
+                                                    '</div><div>'+
+                                                        ' <i title="Planilla modificada el '+ data.updatedAt +'" class="fa fa-calendar-o text-orange" aria-hidden="true"></i> '+ data.updatedAt +
+                                                    '</div></small>'
+                                                :'';
+                                        }
+                        },
+                        {
+                            "targets": 5,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    '<small><div>'+
+                                                        '<i title="Planilla en estado actual desde" class="fa fa-calendar-o text-success" aria-hidden="true"></i> '+ data.auditoria.createdAt +
+                                                    '</div><div>'+
+                                                        '<i title="Estado de planilla asignado por" class="fa fa-user text-info" aria-hidden="true"></i> '+ data.auditoria.createdBy +
+                                                    '</div></small><div>'+
+                                                        data.observacion +
+                                                    '</div>'
+                                                :'';
+                                        }
                         }
                     ],
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {},
@@ -117,10 +151,14 @@
                 $('.no-display').html('<i class="fa fa-edit"></i> Editar lista de buena fe <small>Modifique y complete el formulario para editar la lista de buena fe</small>');
                 $.get(url)
                     .done((data)=>{
-                        $('.planillaInscripcion').remove();
-                        $('#globalSubView .subviews-container').html(data);
-                        $.subview();
-                        $('.page-header h1').toggle();
+                        if (!data.error){
+                            $('.planillaInscripcion').remove();
+                            $('#globalSubView .subviews-container').html(data);
+                            $.subview();
+                            $('.page-header h1').toggle();
+                        }else{
+                            toastr['error'](data.message, 'Cuidado!');
+                        }
                     }).fail(()=>{
                         toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
                     });

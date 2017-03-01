@@ -59,17 +59,17 @@ class Cargada extends PlanillaEstado
     
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-        if($usuario->hasRole('ROLE_INSCRIPTOR') || $usuario->hasRole('ROLE_ADMIN'))
+        if($usuario->hasRole('ROLE_INSCRIPTOR') && $this->getPlanilla()->getCreatedBy() == $usuario)
         {
             return array(new Enviada());
         }
         
-        if($usuario->hasRole('ROLE_ORGANIZADOR'))
+        if($usuario->hasRole('ROLE_ORGANIZADOR') && $this->getPlanilla()->getCreatedBy() == $usuario)
         {
             return array(new Presentada());
         }
         
-        if($usuario->hasRole('ROLE_COORDINADOR'))
+        if($usuario->hasRole('ROLE_COORDINADOR') && $this->getPlanilla()->getCreatedBy() == $usuario)
         {
             return array(new Aprobada());
         }

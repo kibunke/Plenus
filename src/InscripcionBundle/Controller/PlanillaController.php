@@ -60,7 +60,7 @@ class PlanillaController extends Controller
     public function listDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request);
+        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'));
         
         $data = array(
                     "draw"            => $request->request->get('draw'),
@@ -71,12 +71,21 @@ class PlanillaController extends Controller
         
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
-                "id"        => str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT),
+                "id"        => "<strong>".str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
                 "inscriptos"   => $planilla->getTotalInscriptos(),
                 "estado"  => array(
                         "nombre" => $planilla->getEstado()->getNombreRaw(),
-                        "observacion" => $planilla->getEstado()->getObservacion()
+                        "observacion" => $planilla->getEstado()->getObservacion() ? $planilla->getEstado()->getObservacion() : '',
+                        "auditoria"  => array(
+                            "createdBy" => $planilla->getEstado()->getCreatedBy()->getNombreCompleto(),
+                            "createdAt" => $planilla->getEstado()->getCreatedAt()->format('d/m/y H:i')
+                        )
+                    ),
+                "auditoria"  => array(
+                        "createdBy" => $planilla->getCreatedBy()->getNombreCompleto(),
+                        "createdAt" => $planilla->getCreatedAt()->format('d/m/y H:i'),
+                        "updatedAt" => $planilla->getUpdatedAt()?$planilla->getUpdatedAt()->format('d/m/y H:i'):''
                     ),
                 "actions"   => $this->renderView('InscripcionBundle:Planilla:actions.html.twig', array('entity' => $planilla)),
             );
@@ -109,6 +118,8 @@ class PlanillaController extends Controller
             $json = json_decode($form->get('data')->getData());
             //var_dump($json);//die;
             try {
+                if (!$planilla->getMunicipio())
+                    $planilla->setMunicipio($this->getUser()->getMunicipio());
                 if ($this->loadPlanilla($planilla,$json)){
                     $planilla->setCreatedBy($this->getUser());
                     $estado = new Cargada();
@@ -116,7 +127,7 @@ class PlanillaController extends Controller
                     $planilla->addEstado($estado);
                     $em->persist($planilla);
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
+                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla <h3 class="no-margin">N°'. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</h3>"));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -294,6 +305,9 @@ class PlanillaController extends Controller
     public function editAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
+        if (!$planilla->isEditable($this->getUser())){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no puede ser editada por usted en este estado!'));
+        }
         if (!$this->canEdit($planilla)){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
         }
@@ -332,7 +346,7 @@ class PlanillaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if ($planilla){
-            if ($planilla->isRemovable()){
+            if ($planilla->isRemovable($this->getUser())){
                 try {
                     $planilla->prepareToDelete();
                     $em->remove($planilla);

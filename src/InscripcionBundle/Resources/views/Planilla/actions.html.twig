@@ -1,9 +1,9 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
     <button onclick="$.Default.show('{{ path('planilla_show', { 'id': entity.id }) }}')" class="btn btn-xs btn-light-azure"><i class="fa fa-eye"></i></button>
-    {% if entity.isEditable() %}
+    {% if entity.isEditable(app.user) %}
         <button onclick="$.Default.edit('{{ path('planilla_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green"><i class="fa fa-edit"></i></button>
     {% endif %}
-    {% if entity.isRemovable() %}
+    {% if entity.isRemovable(app.user) %}
         <button onclick="$.Default.deleteConfirm('{{ path('planilla_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red"><i class="fa fa-times fa fa-white"></i></button>
     {% endif %}
     {% for estado in entity.getEstado().getProximosEstados(app.user) %}

@@ -30,9 +30,10 @@ class SegmentoRepository extends EntityRepository
                     ",g.nombre ".$request->get('order')[0]['dir'].
                     ",m.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
+                    "planillas",
+                    "inscriptos",                    
                     "eventos",
-                    "coordinadores",
-                    "inscriptos"];
+                    "coordinadores"];
         $where = "( s.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
@@ -44,7 +45,7 @@ class SegmentoRepository extends EntityRepository
                     . $this->applyRoleFilter($user,$auth_checker);
                     
         return $this->getEntityManager()
-                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(DISTINCT(e)) AS HIDDEN eventos, COUNT(DISTINCT(u)) AS HIDDEN coordinadores, COUNT(DISTINCT(com)) as HIDDEN inscriptos
+                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(DISTINCT(e)) AS HIDDEN eventos, COUNT(DISTINCT(u)) AS HIDDEN coordinadores, COUNT(DISTINCT(com)) as HIDDEN inscriptos, COUNT(DISTINCT(p)) as HIDDEN planillas
                                         FROM InscripcionBundle:Segmento s
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
@@ -79,12 +80,12 @@ class SegmentoRepository extends EntityRepository
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(s))
                                         FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.coordinadores u
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
                                         JOIN s.categoria c
                                         JOIN s.modalidad m
-                                        JOIN s.genero g                                        
+                                        JOIN s.genero g
+                                        LEFT JOIN s.coordinadores u
                                         WHERE $where")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
@@ -94,8 +95,9 @@ class SegmentoRepository extends EntityRepository
     {
         $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(s)
+                        ->createQuery(" SELECT COUNT(DISTINCT(s))
                                         FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores u
                                         WHERE $where ")
                         ->getSingleScalarResult();
     }
@@ -105,13 +107,14 @@ class SegmentoRepository extends EntityRepository
         $where = "s.isActive = 1". $this->applyRoleFilter($user,$auth_checker);
         
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(s)
+                        ->createQuery(" SELECT COUNT(DISTINCT(s))
                                         FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores u
                                         WHERE $where")
                         ->getSingleScalarResult();
     }
     
-    public function getTotalInscriptos($segmento)
+    public function getTotalInscriptos($segmento,$user)
     {
         $where = "s.id = ". $segmento->getId();
         $estados = array_map('current',$this->getEntityManager()
@@ -123,7 +126,8 @@ class SegmentoRepository extends EntityRepository
                                         GROUP BY p.id")
                         ->getArrayResult());
         $estados[]=0;
-        $where .= " AND e.id IN (".implode(",",$estados).")";
+        $where .= " AND e.id IN (".implode(",",$estados).")". $this->applyRoleAndPlanillaFilter($user);
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(com.id) as cant, e.nombre
                                         FROM InscripcionBundle:Segmento s
@@ -131,9 +135,29 @@ class SegmentoRepository extends EntityRepository
                                         LEFT JOIN p.estados e
                                         LEFT JOIN p.equipos eq
                                         LEFT JOIN eq.competidores com
+                                        JOIN p.municipio municipio
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador                                        
                                         WHERE $where
                                         GROUP BY s.id,e.nombre ")
                         ->getScalarResult();
+    }
+    
+    
+    public function getTotalPlanillas($segmento,$user)
+    {
+        $where = "s.id = ". $segmento->getId(). $this->applyRoleAndPlanillaFilter($user);
+        
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(DISTINCT(p)) as cant
+                                        FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.planillas p
+                                        JOIN p.municipio municipio
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador                                        
+                                        WHERE $where
+                                        GROUP BY s.id")
+                        ->getOneOrNullResult();
     }
     
     private function applyRoleFilter($user,$auth_checker)
@@ -144,6 +168,24 @@ class SegmentoRepository extends EntityRepository
                 $where .= " AND (u.id = " . $user->getId() . ")";
             }else{
                 $where .= " AND (s.isActive = 1)";
+            }
+        }
+        return $where;
+    }
+    
+    private function applyRoleAndPlanillaFilter($user)
+    {
+        $where = '';
+        if(!$user->hasRole('ROLE_ADMIN')){
+            if($user->hasRole('ROLE_COORDINADOR')){
+                //COORDINADORES ven todas las planillas de sus Segmentos
+                $where .= " AND (coordinador.id = " . $user->getId() . ")";
+            }elseif($user->hasRole('ROLE_ORGANIZADOR')){
+                //ORGANIZADORES ven todas las planillas de su Municipio
+                $where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
+            }else{
+                //INSCRIPTORES ven todas las planillas que crearon
+                $where .= " AND (creador.id = " . $user->getId() . ")";
             }
         }
         return $where;

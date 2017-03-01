@@ -12,16 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class PlanillaRepository extends EntityRepository
 {
-    public function dataTable($request)
+    public function dataTable($request,$user,$auth_checker)
     {
         return array(
-                      "total"    => $this->getTotalRows(),
-                      "filtered" => $this->getFilteredRows($request),
-                      "rows"     => $this->getRows($request)
+                      "total"    => $this->getTotalRows($user,$auth_checker),
+                      "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
+                      "rows"     => $this->getRows($request,$user,$auth_checker),
             );
     }
     
-    public function getRows($request)
+    public function getRows($request,$user,$auth_checker)
     {
         $columns = ["s.id",
                     "t.nombre ".$request->get('order')[0]['dir'].
@@ -33,16 +33,20 @@ class PlanillaRepository extends EntityRepository
                     "eventos"];
         $where = "( s.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
+                    municipio.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)";
+                    m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
                 
         return $this->getEntityManager()
                         ->createQuery(" SELECT p
                                         FROM InscripcionBundle:Planilla p
+                                        JOIN p.municipio municipio
                                         JOIN p.segmento s
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
                                         JOIN s.categoria c
@@ -57,20 +61,24 @@ class PlanillaRepository extends EntityRepository
                         ->getResult();
     }
     
-    public function getFilteredRows($request)
+    public function getFilteredRows($request,$user,$auth_checker)
     {
         $where = "( s.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
+                    municipio.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)";
+                    m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(p)
+                        ->createQuery(" SELECT COUNT(DISTINCT(p))
                                         FROM InscripcionBundle:Planilla p
+                                        JOIN p.municipio municipio
                                         JOIN p.segmento s
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador
                                         JOIN s.disciplina d
                                         JOIN s.torneo t
                                         JOIN s.categoria c
@@ -81,12 +89,36 @@ class PlanillaRepository extends EntityRepository
                         ->getSingleScalarResult();
     }
     
-    public function getTotalRows()
+    public function getTotalRows($user,$auth_checker)
     {
+        $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(p)
-                                        FROM InscripcionBundle:Planilla p")
+                        ->createQuery(" SELECT COUNT(DISTINCT(p))
+                                        FROM InscripcionBundle:Planilla p
+                                        JOIN p.municipio municipio
+                                        JOIN p.segmento s
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador
+                                        WHERE $where")
                         ->getSingleScalarResult();
+    }
+    
+    private function applyRoleFilter($user,$auth_checker)
+    {
+        $where = '';
+        if(!$auth_checker->isGranted('ROLE_ADMIN')){
+            if($auth_checker->isGranted('ROLE_COORDINADOR')){
+                //COORDINADORES ven todas las planillas de sus Segmentos
+                $where .= " AND (coordinador.id = " . $user->getId() . ")";
+            }elseif($auth_checker->isGranted('ROLE_ORGANIZADOR')){
+                //ORGANIZADORES ven todas las planillas de su Municipio
+                $where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
+            }else{
+                //INSCRIPTORES ven todas las planillas que crearon
+                $where .= " AND (creador.id = " . $user->getId() . ")";
+            }
+        }
+        return $where;
     }
     
     //public function findAllByEvento($evento)

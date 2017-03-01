@@ -806,4 +806,14 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return $this->cargo;
     }
+    
+    /**
+     * Get municipio
+     *
+     * @return \CommonBundle\Entity\Municipio
+     */
+    public function getMunicipio()
+    {
+        return $this->getPersona()->getMunicipio();
+    }    
 }

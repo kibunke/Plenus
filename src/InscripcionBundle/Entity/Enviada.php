@@ -25,7 +25,10 @@ class Enviada extends PlanillaEstado
     {
         if($usuario->hasRole('ROLE_ORGANIZADOR'))
         {
-            return array(new Presentada());
+            return array(
+                         new EnRevision(),
+                         new Presentada()
+                    );
         }
         
         return parent::getProximosEstados($usuario);

@@ -63,11 +63,12 @@ class SegmentoController extends Controller
         );
         
         foreach ($filter['rows'] as $segmento){
-            $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento);
+            $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
             $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
+                "planillas"   => count($segmento->getPlanillas()),
                 "eventos"   => count($segmento->getEventos()),
                 "coordinadores" => count($segmento->getCoordinadores()),
                 "inscriptos"=> '<span class="text-danger" title="Planillas en cualquier estado / Planillas es estado Aprobadas">'.$inscriptos['total'].'</span> / <small class="text-success">'.$inscriptos['aprobadas'].'</small>',

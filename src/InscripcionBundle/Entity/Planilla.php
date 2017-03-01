@@ -636,9 +636,9 @@ abstract class Planilla
      *
      * @return boolean
      */
-    public function isRemovable()
+    public function isRemovable($user)
     {
-        return $this->getEstado()->isRemovable();
+        return $this->getEstado()->isRemovable() && $user->getId() == $this->getCreatedBy()->getId();
     }
 
     /**
@@ -646,9 +646,9 @@ abstract class Planilla
      *
      * @return boolean
      */
-    public function isEditable()
+    public function isEditable($user)
     {
-        return $this->getEstado()->isEditable();
+        return $this->getEstado()->isEditable() && $user->getId() == $this->getCreatedBy()->getId();
     }
     
     /**

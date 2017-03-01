@@ -35,7 +35,8 @@ class PlanillaEstadoController extends Controller
     public function enviarAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($this->canEdit($planilla)){
+        $result = $this->canEdit($planilla);
+        if ($result === true){
             try {
                 $estado = new Enviada();
                 $estado->setCreatedBy($this->getUser());
@@ -48,7 +49,7 @@ class PlanillaEstadoController extends Controller
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
             }
         }else{
-            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no cambiar de estado.'));
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
     
@@ -60,7 +61,8 @@ class PlanillaEstadoController extends Controller
     public function presentarAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($this->canEdit($planilla)){
+        $result = $this->canEdit($planilla);
+        if ($result === true){
             try {
                 $estado = new Presentada();
                 $estado->setCreatedBy($this->getUser());
@@ -73,7 +75,7 @@ class PlanillaEstadoController extends Controller
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
             }
         }else{
-            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no cambiar de estado.'));
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
     
@@ -84,7 +86,8 @@ class PlanillaEstadoController extends Controller
     public function observarAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($this->canEdit($planilla)){
+        $result = $this->canEdit($planilla,true);
+        if ($result === true){
             if (strlen($request->request->get('observacion')) > 5){
                 try {
                     $estado = new Observada();
@@ -101,7 +104,7 @@ class PlanillaEstadoController extends Controller
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Para pasar una planilla a estado OBSERVADA debe completar la observación obligatoriamente.'));
             }    
         }else{
-            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no cambiar de estado.'));
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
     
@@ -112,7 +115,8 @@ class PlanillaEstadoController extends Controller
     public function aprobarAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($this->canEdit($planilla)){
+        $result = $this->canEdit($planilla);
+        if ($result === true){
             try {
                 $estado = new Aprobada();
                 $estado->setCreatedBy($this->getUser());
@@ -125,7 +129,7 @@ class PlanillaEstadoController extends Controller
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
             }
         }else{
-            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no cambiar de estado.'));
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
     
@@ -136,7 +140,8 @@ class PlanillaEstadoController extends Controller
     public function revisarAction(Request $request,Planilla $planilla)
     {
         $em = $this->getDoctrine()->getManager();
-        if ($this->canEdit($planilla)){
+        $result = $this->canEdit($planilla,true);
+        if ($result === true){
             try {
                 $estado = new EnRevision();
                 $estado->setCreatedBy($this->getUser());
@@ -149,23 +154,23 @@ class PlanillaEstadoController extends Controller
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
             }
         }else{
-            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no cambiar de estado.'));
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
     
-    private function canEdit($planilla)
+    private function canEdit($planilla, $back = false)
     {
         if (!$this->isGranted('ROLE_COORDINADOR')){
-            if ($this->getUser()->getMunicipio() != $planilla->getMunicipio())
-                return false;
+            if ($this->getUser()->getMunicipio()->getId() != $planilla->getMunicipio()->getId())
+                return "Esta planilla no pertenece a su municipio.";
         }
         
-        if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO')){
+        if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO') || $back){
             return true;
         }elseif ($planilla->getSegmento()->getIsActive()){
             return true;
         }
         
-        return false;
+        return "La inscripción al segmento está cerrada!";
     }
 }

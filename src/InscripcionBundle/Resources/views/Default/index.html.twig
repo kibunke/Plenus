@@ -150,10 +150,15 @@
                 }
                 $.get(_pathPlanillaNew.replace('__XX__',id))
                     .done((data)=>{
-                        $('.planillaInscripcion').remove();
-                        $('#globalSubView .subviews-container').html(data);
-                        $.subview();
-                        $('.page-header h1').toggle();
+                        if (!data.error){
+                            $('.planillaInscripcion').remove();
+                            $('#globalSubView .subviews-container').html(data);
+                            $.subview();
+                            $('.page-header h1').toggle();
+                        }else{
+                            toastr['error'](data.message, 'Cuidado!');
+                        }                        
+
                     }).fail(()=>{
                         toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
                     });		

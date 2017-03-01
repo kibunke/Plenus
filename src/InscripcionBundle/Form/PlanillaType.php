@@ -47,27 +47,13 @@ class PlanillaType extends AbstractType
                                                                     },
                                                 'multiple' => false,
                                                 'required' => true,
-                                                'placeholder' => 'Seleccione',
-                                                'disabled' => !$user->hasRole('ROLE_COORDINADOR') || !$user->hasRole('ROLE_ADMIN'),
-                                                'data' => $user->getPersona()->getMunicipio()
+                                                //'placeholder' => 'Seleccione',
+                                                'data' => $user->getPersona()->getMunicipio(),
+                                                'disabled' => !$user->hasRole('ROLE_COORDINADOR') || !$user->hasRole('ROLE_ADMIN')
                                             )
                   )
             ->add('data', TextareaType::class, array("mapped" => false,"data" => json_encode($entity->getJson())))
-            //->add('tipoOrigen', ChoiceType::class, array(
-            //                                'choices'  => array('' => 'Seleccione',
-            //                                                    'Municipio' => 'Municipio',
-            //                                                    'Escuela' => 'Escuela',
-            //                                                    'Otro' => 'Otra Institución'),
-            //                                'required' => true,
-            //                                'mapped' => false,
-            //                                'data' => $entity->getOrigen()?$entity->getOrigen()->getClass():'',
-            //                                'disabled' => false,
-            //                        )
-            //      )
-            //->add('origen', TextType::class,array())
         ;
-        //$builder->get('origen')
-        //    ->addModelTransformer(new OrigenToTextTransformer($this->manager));
     }
 
     public function configureOptions(OptionsResolver $resolver)
