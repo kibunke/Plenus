@@ -290,7 +290,6 @@
             if (cell.hasClass('validate-no-edit-td')) {
                 cell.trigger('blur');
             }
-            //console.log(cell.parent().data());
         }).on('validate', function (evt, value) {
             var cell = $(this),
                 column = cell.index();
@@ -395,7 +394,6 @@
             $.Planilla.readEquipos();
             $('#planilla_data').text(JSON.stringify(_planilla));
             let path = '{{ path('planilla_new', {'id': planilla.segmento.id}) }}';
-            console.log(_planilla.id);
             if (_planilla.id > 0){
                 path = '{{ path('planilla_edit', {'id': '__XX__'}) }}'.replace('__XX__',_planilla.id);
             }

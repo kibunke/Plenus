@@ -34,7 +34,7 @@
                 }
                 if (_planilla.parametros.maxReemplazos > 0){
                     let cantTfootRows = $('#planillaBuenaFe tfoot tr').length;
-                    for (let j = cantTfootRows; j < _planilla.parametros.maxReemplazos; j++) {
+                    for (let j = cantTfootRows; j < _planilla.parametros.maxReemplazos + 1; j++) {
                         let $tr = _tr.clone();
                         $tr.data({'idEquipo':'new','idIntegrante': 'new'}).find(':nth-child(1)').html(j)
                         $('#planillaBuenaFe tfoot').append($tr);
