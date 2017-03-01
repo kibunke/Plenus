@@ -53,6 +53,7 @@
             {{ form_row(form.municipio) }}
         </div>
         <div class="col-sm-6">
+            <p>(*) Campos obligatorios</p>
             <table class="table header-planilla">
                 <tr class="no-borderTop">
                     <th>Disciplina</th>
@@ -84,13 +85,13 @@
                 <thead>
                     <tr>
                         <th class="text-center validate-no-edit"><i class="fa fa-hashtag" aria-hidden="true"></i></th>
-                        <th class="text-center validate-number">N° documento</th>
-                        <th class="validate-text">Apellido</th>
-                        <th class="validate-text">Nombres</th>
-                        <th class="{% if planilla.segmento.genero.nombre != 'Mixto' %} validate-no-edit-td {% endif %} validate-sexo">Sexo</th>
-                        <th class="text-center validate-date">F. nacimiento</th>
+                        <th class="text-center validate-number">N° documento (*)</th>
+                        <th class="validate-text">Apellido (*)</th>
+                        <th class="validate-text">Nombres (*)</th>
+                        <th class="{% if planilla.segmento.genero.nombre != 'Mixto' %} validate-no-edit-td {% endif %} validate-sexo">Sexo (*)</th>
+                        <th class="text-center validate-date">F. nacimiento (*)</th>
                         <th class="validate-text">Teléfono</th>
-                        <th class="validate-municipio">Municipio</th>
+                        <th class="validate-municipio">Municipio (*)</th>
                         <th class="text-center validate-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></th>
                         <th class="text-center validate-text"><i class="fa fa-comment-o" aria-hidden="true"></i></th>
                     </tr>
