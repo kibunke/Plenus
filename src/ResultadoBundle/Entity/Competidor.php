@@ -216,5 +216,15 @@ class Competidor extends Persona
     {
         $this->setRol(isset($json->rol)?$json->rol:'integrante' );
         return parent::loadFromJson($json->persona);
-    }  
+    }
+    
+    public function getTipoPersona()
+    {
+        return 'Competidor';
+    }
+    
+    public function getClass()
+    {
+        return 'ResultadoBundle:Competidor';
+    }
 }

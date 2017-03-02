@@ -830,4 +830,14 @@ class Persona
     {
         return $this->genero;
     }
+    
+    public function getTipoPersona()
+    {
+        return 'Usuario';
+    }
+    
+    public function getClass()
+    {
+        return 'CommonBundle:Persona';
+    }
 }

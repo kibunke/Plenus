@@ -1,0 +1,17 @@
+<div class="visible-md visible-lg hidden-sm hidden-xs">
+    <a href="{{path("persona_sin_user_show",{"persona": entity.id})}}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+</div>
+<div class="visible-xs visible-sm hidden-md hidden-lg">
+    <div class="btn-group">
+        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </a>
+        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+            <li>
+                <a role="menuitem" tabindex="-1"  href="{{path("persona_sin_user_show",{"persona": entity.id})}}" >
+                    <i class="fa fa-eye"></i> Editar
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+{% include 'CommonBundle:Persona:show.html.twig' %}
+<div class="row">
+    <div class="col-sm-2">Rol</div>
+    <div class="col-sm-10">{{entity.rol}}</div>
+</div>
+{% if entity.equipos | length > 0 %}
+<div class="row">    
+    <div class="col-sm-2">Equipos</div>
+    <div class="col-sm-10">
+        <ul>
+        {% for equipo in entity.equipos %}
+            <li>{{equipo}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}

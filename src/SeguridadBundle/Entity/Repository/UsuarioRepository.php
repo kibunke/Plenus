@@ -36,8 +36,8 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     
     public function getRows($request,$user,$auth_checker)
     {
-        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","f.name","u.isActive","info","pass","actions"];
-        $where   = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
+        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","f.name","u.isActive","m.nombre","info","pass","actions"];
+        $where   = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR f.name LIKE ?1 OR m.nombre LIKE ?1)";
             
         if(!$auth_checker->isGranted('ROLE_ADMIN'))
         {
@@ -62,7 +62,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     
     public function getFilteredRows($request,$user,$auth_checker)
     {
-        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1)";
+        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR p.nombre LIKE ?1 OR m.nombre LIKE ?1)";
                 
         if(!$auth_checker->isGranted('ROLE_ADMIN'))
         {
@@ -99,5 +99,54 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
                                       JOIN p.municipio m
                                      WHERE $where ")
                     ->getSingleScalarResult();
-    } 
+    }
+    
+    public function dataTablePersonaSinUser($request)
+    {
+        return array(
+                        "total"    => $this->getTotalPersonaSinUserRows($request),
+                        "filtered" => $this->getFilteredPersonaSinUserRows($request),
+                        "rows"     => $this->getPersonaSinUserRows($request)
+                    );
+    }
+    
+    public function getPersonaSinUserRows($request)
+    {
+        $columns = ["p.id","p.apellido","p.nombre", "p.dni","m.nombre","actions"];
+            
+        return $this->getEntityManager()
+                    ->createQuery(" SELECT p
+                                      FROM CommonBundle:Persona p
+                                      JOIN p.municipio m
+                                     WHERE p.id NOT IN (SELECT p2.id FROM SeguridadBundle:Usuario u INNER JOIN u.persona p2) AND (p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR m.nombre LIKE ?1)
+                                  ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->setMaxResults($request->get('length'))
+                    ->setFirstResult($request->get('start'))
+                    ->getResult();
+    }
+    
+    public function getFilteredPersonaSinUserRows($request)
+    {
+        return $this->getEntityManager()
+                    ->createQuery(" SELECT COUNT(DISTINCT(p))
+                                      FROM CommonBundle:Persona p
+                                      JOIN p.municipio m
+                                     WHERE p.id NOT IN (SELECT p2.id FROM SeguridadBundle:Usuario u INNER JOIN u.persona p2) AND (p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR m.nombre LIKE ?1)")
+                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->getSingleScalarResult();
+    }
+    
+    
+    public function getTotalPersonaSinUserRows()
+    {
+        return $this->getEntityManager()
+                    ->createQuery("SELECT COUNT(DISTINCT(p))
+                                      FROM CommonBundle:Persona p
+                                      JOIN p.municipio m
+                                     WHERE p.id NOT IN (SELECT p2.id FROM SeguridadBundle:Usuario u INNER JOIN u.persona p2)")
+                    ->getSingleScalarResult();
+    }
+    
+
 }
