@@ -31,15 +31,26 @@ class PlanillaController extends Controller
     /**
      * Lists all Planilla entities.
      *
-     * @Route("/list", name="planilla_list")
+     * @Route("/list/misPlanillas", name="planilla_mis_list")
      * @Method("GET")
      * @Template()
      */
-    public function listAction()
+    public function misPlanillasListAction()
     {
         return array();        
     }
     
+    /**
+     * Lists all Planilla entities.
+     *
+     * @Route("/list/misPendientes", name="planilla_pendientes_list")
+     * @Method("GET")
+     * @Template()
+     */
+    public function misPendientesListAction()
+    {
+        return array();        
+    }    
     /**
      * show a Planilla entity.
      *
@@ -70,13 +81,54 @@ class PlanillaController extends Controller
     }
     
     /**
-     * @Route("/list/datatable", name="planilla_list_datatable", condition="request.isXmlHttpRequest()")
+     * @Route("/list/misPlanillas/datatable", name="planilla_mis_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
-    public function listDataTableAction(Request $request)
+    public function misPlanillasListDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'));
+        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'),false);
+        
+        $data = array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+        
+        foreach ($filter['rows'] as $planilla){
+            //var_dump($planilla);
+            $data['data'][] = array(
+                "id"        => "<strong>".str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
+                "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
+                "inscriptos"   => $planilla->getTotalInscriptos(),
+                "estado"  => array(
+                        "nombre" => $planilla->getEstado()->getNombreRaw(),
+                        "observacion" => $planilla->getEstado()->getObservacion() ? $planilla->getEstado()->getObservacion() : '',
+                        "auditoria"  => array(
+                            "createdBy" => $planilla->getEstado()->getCreatedBy()->getNombreCompleto(),
+                            "createdAt" => $planilla->getEstado()->getCreatedAt()->format('d/m/y H:i')
+                        )
+                    ),
+                "auditoria"  => array(
+                        "createdBy" => $planilla->getCreatedBy()->getNombreCompleto(),
+                        "createdAt" => $planilla->getCreatedAt()->format('d/m/y H:i'),
+                        "updatedAt" => $planilla->getUpdatedAt()?$planilla->getUpdatedAt()->format('d/m/y H:i'):''
+                    ),
+                "actions"   => $this->renderView('InscripcionBundle:Planilla:actions.html.twig', array('entity' => $planilla)),
+            );
+        }
+        return new JsonResponse($data);
+    }
+    
+    /**
+     * @Route("/list/misPendientes/datatable", name="planilla_pendientes_list_datatable", condition="request.isXmlHttpRequest()")
+     * @Method("POST")
+     */
+    public function misPendientesListDataTableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'),true);
         
         $data = array(
                     "draw"            => $request->request->get('draw'),

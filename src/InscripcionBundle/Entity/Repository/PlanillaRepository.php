@@ -12,8 +12,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class PlanillaRepository extends EntityRepository
 {
-    public function dataTable($request,$user,$auth_checker)
+    private $onlyPendientes = false;
+    private $idEstatos;
+    
+    public function dataTable($request,$user,$auth_checker,$onlyPendientes)
     {
+        $estados = array_map('current',$this->getEntityManager()
+                        ->createQuery(" SELECT MAX(e.id)
+                                        FROM InscripcionBundle:Planilla p
+                                        JOIN p.estados e
+                                        GROUP BY p.id")
+                        ->getArrayResult());
+        $estados[]=0;
+        $this->idEstatos = implode(",",$estados);
+        
+        $this->onlyPendientes = $onlyPendientes;
         return array(
                       "total"    => $this->getTotalRows($user,$auth_checker),
                       "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
@@ -53,6 +66,7 @@ class PlanillaRepository extends EntityRepository
                                         JOIN s.modalidad m
                                         JOIN s.genero g
                                         LEFT JOIN s.eventos e
+                                        JOIN p.estados est
                                         WHERE $where
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
@@ -83,7 +97,8 @@ class PlanillaRepository extends EntityRepository
                                         JOIN s.torneo t
                                         JOIN s.categoria c
                                         JOIN s.modalidad m
-                                        JOIN s.genero g                                        
+                                        JOIN s.genero g
+                                        JOIN p.estados est
                                         WHERE $where ")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
@@ -99,24 +114,38 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.segmento s
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador
+                                        JOIN p.estados est
                                         WHERE $where")
                         ->getSingleScalarResult();
     }
     
     private function applyRoleFilter($user,$auth_checker)
     {
-        $where = '';
+        $where = " AND est.id IN (".$this->idEstatos.")";
         if(!$auth_checker->isGranted('ROLE_ADMIN')){
             if($auth_checker->isGranted('ROLE_COORDINADOR')){
                 //COORDINADORES ven todas las planillas de sus Segmentos
                 $where .= " AND (coordinador.id = " . $user->getId() . ")";
+                if ($this->onlyPendientes){
+                    $where .= " AND (est.nombre = 'Presentada' )";
+                }
             }elseif($auth_checker->isGranted('ROLE_ORGANIZADOR')){
                 //ORGANIZADORES ven todas las planillas de su Municipio
                 $where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
+                if ($this->onlyPendientes){
+                    $where .= " AND (est.nombre = 'Enviada' OR est.nombre = 'Observada' OR (creador.id = " . $user->getId() ." AND est.nombre = 'Cargada'))";
+                }
             }else{
                 //INSCRIPTORES ven todas las planillas que crearon
                 $where .= " AND (creador.id = " . $user->getId() . ")";
+                if ($this->onlyPendientes){
+                    $where .= " AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')";
+                }
             }
+        }else{
+            if ($this->onlyPendientes){
+                    $where .= " AND (est.nombre = 'Publicada')";
+                }
         }
         return $where;
     }

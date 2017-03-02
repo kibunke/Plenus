@@ -443,7 +443,7 @@ class SecurityController extends Controller
                     $em->persist($log);
                     $em->flush();
                     $this->get('mailer')->send($message);
-                    return new JsonResponse(array('success' => true, 'message' => '<h4>Excelente!</h4><p>Su <strong>cuenta</strong> fue creada con éxito. Se envió una <strong>e-mail</strong> con las instrucciones para <strong>completar el proceso</strong>.</p><p> Gracias por utilizar Plenus!.</p>'));
+                    return new JsonResponse(array('success' => true, 'message' => '<h4>Excelente!</h4><p>Su <strong>cuenta</strong> fue creada con éxito. Se envió un <strong>e-mail</strong> con las instrucciones para <strong>completar el proceso</strong>.</p><p> Gracias por utilizar Plenus!.</p>'));
                 }
                 catch(\Exception $e ){
                     //$error = 'DEBUG '.$e->getMessage();
