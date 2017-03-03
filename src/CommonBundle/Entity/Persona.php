@@ -739,18 +739,18 @@ class Persona
     public function getJson()
     {
         return array(
-                'id' => $this->getId(),
-                'apellido' => $this->getApellido(),
-                'nombre' => $this->getNombre(),
-                'sexo' => $this->getGenero() ? $this->getGenero()->getNombre() : '',
-                'tipoDocumento' => $this->getTipoDocumento()->getNombre(),
-                'dni' => $this->getDni(),
-                'fNacimiento' => $this->getFNacimiento()->format('d/m/Y'),
-                'telefono' => $this->getTelefono(),
-                'municipio' => $this->getMunicipio()->getNombre(),
-                'email' => $this->getEmail(),
-                'observacion' => $this->getObservacion()
-            );
+                        'id'            => $this->getId(),
+                        'apellido'      => $this->getApellido(),
+                        'nombre'        => $this->getNombre(),
+                        'sexo'          => $this->getGenero() ? $this->getGenero()->getNombre() : '',
+                        'tipoDocumento' => $this->getTipoDocumento()->getNombre(),
+                        'dni'           => $this->getDni(),
+                        'fNacimiento'   => $this->getFNacimiento()->format('d/m/Y'),
+                        'telefono'      => $this->getTelefono(),
+                        'municipio'     => $this->getMunicipio()->getNombre(),
+                        'email'         => $this->getEmail(),
+                        'observacion'   => $this->getObservacion()
+                    );
     }
     
     /**
@@ -829,5 +829,15 @@ class Persona
     public function getGenero()
     {
         return $this->genero;
+    }
+    
+    public function getTipoPersona()
+    {
+        return 'Usuario';
+    }
+    
+    public function getClass()
+    {
+        return 'CommonBundle:Persona';
     }
 }

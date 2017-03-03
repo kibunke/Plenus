@@ -36,4 +36,14 @@ class DirectorTecnico extends Persona
                 'dni' => $this->getDni()
             );
     }
+    
+    public function getTipoPersona()
+    {
+        return 'Director Técnico';
+    }
+    
+    public function getClass()
+    {
+        return 'ResultadoBundle:DirectorTecnico';
+    }
 }

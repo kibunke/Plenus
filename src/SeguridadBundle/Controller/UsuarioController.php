@@ -18,6 +18,7 @@ use SeguridadBundle\Form\UsuarioAdminType;
 use SeguridadBundle\Form\UsuarioEditType;
 use SeguridadBundle\Form\UsuarioCheckDataType;
 use SeguridadBundle\Entity\Usuario;
+use CommonBundle\Entity\Persona;
 
 /**
  * Usuario controller.
@@ -125,6 +126,7 @@ class UsuarioController extends Controller
                                     "dni"      => $persona->getDni(),
                                     "email"    => $persona->getEmail(),
                                     "telefono" => $persona->getTelefono(),
+                                    "municipio" => $persona->getMunicipio()->getNombre()
                 ),
                 "perfil" => $user->getPerfil()->getName(),
                 "active" => $user->getIsActive(),
@@ -421,5 +423,57 @@ class UsuarioController extends Controller
         }
         
         return true;
+    }
+    
+    
+    /**
+     * @Route("/persona/sin/user/list", name="persona_sin_user_list")
+     * @Template("SeguridadBundle:Usuario:list.personas.sin.user.html.twig")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function listPersonasSinUserAction(Request $request)
+    {
+        return array();
+    }
+    
+    /**
+     * @Route("/persona/sin/user/datatable/list", name="persona_sin_user_list_datatable")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function listPersonasSinUserDatatableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('SeguridadBundle:Usuario')->dataTablePersonaSinUser($request->request);
+        
+        $data=array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+        
+        foreach ($filter['rows'] as $persona){
+            $data['data'][] = array(
+                                    "id"        => $persona->getId(),
+                                    "name"      => $persona->getApellido() . ', ' . $persona->getNombre(),
+                                    "dni"       => $persona->getDni(),
+                                    "municipio" => $persona->getMunicipio()->getNombre(),
+                                    "tipo"      => $persona->getTipoPersona(),
+                                    "email"     => $persona->getEmail(),
+                                    "actions"   => $this->renderView('SeguridadBundle:Usuario:actions.personas.sin.user.html.twig', array('entity' => $persona))
+                                   );
+        }
+        
+        return new JsonResponse($data);
+    }
+    
+    /**
+     * @Route("/persona/sin/user/{persona}/show", name="persona_sin_user_show")
+     * @Template("SeguridadBundle:Usuario:show.persona.sin.user.html.twig")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function showPersonaSinUserAction(Request $request,Persona $persona)
+    {
+        return array('entity' => $persona);
     }
 }

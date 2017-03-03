@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-sm-2">Id</div>
+    <div class="col-sm-10">{{entity.id}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Nombre</div>
+    <div class="col-sm-10">{{entity.getNombreCompleto}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Documento</div>
+    <div class="col-sm-10">{{entity.tipoDocumento}} {{entity.dni}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Fecha de Nacimiento</div>
+    <div class="col-sm-10">{% if entity.fNacimiento %}{{entity.fNacimiento|date('d/m/Y')}}{% endif %}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Género</div>
+    <div class="col-sm-10">{{entity.genero}}</div>
+</div>    
+<div class="row">
+    <div class="col-sm-2">Em@il</div>
+    <div class="col-sm-10">{{entity.email}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Municipio</div>
+    <div class="col-sm-10">{{entity.municipio}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Teléfono</div>
+    <div class="col-sm-10">{{entity.telefono}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Facebook</div>
+    <div class="col-sm-10">{{entity.facebook}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Skype</div>
+    <div class="col-sm-10">{{entity.skype}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Twitter</div>
+    <div class="col-sm-10">{{entity.twitter}}</div>
+</div>
+<div class="row">
+    <div class="col-sm-2">Linkedin</div>
+    <div class="col-sm-10">{{entity.linkedin}}</div>
+</div>
+

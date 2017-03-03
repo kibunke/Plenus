@@ -131,6 +131,7 @@
                     <th class="">Usuario</th>
                     <th class="">Nombre</th>
                     <th class="text-center">DNI</th>
+                    <th class="">Municipio</th>
                     <th class="">Perfil</th>
                     <th class="" title="Email registrado"><span class="fa fa-envelope fa-lg"></span></th>
                     <th class="" title="Usuario Activo"><span class="fa fa-user fa-lg"></span></th>
@@ -172,6 +173,7 @@
                         { "data": "user" },
                         { "data": "persona.name" },
                         { "data": "persona.dni" },
+                        { "data": "persona.municipio" },
                         { "data": "perfil" },
                         { "data": "persona.email" },
                         { "data": "active" },
@@ -187,7 +189,7 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [1,6,7,8,9,10]
+                            "targets": [1,7,8,9,10,11]
                         },
                         {
                             "targets": 1,
@@ -199,7 +201,7 @@
                                         }
                         },
                         {
-                            "targets": 6,
+                            "targets": 7,
                             "data": false,
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' ?
@@ -210,7 +212,7 @@
                                         }
                         },
                         {
-                            "targets": 7,
+                            "targets": 8,
                             "data": false,
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' && data === true ?
@@ -219,7 +221,7 @@
                                         }
                         },
                         {
-                            "targets": 8,
+                            "targets": 9,
                             "data": false,
                             "render":   function ( data, type, full, meta ) {
                                             created = data.created ? new Date(data.created.date).toLocaleString():"";
@@ -232,7 +234,7 @@
                                         }
                         },
                         {
-                            "targets": 9,
+                            "targets": 10,
                             "data": false,
                             "render":   function ( data, type, full, meta ) {
                                             return type === 'display' && data === true ?
