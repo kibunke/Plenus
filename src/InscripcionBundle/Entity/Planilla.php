@@ -541,7 +541,6 @@ abstract class Planilla
                                                       )
                 );
     }
-    
     private function getEquiposJson()
     {
         $equipos = array();
