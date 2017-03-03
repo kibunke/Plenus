@@ -356,4 +356,21 @@ class Torneo
     {
         return $this->segmentos;
     }
+    
+    public function getJson()
+    {
+        return array(
+                'id' => $this->getId(),
+                'nombre' => $this->getNombre(),
+                'datos' => array(
+                    'planillas' => 0,
+                    'equipos' => 0,
+                    'inscriptos' => array(
+                        'total' => 0,
+                        'Femenino' => 0,
+                        'Masculino' => 0,                        
+                    )
+                )
+            );
+    }    
 }

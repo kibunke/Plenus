@@ -12,6 +12,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class PlanillaRepository extends EntityRepository
 {
+    public function getDashboard()
+    {
+        return  $this->getEntityManager()
+                        ->createQuery(" SELECT t.id, t.nombre, sex.nombre as sexoNombre, COUNT(DISTINCT(p)) as planillas, COUNT(DISTINCT(e)) as equipos, COUNT(DISTINCT(c)) as inscriptos, COUNT(DISTINCT(sex)) as sexo
+                                        FROM InscripcionBundle:Planilla p
+                                        JOIN p.segmento s
+                                        JOIN s.torneo t
+                                        LEFT JOIN p.equipos e
+                                        LEFT JOIN e.competidores c
+                                        LEFT JOIN c.genero sex
+                                        GROUP BY t.id,sex.id")
+                        ->getArrayResult();
+    }    
+    
     private $onlyPendientes = false;
     private $idEstatos;
     

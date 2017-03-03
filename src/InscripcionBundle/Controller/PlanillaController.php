@@ -29,6 +29,29 @@ use ResultadoBundle\Entity\Competidor;
 class PlanillaController extends Controller
 {
     /**
+     * @Route("/dashboard", name="planilla_dashboard")
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template()
+     */
+    public function dashboardAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $torneos = $em->getRepository('ResultadoBundle:Torneo')->findAll();
+        $result = [];
+        foreach ($torneos as $torneo){
+            $result[$torneo->getId()] = $torneo->getJson();
+        }
+        $datos = $em->getRepository('InscripcionBundle:Planilla')->getDashboard();
+        foreach ($datos as $dato){
+            $result[$torneo->getId()]['datos']['inscriptos'][$dato['sexoNombre']] += $dato['sexo'];
+        }
+        return array(
+            'datos' => $datos
+        );
+    }
+    
+    /**
      * Lists all Planilla entities.
      *
      * @Route("/list/misPlanillas", name="planilla_mis_list")
@@ -97,7 +120,6 @@ class PlanillaController extends Controller
         );
         
         foreach ($filter['rows'] as $planilla){
-            //var_dump($planilla);
             $data['data'][] = array(
                 "id"        => "<strong>".str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
