@@ -1,5 +1,7 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
-    <button disabled class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></button>
+    {% if is_granted('ROLE_INSCRIPCION_PLANILLA_PRINT') %}
+        <a href="{{ path('planilla_print', {'segmento': entity.id}) }}" class="btn btn-xs btn-blue" title="Imprimir planilla en blanco"><i class="fa fa-print"></i></a>
+    {% endif %}
     {% if is_granted('ROLE_INSCRIPCION_PLANILLA_NEW') %}
         {#<a  href="#1" class="show-sv" onclick="$('.page-header h1').toggle();$.Planilla.add('{{ path('planilla_new') }}')" href="#globalSubView" data-startFrom="right"">#}
         <button title="Agregar un planillade buena fe en el segmento" onclick="$.Default.planilla.add('{{ entity.id }}')" class="btn btn-xs btn-green"><i class="fa fa-plus fa-white"></i></button>
@@ -11,18 +13,20 @@
             <i class="fa fa-cog"></i> <span class="caret"></span>
         </a>
         <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-            <li>
-                <a disabled role="menuitem" tabindex="-1" href="#1">
-                    <i class="fa fa-eye"></i> Ver
-                </a>
-            </li>
-            {#% if is_granted('ROLE_INSCRIPCION_PLANILLA_NEW') %}
-            <li>
-                <a onclick="$.Segmento.deleteConfirm('{{ path('segmento_delete', { 'id': entity.id }) }}')" role="menuitem" tabindex="-1" href="#">
-                    <i class="fa fa-times"></i> Eliminar
-                </a>
-            </li>
-            {% endif %#}
+            {% if is_granted('ROLE_INSCRIPCION_PLANILLA_PRINT') %}
+                <li>
+                    <a role="menuitem" tabindex="-1" href="href="{{ path('planilla_print', {'segmento': entity.id}) }}"">
+                        <i class="fa fa-print"></i> Imprimir
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_INSCRIPCION_PLANILLA_NEW') %}
+                <li>
+                    <a title="Agregar un planillade buena fe en el segmento" onclick="$.Default.planilla.add('{{ entity.id }}')" role="menuitem" tabindex="-1" href="#2">
+                        <i class="fa fa-plus"></i> Nueva
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </div>

@@ -134,6 +134,7 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
     {
         $parent = new ClassMetadata(self::PARENTCLASS);
         $parent->addPropertyConstraint('firstName', new ConstraintA());
+        $parent->addPropertyConstraint('firstName', new ConstraintB(array('groups' => 'foo')));
 
         $this->metadata->mergeConstraints($parent);
         $this->metadata->addPropertyConstraint('firstName', new ConstraintA());
@@ -147,9 +148,13 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
             'Default',
             'Entity',
         )));
+        $constraintB = new ConstraintB(array(
+            'groups' => array('foo'),
+        ));
 
         $constraints = array(
             $constraintA1,
+            $constraintB,
             $constraintA2,
         );
 
@@ -164,6 +169,9 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
             'Entity' => array(
                 $constraintA1,
                 $constraintA2,
+            ),
+            'foo' => array(
+                $constraintB,
             ),
         );
 
@@ -295,4 +303,14 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertCount(0, $this->metadata->getPropertyMetadata('foo'), '->getPropertyMetadata() returns an empty collection if no metadata is configured for the given property');
     }
+}
+
+class ParentClass
+{
+    public $example = 0;
+}
+
+class ChildClass extends ParentClass
+{
+    public $example = 1;    // overrides parent property of same name
 }

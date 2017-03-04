@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'jonasarts\\Bundle\\TCPDFBundle' => array($vendorDir . '/jonasarts/tcpdf-bundle'),
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'SensioLabs\\Security' => array($vendorDir . '/sensiolabs/security-checker'),
     'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib'),

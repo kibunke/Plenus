@@ -71,7 +71,7 @@ class RequestDataCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testKernelResponseDoesNotStartSession()
     {
-        $kernel = $this->getMock(HttpKernelInterface::class);
+        $kernel = $this->getMockBuilder(HttpKernelInterface::class)->getMock();
         $request = new Request();
         $session = new Session(new MockArraySessionStorage());
         $request->setSession($session);
@@ -234,6 +234,7 @@ class RequestDataCollectorTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('X-Foo-Bar', null);
         $response->headers->setCookie(new Cookie('foo', 'bar', 1, '/foo', 'localhost', true, true));
         $response->headers->setCookie(new Cookie('bar', 'foo', new \DateTime('@946684800')));
         $response->headers->setCookie(new Cookie('bazz', 'foo', '2000-12-12'));
@@ -246,8 +247,8 @@ class RequestDataCollectorTest extends \PHPUnit_Framework_TestCase
      */
     protected function injectController($collector, $controller, $request)
     {
-        $resolver = $this->getMock('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface');
-        $httpKernel = new HttpKernel(new EventDispatcher(), $resolver, null, $this->getMock(ArgumentResolverInterface::class));
+        $resolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface')->getMock();
+        $httpKernel = new HttpKernel(new EventDispatcher(), $resolver, null, $this->getMockBuilder(ArgumentResolverInterface::class)->getMock());
         $event = new FilterControllerEvent($httpKernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
         $collector->onKernelController($event);
     }

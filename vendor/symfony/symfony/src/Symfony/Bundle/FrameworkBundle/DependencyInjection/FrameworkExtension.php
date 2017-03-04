@@ -35,7 +35,6 @@ use Symfony\Component\Serializer\Normalizer\DataUriNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Symfony\Component\Workflow;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * FrameworkExtension.
@@ -205,9 +204,6 @@ class FrameworkExtension extends Extension
 
             'Symfony\\Component\\EventDispatcher\\Event',
             'Symfony\\Component\\EventDispatcher\\ContainerAwareEventDispatcher',
-
-            'Symfony\\Component\\HttpFoundation\\Response',
-            'Symfony\\Component\\HttpFoundation\\ResponseHeaderBag',
 
             'Symfony\\Component\\HttpKernel\\EventListener\\ResponseListener',
             'Symfony\\Component\\HttpKernel\\EventListener\\RouterListener',
@@ -408,13 +404,13 @@ class FrameworkExtension extends Extension
             $type = $workflow['type'];
 
             $transitions = array();
-            foreach ($workflow['transitions'] as $transitionName => $transition) {
+            foreach ($workflow['transitions'] as $transition) {
                 if ($type === 'workflow') {
-                    $transitions[] = new Definition(Workflow\Transition::class, array($transitionName, $transition['from'], $transition['to']));
+                    $transitions[] = new Definition(Workflow\Transition::class, array($transition['name'], $transition['from'], $transition['to']));
                 } elseif ($type === 'state_machine') {
                     foreach ($transition['from'] as $from) {
                         foreach ($transition['to'] as $to) {
-                            $transitions[] = new Definition(Workflow\Transition::class, array($transitionName, $from, $to));
+                            $transitions[] = new Definition(Workflow\Transition::class, array($transition['name'], $from, $to));
                         }
                     }
                 }
@@ -767,23 +763,14 @@ class FrameworkExtension extends Extension
             throw new \LogicException('An asset package cannot have base URLs and base paths.');
         }
 
-        if (!$baseUrls) {
-            $package = new DefinitionDecorator('assets.path_package');
-
-            return $package
-                ->setPublic(false)
-                ->replaceArgument(0, $basePath)
-                ->replaceArgument(1, $version)
-            ;
-        }
-
-        $package = new DefinitionDecorator('assets.url_package');
-
-        return $package
+        $package = new DefinitionDecorator($baseUrls ? 'assets.url_package' : 'assets.path_package');
+        $package
             ->setPublic(false)
-            ->replaceArgument(0, $baseUrls)
+            ->replaceArgument(0, $baseUrls ?: $basePath)
             ->replaceArgument(1, $version)
         ;
+
+        return $package;
     }
 
     private function createVersion(ContainerBuilder $container, $version, $format, $name)
@@ -845,12 +832,11 @@ class FrameworkExtension extends Extension
             $dirs[] = dirname(dirname($r->getFileName())).'/Resources/translations';
         }
         $rootDir = $container->getParameter('kernel.root_dir');
-        foreach ($container->getParameter('kernel.bundles') as $bundle => $class) {
-            $reflection = new \ReflectionClass($class);
-            if (is_dir($dir = dirname($reflection->getFileName()).'/Resources/translations')) {
+        foreach ($container->getParameter('kernel.bundles_metadata') as $name => $bundle) {
+            if (is_dir($dir = $bundle['path'].'/Resources/translations')) {
                 $dirs[] = $dir;
             }
-            if (is_dir($dir = $rootDir.sprintf('/Resources/%s/translations', $bundle))) {
+            if (is_dir($dir = $rootDir.sprintf('/Resources/%s/translations', $name))) {
                 $dirs[] = $dir;
             }
         }
@@ -913,6 +899,10 @@ class FrameworkExtension extends Extension
             return;
         }
 
+        if (!class_exists('Symfony\Component\Validator\Validation')) {
+            throw new LogicException('Validation support cannot be enabled as the Validator component is not installed.');
+        }
+
         $loader->load('validator.xml');
 
         $validatorBuilder = $container->getDefinition('validator.builder');
@@ -969,11 +959,8 @@ class FrameworkExtension extends Extension
             $container->addResource(new FileResource($files[0][0]));
         }
 
-        $bundles = $container->getParameter('kernel.bundles');
-        foreach ($bundles as $bundle) {
-            $reflection = new \ReflectionClass($bundle);
-            $dirname = dirname($reflection->getFileName());
-
+        foreach ($container->getParameter('kernel.bundles_metadata') as $bundle) {
+            $dirname = $bundle['path'];
             if (is_file($file = $dirname.'/Resources/config/validation.xml')) {
                 $files[0][] = $file;
                 $container->addResource(new FileResource($file));
@@ -1042,11 +1029,13 @@ class FrameworkExtension extends Extension
 
             $container
                 ->getDefinition('annotations.cached_reader')
-                ->replaceArgument(1, new Reference($cacheService))
                 ->replaceArgument(2, $config['debug'])
+                ->addTag('annotations.cached_reader', array('provider' => $cacheService))
                 ->addAutowiringType(Reader::class)
             ;
             $container->setAlias('annotation_reader', 'annotations.cached_reader');
+        } else {
+            $container->removeDefinition('annotations.cached_reader');
         }
     }
 
@@ -1146,10 +1135,8 @@ class FrameworkExtension extends Extension
             $serializerLoaders[] = $annotationLoader;
         }
 
-        $bundles = $container->getParameter('kernel.bundles');
-        foreach ($bundles as $bundle) {
-            $reflection = new \ReflectionClass($bundle);
-            $dirname = dirname($reflection->getFileName());
+        foreach ($container->getParameter('kernel.bundles_metadata') as $bundle) {
+            $dirname = $bundle['path'];
 
             if (is_file($file = $dirname.'/Resources/config/serialization.xml')) {
                 $definition = new Definition('Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader', array($file));
@@ -1239,7 +1226,6 @@ class FrameworkExtension extends Extension
     private function registerCacheConfiguration(array $config, ContainerBuilder $container)
     {
         $version = substr(str_replace('/', '-', base64_encode(hash('sha256', uniqid(mt_rand(), true), true))), 0, 22);
-        $container->getDefinition('cache.annotations')->replaceArgument(2, $version);
         $container->getDefinition('cache.adapter.apcu')->replaceArgument(2, $version);
         $container->getDefinition('cache.adapter.system')->replaceArgument(2, $version);
         $container->getDefinition('cache.adapter.filesystem')->replaceArgument(2, $config['directory']);

@@ -1,5 +1,8 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
     <button onclick="$.Default.show('{{ path('planilla_show', { 'id': entity.id }) }}')" class="btn btn-xs btn-light-azure"><i class="fa fa-eye"></i></button>
+    {% if is_granted('ROLE_INSCRIPCION_PLANILLA_PRINT') %}
+        <a href="{#{ path('planilla_print', {'segmento': entity.id}) }#}" class="btn btn-xs btn-blue" title="Imprimir planilla en blanco"><i class="fa fa-print"></i></a>
+    {% endif %}    
     {% if entity.isEditable(app.user) %}
         <button onclick="$.Default.edit('{{ path('planilla_edit', { 'id': entity.id }) }}')" class="btn btn-xs btn-green"><i class="fa fa-edit"></i></button>
     {% endif %}

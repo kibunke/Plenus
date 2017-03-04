@@ -194,6 +194,13 @@ class ComposerStaticInit95765934b6178ad0696d3262eb62eb80
     );
 
     public static $prefixesPsr0 = array (
+        'j' => 
+        array (
+            'jonasarts\\Bundle\\TCPDFBundle' => 
+            array (
+                0 => __DIR__ . '/..' . '/jonasarts/tcpdf-bundle',
+            ),
+        ),
         'T' => 
         array (
             'Twig_' => 

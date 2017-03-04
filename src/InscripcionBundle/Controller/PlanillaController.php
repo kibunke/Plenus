@@ -5,6 +5,7 @@ namespace InscripcionBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,7 +20,7 @@ use ResultadoBundle\Entity\DirectorTecnico;
 use InscripcionBundle\Form\PlanillaType;
 use InscripcionBundle\Entity\Segmento;
 use ResultadoBundle\Entity\Competidor;
-
+use CommonBundle\PDFs\DocumentoPDF;
 /**
  * Planilla controller.
  *
@@ -217,7 +218,7 @@ class PlanillaController extends Controller
                     $planilla->addEstado($estado);
                     $em->persist($planilla);
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Se creo la Planilla <h3 class="no-margin">N°'. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</h3>"));
+                    return new JsonResponse(array('success' => true, 'message' => 'Planilla N°'. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -417,7 +418,7 @@ class PlanillaController extends Controller
                     $planilla->setUpdatedBy($this->getUser());
                     $planilla->setUpdatedAt(new \DateTime());
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Se modificó la Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
+                    return new JsonResponse(array('success' => true, 'message' => 'Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -467,4 +468,51 @@ class PlanillaController extends Controller
         
         return false;
     }
+    
+    /**
+     * Print a Planilla entity.
+     *
+     * @Route("/print/{segmento}/{idPlanilla}", name="planilla_print", defaults={"idPlanilla" = null})
+     * @Method("GET")
+     * @Security("has_role('ROLE_INSCRIPCION_PLANILLA_PRINT')")
+     */    
+    public function printAction(Request $request,Segmento $segmento, $idPlanilla)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if ($idPlanilla){
+            $planilla = $em->getRepository('InscripcionBundle:Planilla')->find($idPlanilla);    
+        }else{
+            if ($segmento->getMaxIntegrantes() == 1){
+                $planilla = new Individual();
+            }else{
+                $planilla = new Equipo();
+            }
+        }
+
+        $pdf = new DocumentoPDF();
+        $pdf->setMargenTop(5);
+        $pdf->setMargenRight(10);
+        $pdf->setMargenLeft(5);
+        $pdf->init();
+        
+        $pdf->deletePage(1);
+        //foreach($eventos as $evento){
+            $pdf->AddPage('L', 'LEGAL');
+            $trs = '<tr>
+                        <th style="border-bottom: 1px solid silver;width: 50%" align="left">
+                            <img src="'.$request->getUriForPath('/../assets/images/logos/logojuegos.png').'" style="height:50px;float:left">
+                        </th>
+                        <th style="border-bottom: 1px solid silver;width: 50%" align="right">
+                            <img src="'.$request->getUriForPath('/../assets/images/logos/buenosAiresProvBlack.png').'" style="height:50px;right:0px">
+                        </th>
+                    </tr>';
+            //$trs = '<tr>
+            //            <th style="border-bottom: 1px solid silver;width: 25%" align="center"><b>Fecha</b></th>
+            //            <th style="border-bottom: 1px solid silver;width: 75%"><b>Descripción</b></th>
+            //        </tr>';     
+          
+            $pdf->writeHTML('<table cellspacing="0" cellpadding="0">'.$trs.'</table>', true, false, true, false, '');
+        //}
+        return new Response($pdf->Output('Cronograma.pdf','D'));
+    }    
 }

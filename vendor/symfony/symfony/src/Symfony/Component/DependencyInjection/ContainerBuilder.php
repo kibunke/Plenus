@@ -91,12 +91,12 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     private $usedTags = array();
 
     /**
-     * @var string[][] A map of env var names to their placeholders
+     * @var string[][] a map of env var names to their placeholders
      */
     private $envPlaceholders = array();
 
     /**
-     * @var int[] A map of env vars to their resolution counter.
+     * @var int[] a map of env vars to their resolution counter
      */
     private $envCounters = array();
 
@@ -206,7 +206,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param ResourceInterface $resource A resource instance
      *
-     * @return ContainerBuilder The current instance
+     * @return $this
      */
     public function addResource(ResourceInterface $resource)
     {
@@ -224,7 +224,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param ResourceInterface[] $resources An array of resources
      *
-     * @return ContainerBuilder The current instance
+     * @return $this
      */
     public function setResources(array $resources)
     {
@@ -242,7 +242,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param object $object An object instance
      *
-     * @return ContainerBuilder The current instance
+     * @return $this
      */
     public function addObjectResource($object)
     {
@@ -258,7 +258,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param \ReflectionClass $class
      *
-     * @return ContainerBuilder The current instance
+     * @return $this
      */
     public function addClassResource(\ReflectionClass $class)
     {
@@ -281,7 +281,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @param string $extension The extension alias or namespace
      * @param array  $values    An array of values that customizes the extension
      *
-     * @return ContainerBuilder The current instance
+     * @return $this
      *
      * @throws BadMethodCallException When this ContainerBuilder is frozen
      * @throws \LogicException        if the container is frozen
@@ -306,7 +306,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @param string                $type     The type of compiler pass
      * @param int                   $priority Used to sort the passes
      *
-     * @return ContainerBuilder The current instance
+     * @return $this
      */
     public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION/*, $priority = 0*/)
     {
@@ -424,7 +424,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         }
 
         if (!isset($this->definitions[$id]) && isset($this->aliasDefinitions[$id])) {
-            return $this->get($this->aliasDefinitions[$id], $invalidBehavior);
+            return $this->get((string) $this->aliasDefinitions[$id], $invalidBehavior);
         }
 
         try {
@@ -1026,34 +1026,47 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     }
 
     /**
-     * Resolves env parameter placeholders in a string.
+     * Resolves env parameter placeholders in a string or an array.
      *
-     * @param string      $string    The string to resolve
+     * @param mixed       $value     The value to resolve
      * @param string|null $format    A sprintf() format to use as replacement for env placeholders or null to use the default parameter format
      * @param array       &$usedEnvs Env vars found while resolving are added to this array
      *
      * @return string The string with env parameters resolved
      */
-    public function resolveEnvPlaceholders($string, $format = null, array &$usedEnvs = null)
+    public function resolveEnvPlaceholders($value, $format = null, array &$usedEnvs = null)
     {
-        $bag = $this->getParameterBag();
-        $envPlaceholders = $bag instanceof EnvPlaceholderParameterBag ? $bag->getEnvPlaceholders() : $this->envPlaceholders;
-
         if (null === $format) {
             $format = '%%env(%s)%%';
         }
 
+        if (is_array($value)) {
+            $result = array();
+            foreach ($value as $k => $v) {
+                $result[$this->resolveEnvPlaceholders($k, $format, $usedEnvs)] = $this->resolveEnvPlaceholders($v, $format, $usedEnvs);
+            }
+
+            return $result;
+        }
+
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $bag = $this->getParameterBag();
+        $envPlaceholders = $bag instanceof EnvPlaceholderParameterBag ? $bag->getEnvPlaceholders() : $this->envPlaceholders;
+
         foreach ($envPlaceholders as $env => $placeholders) {
             foreach ($placeholders as $placeholder) {
-                if (false !== stripos($string, $placeholder)) {
-                    $string = str_ireplace($placeholder, sprintf($format, $env), $string);
+                if (false !== stripos($value, $placeholder)) {
+                    $value = str_ireplace($placeholder, sprintf($format, $env), $value);
                     $usedEnvs[$env] = $env;
                     $this->envCounters[$env] = isset($this->envCounters[$env]) ? 1 + $this->envCounters[$env] : 1;
                 }
             }
         }
 
-        return $string;
+        return $value;
     }
 
     /**
@@ -1127,14 +1140,14 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Shares a given service in the container.
      *
-     * @param Definition $definition
-     * @param mixed      $service
-     * @param string     $id
+     * @param Definition  $definition
+     * @param mixed       $service
+     * @param string|null $id
      */
     private function shareService(Definition $definition, $service, $id)
     {
-        if ($definition->isShared()) {
-            $this->services[$lowerId = strtolower($id)] = $service;
+        if (null !== $id && $definition->isShared()) {
+            $this->services[strtolower($id)] = $service;
         }
     }
 

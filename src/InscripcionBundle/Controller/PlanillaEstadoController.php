@@ -102,7 +102,7 @@ class PlanillaEstadoController extends Controller
                 }
             }else{
                 return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Para pasar una planilla a estado OBSERVADA debe completar la observación obligatoriamente.'));
-            }    
+            }
         }else{
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
@@ -142,16 +142,20 @@ class PlanillaEstadoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $result = $this->canEdit($planilla,true);
         if ($result === true){
-            try {
-                $estado = new EnRevision();
-                $estado->setCreatedBy($this->getUser());
-                $estado->setObservacion($request->request->get('observacion'));
-                $planilla->addEstado($estado);
-                $em->flush();
-                return new JsonResponse(array('success' => true, 'message' => 'La planilla ahora esta en estado En revisión!'));
-            }
-            catch(\Exception $e ){
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
+            if (strlen($request->request->get('observacion')) > 5){
+                try {
+                    $estado = new EnRevision();
+                    $estado->setCreatedBy($this->getUser());
+                    $estado->setObservacion($request->request->get('observacion'));
+                    $planilla->addEstado($estado);
+                    $em->flush();
+                    return new JsonResponse(array('success' => true, 'message' => 'La planilla ahora esta en estado En revisión!'));
+                }
+                catch(\Exception $e ){
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
+                }
+            }else{
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Para pasar una planilla a estado En Revisión debe completar la observación obligatoriamente.'));
             }
         }else{
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
