@@ -515,40 +515,41 @@ class PlanillaController extends Controller
         //        </table>';
         $txtModalidad = $segmento->getModalidad()->getNombre();
         $txtModalidad .= $segmento->getNombre()? " - " . $segmento->getNombre() : '';
+        $municipio = $planilla->getMunicipio() ? $planilla->getMunicipio()->getNombre():'Municipio:';
         $nPlanilla = "N° ".($planilla->getId() ? str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT):'000000');
-        $html .= '<table cellspacing="0" cellpadding="5" style="width:100%;">
+        $html .= '<table cellspacing="0" cellpadding="3" style="width:100%;">
                     <tr>
-                        <th style="border-bottom: 1px solid silver;width: 25%" align="left" rowspan="4">
+                        <th style="border-bottom: 1px solid silver;width: 22%" align="left" rowspan="4">
                             <img src="'.$request->getBasePath().'/assets/images/logos/logojuegos.png'.'" style="height:250px">
                         </th>                    
-                        <th style="width: 35%; text-align:center;font-size:19px;color:#999" rowspan="4">
+                        <th style="width: 37%; text-align:center;font-size:16px;color:#999" rowspan="4">
                             <b>Solicitud de inscripción </b><br>
-                            Lista de buena fe<br/>
-                            <b style="font-size:21px">LA PLATA</b><br>
+                            Lista de buena fe
+                            <div style="font-size:17px;width:100%;'.($planilla->getMunicipio() ? "text-align:center" : "text-align:left").'"><b>'.$municipio.'</b></div>
                             <b style="">'.$nPlanilla.'</b>
                         </th>
-                        <th style="width: 15%;border-bottom: 1px solid silver;text-align:right;font-size:13px;color:#999;font-weight:700">Disciplina</th>
-                        <td style="width: 25%;border-bottom: 1px solid silver;text-align:left;font-size:13px;">'.$segmento->getDisciplina()->getNombreCompleto().'</td>
+                        <th style="width: 15%;border-bottom: 1px solid silver;text-align:right;font-size:12px;color:#999;font-weight:700">Disciplina</th>
+                        <td style="width: 25%;border-bottom: 1px solid silver;text-align:left;font-size:12px;">'.$segmento->getDisciplina()->getNombreCompleto().'</td>
                     </tr>
                     <tr>
-                        <th style="border-bottom: 1px solid silver;text-align:right;font-size:13px;color:#999;font-weight:700">Genero</th>
-                        <td style="border-bottom: 1px solid silver;text-align:left;font-size:13px;">'.$segmento->getGenero()->getNombre().'</td>
+                        <th style="border-bottom: 1px solid silver;text-align:right;font-size:12px;color:#999;font-weight:700">Genero</th>
+                        <td style="border-bottom: 1px solid silver;text-align:left;font-size:12px;">'.$segmento->getGenero()->getNombre().'</td>
                     </tr>
                     <tr>
-                        <th style="border-bottom: 1px solid silver;text-align:right;font-size:13px;color:#999;font-weight:700">Categoria</th>
-                        <td style="border-bottom: 1px solid silver;text-align:left;font-size:13px;">'.$segmento->getCategoria()->getNombre().'</td>
+                        <th style="border-bottom: 1px solid silver;text-align:right;font-size:12px;color:#999;font-weight:700">Categoria</th>
+                        <td style="border-bottom: 1px solid silver;text-align:left;font-size:12px;">'.$segmento->getCategoria()->getNombre().'</td>
                     </tr>
                     <tr>
-                        <th style="text-align:right;color:#999;font-weight:700;font-size:13px">Modalidad</th>
-                        <td style="text-align:left;font-size:13px;">'.$txtModalidad.'</td>
+                        <th style="text-align:right;color:#999;font-weight:700;font-size:12px">Modalidad</th>
+                        <td style="text-align:left;font-size:12px;">'.$txtModalidad.'</td>
                     </tr>
                 </table>';
         $arrPlanilla = $planilla->getJson();
         $html .= $this->getTableEquiposHTML($arrPlanilla);
         $html .= $this->getTableFooter($arrPlanilla);
-        $html .= '<div style="font-size:8px">
+        $html .= '<div style="font-size:7px">
             * Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.<br>
-            * Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.<br>
+            * Reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.<br>
             * La presente planilla debe ser confeccionada a máquina o con letra tipo imprenta, consignándose la totalidad de los datos solicitados, que se consideran como DECLARACION JURADA.<br>
             * Acepto que los datos proporcionados sean utilizados por el Gobierno de la provincia de Buenos Aires para envíos de información Institucional.<br>
         </div>';
@@ -571,17 +572,17 @@ class PlanillaController extends Controller
                             <td style="border:1px solid silver"></td>
                         </tr>';
         $html = '
-                <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px;">
+                <table cellspacing="0" cellpadding="2" style="width:100%;font-size:10px;">
                     <tr>
-                        <th style="width:5%;text-align:center;border:1px solid silver">#</th>
-                        <th style="width:10%;text-align:center;border:1px solid silver">N° documento (*)</th>
-                        <th style="width:15%;border:1px solid silver">Apellido (*)</th>
-                        <th style="width:15%;border:1px solid silver">Nombres (*)</th>
-                        <th style="width:6%;border:1px solid silver">Sexo (*)</th>
-                        <th style="width:10%;text-align:center;border:1px solid silver">F. nacimiento (*)</th>
+                        <th style="width:3%;text-align:center;border:1px solid silver">#</th>
+                        <th style="width:8%;text-align:center;border:1px solid silver">N° documento</th>
+                        <th style="width:15%;border:1px solid silver">Apellido</th>
+                        <th style="width:15%;border:1px solid silver">Nombres</th>
+                        <th style="width:4%;text-align:center;border:1px solid silver">Sexo</th>
+                        <th style="width:8%;text-align:center;border:1px solid silver">F. nacimiento</th>
                         <th style="width:10%;text-align:center;border:1px solid silver">Teléfono</th>
-                        <th style="width:14%;border:1px solid silver">Municipio (*)</th>
-                        <th style="width:10%;text-align:center;border:1px solid silver">e-mail</th>
+                        <th style="width:16%;border:1px solid silver">Municipio</th>
+                        <th style="width:16%;text-align:center;border:1px solid silver">E-mail</th>
                         <th style="width:5%;border:1px solid silver">Obs.</th>
                     </tr>';
         //$arrPlanilla = $planilla->getJson();
@@ -595,7 +596,7 @@ class PlanillaController extends Controller
                                     <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['dni'].'</td>
                                     <td style="border:1px solid silver">'.$competidor['persona']['apellido'].'</td>
                                     <td style="border:1px solid silver">'.$competidor['persona']['nombre'].'</td>
-                                    <td style="border:1px solid silver">'.$competidor['persona']['sexo'].'</td>
+                                    <td style="border:1px solid silver">'.substr($competidor['persona']['sexo'],0,1).'</td>
                                     <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['fNacimiento'].'</td>
                                     <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['telefono'].'</td>
                                     <td style="border:1px solid silver">'.$competidor['persona']['municipio'].'</td>
@@ -630,7 +631,7 @@ class PlanillaController extends Controller
                                         <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['dni'].'</td>
                                         <td style="border:1px solid silver">'.$competidor['persona']['apellido'].'</td>
                                         <td style="border:1px solid silver">'.$competidor['persona']['nombre'].'</td>
-                                        <td style="border:1px solid silver">'.$competidor['persona']['sexo'].'</td>
+                                        <td style="border:1px solid silver">'.substr($competidor['persona']['sexo'],0,1).'</td>
                                         <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['fNacimiento'].'</td>
                                         <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['telefono'].'</td>
                                         <td style="border:1px solid silver">'.$competidor['persona']['municipio'].'</td>
@@ -657,7 +658,7 @@ class PlanillaController extends Controller
             <table cellspacing="0" cellpadding="0" style="width:100%;font-size:10px;">
                 <tr>
                     <td>
-                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px;">
+                        <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px;">
                             <tr>
                                 <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Director técnico</th>
                             </tr>
@@ -674,13 +675,13 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;">'.($tecnico ? $tecnico['dni'] :'').'</td>
                             </tr>
                             <tr class="sello">
-                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Firma</th>
+                                <th style="border:1px solid silver;background-color:#ddd;height:30px">Firma</th>
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
                     </td>    
                     <td>
-                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px;float:left">
+                        <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px;float:left">
                             <tr>
                                 <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Institución a la que representa</th>
                             </tr>
@@ -697,13 +698,13 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;">'.($institucion ? $institucion['telefono'] :'').'</td>
                             </tr>
                             <tr class="sello">
-                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Sello</th>
+                                <th style="border:1px solid silver;background-color:#ddd;height:30px">Sello</th>
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
                     </td>    
                     <td>
-                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px">
+                        <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px">
                             <tr>
                                 <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Responsable Institución</th>
                             </tr>
@@ -720,13 +721,13 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;">'.($institucion ? $institucion['responsable']['dni'] :'').'</td>
                             </tr>
                             <tr class="sello">
-                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Firma y Sello</th>
+                                <th style="border:1px solid silver;background-color:#ddd;height:30px">Firma y Sello</th>
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
                     </td>    
                     <td>
-                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px">
+                        <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px">
                             <tr>
                                 <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Responsable Municipio</th>
                             </tr>
@@ -743,7 +744,7 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;">'.$arrPlanilla['responsableMunicipio']['dni'].'</td>
                             </tr>
                             <tr class="sello">
-                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Firma y Sello</th>
+                                <th style="border:1px solid silver;background-color:#ddd;height:30px">Firma y Sello</th>
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
