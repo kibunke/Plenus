@@ -234,7 +234,7 @@
         <div class="hidden">
             {{ form_rest(form) }}
         </div>
-        <button type="button" class="btn btn-defaut" onclick="$.Planilla.save()">Guardar</button>
+        <button type="button" class="btn btn-defaut btn-lg pull-right btn-primary" onclick="$.Planilla.save()"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Guardar</button>
     </div>
     <p><i class="fa fa-info" aria-hidden="true"></i> Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.</p>
     <p><i class="fa fa-info" aria-hidden="true"></i> Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.</p>
@@ -474,7 +474,8 @@
                             confirmButtonText: 'Si, imprimir!',
                             cancelButtonText: 'No, continuar!'
                         },function () {
-                            toastr['success']('Se esta generando el PDF de la planilla', 'Imprimiendo!');
+                            toastr['success']('Aguarde mientras se genera el PDF de la planilla', 'Imprimiendo!');
+                            window.location.href = data.pathImp;
                         });
                         $.hideSubview();
                         $('.page-header h1').toggle();

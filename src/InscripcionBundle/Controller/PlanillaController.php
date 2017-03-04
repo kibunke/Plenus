@@ -218,7 +218,7 @@ class PlanillaController extends Controller
                     $planilla->addEstado($estado);
                     $em->persist($planilla);
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Planilla N°'. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
+                    return new JsonResponse(array('success' => true, 'pathImp' => $this->generateUrl('planilla_print', array('segmento' => $segmento->getId(),'idPlanilla' => $planilla->getId())), 'message' => 'Planilla N°'. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -296,7 +296,10 @@ class PlanillaController extends Controller
             if (!$institucion){
                 $institucion = Institucion::getInstance($this->getUser(),$json);
                 $institucion->setMunicipio($planilla->getMunicipio());
-            }    
+            }else{
+                if (strlen($json->telefono)>4 && strlen($institucion->getTelefono())<4)
+                    $institucion->setTelefono($json->telefono);
+            }
         }catch(\Exception $e){
             //if(strpos($e->getMessage(), 'Plenus:') !== false){
                 throw $e;
@@ -418,7 +421,7 @@ class PlanillaController extends Controller
                     $planilla->setUpdatedBy($this->getUser());
                     $planilla->setUpdatedAt(new \DateTime());
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'message' => 'Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
+                    return new JsonResponse(array('success' => true, 'pathImp' => $this->generateUrl('planilla_print', array('segmento' => $planilla->getSegmento()->getId(),'idPlanilla' => $planilla->getId())), 'message' => 'Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -479,6 +482,7 @@ class PlanillaController extends Controller
     public function printAction(Request $request,Segmento $segmento, $idPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
+        //var_dump($idPlanilla);
         if ($idPlanilla){
             $planilla = $em->getRepository('InscripcionBundle:Planilla')->find($idPlanilla);    
         }else{
@@ -487,32 +491,267 @@ class PlanillaController extends Controller
             }else{
                 $planilla = new Equipo();
             }
+            $planilla->setSegmento($segmento);
         }
 
         $pdf = new DocumentoPDF();
-        $pdf->setMargenTop(5);
+        $pdf->setMargenTop(2);
         $pdf->setMargenRight(10);
         $pdf->setMargenLeft(5);
         $pdf->init();
-        
+
         $pdf->deletePage(1);
-        //foreach($eventos as $evento){
-            $pdf->AddPage('L', 'LEGAL');
-            $trs = '<tr>
-                        <th style="border-bottom: 1px solid silver;width: 50%" align="left">
-                            <img src="'.$request->getUriForPath('/../assets/images/logos/logojuegos.png').'" style="height:50px;float:left">
+        $pdf->AddPage('L', 'LEGAL');
+        $html = '';
+        //$html = '<table cellspacing="0" cellpadding="0">
+        //            <tr>
+        //                <th style="border-bottom: 1px solid silver;width: 50%" align="left">
+        //                    <img src="'.$request->getBasePath().'/assets/images/logos/logojuegos.png'.'" style="height:50px">
+        //                </th>
+        //                <th style="border-bottom: 1px solid silver;width: 50%" align="right">
+        //                    <img src="'.$request->getBasePath().'/assets/images/logos/buenosAiresProvBlack.png'.'" style="height:50px;">
+        //                </th>
+        //            </tr>
+        //        </table>';
+        $txtModalidad = $segmento->getModalidad()->getNombre();
+        $txtModalidad .= $segmento->getNombre()? " - " . $segmento->getNombre() : '';
+        $nPlanilla = "N° ".($planilla->getId() ? str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT):'000000');
+        $html .= '<table cellspacing="0" cellpadding="5" style="width:100%;">
+                    <tr>
+                        <th style="border-bottom: 1px solid silver;width: 25%" align="left" rowspan="4">
+                            <img src="'.$request->getBasePath().'/assets/images/logos/logojuegos.png'.'" style="height:250px">
+                        </th>                    
+                        <th style="width: 35%; text-align:center;font-size:19px;color:#999" rowspan="4">
+                            <b>Solicitud de inscripción </b><br>
+                            Lista de buena fe<br/>
+                            <b style="font-size:21px">LA PLATA</b><br>
+                            <b style="">'.$nPlanilla.'</b>
                         </th>
-                        <th style="border-bottom: 1px solid silver;width: 50%" align="right">
-                            <img src="'.$request->getUriForPath('/../assets/images/logos/buenosAiresProvBlack.png').'" style="height:50px;right:0px">
-                        </th>
+                        <th style="width: 15%;border-bottom: 1px solid silver;text-align:right;font-size:13px;color:#999;font-weight:700">Disciplina</th>
+                        <td style="width: 25%;border-bottom: 1px solid silver;text-align:left;font-size:13px;">'.$segmento->getDisciplina()->getNombreCompleto().'</td>
+                    </tr>
+                    <tr>
+                        <th style="border-bottom: 1px solid silver;text-align:right;font-size:13px;color:#999;font-weight:700">Genero</th>
+                        <td style="border-bottom: 1px solid silver;text-align:left;font-size:13px;">'.$segmento->getGenero()->getNombre().'</td>
+                    </tr>
+                    <tr>
+                        <th style="border-bottom: 1px solid silver;text-align:right;font-size:13px;color:#999;font-weight:700">Categoria</th>
+                        <td style="border-bottom: 1px solid silver;text-align:left;font-size:13px;">'.$segmento->getCategoria()->getNombre().'</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align:right;color:#999;font-weight:700;font-size:13px">Modalidad</th>
+                        <td style="text-align:left;font-size:13px;">'.$txtModalidad.'</td>
+                    </tr>
+                </table>';
+        $arrPlanilla = $planilla->getJson();
+        $html .= $this->getTableEquiposHTML($arrPlanilla);
+        $html .= $this->getTableFooter($arrPlanilla);
+        $html .= '<div style="font-size:8px">
+            * Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.<br>
+            * Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.<br>
+            * La presente planilla debe ser confeccionada a máquina o con letra tipo imprenta, consignándose la totalidad de los datos solicitados, que se consideran como DECLARACION JURADA.<br>
+            * Acepto que los datos proporcionados sean utilizados por el Gobierno de la provincia de Buenos Aires para envíos de información Institucional.<br>
+        </div>';
+        $pdf->writeHTML($html, true, false, true, false, '');
+        return new Response($pdf->Output($segmento->getNombreCompleto().'.pdf','D'));
+    }
+    
+    private function getTableEquiposHTML($arrPlanilla)
+    {
+        $blankRow =    '<tr>
+                            <th style="text-align:center;border:1px solid silver;background-color:#ddd">%nROW%</th>
+                            <td style="text-align:center;border:1px solid silver"></td>
+                            <td style="border:1px solid silver"></td>
+                            <td style="border:1px solid silver"></td>
+                            <td style="border:1px solid silver"></td>
+                            <td style="text-align:center;border:1px solid silver"></td>
+                            <td style="text-align:center;border:1px solid silver"></td>
+                            <td style="border:1px solid silver"></td>
+                            <td style="text-align:center;border:1px solid silver"></td>
+                            <td style="border:1px solid silver"></td>
+                        </tr>';
+        $html = '
+                <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px;">
+                    <tr>
+                        <th style="width:5%;text-align:center;border:1px solid silver">#</th>
+                        <th style="width:10%;text-align:center;border:1px solid silver">N° documento (*)</th>
+                        <th style="width:15%;border:1px solid silver">Apellido (*)</th>
+                        <th style="width:15%;border:1px solid silver">Nombres (*)</th>
+                        <th style="width:6%;border:1px solid silver">Sexo (*)</th>
+                        <th style="width:10%;text-align:center;border:1px solid silver">F. nacimiento (*)</th>
+                        <th style="width:10%;text-align:center;border:1px solid silver">Teléfono</th>
+                        <th style="width:14%;border:1px solid silver">Municipio (*)</th>
+                        <th style="width:10%;text-align:center;border:1px solid silver">e-mail</th>
+                        <th style="width:5%;border:1px solid silver">Obs.</th>
                     </tr>';
-            //$trs = '<tr>
-            //            <th style="border-bottom: 1px solid silver;width: 25%" align="center"><b>Fecha</b></th>
-            //            <th style="border-bottom: 1px solid silver;width: 75%"><b>Descripción</b></th>
-            //        </tr>';     
-          
-            $pdf->writeHTML('<table cellspacing="0" cellpadding="0">'.$trs.'</table>', true, false, true, false, '');
-        //}
-        return new Response($pdf->Output('Cronograma.pdf','D'));
+        //$arrPlanilla = $planilla->getJson();
+        $cantRows = 0;
+        foreach( $arrPlanilla['equipos'] as $equipo ){
+            foreach( $equipo['integrantes'] as $competidor ){
+                if ($competidor['rol'] == 'inscripto' ){
+                    $cantRows++;
+                    $html .=    '<tr>
+                                    <th style="text-align:center;border:1px solid silver;background-color:#ddd">'.$cantRows.'</th>
+                                    <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['dni'].'</td>
+                                    <td style="border:1px solid silver">'.$competidor['persona']['apellido'].'</td>
+                                    <td style="border:1px solid silver">'.$competidor['persona']['nombre'].'</td>
+                                    <td style="border:1px solid silver">'.$competidor['persona']['sexo'].'</td>
+                                    <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['fNacimiento'].'</td>
+                                    <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['telefono'].'</td>
+                                    <td style="border:1px solid silver">'.$competidor['persona']['municipio'].'</td>
+                                    <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['email'].'</td>
+                                    <td style="border:1px solid silver"></td>
+                                </tr>';
+                }
+            }
+        }
+        if ($arrPlanilla['parametros']['maxEqPlanilla'] > 1){
+            for( $i = $cantRows; $i < $arrPlanilla['parametros']['maxEqPlanilla']; $i++){
+                $cantRows++;
+                $html .=  str_replace('%nROW%',$cantRows, $blankRow);
+                    
+            }
+        }else{
+            for( $i = $cantRows; $i < $arrPlanilla['parametros']['maxIntegrantes']; $i++){
+                $cantRows++;
+                $html .=  str_replace('%nROW%',$cantRows, $blankRow);
+                    
+            }            
+        }
+        if ($arrPlanilla['parametros']['maxReemplazos'] > 0){
+            $html .=    '<tr><th colspan="10" style="border:1px solid silver;background-color:#ddd;text-align:center">Sustitutos</th></tr>';
+            $cantRowsSustituto = 0;
+            foreach( $arrPlanilla['equipos'] as $equipo ){
+                foreach( $equipo['integrantes'] as $competidor ){
+                    if ($competidor['rol'] != 'inscripto' ){
+                        $cantRowsSustituto++;
+                        $html .=    '<tr>
+                                        <th style="text-align:center;border:1px solid silver;background-color:#ddd">'.$cantRows.'</th>
+                                        <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['dni'].'</td>
+                                        <td style="border:1px solid silver">'.$competidor['persona']['apellido'].'</td>
+                                        <td style="border:1px solid silver">'.$competidor['persona']['nombre'].'</td>
+                                        <td style="border:1px solid silver">'.$competidor['persona']['sexo'].'</td>
+                                        <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['fNacimiento'].'</td>
+                                        <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['telefono'].'</td>
+                                        <td style="border:1px solid silver">'.$competidor['persona']['municipio'].'</td>
+                                        <td style="text-align:center;border:1px solid silver">'.$competidor['persona']['email'].'</td>
+                                        <td style="border:1px solid silver"></td>
+                                    </tr>';
+                    }
+                }
+            }            
+            for( $i = $cantRowsSustituto; $i < $arrPlanilla['parametros']['maxReemplazos']; $i++){
+                $cantRowsSustituto++;
+                $html .=  str_replace('%nROW%',$cantRowsSustituto, $blankRow);
+            }
+        }
+        return $html .='</table>';
+    }
+    
+    private function getTableFooter($arrPlanilla)
+    {
+        $tecnico = sizeof($arrPlanilla['equipos']) ? $arrPlanilla['equipos'][0]['tecnico'] :null;
+        $institucion = $arrPlanilla['institucion'] ? $arrPlanilla['institucion'] : null;
+        $html = '
+            <div></div>
+            <table cellspacing="0" cellpadding="0" style="width:100%;font-size:10px;">
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px;">
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Director técnico</th>
+                            </tr>
+                            <tr>
+                                <th style="width:30%;border:1px solid silver;background-color:#ddd">Apellido</th>
+                                <td style="width:70%;border:1px solid silver;">'.($tecnico ? $tecnico['apellido'] :'').'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Nombre</th>
+                                <td style="border:1px solid silver;">'.($tecnico ? $tecnico['nombre'] :'').'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Documento</th>
+                                <td style="border:1px solid silver;">'.($tecnico ? $tecnico['dni'] :'').'</td>
+                            </tr>
+                            <tr class="sello">
+                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Firma</th>
+                                <td style="border:1px solid silver;"></td>
+                            </tr>
+                        </table>
+                    </td>    
+                    <td>
+                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px;float:left">
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Institución a la que representa</th>
+                            </tr>
+                            <tr>
+                                <th style="width:30%;border:1px solid silver;background-color:#ddd">Nombre</th>
+                                <td style="width:70%;border:1px solid silver;">'.($institucion ? $institucion['nombre'] :'').'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Domicilio</th>
+                                <td style="border:1px solid silver;">'.($institucion ? $institucion['domicilio'] :'').'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Telefono</th>
+                                <td style="border:1px solid silver;">'.($institucion ? $institucion['telefono'] :'').'</td>
+                            </tr>
+                            <tr class="sello">
+                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Sello</th>
+                                <td style="border:1px solid silver;"></td>
+                            </tr>
+                        </table>
+                    </td>    
+                    <td>
+                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px">
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Responsable Institución</th>
+                            </tr>
+                            <tr>
+                                <th style="width:30%;border:1px solid silver;background-color:#ddd">Apellido</th>
+                                <td style="width:70%;border:1px solid silver;">'.($institucion ? $institucion['responsable']['apellido'] :'').'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Nombre</th>
+                                <td style="border:1px solid silver;">'.($institucion ? $institucion['responsable']['nombre'] :'').'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Documento</th>
+                                <td style="border:1px solid silver;">'.($institucion ? $institucion['responsable']['dni'] :'').'</td>
+                            </tr>
+                            <tr class="sello">
+                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Firma y Sello</th>
+                                <td style="border:1px solid silver;"></td>
+                            </tr>
+                        </table>
+                    </td>    
+                    <td>
+                        <table cellspacing="0" cellpadding="3" style="width:100%;font-size:10px">
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd" class="text-center" colspan="2">Responsable Municipio</th>
+                            </tr>
+                            <tr>
+                                <th style="width:30%;border:1px solid silver;background-color:#ddd">Apellido</th>
+                                <td style="width:70%;border:1px solid silver;">'.$arrPlanilla['responsableMunicipio']['apellido'].'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Nombre</th>
+                                <td style="border:1px solid silver;">'.$arrPlanilla['responsableMunicipio']['nombre'].'</td>
+                            </tr>
+                            <tr>
+                                <th style="border:1px solid silver;background-color:#ddd">Documento</th>
+                                <td style="border:1px solid silver;">'.$arrPlanilla['responsableMunicipio']['dni'].'</td>
+                            </tr>
+                            <tr class="sello">
+                                <th style="border:1px solid silver;background-color:#ddd;height:50px">Firma y Sello</th>
+                                <td style="border:1px solid silver;"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>';
+        
+        return $html;
     }    
+    
 }
