@@ -1,0 +1,104 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-tachometer"></i> DASHBOARD <small>Aquí encontrara los indicadores del módulo de inscripción</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>  
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                    </a>
+                </li>                 
+                <li>
+                    <a href="{#{ path('inscripcion') }#}">
+                        Inscripción
+                    </a>
+                </li>
+                <li class="active">
+                    Dashboard
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    {% for torneo in datos %}
+        <div class="col-md-3">
+            <div class="panel panel-blue">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{ torneo.nombre }} <span class="text-bold"></span></h4>
+                </div>
+                <div class="panel-body">
+                    <div id="container_{{ loop.index }}" class="col-sm-12 text-center">
+                        {{ torneo.planillas }}
+                        {{ torneo.equipos }}
+                        {{ torneo.inscriptos.femenino }}
+                        {{ torneo.inscriptos.masculino }}
+                    </div>        
+                </div>
+            </div>
+        </div>        
+        <script>
+            $('#container_{{ loop.index }}').highcharts({
+                credits:{'enabled':false},                
+                chart: {
+                    type: 'pie',
+                    backgroundColor:'transparent'
+                },
+                title: {
+                    text: '',
+                    style: {'display':'none'}
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.percentage:.1f}%</b><br>{point.y} de {{ torneo.inscriptos.total }}'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: false
+                    }
+                },
+                series: [{
+                    name: 'Inscriptos',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Masculino',
+                        y: {{ torneo.inscriptos.masculino }}
+                    }, {
+                        name: 'Femenino',
+                        y: {{ torneo.inscriptos.femenino }},
+                        sliced: true,
+                        selected: true
+                    }]
+                }]
+            });
+        </script>#}
+    {% endfor %}
+{% endblock %}
+
+{% block otherJavascripts %}
+{% endblock %}

@@ -1,0 +1,7 @@
+parameters:
+    jonasarts.tcpdf.class: jonasarts\Bundle\TCPDFBundle\Services\TCPDF
+
+services:
+    tcpdf:
+        class: %jonasarts.tcpdf.class%
+        arguments: []
