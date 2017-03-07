@@ -128,6 +128,44 @@
                     }
                 });
             },
+            $.PersonaSinUsuario.openAjaxForm = function(url,title) {
+                $('#cancelButton').html('Descartar').removeClass('btn-primary');
+                $('#okButton').removeClass('hide');
+                $.Main.openFormModal(url,title, function(){
+                        $('#panel-config form').submit(function(event){
+                            $('#okButton').button('loading')
+                            event.preventDefault();
+                            $.post(url, $('#panel-config form').serialize(), function(data){
+                                if(data.success){
+                                    toastr['success'](data.message, 'Excelente!');
+                                    $.Main.closeFormModal();
+                                }else if(data.error){
+                                    toastr['error'](data.message, 'Cuidado!');
+                                }else{
+                                    $("#panel-config form").html($(data).find('form').html());
+                                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
+                                }
+                                $('#okButton').button('reset');
+                                
+                            });
+                        });
+                        $('.datetimepicker').datetimepicker({
+				                                  //locale: 'es',
+							                      viewMode: 'years',
+				                                  format: 'DD/MM/YYYY'
+    	                                       });
+                    }
+                );
+            }
+            $.PersonaSinUsuario.verDatosPersona = function(url,title) {
+                $('#cancelButton').html('Cerrar').addClass('btn-primary');
+                $('#okButton').addClass('hide');
+                $.Main.openFormModal(url,title, function(){
+                        
+                        
+                    }
+                );
+            }
             $.PersonaSinUsuario.charts = function(){}
         })(jQuery);
         $(document).ready(function(){$.PersonaSinUsuario.init();});

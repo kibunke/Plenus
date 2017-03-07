@@ -17,6 +17,7 @@ use SeguridadBundle\Form\UsuarioType;
 use SeguridadBundle\Form\UsuarioAdminType;
 use SeguridadBundle\Form\UsuarioEditType;
 use SeguridadBundle\Form\UsuarioCheckDataType;
+use SeguridadBundle\Form\PersonaSinUserType;
 use SeguridadBundle\Entity\Usuario;
 use CommonBundle\Entity\Persona;
 
@@ -476,4 +477,32 @@ class UsuarioController extends Controller
     {
         return array('entity' => $persona);
     }
+    
+    
+    /**
+     *
+     * @Route("/persona/sin/user/{persona}/edit", name="persona_sin_user_edit", condition="request.isXmlHttpRequest()")
+     * @Method({"GET", "POST"})
+     * @Template("CommonBundle::generic.form.html.twig")
+     */
+    public function editPersonaSinUserAction(Request $request,Persona $persona)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(PersonaSinUserType::class, $persona);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $persona->setUpdatedBy($this->getUser());
+            try{
+                $em->flush();
+                return new JsonResponse(array('success' => true, 'message' => 'Se editó la persona.'));
+            }catch (\Exception $e) {
+                $error = $e->getMessage();
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos.', 'debug' => $error));
+            }
+        }
+        return array(
+            'entity' => $persona,
+            'form'   => $form->createView(),
+        );
+    } 
 }
