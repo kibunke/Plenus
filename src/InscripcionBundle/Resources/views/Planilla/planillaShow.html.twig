@@ -300,8 +300,8 @@
                 }
                 $('#planillaBuenaFe tfoot').remove();                
             }else{
-                $.map(_planilla.equipos,(equipo, index)=>{
-                    $.map(equipo.integrantes,(integrante)=>{
+                $.map(_planilla.equipos,(equipo)=>{
+                    $.map(equipo.integrantes,(integrante, index)=>{
                         let $tr = _tr.clone();
                         $tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.id});
                         $tr.find(':nth-child(1)').html(index + 1);
