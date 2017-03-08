@@ -51,7 +51,10 @@ class ActivityListener
 						// store an attribute for reuse during a later user request
 						$session->set('haveUser', $user->getId());
 						$sessionPDO = $this->em->getRepository('SeguridadBundle:Sessions')->findOneBy(array("sessId" => $session->getId()));
-						$sessionPDO->setCreatedBy($user);
+						if($sessionPDO)
+						{
+							$sessionPDO->setCreatedBy($user);
+						}
 					}
 					$user->setLastActivity(new \DateTime());
 					$this->em->flush();
