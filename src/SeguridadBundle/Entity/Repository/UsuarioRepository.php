@@ -62,7 +62,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     
     public function getFilteredRows($request,$user,$auth_checker)
     {
-        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR p.nombre LIKE ?1 OR m.nombre LIKE ?1)";
+        $where = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR f.name LIKE ?1 OR m.nombre LIKE ?1)";
                 
         if(!$auth_checker->isGranted('ROLE_ADMIN'))
         {
