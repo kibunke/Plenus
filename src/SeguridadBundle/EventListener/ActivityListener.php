@@ -40,7 +40,7 @@ class ActivityListener
         if ($event->getRequestType() == HttpKernel::MASTER_REQUEST) {
 			$request = $event->getRequest();
 			// Ignore some routes for not enter into a bucle
-			$routes = ['_reset_password_step1','_changePassword','_checkUserData','_login','_security_check','_new_account','_wdt','_new_account_check_data','perfil_data'];
+			$routes = ['_reset_password_step1','_changePassword','_checkUserData','_login','_security_check','_new_account','_wdt','_new_account_check_data','perfil_data','_profiler'];
 			if ( !in_array($request->attributes->get('_route'), $routes)){
 				// Check token authentication availability
 				$user = $this->securityContext->getToken()->getUser();
