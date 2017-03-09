@@ -158,7 +158,7 @@ class PlanillaRepository extends EntityRepository
             }
         }else{
             if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Publicada')";
+                    //$where .= " AND (est.nombre = 'Publicada')";
                 }
         }
         return $where;
