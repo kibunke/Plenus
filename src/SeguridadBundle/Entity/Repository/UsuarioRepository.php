@@ -36,7 +36,7 @@ class UsuarioRepository extends \Doctrine\ORM\EntityRepository
     
     public function getRows($request,$user,$auth_checker)
     {
-        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","m.nombre","f.name","u.isActive","info","pass","actions"];
+        $columns = ["u.id","u.ico","u.username","p.apellido","p.dni","m.nombre","f.name","","u.isActive","info","pass","actions"];
         $where   = "(u.username LIKE ?1 OR p.apellido LIKE ?1 OR p.nombre LIKE ?1 OR p.dni LIKE ?1 OR f.name LIKE ?1 OR m.nombre LIKE ?1)";
             
         if(!$auth_checker->isGranted('ROLE_ADMIN'))
