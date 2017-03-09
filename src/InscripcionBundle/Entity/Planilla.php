@@ -140,7 +140,7 @@ abstract class Planilla
         $this->createdAt = new \DateTime();
         $this->equipos   = new ArrayCollection();
         $this->estados   = new ArrayCollection();
-        $this->addEstado(new Cargada());
+        //$this->addEstado(new Cargada());
     }
 
     /**
