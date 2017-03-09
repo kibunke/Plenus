@@ -31,11 +31,12 @@ class PlanillaRepository extends EntityRepository
     
     public function dataTable($request,$user,$auth_checker,$onlyPendientes)
     {
+        //SELECT MAX(PlanillaEstado.id) FROM PlanillaEstado INNER JOIN Planilla ON (PlanillaEstado.planilla=Planilla.id) GROUP BY Planilla.id
+
         $estados = array_map('current',$this->getEntityManager()
                         ->createQuery(" SELECT MAX(e.id)
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.estados e
-                                        GROUP BY p.id")
+                                        FROM InscripcionBundle:PlanillaEstado e
+                                        GROUP BY e.planilla")
                         ->getArrayResult());
         $estados[]=0;
         $this->idEstatos = implode(",",$estados);
@@ -91,7 +92,7 @@ class PlanillaRepository extends EntityRepository
     
     public function getFilteredRows($request,$user,$auth_checker)
     {
-        $where = "( d.id LIKE ?1 OR
+        $where = "( p.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
