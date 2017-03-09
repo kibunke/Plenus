@@ -232,8 +232,9 @@ class Persona
     /**
      * Constructor
      */    
-    public function __construct()
+    public function __construct($user = null)
     {
+        $this->createdBy = $user;
         $this->createdAt = new \DateTime();
         $this->isActive = true;
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();

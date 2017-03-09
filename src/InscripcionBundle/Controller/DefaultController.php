@@ -82,6 +82,51 @@ class DefaultController extends Controller
     }
     
     /**
+     * @Route("/competidor/list", name="competidor_list")
+     * @Template()
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function listCompetidorAction(Request $request)
+    {
+        return array();
+    }
+    
+    /**
+     * @Route("/competidor/list/datatable", name="competidor_list_datatable")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function listCompetidorDatatableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('ResultadoBundle:Competidor')->dataTable($request->request);
+        
+        $data=array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+        
+        foreach ($filter['rows'] as $competidor){
+            $data['data'][] = array(
+                                    "id"        => $competidor->getId(),
+                                    "name"      => $competidor->getNombreCompleto(),
+                                    "dni"       => $competidor->getDni(),
+                                    "municipio" => $competidor->getMunicipio()->getNombre(),
+                                    "planillas" => count($competidor->getPlanillas()),
+                                    "segmentos" => count($competidor->getSegmentos()),
+                                    "auditoria" => array(
+                                                        "createdBy" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getNombreCompleto() : '-',
+                                                        "municipio" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getMunicipio()->getNombre() : '-',
+                                                        "createdBy" => $competidor->getCreatedAt()->format('d/m/y H:i')
+                                                    ),
+                                    "actions"   => ""//$this->renderView('SeguridadBundle:Usuario:actions.personas.sin.user.html.twig', array('entity' => $persona))
+                                   );
+        }
+        
+        return new JsonResponse($data);
+    }    
+    /**
      * @Route("/mapa", name="inscripcion_mapa")
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_INSCRIPCION_LIST')")

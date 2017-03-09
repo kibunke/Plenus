@@ -227,4 +227,27 @@ class Competidor extends Persona
     {
         return 'ResultadoBundle:Competidor';
     }
+    
+    public function getPlanillas()
+    {
+        $planillas = [];
+        foreach($this->getEquipos() as $equipo){
+            $planillas[] = $equipo->getPlanilla();
+        }
+        return $planillas;
+    }
+    
+    public function getSegmentos()
+    {
+        $segmentosIds = [];
+        $segmentos = [];
+        foreach($this->getEquipos() as $equipo){
+            $segmento = $equipo->getPlanilla()->getSegmento();
+            if (!in_array($segmento->getId(), $segmentosIds)){
+                $segmentosIds[] = $segmento->getId();
+                $segmentos[] = $segmento;        
+            }
+        }
+        return $segmentos;
+    }    
 }

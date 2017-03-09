@@ -13,6 +13,52 @@ use Doctrine\ORM\Query\ResultSetMapping;
  */
 class CompetidorRepository extends EntityRepository
 {
+    public function dataTable($request)
+    {
+        return array(
+                        "total"    => $this->getTotalRows($request),
+                        "filtered" => $this->getFilteredRows($request),
+                        "rows"     => $this->getRows($request)
+                    );
+    }
+    
+    public function getRows($request)
+    {
+        $columns = ["c.id","c.apellido","c.nombre", "c.dni","m.nombre","","","actions"];
+            
+        return $this->getEntityManager()
+                    ->createQuery(" SELECT c
+                                    FROM ResultadoBundle:Competidor c
+                                    JOIN c.municipio m
+                                    WHERE (c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1)
+                                    ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->setMaxResults($request->get('length'))
+                    ->setFirstResult($request->get('start'))
+                    ->getResult();
+    }
+    
+    public function getFilteredRows($request)
+    {
+        return $this->getEntityManager()
+                    ->createQuery(" SELECT COUNT(DISTINCT(c))
+                                    FROM ResultadoBundle:Competidor c
+                                    JOIN c.municipio m
+                                    WHERE (c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1)")
+                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->getSingleScalarResult();
+    }
+    
+    
+    public function getTotalRows()
+    {
+        return $this->getEntityManager()
+                    ->createQuery("SELECT COUNT(DISTINCT(c))
+                                    FROM ResultadoBundle:Competidor c
+                                    JOIN c.municipio m")
+                    ->getSingleScalarResult();
+    }
+    
     public function getParticipanteSospechosos()
     {
         return $this->getEntityManager()
