@@ -58,7 +58,7 @@ class PlanillaRepository extends EntityRepository
                     ",m.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
                     "eventos"];
-        $where = "( s.id LIKE ?1 OR
+        $where = "( p.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
@@ -91,7 +91,7 @@ class PlanillaRepository extends EntityRepository
     
     public function getFilteredRows($request,$user,$auth_checker)
     {
-        $where = "( s.id LIKE ?1 OR
+        $where = "( d.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
