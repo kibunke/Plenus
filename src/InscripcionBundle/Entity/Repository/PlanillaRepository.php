@@ -27,7 +27,7 @@ class PlanillaRepository extends EntityRepository
     }    
     
     private $onlyPendientes = false;
-    private $idEstatos;
+    private $idEstados;
     
     public function dataTable($request,$user,$auth_checker,$onlyPendientes)
     {
@@ -39,7 +39,7 @@ class PlanillaRepository extends EntityRepository
                                         GROUP BY e.planilla")
                         ->getArrayResult());
         $estados[]=0;
-        $this->idEstatos = implode(",",$estados);
+        $this->idEstados = implode(",",$estados);
         
         $this->onlyPendientes = $onlyPendientes;
         return array(
@@ -58,7 +58,7 @@ class PlanillaRepository extends EntityRepository
                     ",g.nombre ".$request->get('order')[0]['dir'].
                     ",m.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
-                    "eventos"];
+                    ""];
         $where = "( p.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
@@ -80,7 +80,6 @@ class PlanillaRepository extends EntityRepository
                                         JOIN s.categoria c
                                         JOIN s.modalidad m
                                         JOIN s.genero g
-                                        LEFT JOIN s.eventos e
                                         JOIN p.estados est
                                         WHERE $where
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
@@ -136,7 +135,7 @@ class PlanillaRepository extends EntityRepository
     
     private function applyRoleFilter($user,$auth_checker)
     {
-        $where = " AND est.id IN (".$this->idEstatos.")";
+        $where = " AND est.id IN (".$this->idEstados.")";
         if(!$auth_checker->isGranted('ROLE_ADMIN')){
             if($auth_checker->isGranted('ROLE_COORDINADOR')){
                 //COORDINADORES ven todas las planillas de sus Segmentos
