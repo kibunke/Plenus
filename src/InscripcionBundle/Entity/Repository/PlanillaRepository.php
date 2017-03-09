@@ -50,7 +50,7 @@ class PlanillaRepository extends EntityRepository
     
     public function getRows($request,$user,$auth_checker)
     {
-        $columns = ["s.id",
+        $columns = ["p.id",
                     "t.nombre ".$request->get('order')[0]['dir'].
                     ",d.nombre ".$request->get('order')[0]['dir'].
                     ",c.nombre ".$request->get('order')[0]['dir'].
