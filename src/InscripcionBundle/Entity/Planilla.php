@@ -541,6 +541,22 @@ abstract class Planilla
                                                       )
                 );
     }
+    
+    /**
+     * Get equipos
+     *
+     * @return json
+     */
+    public function toArray()
+    {
+        return array(
+                        "id"        => $this->getId(),
+                        "numero"    => str_pad($this->getId(), 6, "0", STR_PAD_LEFT),
+                        "municipio" => $this->getMunicipio()->getNombre(),
+                        "segmento"  => $this->getSegmento()->toArray()
+                );
+    }
+    
     private function getEquiposJson()
     {
         $equipos = array();

@@ -68,7 +68,7 @@
                         <th>Municipio</th>
                         <th title="Planillas en las que aparece"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
                         <th title="Segmentos en los que aparece"><i class="fa fa-users" aria-hidden="true"></i></th>
-                        <th title="Auditoria">Auditoria</th>
+                        <th title="Auditoria">Auditoría</th>
                         <th style="width: 110px"></th>
                     </tr>
                 </thead>
@@ -116,13 +116,57 @@
                             "searchable": false,
                             "orderable": false,
                             "targets": [4,5,6,7]
+                        },{
+                            "targets": 4,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            let aux="";
+                                            $.map(data.data, function(ele){
+                                                console.log(ele);
+                                                aux = aux + '<li style=\'list-style:none\'><b>'+ele.numero+'</b> '+ele.municipio+'</li>';
+                                            })
+
+                                            return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
+                                                        '<i class="fa fa-file-o fa-stack-lg"></i>'+
+                                                        '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
+                                                    '</span>';
+                                                   
+                                            //return type === 'display' ?
+                                            //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
+                                            //        '<span class="glyphicon glyphicon-info-sign"></span>'+
+                                            //    '</button>':
+                                            //    '<span class="sr-only">0</span>';
+                                        }
+                        },{
+                            "targets": 5,
+                            "data": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            let aux="";
+                                            $.map(data.data, function(ele){
+                                                console.log(ele);
+                                                aux = aux + '<li style=\'list-style:none\'><b>'+ele.id+'</b> '+ele.nombre+'</li>';
+                                            })
+
+                                            return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
+                                                        '<i class="fa fa-file-o fa-stack-lg"></i>'+
+                                                        '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
+                                                    '</span>';
+                                                   
+                                            //return type === 'display' ?
+                                            //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
+                                            //        '<span class="glyphicon glyphicon-info-sign"></span>'+
+                                            //    '</button>':
+                                            //    '<span class="sr-only">0</span>';
+                                        }
                         }
                     ],
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {
                         $(nRow).attr( 'id', 'row_'+aData.id );
                         return nRow;
                     },
-                    "fnDrawCallback": function(oSettings, json) {}       
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('[data-toggle="popover"]').popover();
+                    }       
                 });   
             }
             //$.Default.planilla = {},

@@ -818,5 +818,21 @@ class Segmento
         }
         return $result;
     }    
+        /**
+     * Get equipos
+     *
+     * @return json
+     */
+    public function toArray()
+    {
+        return array(
+                        "id" => $this->getId(),
+                        "nombre" => $this->getNombreCompleto(),
+                        "torneo" => $this->getTorneo()->getNombre(),
+                        "categoria" => $this->getCategoria()->getNombre(),
+                        "disciplina" => $this->getDisciplina()->getNombreCompleto(),
+                        "genero" => $this->getGenero()->getNombre(),
+                    );
+    }
     
 }

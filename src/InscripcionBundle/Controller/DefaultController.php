@@ -108,13 +108,23 @@ class DefaultController extends Controller
         );
         
         foreach ($filter['rows'] as $competidor){
+            $planillas = array("total" => 0, "data"=>[]);
+            foreach ($competidor->getPlanillas() as $planilla){
+                $planillas['total'] ++;
+                $planillas['data'][] = $planilla->toArray();
+            }
+            $segmentos = array("total" => 0, "data"=>[]);
+            foreach ($competidor->getSegmentos() as $segmento){
+                $segmentos['total'] ++;
+                $segmentos['data'][] = $segmento->toArray();
+            }
             $data['data'][] = array(
                                     "id"        => $competidor->getId(),
                                     "name"      => $competidor->getNombreCompleto(),
                                     "dni"       => $competidor->getDni(),
                                     "municipio" => $competidor->getMunicipio()->getNombre(),
-                                    "planillas" => count($competidor->getPlanillas()),
-                                    "segmentos" => count($competidor->getSegmentos()),
+                                    "planillas" => $planillas,
+                                    "segmentos" => $segmentos,
                                     "auditoria" => array(
                                                         "createdBy" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getNombreCompleto() : '-',
                                                         "municipio" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getMunicipio()->getNombre() : '-',
