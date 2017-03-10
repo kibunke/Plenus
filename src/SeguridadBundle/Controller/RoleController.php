@@ -41,12 +41,22 @@ class RoleController extends Controller
         $user   = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('SeguridadBundle:Role')->datatable($request->request);
-        
+        $roles  = array();
+        foreach($filter['rows'] as $role)
+        {
+            $roles[] = array(
+                               'id'          => $role->getId(),
+                               'name'        => $role->getName(),
+                               'description' => $role->getDescription(),
+                               'isActive'    => $role->getIsActive(),
+                               'perfiles'    => $role->getPerfiles()->count()
+                            );
+        }
         $data=array(
-            "draw"=> $request->request->get('draw'),
-            "recordsTotal"=> $filter['total'],
-            "recordsFiltered"=> $filter['filtered'],
-            "data"=> $filter['rows'],
+            "draw"            => $request->request->get('draw'),
+            "recordsTotal"    => $filter['total'],
+            "recordsFiltered" => $filter['filtered'],
+            "data"            => $roles,
         );
         
         return new JsonResponse($data);
