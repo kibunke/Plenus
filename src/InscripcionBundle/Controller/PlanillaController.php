@@ -389,7 +389,8 @@ class PlanillaController extends Controller
         if (isset($json->persona->dni) && isset($json->persona->municipio)){
             $json->persona->municipio = $em->getRepository('CommonBundle:Municipio')->findOneBy(array('nombre' => $json->persona->municipio));
             $json->persona->tipoDocumento = $em->getRepository('CommonBundle:TipoDocumento')->findOneBy(array('nombre' => $json->persona->tipoDocumento));
-            $json->persona->fNacimiento = new \DateTime($json->persona->fNacimiento);
+            $json->persona->fNacimiento = explode("/",$json->persona->fNacimiento);
+            $json->persona->fNacimiento = new \DateTime($json->persona->fNacimiento[2].'-'.$json->persona->fNacimiento[1]."-".$json->persona->fNacimiento[0]);
             $json->persona->sexo = $em->getRepository('ResultadoBundle:Genero')->findOneBy(array('nombre' => $json->persona->sexo));
             if (is_object($json->persona->municipio) &&
                 is_object($json->persona->tipoDocumento) &&
