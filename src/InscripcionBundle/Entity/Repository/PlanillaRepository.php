@@ -15,7 +15,7 @@ class PlanillaRepository extends EntityRepository
     public function getDashboard()
     {
         return  $this->getEntityManager()
-                        ->createQuery(" SELECT t.id, t.nombre, sex.nombre as sexoNombre, COUNT(p) as planillas, COUNT(e) as equipos, COUNT(c) as inscriptos, COUNT(sex) as sexo
+                        ->createQuery(" SELECT t.id, t.nombre, sex.nombre as sexoNombre, COUNT(DISTINCT(p)) as planillas, COUNT(DISTINCT(e)) as equipos, COUNT(c) as inscriptos, COUNT(sex) as sexo
                                         FROM InscripcionBundle:Planilla p
                                         JOIN p.segmento s
                                         JOIN s.torneo t
