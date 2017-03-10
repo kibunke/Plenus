@@ -409,7 +409,6 @@
             $td.data('pos',$td.text()).html('<i class="fa fa-spinner fa-pulse fa-fw"></i><span class="sr-only">Loading...</span>');
             $.get('{{ path('planilla_load_participante', {'dni' : '__XX__'}) }}'.replace('__XX__', dni))
                 .done((data)=>{
-                    console.log(data);
                     if(data.success){
                         let persona = data.participante.persona;
                         //$tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.persona.id});
@@ -486,6 +485,8 @@
                     }
                 }).fail(()=>{
                     toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
+                }).always(()=>{
+                    $('#sendForm').button('reset');
                 });
         }
         {% block especiales %}{% endblock %}
