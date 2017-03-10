@@ -13,17 +13,17 @@ class PerfilRepository extends \Doctrine\ORM\EntityRepository
                       "total"    => $this->getTotalRows(),
                       "filtered" => $this->getFilteredRows($request),
                       "rows"     => $this->getRows($request)
-            );
+                    );
     }
     
     public function getRows($request)
     {
-        $columns = ["p.id","p.legend","p.description","p.isActive"];
+        $columns = ["p.id","p.name","p.legend","p.description","p.isActive"];
                 
         return $this->getEntityManager()
                         ->createQuery(" SELECT p
                                         FROM SeguridadBundle:Perfil p
-                                        WHERE (p.legend LIKE ?1) OR (p.name LIKE ?1) OR (p.description LIKE ?1)
+                                        WHERE (p.legend LIKE ?1) OR (p.name LIKE ?1) OR (p.description LIKE ?1) OR (p.id LIKE ?1)
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir']) 
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
@@ -36,7 +36,7 @@ class PerfilRepository extends \Doctrine\ORM\EntityRepository
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(p)
                                         FROM SeguridadBundle:Perfil p
-                                        WHERE (p.legend LIKE ?1) OR (p.name LIKE ?1) OR (p.description LIKE ?1) ")
+                                        WHERE (p.legend LIKE ?1) OR (p.name LIKE ?1) OR (p.description LIKE ?1) OR (p.id LIKE ?1)")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }
@@ -44,10 +44,8 @@ class PerfilRepository extends \Doctrine\ORM\EntityRepository
     public function getTotalRows()
     {
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(u)
-                                        FROM SeguridadBundle:Perfil u
-                                       ")
-                        ->getSingleScalarResult();
+                    ->createQuery(" SELECT COUNT(u) FROM SeguridadBundle:Perfil u")
+                    ->getSingleScalarResult();
     }
 }
 
