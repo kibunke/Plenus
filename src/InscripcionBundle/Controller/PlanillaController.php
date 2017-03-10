@@ -32,7 +32,7 @@ class PlanillaController extends Controller
     /**
      * @Route("/dashboard", name="planilla_dashboard")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_INSCRIPCION_DASHBOARD')")
      * @Template()
      */
     public function dashboardAction(Request $request)

@@ -93,7 +93,7 @@ class DefaultController extends Controller
     
     /**
      * @Route("/competidor/list/datatable", name="competidor_list_datatable")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_INSCRIPCION_COMPETIDORES_LIST')")
      */
     public function listCompetidorDatatableAction(Request $request)
     {
