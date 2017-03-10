@@ -234,7 +234,7 @@
         <div class="hidden">
             {{ form_rest(form) }}
         </div>
-        <button type="button" class="btn btn-defaut btn-lg pull-right btn-primary" onclick="$.Planilla.save()"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Guardar</button>
+        <button id="sendForm" type="button" class="btn btn-defaut btn-lg pull-right btn-primary" onclick="$.Planilla.save()" data-loading-text="Enviando..."><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Guardar</button>
     </div>
     <p><i class="fa fa-info" aria-hidden="true"></i> Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.</p>
     <p><i class="fa fa-info" aria-hidden="true"></i> Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.</p>
@@ -435,6 +435,7 @@
                 });
         },
         $.Planilla.save = function(){
+            $('#sendForm').button('loading');
             _planilla.inscripcionInstitucional = ($('#tipoInscripcionButtons input:checked').val() != 'inscripcionMunicipal');
             _planilla.responsableMunicipio = {
                 nombre : $('#datosResponsableMunicipio .nombre').text(),
@@ -483,10 +484,7 @@
                     }else if(data.error){
                         toastr['error'](data.message, 'Cuidado!');
                     }else{
-                        //$('.planillaInscripcion').remove();
-                        //$('#globalSubView .subviews-container').html(data);
-                        //$.subview();
-                        //$('.page-header h1').toggle();
+                        toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
                     }
                 }).fail(()=>{
                     toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');

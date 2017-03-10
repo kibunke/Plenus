@@ -22,7 +22,8 @@ module.exports = function (grunt) {
                     'js/velocity.js': 'velocity/velocity.js',
                     'js/scrollTo.js': 'jquery.scrollTo/jquery.scrollTo.js',
                     'js/sweetalert.js': 'sweetalert/dist/sweetalert.min.js',
-                    'js/select2.js': 'select2/dist/js/select2.min.js'
+                    'js/select2.js': 'select2/dist/js/select2.min.js',
+                    'js/highcharts.js': 'highcharts/js/highcharts.js'
                 }
             },
             stylesheets: {
@@ -35,7 +36,8 @@ module.exports = function (grunt) {
                     'css/animate.min.css': 'animate.css/animate.min.css',
                     'css/toastr.min.css': 'toastr/toastr.min.css',
                     'css/sweetalert.css': 'sweetalert/dist/sweetalert.css',
-                    'css/select2.css': 'select2/dist/css/select2.min.css'
+                    'css/select2.css': 'select2/dist/css/select2.min.css',
+                    'css/highcharts.css': 'highcharts/css/highcharts.css'
                 }
             },
             fonts: {

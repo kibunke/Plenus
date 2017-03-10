@@ -15,7 +15,7 @@ class PlanillaRepository extends EntityRepository
     public function getDashboard()
     {
         return  $this->getEntityManager()
-                        ->createQuery(" SELECT t.id, t.nombre, sex.nombre as sexoNombre, COUNT(DISTINCT(p)) as planillas, COUNT(DISTINCT(e)) as equipos, COUNT(DISTINCT(c)) as inscriptos, COUNT(DISTINCT(sex)) as sexo
+                        ->createQuery(" SELECT t.id, t.nombre, sex.nombre as sexoNombre, COUNT(p) as planillas, COUNT(e) as equipos, COUNT(c) as inscriptos, COUNT(sex) as sexo
                                         FROM InscripcionBundle:Planilla p
                                         JOIN p.segmento s
                                         JOIN s.torneo t
@@ -140,25 +140,29 @@ class PlanillaRepository extends EntityRepository
             if($auth_checker->isGranted('ROLE_COORDINADOR')){
                 //COORDINADORES ven todas las planillas de sus Segmentos
                 $where .= " AND (coordinador.id = " . $user->getId() . ")";
+                //En mis pendientes ven solo las que estan en estado Presentada más las creadas por ellos en estado Cargada , en revision y observadas
                 if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Presentada' )";
+                    $where .= " AND (est.nombre = 'Presentada' OR (creador.id = " . $user->getId() ." AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión' OR est.nombre = 'Observada')))";
                 }
             }elseif($auth_checker->isGranted('ROLE_ORGANIZADOR')){
                 //ORGANIZADORES ven todas las planillas de su Municipio
                 $where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
+                //En mis pendientes ven solo las que estan en estado Enviada u Observadas más las creadas por ellos en estado Cargada o En revision
                 if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Enviada' OR est.nombre = 'Observada' OR (creador.id = " . $user->getId() ." AND est.nombre = 'Cargada'))";
+                    $where .= " AND (est.nombre = 'Enviada' OR est.nombre = 'Observada' OR (creador.id = " . $user->getId() ." AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')))";
                 }
             }else{
                 //INSCRIPTORES ven todas las planillas que crearon
                 $where .= " AND (creador.id = " . $user->getId() . ")";
+                //En mis pendientes ven solo las que estan en estado Carga o En revision
                 if ($this->onlyPendientes){
                     $where .= " AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')";
                 }
             }
         }else{
+            //En mis pendientes ven las que estan en estado Aprobada
             if ($this->onlyPendientes){
-                    //$where .= " AND (est.nombre = 'Publicada')";
+                    $where .= " AND (est.nombre = 'Aprobada')";
                 }
         }
         return $where;

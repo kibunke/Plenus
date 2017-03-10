@@ -45,10 +45,14 @@ class PlanillaController extends Controller
         }
         $datos = $em->getRepository('InscripcionBundle:Planilla')->getDashboard();
         foreach ($datos as $dato){
-            $result[$torneo->getId()]['datos']['inscriptos'][$dato['sexoNombre']] += $dato['sexo'];
+            $result[$dato['id']]['datos']['inscriptos'][$dato['sexoNombre']] += $dato['sexo'];
+            $result[$dato['id']]['datos']['inscriptos']['total'] += $dato['sexo'];
+            $result[$dato['id']]['datos']['planillas'] += $dato['planillas'];
+            $result[$dato['id']]['datos']['equipos'] += $dato['equipos'];
         }
+        //var_dump($result);die;
         return array(
-            'datos' => $datos
+            'datos' => $result
         );
     }
     
