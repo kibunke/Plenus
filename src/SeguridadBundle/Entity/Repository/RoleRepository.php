@@ -13,22 +13,16 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
                       "total"    => $this->getTotalRows(),
                       "filtered" => $this->getFilteredRows($request),
                       "rows"     => $this->getRows($request)
-            );
+                    );
     }
     
     public function getRows($request)
     {
         $columns = ["id","name","description","isActive","perfiles"];
-        $where = "(u.name LIKE ?1) ";
+        $where = "(u.name LIKE ?1) OR (u.id LIKE ?1) OR (u.description LIKE ?1)";
                 
         return $this->getEntityManager()
-                        //->createQuery(" SELECT u.id,u.name,u.description,u.isActive, p.id as perfiles
-                        //                FROM SeguridadBundle:Role u LEFT JOIN u.perfiles p
-                        //                WHERE $where
-                        //                GROUP BY u.id
-                        //                ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir']
-                        //                )
-                        ->createQuery(" SELECT u.id,u.name,u.description,u.isActive
+                        ->createQuery(" SELECT u
                                         FROM SeguridadBundle:Role u
                                         WHERE $where
                                         ORDER BY u.".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir']
@@ -36,12 +30,12 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
                         ->setFirstResult($request->get('start'))
-                        ->getArrayResult();
+                        ->getResult();
     }
     
     public function getFilteredRows($request)
     {
-        $where = "(u.name LIKE ?1)";
+        $where = "(u.name LIKE ?1) OR (u.id LIKE ?1) OR (u.description LIKE ?1)";
                 
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(u)
