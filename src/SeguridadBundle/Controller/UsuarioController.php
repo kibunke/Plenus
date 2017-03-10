@@ -89,7 +89,7 @@ class UsuarioController extends Controller
     
     /**
      * @Route("/list/datatable", name="user_list_datatable")
-     * @Security("has_role('ROLE_USER_LIST') and has_role('ROLE_ORGANIZADOR')")
+     * @Security("(has_role('ROLE_USER_LIST') and has_role('ROLE_ORGANIZADOR')) or has_role('ROLE_ADMIN')")
      */
     public function listDataTableAction(Request $request)
     {
