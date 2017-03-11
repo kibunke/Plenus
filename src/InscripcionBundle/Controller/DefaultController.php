@@ -109,9 +109,11 @@ class DefaultController extends Controller
         
         foreach ($filter['rows'] as $competidor){
             $planillas = array("total" => 0, "data"=>[]);
+            $municipio = "";
             foreach ($competidor->getPlanillas() as $planilla){
                 $planillas['total'] ++;
                 $planillas['data'][] = $planilla->toArray();
+                $municipio = $planilla->getMunicipio()->getNombre();
             }
             $segmentos = array("total" => 0, "data"=>[]);
             foreach ($competidor->getSegmentos() as $segmento){
@@ -127,8 +129,8 @@ class DefaultController extends Controller
                                     "segmentos" => $segmentos,
                                     "auditoria" => array(
                                                         "createdBy" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getNombreCompleto() : '-',
-                                                        "municipio" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getMunicipio()->getNombre() : '-',
-                                                        "createdBy" => $competidor->getCreatedAt()->format('d/m/y H:i')
+                                                        "municipio" => $municipio,
+                                                        "createdAt" => $competidor->getCreatedAt()->format('d/m/y H:i')
                                                     ),
                                     "actions"   => ""//$this->renderView('SeguridadBundle:Usuario:actions.personas.sin.user.html.twig', array('entity' => $persona))
                                    );

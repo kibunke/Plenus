@@ -104,7 +104,7 @@
                         { "data": "municipio" },
                         { "data": "planillas", "className": "text-center" },
                         { "data": "segmentos", "className": "text-center" },
-                        { "data": "auditoria.createdBy" },
+                        { "data": "auditoria" },
                         { "data": "actions" }
                     ],
                     "bLengthChange" : true,
@@ -157,6 +157,21 @@
                                             //        '<span class="glyphicon glyphicon-info-sign"></span>'+
                                             //    '</button>':
                                             //    '<span class="sr-only">0</span>';
+                                        }
+                        },{
+                            "targets": 6,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    '<div>'+
+                                                        '<i title="Competidor creado por '+ data.createdBy +'" class="fa fa-user text-info" aria-hidden="true"></i> '+ data.createdBy +
+                                                    '</div><small><div>'+
+                                                        ' <i title="Compite por el municipio '+ data.municipio +'" class="fa fa-map-marker text-orange" aria-hidden="true"></i> '+ data.municipio +
+                                                    '</div><div>'+
+                                                        '<i title="Competidor creado el '+ data.createdAt +'" class="fa fa-calendar-o text-success" aria-hidden="true"></i> '+ data.createdAt +
+                                                    '</div></small>'
+                                                :'';
                                         }
                         }
                     ],
