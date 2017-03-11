@@ -23,7 +23,8 @@ module.exports = function (grunt) {
                     'js/scrollTo.js': 'jquery.scrollTo/jquery.scrollTo.js',
                     'js/sweetalert.js': 'sweetalert/dist/sweetalert.min.js',
                     'js/select2.js': 'select2/dist/js/select2.min.js',
-                    'js/highcharts.js': 'highcharts/js/highcharts.js'
+                    'js/highcharts.js': 'highcharts/js/highcharts.js',
+                    'js/highstock.js': 'highcharts/js/highstock.js'
                 }
             },
             stylesheets: {

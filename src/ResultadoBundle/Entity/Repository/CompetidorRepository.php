@@ -24,7 +24,10 @@ class CompetidorRepository extends EntityRepository
     
     public function getRows($request)
     {
-        $columns = ["c.id","c.apellido","c.nombre", "c.dni","m.nombre","","","actions"];
+        $columns = ["c.id",
+                    "c.apellido ".$request->get('order')[0]['dir'].",c.nombre" ,
+                    "c.dni",
+                    "m.nombre","","","actions"];
             
         return $this->getEntityManager()
                     ->createQuery(" SELECT c
