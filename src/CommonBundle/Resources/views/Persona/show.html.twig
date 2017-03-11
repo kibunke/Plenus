@@ -1,49 +1,72 @@
 <div class="row">
-    <div class="col-sm-2">Id</div>
-    <div class="col-sm-10">{{entity.id}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Id</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.id}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Nombre</div>
-    <div class="col-sm-10">{{entity.getNombreCompleto}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Nombre</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.getNombreCompleto}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Documento</div>
-    <div class="col-sm-10">{{entity.tipoDocumento}} {{entity.dni}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Documento</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.tipoDocumento}} {{entity.dni}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Fecha de Nacimiento</div>
-    <div class="col-sm-10">{% if entity.fNacimiento %}{{entity.fNacimiento|date('d/m/Y')}}{% endif %}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Nacimiento</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{% if entity.fNacimiento %}{{entity.fNacimiento|date('d/m/Y')}}{% endif %}"/></div>
+    </div>
+</div> 
+<div class="row">
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Género</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.genero}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Género</div>
-    <div class="col-sm-10">{{entity.genero}}</div>
-</div>    
-<div class="row">
-    <div class="col-sm-2">Em@il</div>
-    <div class="col-sm-10">{{entity.email}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Em@il</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.email}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Municipio</div>
-    <div class="col-sm-10">{{entity.municipio}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Municipio</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.municipio}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Teléfono</div>
-    <div class="col-sm-10">{{entity.telefono}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Teléfono</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.telefono}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Facebook</div>
-    <div class="col-sm-10">{{entity.facebook}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Facebook</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.facebook}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Skype</div>
-    <div class="col-sm-10">{{entity.skype}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Skype</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.skype}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Twitter</div>
-    <div class="col-sm-10">{{entity.twitter}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Twitter</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.twitter}}"/></div>
+    </div>
 </div>
 <div class="row">
-    <div class="col-sm-2">Linkedin</div>
-    <div class="col-sm-10">{{entity.linkedin}}</div>
+    <div class="form-group">
+        <div class="col-sm-2"><label class="control-label">Linkedin</label></div>
+        <div class="col-sm-10"><input class="form-control" readonly value="{{entity.linkedin}}"/></div>
+    </div>
 </div>
-
