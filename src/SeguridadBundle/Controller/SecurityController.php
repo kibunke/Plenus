@@ -483,8 +483,15 @@ class SecurityController extends Controller
                 }
                 
                 return new JsonResponse(array('success' => false, 'message' => $error));
+            }else{
+                if($form->isSubmitted() && !$form->isValid())
+                {
+                    $error = (string) $form->getErrors(true, false);
+                    
+                    return new JsonResponse(array('success' => false, 'message' => 'Error en los datos del formulario: ' . $error ));
+                }
             }
-            return new JsonResponse(array('success' => false, 'message' => explode(',',$form->getErrors())));
+            
             return $this->render("SeguridadBundle:Security:renderNewAccountForm.html.twig",
                                                                                             array(
                                                                                                 'form' => $form->createView(),
