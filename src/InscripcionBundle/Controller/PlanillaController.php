@@ -126,7 +126,7 @@ class PlanillaController extends Controller
         
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
-                "id"        => "<strong>".str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
+                "id"        => "<strong>".$planilla->getNumero()."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
                 "inscriptos"   => $planilla->getTotalInscriptos(),
                 "estado"  => array(
@@ -166,7 +166,7 @@ class PlanillaController extends Controller
         
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
-                "id"        => "<strong>".str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
+                "id"        => "<strong>".$planilla->getNumero()."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
                 "inscriptos"   => $planilla->getTotalInscriptos(),
                 "estado"  => array(
@@ -222,7 +222,7 @@ class PlanillaController extends Controller
                     $planilla->addEstado($estado);
                     $em->persist($planilla);
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'pathImp' => $this->generateUrl('planilla_print', array('segmento' => $segmento->getId(),'idPlanilla' => $planilla->getId())), 'message' => 'Planilla N°'. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
+                    return new JsonResponse(array('success' => true, 'pathImp' => $this->generateUrl('planilla_print', array('segmento' => $segmento->getId(),'idPlanilla' => $planilla->getId())), 'message' => 'Planilla N°'. $planilla->getNumero()));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -426,7 +426,7 @@ class PlanillaController extends Controller
                     $planilla->setUpdatedBy($this->getUser());
                     $planilla->setUpdatedAt(new \DateTime());
                     $em->flush();
-                    return new JsonResponse(array('success' => true, 'pathImp' => $this->generateUrl('planilla_print', array('segmento' => $planilla->getSegmento()->getId(),'idPlanilla' => $planilla->getId())), 'message' => 'Planilla N° '. str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT)));
+                    return new JsonResponse(array('success' => true, 'pathImp' => $this->generateUrl('planilla_print', array('segmento' => $planilla->getSegmento()->getId(),'idPlanilla' => $planilla->getId())), 'message' => 'Planilla N° '. $planilla->getNumero()));
                 }else{
                     return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no tiene Participantes!. Debe completar los campos obligatorios en la tabla de participantes para continuar.'));
                 }
@@ -521,7 +521,7 @@ class PlanillaController extends Controller
         $txtModalidad = $segmento->getModalidad()->getNombre();
         $txtModalidad .= $segmento->getNombre()? " - " . $segmento->getNombre() : '';
         $municipio = $planilla->getMunicipio() ? $planilla->getMunicipio()->getNombre():'Municipio:';
-        $nPlanilla = "N° ".($planilla->getId() ? str_pad($planilla->getId(), 6, "0", STR_PAD_LEFT):'000000');
+        $nPlanilla = "N° ".$planilla->getNumero();
         $html .= '<table cellspacing="0" cellpadding="3" style="width:100%;">
                     <tr>
                         <th style="border-bottom: 1px solid silver;width: 22%" align="left" rowspan="4">

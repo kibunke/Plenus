@@ -160,6 +160,16 @@ abstract class Planilla
     {
         return $this->id;
     }
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getNumero()
+    {
+        return $this->getId() ? str_pad($this->getId(), 6, "0", STR_PAD_LEFT):'000000';
+    }    
 
     /**
      * Set descripcion
@@ -551,7 +561,7 @@ abstract class Planilla
     {
         return array(
                         "id"        => $this->getId(),
-                        "numero"    => str_pad($this->getId(), 6, "0", STR_PAD_LEFT),
+                        "numero"    => $this->getNumero(),
                         "municipio" => $this->getMunicipio()->getNombre(),
                         "segmento"  => $this->getSegmento()->toArray()
                 );
