@@ -376,6 +376,18 @@ class SecurityController extends Controller
     {
         $response = array('success' => true, 'states' => []);
         $data = $request->request;
+
+        if ($data->get('username') != ''){
+            //validar con expresión regular que no tenga espacios, solo letras y números
+            //\w le decimos que permitimos todo tipo de carácteres alfanuméricos incluyendo el signo _
+            if(!preg_match("/^\w+$/", $data->get('username')))
+            {            
+                $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario es inválido, solamente debe contener Letras y Números y sin espacios intermedios.');
+            }else{
+                $response['states'][] = array('type' => 'usuario_username', 'hasError' => false, 'message' => '');
+            }
+        }
+
         if ($data->get('username') != ''){
             $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository('SeguridadBundle:Usuario')->findBy(array("username" => $data->get('username')));
@@ -385,6 +397,7 @@ class SecurityController extends Controller
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => false, 'message' => '');
             }
         }
+        
         if ($data->get('nroDocumento') != ''){
             $em = $this->getDoctrine()->getManager();
             $persona = $em->getRepository('CommonBundle:Persona')->findBy(array("tipoDocumento" => $data->get('tipoDocumento'),"dni" => $data->get('nroDocumento')));
@@ -420,6 +433,7 @@ class SecurityController extends Controller
             $form = $this->createForm(UsuarioType::class, $user);
             //$form = $this->createNewAccountForm($user);
             $form->handleRequest($request);
+       
             if ($form->isSubmitted() && $form->isValid())
             {
                 $newPassword = $this->resetPassword($user);
@@ -446,12 +460,16 @@ class SecurityController extends Controller
                     return new JsonResponse(array('success' => true, 'message' => '<h4>Excelente!</h4><p>Su <strong>cuenta</strong> fue creada con éxito. Se envió un <strong>e-mail</strong> con las instrucciones para <strong>completar el proceso</strong>.</p><p> Gracias por utilizar Plenus!.</p>'));
                 }
                 catch(\Exception $e ){
-                    //$error = 'DEBUG '.$e->getMessage();
+                    // $error = 'DEBUG '.$e->getMessage();
+                    
                     if (strpos($e->getMessage(), 'constraint violation') === false )
                         $error = 'Ocurrio un error al intentar enviar el email.';
-                    elseif(strpos($e->getMessage(), 'unique_dni') === false){
-                        if(strpos($e->getMessage(), 'unique_email') === false){
-                            if(strpos($e->getMessage(), 'unique_username') === false){
+                    elseif(strpos($e->getMessage(), 'unique_dni') === false)
+                    {
+                        if(strpos($e->getMessage(), 'unique_email') === false)
+                        {
+                            if(strpos($e->getMessage(), 'unique_username') === false)
+                            {
                                 $error = 'Ocurrio un error al intentar guardar los datos. Si el error persiste, contacte al adminsitrador.';   
                             }else{
                                 $error = 'El nombre de usuario ya esta en uso.';
@@ -463,12 +481,14 @@ class SecurityController extends Controller
                         $error = 'El DNI ingresado ya esta registrado en el sistema.';
                     }
                 }
+                
                 return new JsonResponse(array('success' => false, 'message' => $error));
             }
+            return new JsonResponse(array('success' => false, 'message' => explode(',',$form->getErrors())));
             return $this->render("SeguridadBundle:Security:renderNewAccountForm.html.twig",
-                array(
-                    'form' => $form->createView(),
-                )
+                                                                                            array(
+                                                                                                'form' => $form->createView(),
+                                                                                            )
             );
         }else{
             return new Response('<div class="alert alert-warning"><h4>Atención!</h4><p>La <strong>creación</strong> de cuentas de usuario se encuentra <strong>inhabilitada</strong> por el momento.</p><p> Disculpe las molestias, gracias por utilizar Plenus!.</p>');
