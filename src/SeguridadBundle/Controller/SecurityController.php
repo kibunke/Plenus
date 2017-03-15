@@ -377,12 +377,13 @@ class SecurityController extends Controller
         $response = array('success' => true, 'states' => []);
         $data = $request->request;
 
-        if ($data->get('username') != ''){
+        if ($data->get('username') != '')
+        {
             //validar con expresión regular que no tenga espacios, solo letras y números
             //\w le decimos que permitimos todo tipo de carácteres alfanuméricos incluyendo el signo _
             if(!preg_match("/^\w+$/", $data->get('username')))
             {            
-                $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario es inválido, solamente debe contener Letras y Números y sin espacios intermedios.');
+                $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario es inválido, solamente    debe contener Letras, Números, guiones bajos y sin espacios intermedios.');
             }else{
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => false, 'message' => '');
             }
@@ -394,7 +395,10 @@ class SecurityController extends Controller
             if ($user){            
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario ya está en uso.');
             }else{
-                $response['states'][] = array('type' => 'usuario_username', 'hasError' => false, 'message' => '');
+                if(preg_match("/^\w+$/", $data->get('username')))
+                {
+                    $response['states'][] = array('type' => 'usuario_username', 'hasError' => false, 'message' => '');
+                }
             }
         }
         

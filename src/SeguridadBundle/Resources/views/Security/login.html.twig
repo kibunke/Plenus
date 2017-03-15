@@ -290,7 +290,7 @@
                                 var username = Login.sugerirUsername();
                                 $('#usuario_username').val(username);
                             });
-                            $('#usuario_persona_email,#usuario_persona_dni,#usuario_persona_tipoDocumento').on("focusout",() => {
+                            $('#usuario_persona_email,#usuario_persona_dni,#usuario_persona_tipoDocumento,#usuario_username').on("focusout",() => {
                                 Login.checkData();
                             });
                             $('#usuario_username').on("focusin keyup",() => {
