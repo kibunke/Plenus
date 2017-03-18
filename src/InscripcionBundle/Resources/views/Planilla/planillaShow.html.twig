@@ -256,7 +256,8 @@
             $('#datosResponsableMunicipio .apellido').text(_planilla.responsableMunicipio.apellido);
             $('#datosResponsableMunicipio .dni').text(_planilla.responsableMunicipio.dni);
             if (_planilla.inscripcionInstitucional){
-                $("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").trigger('click');
+                $("#tipoInscripcionButtons input").removeClass("active");
+                $("#tipoInscripcionButtons input[value='"+_planilla.institucion.tipo+"']").addClass('active');
                 $('#datosInstitucion').data('id',_planilla.institucion.id);
                 $('#datosInstitucion .nombre').text(_planilla.institucion.nombre);
                 $('#datosInstitucion .domicilio').text(_planilla.institucion.domicilio);
