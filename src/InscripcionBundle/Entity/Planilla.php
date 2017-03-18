@@ -512,11 +512,11 @@ abstract class Planilla
     }
 
     /**
-     * isOnDateRange
+     * inDateRange
      *
      * @return boolean
      */
-    public function isOnDateRange($integrante)
+    public function inDateRange($integrante)
     {
         return  $this->getSegmento()->getMinFechaNacimiento() <= $integrante->getFNacimiento() &&
                 $this->getSegmento()->getMaxFechaNacimiento() >= $integrante->getFNacimiento();
@@ -675,7 +675,13 @@ abstract class Planilla
     {
         foreach ($this->getEquipos() as $equipo)
         {
-            $cantCompetidores = count($equipo->getCompetidores());
+            $cantCompetidores = 0;
+            foreach ($equipo->getCompetidores() as $competidor)
+            {
+                if ($competidor->getRol() == "inscripto"){
+                    $cantCompetidores ++;
+                }
+            }
             if ( $cantCompetidores > $this->getSegmento()->getMaxIntegrantes() || $cantCompetidores < $this->getSegmento()->getMinIntegrantes())
                 return false;
             

@@ -1,12 +1,12 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\EtapaFinal
+ * ResultadoBundle\Entity\EtapaFinal
  *
  * @ORM\Entity()
  *
@@ -31,5 +31,25 @@ class EtapaFinal extends Etapa
     public function getIcon()
     {
         return "fa fa-trophy";
-    }      
+    }
+    
+    /**
+     * get tipo
+     *
+     * @return string 
+     */
+    public function getTipo()
+    {
+        return "final";
+    }
+    
+    /**
+     * get tipoValor
+     *
+     * @return integer
+     */
+    public function getTipoValor()
+    {
+        return 7;
+    }
 }

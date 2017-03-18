@@ -1,12 +1,12 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\EtapaMedallero
+ * ResultadoBundle\Entity\EtapaMedallero
  *
  * @ORM\Entity()
  *
@@ -29,5 +29,25 @@ class EtapaMedallero extends Etapa
     public function getIcon()
     {
         return "fa fa-asterisk";
-    }      
+    }
+    
+    /**
+     * get tipo
+     *
+     * @return string 
+     */
+    public function getTipo()
+    {
+        return "medallero";
+    }
+    
+    /**
+     * get tipoValor
+     *
+     * @return integer
+     */
+    public function getTipoValor()
+    {
+        return 10;
+    }
 }

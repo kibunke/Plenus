@@ -43,12 +43,12 @@ class Equipo
     private $descripcion;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Competidor", mappedBy="equipos", cascade={"persist"})
-     */
-    private $competidores;
+     * @ORM\OneToMany(targetEntity="EquiposCompetidores", mappedBy="equipo", cascade={"all"})
+     * */
+    protected $equipoCompetidores;
     
     /**
-     * @ORM\ManyToOne(targetEntity="DirectorTecnico", inversedBy="equipos")
+     * @ORM\ManyToOne(targetEntity="DirectorTecnico", inversedBy="equipos", cascade={"persist"})
      * @ORM\JoinColumn(name="tecnico", referencedColumnName="id")
      */       
     private $directorTecnico;
@@ -116,7 +116,7 @@ class Equipo
         $this->createdBy = $user;
         //$this->setEvento($evento);
         //$this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
-        $this->competidores = new \Doctrine\Common\Collections\ArrayCollection();        
+        $this->equipoCompetidores = new \Doctrine\Common\Collections\ArrayCollection();        
         $this->plazas = new \Doctrine\Common\Collections\ArrayCollection();
     }    
 
@@ -415,8 +415,13 @@ class Equipo
      */
     public function addCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
     {
-        $this->competidores[] = $competidor;
-        $competidor->addEquipo($this);
+        $aux = new EquiposCompetidores();
+
+        $po->setEquipo($this);
+        $po->setCompetidor($competidor);
+
+        //$this->addPo($po);
+        $this->equipoCompetidores[] = $aux;
 
         return $this;
     }
@@ -450,7 +455,24 @@ class Equipo
      */
     public function removeCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
     {
-        $this->competidores->removeElement($competidor);
+        foreach($this->equipoCompetidores as $aux)
+        {
+            if ($aux->getCompetidor() == $competidor){
+                $this->equipoCompetidores->removeElement($aux);
+            }
+        }
+        //$this->competidores->removeElement($competidor);
+    }
+
+    /**
+     * clean Competidores
+     */
+    public function cleanCompetidores()
+    {
+        foreach($this->equipoCompetidores as $aux){
+            $aux->equipoCompetidores->removeElement($aux);
+        }
+        //$this->competidores = [];
     }
 
     /**
@@ -460,7 +482,14 @@ class Equipo
      */
     public function getCompetidores()
     {
-        return $this->competidores;
+        $competidores = new ArrayCollection();
+        
+        foreach($this->equipoCompetidores as $aux)
+        {
+            $competidores[] = $aux->getCompetidor();
+        }
+
+        return $competidores;
     }
     
     /**
@@ -501,6 +530,54 @@ class Equipo
         }
         return false;
     }
+
+    /**
+     * Set directorTecnico
+     *
+     * @param \ResultadoBundle\Entity\DirectorTecnico $directorTecnico
+     *
+     * @return Equipo
+     */
+    public function setDirectorTecnico(\ResultadoBundle\Entity\DirectorTecnico $directorTecnico = null)
+    {
+        $this->directorTecnico = $directorTecnico;
+
+        return $this;
+    }
+
+    /**
+     * Get directorTecnico
+     *
+     * @return \ResultadoBundle\Entity\DirectorTecnico
+     */
+    public function getDirectorTecnico()
+    {
+        return $this->directorTecnico;
+    }
+
+    /**
+     * Set planilla
+     *
+     * @param \InscripcionBundle\Entity\Planilla $planilla
+     *
+     * @return Equipo
+     */
+    public function setPlanilla(\InscripcionBundle\Entity\Planilla $planilla = null)
+    {
+        $this->planilla = $planilla;
+
+        return $this;
+    }
+
+    /**
+     * Get planilla
+     *
+     * @return \InscripcionBundle\Entity\Planilla
+     */
+    public function getPlanilla()
+    {
+        return $this->planilla;
+    }
     
     public function getJson()
     {
@@ -508,7 +585,12 @@ class Equipo
                 "id" => $this->getId(),
                 "nombre" => $this->getNombre(),
                 "integrantes" => $this->getIntegrantesJson(),
-                "tecnico"=> $this->getDirectorTecnico()->getJson()
+                //"tecnico"=> $this->getDirectorTecnico() ? $this->getDirectorTecnico()->getJson() : []
+                "tecnico" => array(
+                                    'nombre' => $this->getPlanilla()->getDirectorTecnicoNombre(),
+                                    'apellido' => $this->getPlanilla()->getDirectorTecnicoApellido(),
+                                    'dni' => $this->getPlanilla()->getDirectorTecnicoDni()
+                )
         );
     }
     public function getIntegrantesJson()
@@ -518,5 +600,5 @@ class Equipo
             $integrantes[] = $integrante->getJson();
         }
         return $integrantes;
-    }
+    }    
 }

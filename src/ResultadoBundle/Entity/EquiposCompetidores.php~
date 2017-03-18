@@ -1,0 +1,51 @@
+<?php
+
+namespace ResultadoBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use CommonBundle\Entity\Persona;
+/**
+ * ResultadoBundle\Entity\EquiposCompetidores
+ *
+ * @ORM\Entity()
+ * @ORM\Table(name="EquiposCompetidores")
+ *
+ */
+class EquiposCompetidores
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var integer $id
+     */
+    protected $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Competidor", inversedBy="competidorEquipos")
+     * @ORM\JoinColumn(name="competidor_id", referencedColumnName="id")
+     * */
+    protected $competidor;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Equipo", inversedBy="equipoCompetidores")
+     * @ORM\JoinColumn(name="equipo_id", referencedColumnName="id")
+     * */
+    protected $equipo;    
+
+    /**
+     * @var string $rol
+     *
+     * @ORM\Column(name="rol", type="string", length=100)
+     */
+    protected $rol;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+}

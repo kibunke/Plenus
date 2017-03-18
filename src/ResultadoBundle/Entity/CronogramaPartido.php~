@@ -1,12 +1,12 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Cronograma
+ * ResultadoBundle\Entity\Cronograma
  *
  * @ORM\Entity()
  */
@@ -29,10 +29,10 @@ class CronogramaPartido extends Cronograma
     /**
      * Set partido
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Partido $partido
+     * @param \ResultadoBundle\Entity\Partido $partido
      * @return CronogramaPartido
      */
-    public function setPartido(\JuegosBA\ResultadoBundle\Entity\Partido $partido = null)
+    public function setPartido(\ResultadoBundle\Entity\Partido $partido = null)
     {
         $this->partido = $partido;
 
@@ -42,10 +42,40 @@ class CronogramaPartido extends Cronograma
     /**
      * Get partido
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Partido 
+     * @return \ResultadoBundle\Entity\Partido 
      */
     public function getPartido()
     {
         return $this->partido;
     }
+
+    /**
+     * Get evento
+     *
+     * @return \ResultadoBundle\Entity\Evento 
+     */
+    public function getEvento()
+    {
+        return $this->getPartido()->getEvento();
+    }
+    
+    /**
+     * Get idReload
+     *
+     * @return integer
+     */
+    public function getIdReload()
+    {
+        return $this->getPartido()->getPlaza1()->getIdReload();
+    }
+    
+    /**
+     * Can Delete
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return false;
+    }    
 }

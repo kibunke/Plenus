@@ -6,17 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * ResultadoBundle\Entity\CompetenciaLigaTantos
+ * ResultadoBundle\Entity\CompetenciaLigaTantosCartas
  *
  * @ORM\Entity()
  *
  */
-class CompetenciaLigaTantos extends CompetenciaLiga
+class CompetenciaLigaTantosCartas extends CompetenciaLiga
 {
-    /*                   00    01   02   03   04   05   06   07   08   09   10  */
-    private $columns = ["Pts","PJ","PG","PE","PP","SF","SC","DS","TF","TC","DT"];
+    /*                   00    01   02   03   04   05   06   07 */
+    private $columns = ["Pts","PJ","PG","PE","PP","TF","TC","DT"];
     
-    private $row = [0,0,0,0,0,0,0,0,0,0,0];
+    private $row = [0,0,0,0,0,0,0,0];
     
     /*
      * CONSTRUCT
@@ -37,25 +37,29 @@ class CompetenciaLigaTantos extends CompetenciaLiga
         foreach ( $pl as $plaza){
             $aux = $zona->getDetalleZona($plaza);
             $pts[] = $aux[0];
-            $ds[] = $aux[7];
-            $sf[] = $aux[5];
-            $se[] = $aux[6];
-            $dt[] = $aux[10];
-            $tf[] = $aux[8];
-            $te[] = $aux[9];
+            $dt[] = $aux[7];
+            $tf[] = $aux[5];
+            $te[] = $aux[6];
             $plAux[] = $plaza->getId();
         }
-        
-        $arr = array_multisort(
-                    $pts, SORT_DESC, SORT_NUMERIC,
-                    $ds, SORT_DESC, SORT_NUMERIC,
-                    $sf, SORT_DESC, SORT_NUMERIC,
-                    $se, SORT_ASC, SORT_NUMERIC,
-                    $dt, SORT_DESC, SORT_NUMERIC,
-                    $tf, SORT_DESC, SORT_NUMERIC,
-                    $te, SORT_ASC, SORT_NUMERIC,
-                    $plAux
-                );
+        $parametros = json_decode($this->getParametros());
+        if ($parametros->gana == "mayor"){        
+            $arr = array_multisort(
+                        $pts, SORT_DESC, SORT_NUMERIC,
+                        $dt, SORT_DESC, SORT_NUMERIC,
+                        $tf, SORT_DESC, SORT_NUMERIC,
+                        $te, SORT_ASC, SORT_NUMERIC,
+                        $plAux
+                    );
+        }else{
+            $arr = array_multisort(
+                        $pts, SORT_DESC, SORT_NUMERIC,
+                        $dt, SORT_ASC, SORT_NUMERIC,
+                        $tf, SORT_ASC, SORT_NUMERIC,
+                        $te, SORT_DESC, SORT_NUMERIC,
+                        $plAux
+                    );            
+        }
         foreach ( $pl as $plaza){
             $plaza->setOrdenNatural(array_search($plaza->getId(), $plAux));
         }        
@@ -89,6 +93,6 @@ class CompetenciaLigaTantos extends CompetenciaLiga
      */
     public function newPartido($user = null, $nombre = "")
     {
-        return new PartidoTantos($user, $nombre);
+        return new PartidoTantosCartas($user, $nombre);
     }    
 }

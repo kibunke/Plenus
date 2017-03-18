@@ -1,13 +1,13 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Escenario
- * @ORM\Table(name="services_juegosba_final.Escenario")
+ * ResultadoBundle\Entity\Escenario
+ * @ORM\Table(name="Escenario")
  * @ORM\Entity()
  */
 class Escenario
@@ -45,40 +45,40 @@ class Escenario
     /**
      * @var string $numero
      *
-     * @ORM\Column(name="numero", type="string")
+     * @ORM\Column(name="numero", type="string", nullable=true)
      */
     private $numero;
 
     /**
      * @var string $entreCalle1
      *
-     * @ORM\Column(name="entreCalle1", type="string")
+     * @ORM\Column(name="entreCalle1", type="string", nullable=true)
      */
     private $entreCalle1;
     
     /**
      * @var string $entreCalle2
      *
-     * @ORM\Column(name="entreCalle2", type="string")
+     * @ORM\Column(name="entreCalle2", type="string", nullable=true)
      */
     private $entreCalle2;
 
     /**
      * @var string $esquina
      *
-     * @ORM\Column(name="esquina", type="string")
+     * @ORM\Column(name="esquina", type="string", nullable=true)
      */
     private $esquina;
     
     /**
      * @var string $latlng
      *
-     * @ORM\Column(name="latlng", type="string")
+     * @ORM\Column(name="latlng", type="string", nullable=true)
      */
     private $latlng;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\JuegosBA\CommonBundle\Entity\Localidad")
+     * @ORM\ManyToOne(targetEntity="\CommonBundle\Entity\Localidad")
      * @ORM\JoinColumn(name="localidad", referencedColumnName="id")
      */       
     private $localidad;
@@ -96,7 +96,7 @@ class Escenario
     private $createdAt;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
@@ -109,7 +109,7 @@ class Escenario
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */
     private $updatedBy;
@@ -157,6 +157,19 @@ class Escenario
     }    
     
     /**
+     * Get direccion
+     *
+     * @return string 
+     */
+    public function getDireccionRaw()
+    {
+        if ($this->numero)
+            return "<strong>".$this->calle."</strong><small> N° ".$this->numero."</small>";
+        else
+            return "<strong>".$this->calle."</strong><small> esq. ".$this->esquina."</small>";
+    }
+    
+    /**
      * Set calle
      *
      * @param string $calle
@@ -202,13 +215,13 @@ class Escenario
         return $this->latlng;
     }    
     
- /**
+    /**
      * Add cronograma
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $plaza
+     * @param \ResultadoBundle\Entity\Cronograma $plaza
      * @return Escenario
      */
-    public function addCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma)
+    public function addCronograma(\ResultadoBundle\Entity\Cronograma $cronograma)
     {
         $this->cronogramas[] = $cronograma;
         $cronograma->setEscenario($this);
@@ -219,9 +232,9 @@ class Escenario
     /**
      * Remove cronograma
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma
+     * @param \ResultadoBundle\Entity\Cronograma $cronograma
      */
-    public function removeCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma)
+    public function removeCronograma(\ResultadoBundle\Entity\Cronograma $cronograma)
     {
         $this->cronogramas->removeElement($cronograma);
     }
@@ -285,10 +298,10 @@ class Escenario
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Escenario
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -298,7 +311,7 @@ class Escenario
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -308,10 +321,10 @@ class Escenario
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Escenario
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -321,7 +334,7 @@ class Escenario
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -330,8 +343,10 @@ class Escenario
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($user = null)
     {
+        $this->createdAt = new \DateTime();
+        $this->createdBy = $user;
         $this->cronogramas = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -430,10 +445,10 @@ class Escenario
     /**
      * Set localidad
      *
-     * @param \JuegosBA\CommonBundle\Entity\Localidad $localidad
+     * @param \CommonBundle\Entity\Localidad $localidad
      * @return Escenario
      */
-    public function setLocalidad(\JuegosBA\CommonBundle\Entity\Localidad $localidad = null)
+    public function setLocalidad(\CommonBundle\Entity\Localidad $localidad = null)
     {
         $this->localidad = $localidad;
 
@@ -443,10 +458,33 @@ class Escenario
     /**
      * Get localidad
      *
-     * @return \JuegosBA\CommonBundle\Entity\Localidad 
+     * @return \CommonBundle\Entity\Localidad 
      */
     public function getLocalidad()
     {
         return $this->localidad;
+    }
+
+    /**
+     * Set esquina
+     *
+     * @param string $esquina
+     * @return Escenario
+     */
+    public function setEsquina($esquina)
+    {
+        $this->esquina = $esquina;
+
+        return $this;
+    }
+
+    /**
+     * Get esquina
+     *
+     * @return string 
+     */
+    public function getEsquina()
+    {
+        return $this->esquina;
     }
 }

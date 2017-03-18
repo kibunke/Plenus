@@ -79,7 +79,7 @@ abstract class Planilla
      */
     protected $responsableMunicipioDni;
     
-    /*
+    /**
      * @var string $directorTecnicoDni
      *
      * @ORM\Column(name="directorTecnicoDni", type="string", length=100, nullable=true)
@@ -140,7 +140,7 @@ abstract class Planilla
         $this->createdAt = new \DateTime();
         $this->equipos   = new ArrayCollection();
         $this->estados   = new ArrayCollection();
-        $this->addEstado(new Cargada());
+        //$this->addEstado(new Cargada());
     }
 
     /**
@@ -160,6 +160,16 @@ abstract class Planilla
     {
         return $this->id;
     }
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getNumero()
+    {
+        return $this->getId() ? str_pad($this->getId(), 6, "0", STR_PAD_LEFT):'000000';
+    }    
 
     /**
      * Set descripcion
@@ -508,7 +518,6 @@ abstract class Planilla
      */
     public function isOnDateRange($integrante)
     {
-        //Por negocion los Juveniles tiene DT obligatorio
         return  $this->getSegmento()->getMinFechaNacimiento() <= $integrante->getFNacimiento() &&
                 $this->getSegmento()->getMaxFechaNacimiento() >= $integrante->getFNacimiento();
     }    
@@ -530,6 +539,7 @@ abstract class Planilla
                                                 "maxReemplazos"  => $segmento->getMaxReemplazos(),
                                                 "fechaMin"       => $segmento->getMinFechaNacimiento(),
                                                 "fechaMax"       => $segmento->getMaxFechaNacimiento(),
+                                                "genero"         => $segmento->getGenero()->getNombre(),
                                             ),
                       "equipos"                  => $this->getEquiposJson(),
                       "inscripcionInstitucional" => $this->getInstitucion() ? true : false,
@@ -539,6 +549,21 @@ abstract class Planilla
                                                         "apellido" => $this->getResponsableMunicipioApellido(),
                                                         "dni"      => $this->getResponsableMunicipioDni(),
                                                       )
+                );
+    }
+    
+    /**
+     * Get equipos
+     *
+     * @return json
+     */
+    public function toArray()
+    {
+        return array(
+                        "id"        => $this->getId(),
+                        "numero"    => $this->getNumero(),
+                        "municipio" => $this->getMunicipio()->getNombre(),
+                        "segmento"  => $this->getSegmento()->toArray()
                 );
     }
     
@@ -557,7 +582,7 @@ abstract class Planilla
      * validarInscripcion
      */
     public function inscripcionValida($planilla)
-    {
+    {    
         //Chequea que el participante no este inscripto en el segmento 
         if ($this->getSegmento() == $planilla->getSegmento())
         {
@@ -569,6 +594,28 @@ abstract class Planilla
             throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en otro equipo por el municipio de '.$this->getMunicipio()->getNombre());
         }
         
+        return true;
+    }
+    
+    /**
+     * validarInscripcion
+     */
+    public function validarInscripcion($inscripto)
+    {
+        try{
+            if (!$this->getInstitucion()){
+                if ($this->getMunicipio() != $inscripto->getMunicipio()){
+                    throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse en esta planilla porque pertenece al municipio de '.$inscripto->getMunicipio()->getNombre().'. En una inscripción MUNICIPAL todos los participantes deben pertenecer al municipio indicado en la planilla.');
+                }
+            }
+            foreach ($inscripto->getEquipos() as $equipo){
+                if ($this->id != $equipo->getPlanilla()->getId())
+                    $this->inscripcionValida($equipo->getPlanilla());
+            }
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            throw new \Exception(str_replace('%DNI%',$inscripto->getDni(),$message));
+        }
         return true;
     }
     
@@ -614,11 +661,44 @@ abstract class Planilla
      *
      * @return boolean
      */
-    public function isRemovable()
+    public function isRemovable($user)
     {
-        return $this->getEstado()->isRemovable();
+        return $this->getEstado()->isRemovable() && $user->getId() == $this->getCreatedBy()->getId();
     }
 
+    /**
+     * Get isCompleted
+     *
+     * @return boolean
+     */
+    public function isCompleted()
+    {
+        foreach ($this->getEquipos() as $equipo)
+        {
+            $cantCompetidores = 0;
+            foreach ($equipo->getCompetidores() as $competidor)
+            {
+                if ($competidor->getRol() == "inscripto"){
+                    $cantCompetidores ++;
+                }
+            }
+            if ( $cantCompetidores > $this->getSegmento()->getMaxIntegrantes() || $cantCompetidores < $this->getSegmento()->getMinIntegrantes())
+                return false;
+            
+        }
+        return true;
+    }
+    
+    /**
+     * Get isEditable
+     *
+     * @return boolean
+     */
+    public function isEditable($user)
+    {
+        return $this->getEstado()->isEditable() && $user->getId() == $this->getCreatedBy()->getId();
+    }
+    
     /**
      * Get prepareToDelete
      *
@@ -690,4 +770,32 @@ abstract class Planilla
     {
         return $this->directorTecnicoApellido;
     }
+    
+    /**
+     * Get directorTecnicoDni
+     *
+     * @return string
+     */
+    public function getDirectorTecnicoDni()
+    {
+        return $this->directorTecnicoDni;
+    }
+    
+       /**
+     * Set directorTecnicoDni
+     *
+     * @param string $directorTecnicoDni
+     *
+     * @return Planilla
+     */
+    public function setDirectorTecnicoDni($directorTecnicoDni)
+    {
+        $this->directorTecnicoDni = $directorTecnicoDni;
+
+        return $this;
+    }
+    
+    public function getTemplateShow(){
+        return "InscripcionBundle:Planilla:planillaShow.html.twig";
+    }    
 }

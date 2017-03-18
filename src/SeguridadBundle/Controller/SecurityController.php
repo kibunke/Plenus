@@ -219,7 +219,7 @@ class SecurityController extends Controller
                             );
                             
                         $log = new Log($user,$request->getClientIp(),"resetPassword","Step-2");
-                        $log->getDescription("Regeneración de Clave Paso 2 | diff = ".$diff);
+                        $log->setDescription("Regeneración de Clave Paso 2 | diff = ".$diff);
                         
                         try {
                             $em->persist($log);
@@ -242,12 +242,12 @@ class SecurityController extends Controller
         }
         if ($error){
                 $log = new Log($user,$request->getClientIp(),"resetPassword","Step-2-ERROR");
-                $log->getDescription("ERROR en la Regeneración de Clave Paso 2. SALT: ".urldecode($salt)."::".$encriptador->desencriptar(urldecode($salt)));
+                $log->setDescription("ERROR en la Regeneración de Clave Paso 2. SALT: ".urldecode($salt)."::".$encriptador->desencriptar(urldecode($salt)));
                 $em->persist($log);
                 $em->flush();
                 $this->addFlash('error', $error);
         }else{
-            $this->addFlash('success', "Se invió un e-mail a su cuenta registrada con una clave provisoria que deberá modificar la proxima vez que ingrese al sistema.");        
+            $this->addFlash('success', "Se envió un e-mail a su cuenta registrada con una clave provisoria que deberá modificar la proxima vez que ingrese al sistema.");        
         }
         return $this->redirectToRoute('_login');
     }

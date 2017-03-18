@@ -1,14 +1,14 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Cronograma
+ * ResultadoBundle\Entity\Cronograma
  *
- * @ORM\Entity(repositoryClass="JuegosBA\ResultadoBundle\Entity\Repository\CronogramaRepository")
+ * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\CronogramaRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
@@ -48,7 +48,8 @@ class Cronograma
     private $escenario;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Evento", mappedBy="cronogramas")
+     * @ORM\ManyToMany(targetEntity="Evento", inversedBy="cronogramas")
+     * @ORM\JoinTable(name="evento_cronograma")
      **/
     private $eventos;
 
@@ -60,7 +61,7 @@ class Cronograma
     private $createdAt;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */       
     private $createdBy;
@@ -73,7 +74,7 @@ class Cronograma
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -81,7 +82,7 @@ class Cronograma
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($user = null)
     {
         $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->createdBy = $user;
@@ -111,6 +112,46 @@ class Cronograma
                         $this->getEscenario().                        
                     "</small>
                 </div>"
+        ;
+    }
+    
+        /**
+     * Get raw
+     *
+     * @return string 
+     */
+    public function descripcionFrontRaw($evento = null)
+    {
+        $str="";
+        if (count($this->getEventos())==0){
+            $pl1 = "No definido";
+            $pl2 = "No definido";
+            if ($this->getPartido()->getPlaza1()->getEquipo())
+                $pl1 = $this->getPartido()->getPlaza1()->getEquipo()->getMunicipio()->getNombre();
+            if ($this->getPartido()->getPlaza2()->getEquipo())
+                $pl2 = $this->getPartido()->getPlaza2()->getEquipo()->getMunicipio()->getNombre();
+            $str.="<div>
+                    <strong><small>".
+                        $this->getPartido()->getEvento()->getNombreCompleto().
+                    " </small></strong><br><small>".$this->getPartido()->getNivelTexto()."</small><br>".
+                        $pl1.
+                    "<strong> .VS. </strong>".
+                        $pl2.
+                    "
+                </div>";
+        }else{
+            $str.="<div>
+                    <strong><small>".
+                        $evento.
+                    " </small>".
+                        
+                    "</strong><br>
+                    <small>".
+                        $this->getDescripcion().
+                    "</small>
+                </div>";            
+        }
+        return  $str;
         ;
     }
     
@@ -173,10 +214,10 @@ class Cronograma
     /**
      * Set escenario
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Escenario $escenario
+     * @param \ResultadoBundle\Entity\Escenario $escenario
      * @return Cronograma
      */
-    public function setEscenario(\JuegosBA\ResultadoBundle\Entity\Escenario $escenario)
+    public function setEscenario(\ResultadoBundle\Entity\Escenario $escenario)
     {
         $this->escenario = $escenario;
 
@@ -242,10 +283,10 @@ class Cronograma
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Cronograma
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -255,7 +296,7 @@ class Cronograma
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -265,10 +306,10 @@ class Cronograma
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Cronograma
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -278,7 +319,7 @@ class Cronograma
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -292,7 +333,7 @@ class Cronograma
      */
     public function getIdReload()
     {
-        return $this->getEvento()->getId();
+        //return $this->getEvento()->getId();
     }
     
     /**
@@ -304,4 +345,38 @@ class Cronograma
     {
         return true;
     }    
+
+    /**
+     * Add eventos
+     *
+     * @param \ResultadoBundle\Entity\Evento $eventos
+     * @return Cronograma
+     */
+    public function addEvento(\ResultadoBundle\Entity\Evento $eventos)
+    {
+        $this->eventos[] = $eventos;
+        //$eventos->addCronograma($this);
+        return $this;
+    }
+
+    /**
+     * Remove eventos
+     *
+     * @param \ResultadoBundle\Entity\Evento $eventos
+     */
+    public function removeEvento(\ResultadoBundle\Entity\Evento $eventos)
+    {
+        $this->eventos->removeElement($eventos);
+    }
+
+    /**
+     * Get eventos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEventos()
+    {
+        return $this->eventos;
+    }
+    
 }

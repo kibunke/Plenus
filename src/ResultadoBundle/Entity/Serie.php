@@ -336,4 +336,28 @@ class Serie
         $percent = 0;
         return round($percent,1);
     }
+
+    /**
+     * Add plaza
+     *
+     * @param \ResultadoBundle\Entity\PlazaSerie $plaza
+     *
+     * @return Serie
+     */
+    public function addPlaza(\ResultadoBundle\Entity\PlazaSerie $plaza)
+    {
+        $this->plazas[] = $plaza;
+
+        return $this;
+    }
+
+    /**
+     * Remove plaza
+     *
+     * @param \ResultadoBundle\Entity\PlazaSerie $plaza
+     */
+    public function removePlaza(\ResultadoBundle\Entity\PlazaSerie $plaza)
+    {
+        $this->plazas->removeElement($plaza);
+    }
 }

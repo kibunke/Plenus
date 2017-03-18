@@ -46,38 +46,4 @@ class DirectorTecnico extends Persona
     {
         return 'ResultadoBundle:DirectorTecnico';
     }
-
-    /**
-     * Add equipo
-     *
-     * @param \ResultadoBundle\Entity\Equipo $equipo
-     *
-     * @return DirectorTecnico
-     */
-    public function addEquipo(\ResultadoBundle\Entity\Equipo $equipo)
-    {
-        $this->equipos[] = $equipo;
-
-        return $this;
-    }
-
-    /**
-     * Remove equipo
-     *
-     * @param \ResultadoBundle\Entity\Equipo $equipo
-     */
-    public function removeEquipo(\ResultadoBundle\Entity\Equipo $equipo)
-    {
-        $this->equipos->removeElement($equipo);
-    }
-
-    /**
-     * Get equipos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEquipos()
-    {
-        return $this->equipos;
-    }
 }

@@ -1,18 +1,19 @@
 <?php
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Partido
+ * ResultadoBundle\Entity\Partido
  *
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *                          "partido"       = "Partido",
- *                          "partidoPuntos" = "PartidoPuntos",
- *                          "partidoTantos"    = "PartidoTantos"
+ *                          "partido"               = "Partido",
+ *                          "partidoPuntos"         = "PartidoPuntos",
+ *                          "partidoTantos"         = "PartidoTantos",
+ *                          "partidoTantosCartas"   = "PartidoTantosCartas"
  *                      })
  */
 abstract class Partido
@@ -48,13 +49,13 @@ abstract class Partido
     private $parametros;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Plaza", inversedBy="partidosLocal", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="PlazaPartido", inversedBy="partidosLocal", cascade={"persist","refresh"})
      * @ORM\JoinColumn(name="plaza1", referencedColumnName="id", nullable=false)
      */    
     private $plaza1;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Plaza", inversedBy="partidosVisitante", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="PlazaPartido", inversedBy="partidosVisitante", cascade={"persist","refresh"})
      * @ORM\JoinColumn(name="plaza2", referencedColumnName="id", nullable=false)
      */    
     private $plaza2;
@@ -72,7 +73,7 @@ abstract class Partido
     private $copa;    
     
     /**
-     * @ORM\OneToOne(targetEntity="CronogramaPartido", mappedBy="partido")
+     * @ORM\OneToOne(targetEntity="CronogramaPartido", mappedBy="partido", cascade={"all"})
      **/
     private $cronograma;
 
@@ -90,17 +91,45 @@ abstract class Partido
     /**
      * @var integer $orden
      *
-     * @ORM\Column(name="orden", type="integer")
+     * @ORM\Column(name="orden", type="integer", nullable=true)
      */
     protected $orden;
    
     /**
      * @var integer $nivel
      *
-     * @ORM\Column(name="nivel", type="integer")
+     * @ORM\Column(name="nivel", type="integer", nullable=true)
      */
     protected $nivel;
    
+    /**
+     * @var integer $resultadoLocal
+     *
+     * @ORM\Column(name="resultadoLocal", type="integer", nullable=true)
+     */
+    private $resultadoLocal;
+    
+    /**
+     * @var integer $resultadoVisitante
+     *
+     * @ORM\Column(name="resultadoVisitante", type="integer", nullable=true)
+     */
+    private $resultadoVisitante;
+    
+    /**
+     * @var integer $resultadoSecundarioLocal
+     *
+     * @ORM\Column(name="resultadoSecundarioLocal", type="integer", nullable=true)
+     */
+    private $resultadoSecundarioLocal;
+    
+    /**
+     * @var integer $resultadoSecundarioVisitante
+     *
+     * @ORM\Column(name="resultadoSecundarioVisitante", type="integer", nullable=true)
+     */
+    private $resultadoSecundarioVisitante;
+    
     /**
      * @var datetime $createdAt
      *
@@ -109,9 +138,9 @@ abstract class Partido
     private $createdAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @var SeguridadBundle\Entity\Usuario $createdBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
@@ -124,9 +153,9 @@ abstract class Partido
     private $updatedAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -265,10 +294,10 @@ abstract class Partido
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Competencia
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -278,7 +307,7 @@ abstract class Partido
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -288,10 +317,10 @@ abstract class Partido
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Competencia
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -301,7 +330,7 @@ abstract class Partido
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -334,10 +363,10 @@ abstract class Partido
     /**
      * Set zona
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Zona $zona
-     * @return Plaza
+     * @param \ResultadoBundle\Entity\Zona $zona
+     * @return Partido
      */
-    public function setZona(\JuegosBA\ResultadoBundle\Entity\Zona $zona = null)
+    public function setZona(\ResultadoBundle\Entity\Zona $zona = null)
     {
         $this->zona = $zona;
 
@@ -347,7 +376,7 @@ abstract class Partido
     /**
      * Get zona
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Zona 
+     * @return \ResultadoBundle\Entity\Zona 
      */
     public function getZona()
     {
@@ -357,10 +386,10 @@ abstract class Partido
     /**
      * Set plaza1
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Plaza $plaza1
+     * @param \ResultadoBundle\Entity\PlazaPartido $plaza1
      * @return Partido
      */
-    public function setPlaza1(\JuegosBA\ResultadoBundle\Entity\Plaza $plaza = null)
+    public function setPlaza1(\ResultadoBundle\Entity\PlazaPartido $plaza = null)
     {
         $this->plaza1 = $plaza;
 
@@ -370,7 +399,7 @@ abstract class Partido
     /**
      * Get plaza1
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Plaza 
+     * @return \ResultadoBundle\Entity\PlazaPartido 
      */
     public function getPlaza1()
     {
@@ -380,10 +409,10 @@ abstract class Partido
     /**
      * Set plaza1
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Plaza $plaza
+     * @param \ResultadoBundle\Entity\PlazaPartido $plaza
      * @return Partido
      */
-    public function setPlaza2(\JuegosBA\ResultadoBundle\Entity\Plaza $plaza = null)
+    public function setPlaza2(\ResultadoBundle\Entity\PlazaPartido $plaza = null)
     {
         $this->plaza2 = $plaza;
 
@@ -393,7 +422,7 @@ abstract class Partido
     /**
      * Get plaza2
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Plaza 
+     * @return \ResultadoBundle\Entity\PlazaPartido 
      */
     public function getPlaza2()
     {
@@ -403,12 +432,13 @@ abstract class Partido
     /**
      * Set cronograma
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma
+     * @param \ResultadoBundle\Entity\Cronograma $cronograma
      * @return Partido
      */
-    public function setCronograma(\JuegosBA\ResultadoBundle\Entity\Cronograma $cronograma = null)
+    public function setCronograma(\ResultadoBundle\Entity\Cronograma $cronograma = null)
     {
         $this->cronograma = $cronograma;
+        $cronograma->setPartido($this);
 
         return $this;
     }
@@ -416,7 +446,7 @@ abstract class Partido
     /**
      * Get cronograma
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Cronograma 
+     * @return \ResultadoBundle\Entity\Cronograma 
      */
     public function getCronograma()
     {
@@ -430,8 +460,45 @@ abstract class Partido
      */
     public function soyLocal($plaza)
     {
-        if ($plaza == $this->getPlaza1())
+        if ($plaza->getId() == $this->getPlaza1()->getId())
             return true;
+        return false;
+    }
+    
+    /** 
+     * Get empato
+     *
+     * @return boolean
+     */
+    public function empato($plaza)
+    {    
+        if ( ($this->getResultadoLocal() == $this->getResultadoVisitante()) && ! $this->getResultadoSecundarioLocal())
+            return true;
+        return false;
+    }
+    
+    /** 
+     * Get gano
+     *
+     * @return boolean
+     */
+    public function gano($plaza)
+    {
+        if ($this->soyLocal($plaza)){
+            if ( $this->getResultadoLocal() > $this->getResultadoVisitante() || (
+                    $this->getResultadoLocal() == $this->getResultadoVisitante() &&
+                    $this->getResultadoSecundarioLocal() > $this->getResultadoSecundarioVisitante()
+                    )
+                )
+                return true;
+        }else{
+            if ( $this->getResultadoLocal() < $this->getResultadoVisitante() || (
+                    $this->getResultadoLocal() == $this->getResultadoVisitante() &&
+                    $this->getResultadoSecundarioLocal() < $this->getResultadoSecundarioVisitante()
+                    )
+                )
+                return true;
+        }
         return false;
     }
     
@@ -442,7 +509,17 @@ abstract class Partido
      */
     public function jugado()
     {
-        if ($this->getResultadoLocal())
+        //return ($this->getResultadoLocal()>=0 && !is_null($this->getResultadoLocal()));
+        return !is_null($this->getResultadoLocal());
+    }
+    
+    /** 
+     * Has cronograma
+     * @return boolean
+     */
+    public function hasCronograma()
+    {
+        if ($this->getCronograma()->getEscenario())
             return true;
         return false;
     }
@@ -454,18 +531,20 @@ abstract class Partido
      */
     public function getState()
     {
-        if ($this->jugado())
+        if ($this->jugado() && $this->hasCronograma())
             return 100;
+        elseif ($this->jugado() || $this->hasCronograma())
+            return 50;
         return 0;
     }     
 
     /**
      * Add anteriores
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Partido $anteriores
+     * @param \ResultadoBundle\Entity\Partido $anteriores
      * @return Partido
      */
-    public function addAnteriore(\JuegosBA\ResultadoBundle\Entity\Partido $anteriores)
+    public function addAnteriore(\ResultadoBundle\Entity\Partido $anteriores)
     {
         $this->anteriores[] = $anteriores;
 
@@ -475,9 +554,9 @@ abstract class Partido
     /**
      * Remove anteriores
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Partido $anteriores
+     * @param \ResultadoBundle\Entity\Partido $anteriores
      */
-    public function removeAnteriore(\JuegosBA\ResultadoBundle\Entity\Partido $anteriores)
+    public function removeAnteriore(\ResultadoBundle\Entity\Partido $anteriores)
     {
         $this->anteriores->removeElement($anteriores);
     }
@@ -495,10 +574,10 @@ abstract class Partido
     /**
      * Set siguiente
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Partido $siguiente
+     * @param \ResultadoBundle\Entity\Partido $siguiente
      * @return Partido
      */
-    public function setSiguiente(\JuegosBA\ResultadoBundle\Entity\Partido $siguiente = null)
+    public function setSiguiente(\ResultadoBundle\Entity\Partido $siguiente = null)
     {
         $this->siguiente = $siguiente;
 
@@ -508,7 +587,7 @@ abstract class Partido
     /**
      * Get siguiente
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Partido 
+     * @return \ResultadoBundle\Entity\Partido 
      */
     public function getSiguiente()
     {
@@ -562,12 +641,122 @@ abstract class Partido
     }
 
     /**
+     * Get nivel
+     *
+     * @return integer 
+     */
+    public function getNivelTexto()
+    {
+        if ($this->getZona())
+            return $this->getZona()->getNombre();
+        switch ($this->nivel){
+            case 4 : return "8vos de Final";
+            case 3 : return "4tos de Final";
+            case 2 : return "Semifinal";
+            case 1 : return "Final";
+            case 0 : return "3er Puesto";
+        }
+    }
+
+    /**
+     * Set resultadoLocal
+     *
+     * @param integer $resultadoLocal
+     * @return PartidoPuntos
+     */
+    public function setResultadoLocal($resultadoLocal)
+    {
+        $this->resultadoLocal = $resultadoLocal;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoLocal
+     *
+     * @return integer 
+     */
+    public function getResultadoLocal()
+    {
+        return $this->resultadoLocal;
+    }
+
+    /**
+     * Set resultadoVisitante
+     *
+     * @param integer $resultadoVisitante
+     * @return PartidoPuntos
+     */
+    public function setResultadoVisitante($resultadoVisitante)
+    {
+        $this->resultadoVisitante = $resultadoVisitante;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoVisitante
+     *
+     * @return integer 
+     */
+    public function getResultadoVisitante()
+    {
+        return $this->resultadoVisitante;
+    }
+
+    /**
+     * Set resultadoSecundarioLocal
+     *
+     * @param integer $resultadoSecundarioLocal
+     * @return PartidoPuntos
+     */
+    public function setResultadoSecundarioLocal($resultadoSecundarioLocal)
+    {
+        $this->resultadoSecundarioLocal = $resultadoSecundarioLocal;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoSecundarioLocal
+     *
+     * @return integer 
+     */
+    public function getResultadoSecundarioLocal()
+    {
+        return $this->resultadoSecundarioLocal;
+    }
+
+    /**
+     * Set resultadoSecundarioVisitante
+     *
+     * @param integer $resultadoSecundarioVisitante
+     * @return PartidoPuntos
+     */
+    public function setResultadoSecundarioVisitante($resultadoSecundarioVisitante)
+    {
+        $this->resultadoSecundarioVisitante = $resultadoSecundarioVisitante;
+
+        return $this;
+    }
+
+    /**
+     * Get resultadoSecundarioVisitante
+     *
+     * @return integer 
+     */
+    public function getResultadoSecundarioVisitante()
+    {
+        return $this->resultadoSecundarioVisitante;
+    }
+    
+    /**
      * Set copa
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\CompetenciaEliminacionDirecta $copa
+     * @param \ResultadoBundle\Entity\CompetenciaEliminacionDirecta $copa
      * @return Partido
      */
-    public function setCopa(\JuegosBA\ResultadoBundle\Entity\CompetenciaEliminacionDirecta $copa = null)
+    public function setCopa(\ResultadoBundle\Entity\CompetenciaEliminacionDirecta $copa = null)
     {
         $this->copa = $copa;
 
@@ -577,7 +766,7 @@ abstract class Partido
     /**
      * Get copa
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\CompetenciaEliminacionDirecta 
+     * @return \ResultadoBundle\Entity\CompetenciaEliminacionDirecta 
      */
     public function getCopa()
     {
@@ -587,7 +776,7 @@ abstract class Partido
     /**
      * Get evento
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Evento
+     * @return \ResultadoBundle\Entity\Evento
      */
     public function getEvento()
     {
@@ -603,6 +792,34 @@ abstract class Partido
      */
     public function getIdReload()
     {
-        return $this->getPlaza1()->getIdReload();
-    }    
+        if ($this->getCopa())
+            return $this->getCopa()->getId();
+        else
+            return $this->getZona()->getId();
+    }
+    
+    /**
+     * Get contrincante
+     *
+     * @return Plaza
+     */
+    public function getContrincante($plaza)
+    {
+        if($this->getPlaza1()->getId() == $plaza->getId())
+            return $this->getPlaza2();
+        return $this->getPlaza1();
+    }
+    
+    /**
+     * Get update
+     *
+     * @return boolean
+     */
+    public function update()
+    {
+        if($this->getZona())
+            $this->getZona()->recalcularOrdenNatural();
+        return true;
+    }
+    
 }

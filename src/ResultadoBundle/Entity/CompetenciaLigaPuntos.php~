@@ -1,12 +1,12 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\CompetenciaLigaPuntos
+ * ResultadoBundle\Entity\CompetenciaLigaPuntos
  *
  * @ORM\Entity()
  *
@@ -15,6 +15,13 @@ class CompetenciaLigaPuntos extends CompetenciaLiga
 {
     private $columns = ["Pts","PJ","PG","PE","PP","GF","GC","DG"];
     private $row = [0,0,0,0,0,0,0,0];
+    
+    /*
+     * CONSTRUCT
+     */
+    public function __construct($user = NULL) {
+       parent::__construct($user);
+    }
     
    /**
      * recalcularOrdenNatural
@@ -35,6 +42,7 @@ class CompetenciaLigaPuntos extends CompetenciaLiga
             $dg[] = $aux[7];
             $gf[] = $aux[5];
             $ge[] = $aux[6];
+            $plAux[] = $plaza->getId();
         }
         
         $arr = array_multisort(
@@ -42,14 +50,11 @@ class CompetenciaLigaPuntos extends CompetenciaLiga
                     $dg, SORT_DESC, SORT_NUMERIC,
                     $gf, SORT_DESC, SORT_NUMERIC,
                     $ge, SORT_ASC, SORT_NUMERIC,
-                    $pl, SORT_DESC
+                    $plAux
                 );
-        //$ord = 1;
-        foreach ( $pl as $key=>$plaza){
-            $plaza->setOrdenNatural($key);
-            //echo $key;
-        }        
-        //die();
+        foreach ( $pl as $plaza){
+            $plaza->setOrdenNatural(array_search($plaza->getId(), $plAux));
+        }      
         return $arr;
     }
     
@@ -76,10 +81,25 @@ class CompetenciaLigaPuntos extends CompetenciaLiga
     /** 
      * Get newPartido
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Partido
+     * @return \ResultadoBundle\Entity\Partido
      */
-    public function newPartido($user = null)
+    public function newPartido($user = null, $nombre = "")
     {
-        return new PartidoPuntos($user);
+        return new PartidoPuntos($user,$nombre);
     }
+    
+    /**
+     * Get performance
+     *
+     * @return string
+     */
+    public function getPerformance($plaza)
+    {
+        switch ($plaza->getOrden()){
+            case 1: return "Medalla de Oro";
+            case 2: return "Medalla de Plata";
+            case 3: return "Medalla de Bronce";
+            default: return null;
+        }
+    }    
 }

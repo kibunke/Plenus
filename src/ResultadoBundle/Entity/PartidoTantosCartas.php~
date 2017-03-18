@@ -4,42 +4,16 @@ namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use ResultadoBundle\Form\PartidoTantosType;
+use ResultadoBundle\Form\PartidoTantosCartasType;
 
 /**
- * ResultadoBundle\Entity\PartidoTantos
+ * ResultadoBundle\Entity\PartidoTantosCartas
  *
  * @ORM\Entity()
  *
  */
-class PartidoTantos extends Partido
+class PartidoTantosCartas extends PartidoTantos
 { 
-    /**
-     * @var integer $tanteador
-     *
-     * @ORM\Column(name="tanteador", type="string")
-     */
-    private $tanteador;    
-
-    /*
-     * Construct
-     */
-    public function __construct($user = NULL,$nombre = "") {
-        $this->setNombre($nombre);
-        parent::__construct($user);
-    }
-    
-    /**
-     * resetResultado
-     *
-     * @return boolean
-     */
-    public function resetResultado()
-    {
-        $this->setTanteador(NULL);
-        parent::resetResultado();
-    }
-    
     /** 
      * Get template
      *
@@ -47,7 +21,7 @@ class PartidoTantos extends Partido
      */
     public function getTemplate()
     {
-        return "editResultado.tantos.html.twig";
+        return "editResultado.puntos.html.twig";
     }
     
     /** 
@@ -57,7 +31,35 @@ class PartidoTantos extends Partido
      */
     public function getFormType()
     {
-        return new PartidoTantosType();
+        return new PartidoTantosCartasType();
+    }
+    
+    /** 
+     * Get gano
+     *
+     * @return boolean
+     */
+    public function gano($plaza)
+    {
+        $parametros = json_decode($this->getZona()->getLiga()->getParametros());
+        if ($parametros->gana == "mayor"){
+            if ($this->soyLocal($plaza)){
+                if ( $this->getResultadoLocal() > $this->getResultadoVisitante() )
+                    return true;
+            }else{
+                if ( $this->getResultadoLocal() < $this->getResultadoVisitante() )
+                    return true;
+            }
+        }else{
+            if ($this->soyLocal($plaza)){
+                if ( $this->getResultadoLocal() < $this->getResultadoVisitante() )
+                    return true;
+            }else{
+                if ( $this->getResultadoLocal() > $this->getResultadoVisitante() )
+                    return true;
+            }
+        }
+        return false;
     }
     
     /** 
@@ -85,40 +87,12 @@ class PartidoTantos extends Partido
             if ($this->soyLocal($plaza)){
                 $row[5]+=$this->getResultadoLocal();
                 $row[6]+=$this->getResultadoVisitante();
-                $row[8]+=$this->getResultadoSecundarioLocal();
-                $row[9]+=$this->getResultadoSecundarioVisitante();                
             }else{
                 $row[5]+=$this->getResultadoVisitante();
                 $row[6]+=$this->getResultadoLocal();
-                $row[8]+=$this->getResultadoSecundarioVisitante();
-                $row[9]+=$this->getResultadoSecundarioLocal();
             }
             $row[7] = $row[5] - $row[6];
-            $row[10] = $row[8] - $row[9];
         }
         return $row;
-    }
-
-    /**
-     * Set tanteador
-     *
-     * @param string $tanteador
-     * @return PartidoTantos
-     */
-    public function setTanteador($tanteador)
-    {
-        $this->tanteador = $tanteador;
-
-        return $this;
-    }
-
-    /**
-     * Get tanteador
-     *
-     * @return string 
-     */
-    public function getTanteador()
-    {
-        return $this->tanteador;
     }
 }

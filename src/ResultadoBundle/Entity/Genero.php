@@ -302,4 +302,38 @@ class Genero
     {
         return $this->updatedBy;
     }
+
+    /**
+     * Add segmento
+     *
+     * @param \InscripcionBundle\Entity\Segmento $segmento
+     *
+     * @return Genero
+     */
+    public function addSegmento(\InscripcionBundle\Entity\Segmento $segmento)
+    {
+        $this->segmentos[] = $segmento;
+
+        return $this;
+    }
+
+    /**
+     * Remove segmento
+     *
+     * @param \InscripcionBundle\Entity\Segmento $segmento
+     */
+    public function removeSegmento(\InscripcionBundle\Entity\Segmento $segmento)
+    {
+        $this->segmentos->removeElement($segmento);
+    }
+
+    /**
+     * Get segmentos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSegmentos()
+    {
+        return $this->segmentos;
+    }
 }

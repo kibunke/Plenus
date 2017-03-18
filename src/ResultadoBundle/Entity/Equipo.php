@@ -43,9 +43,9 @@ class Equipo
     private $descripcion;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Competidor", mappedBy="equipos", cascade={"persist"})
-     */
-    private $competidores;
+     * @ORM\OneToMany(targetEntity="EquiposCompetidores", mappedBy="equipo", cascade={"all"})
+     * */
+    protected $equipoCompetidores;
     
     /**
      * @ORM\ManyToOne(targetEntity="DirectorTecnico", inversedBy="equipos", cascade={"persist"})
@@ -116,7 +116,7 @@ class Equipo
         $this->createdBy = $user;
         //$this->setEvento($evento);
         //$this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
-        $this->competidores = new \Doctrine\Common\Collections\ArrayCollection();        
+        $this->equipoCompetidores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->plazas = new \Doctrine\Common\Collections\ArrayCollection();
     }    
 
@@ -127,7 +127,6 @@ class Equipo
      */
     public function __toString()
     {
-        return "lal";
         if ($this->nombre != '')
             return $this->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre()." - ".$this->nombre;
         else
@@ -415,8 +414,12 @@ class Equipo
      */
     public function addCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
     {
-        $this->competidores[] = $competidor;
-        $competidor->addEquipo($this);
+        $aux = new EquiposCompetidores();
+
+        $aux->setEquipo($this);
+        $aux->setCompetidor($competidor);
+
+        $this->equipoCompetidores[] = $aux;
 
         return $this;
     }
@@ -427,9 +430,17 @@ class Equipo
      * @param \ResultadoBundle\Entity\Competidor $integrante
      * @return Equipo
      */
-    public function addIntegrante($integrante)
+    public function addIntegrante($integrante,$json)
     {
-        return $this->addCompetidor($integrante);
+        $rol = isset($json->rol)?$json->rol:'integrante';
+        $aux = new EquiposCompetidores();
+
+        $aux->setEquipo($this);
+        $aux->setRol($rol);
+        $aux->setCompetidor($integrante);
+        $this->equipoCompetidores[] = $aux;
+
+        return $this;
     }
     
     /**
@@ -450,7 +461,13 @@ class Equipo
      */
     public function removeCompetidor(\ResultadoBundle\Entity\Competidor $competidor)
     {
-        $this->competidores->removeElement($competidor);
+        foreach($this->equipoCompetidores as $aux)
+        {
+            if ($aux->getCompetidor() == $competidor){
+                $this->equipoCompetidores->removeElement($aux);
+            }
+        }
+        //$this->competidores->removeElement($competidor);
     }
 
     /**
@@ -458,10 +475,12 @@ class Equipo
      */
     public function cleanCompetidores()
     {
-        foreach($this->getCompetidores() as $competidor){
-            $competidor->removeEquipo($this);
+        foreach($this->equipoCompetidores as $aux){
+            $aux->setEquipo(null);
+            $aux->setCompetidor(null);
+            $this->equipoCompetidores->removeElement($aux);
         }
-        $this->competidores = [];
+        //$this->competidores = [];
     }
 
     /**
@@ -471,7 +490,14 @@ class Equipo
      */
     public function getCompetidores()
     {
-        return $this->competidores;
+        $competidores = new \Doctrine\Common\Collections\ArrayCollection();        
+        
+        foreach($this->equipoCompetidores as $aux)
+        {
+            $competidores[] = $aux->getCompetidor();
+        }
+
+        return $competidores;
     }
     
     /**
@@ -511,30 +537,6 @@ class Equipo
             }
         }
         return false;
-    }
-
-    /**
-     * Add competidore
-     *
-     * @param \ResultadoBundle\Entity\Competidor $competidore
-     *
-     * @return Equipo
-     */
-    public function addCompetidore(\ResultadoBundle\Entity\Competidor $competidore)
-    {
-        $this->competidores[] = $competidore;
-
-        return $this;
-    }
-
-    /**
-     * Remove competidore
-     *
-     * @param \ResultadoBundle\Entity\Competidor $competidore
-     */
-    public function removeCompetidore(\ResultadoBundle\Entity\Competidor $competidore)
-    {
-        $this->competidores->removeElement($competidore);
     }
 
     /**
@@ -602,9 +604,53 @@ class Equipo
     public function getIntegrantesJson()
     {
         $integrantes = [];
-        foreach($this->getIntegrantes() as $integrante){
-            $integrantes[] = $integrante->getJson();
+
+        foreach($this->equipoCompetidores as $aux)
+        {
+            $integrantes[] = $aux->getCompetidor()->getJson($aux);
         }
+
         return $integrantes;
+    
+    
+        //$integrantes = [];
+        //foreach($this->getIntegrantes() as $integrante){
+        //    $integrantes[] = $integrante->getJson();
+        //}
+        //return $integrantes;
     }    
+
+    /**
+     * Add equipoCompetidore
+     *
+     * @param \ResultadoBundle\Entity\EquiposCompetidores $equipoCompetidore
+     *
+     * @return Equipo
+     */
+    public function addEquipoCompetidore(\ResultadoBundle\Entity\EquiposCompetidores $equipoCompetidore)
+    {
+        $this->equipoCompetidores[] = $equipoCompetidore;
+
+        return $this;
+    }
+
+    /**
+     * Remove equipoCompetidore
+     *
+     * @param \ResultadoBundle\Entity\EquiposCompetidores $equipoCompetidore
+     */
+    public function removeEquipoCompetidore(\ResultadoBundle\Entity\EquiposCompetidores $equipoCompetidore)
+    {
+        $this->equipoCompetidores->removeElement($equipoCompetidore);
+    }
+
+    /**
+     * Get equipoCompetidores
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEquipoCompetidores()
+    {
+        return $this->equipoCompetidores;
+    }
 }

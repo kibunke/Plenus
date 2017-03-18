@@ -1,25 +1,30 @@
 <?php
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Competencia
+ * ResultadoBundle\Entity\Competencia
  *
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *                          "competencia"                           = "Competencia",
- *                          "competenciaLiga"                       = "CompetenciaLiga",
- *                          "competenciaLigaPuntos"                 = "CompetenciaLigaPuntos",
- *                          "competenciaLigaTantos"                 = "CompetenciaLigaTantos",
- *                          "competenciaSerie"                      = "CompetenciaSerie",
- *                          "competenciaOrden"                      = "CompetenciaOrden",
- *                          "competenciaEliminacionDirecta"         = "CompetenciaEliminacionDirecta",
- *                          "competenciaEliminacionDirectaPuntos"   = "CompetenciaEliminacionDirectaPuntos",
- *                          "competenciaEliminacionDirectaTantos"   = "CompetenciaEliminacionDirectaTantos",
- *                          "competenciaMedallero"                  = "CompetenciaMedallero"
+ *                          "competencia"                               = "Competencia",
+ *                          "competenciaLiga"                           = "CompetenciaLiga",
+ *                          "competenciaLigaPuntos"                     = "CompetenciaLigaPuntos",
+ *                          "competenciaLigaTantos"                     = "CompetenciaLigaTantos",
+ *                          "competenciaLigaTantosCartas"               = "CompetenciaLigaTantosCartas",
+ *                          "competenciaSerie"                          = "CompetenciaSerie",
+ *                          "CompetenciaSerieTiempo"                    = "CompetenciaSerieTiempo",
+ *                          "CompetenciaSerieDistancia"                 = "CompetenciaSerieDistancia",
+ *                          "CompetenciaSeriePuntos"                    = "CompetenciaSeriePuntos",
+ *                          "competenciaOrden"                          = "CompetenciaOrden",
+ *                          "competenciaEliminacionDirecta"             = "CompetenciaEliminacionDirecta",
+ *                          "competenciaEliminacionDirectaPuntos"       = "CompetenciaEliminacionDirectaPuntos",
+ *                          "competenciaEliminacionDirectaTantos"       = "CompetenciaEliminacionDirectaTantos",
+ *                          "competenciaEliminacionDirectaTantosCartas" = "CompetenciaEliminacionDirectaTantosCartas",
+ *                          "competenciaMedallero"                      = "CompetenciaMedallero"
  *                      })
  */
 abstract class Competencia
@@ -61,7 +66,7 @@ abstract class Competencia
     private $etapa;
     
     /**
-     * @ORM\OneToMany(targetEntity="Plaza", mappedBy="competencia", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Plaza", mappedBy="competencia", cascade={"persist"})
      * @ORM\OrderBy({"orden" = "ASC"})
      */
     private $plazas;
@@ -74,9 +79,9 @@ abstract class Competencia
     private $createdAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @var SeguridadBundle\Entity\Usuario $createdBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
@@ -89,9 +94,9 @@ abstract class Competencia
     private $updatedAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -216,10 +221,10 @@ abstract class Competencia
     /**
      * Set etapa
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Etapa $etapa
+     * @param \ResultadoBundle\Entity\Etapa $etapa
      * @return Competencia
      */
-    public function setEtapa(\JuegosBA\ResultadoBundle\Entity\Etapa $etapa = null)
+    public function setEtapa(\ResultadoBundle\Entity\Etapa $etapa = null)
     {
         $this->etapa = $etapa;
 
@@ -229,7 +234,7 @@ abstract class Competencia
     /**
      * Get etapa
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Etapa 
+     * @return \ResultadoBundle\Entity\Etapa 
      */
     public function getEtapa()
     {
@@ -239,10 +244,10 @@ abstract class Competencia
     /**
      * Add plaza
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Plaza $plaza
+     * @param \ResultadoBundle\Entity\Plaza $plaza
      * @return Competencia
      */
-    public function addPlazas(\JuegosBA\ResultadoBundle\Entity\Plaza $plaza)
+    public function addPlazas(\ResultadoBundle\Entity\Plaza $plaza)
     {
         $this->plazas[] = $plaza;
         $plaza->setCompetencia($this);
@@ -253,9 +258,9 @@ abstract class Competencia
     /**
      * Remove plaza
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Plaza $plaza
+     * @param \ResultadoBundle\Entity\Plaza $plaza
      */
-    public function removePlazas(\JuegosBA\ResultadoBundle\Entity\Plaza $plaza)
+    public function removePlazas(\ResultadoBundle\Entity\Plaza $plaza)
     {
         $this->plazas->removeElement($plaza);
     }
@@ -273,10 +278,10 @@ abstract class Competencia
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Competencia
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -286,7 +291,7 @@ abstract class Competencia
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -296,10 +301,10 @@ abstract class Competencia
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Competencia
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -309,7 +314,7 @@ abstract class Competencia
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -362,5 +367,35 @@ abstract class Competencia
     public function getIdReload($plaza)
     {
         return $this->getId();
-    }      
+    }
+    
+    /**
+     * Get partidos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPartidos()
+    {
+        return array();
+    }
+    
+    /**
+     * Get folder
+     *
+     * @return string
+     */
+    public function getMedalla($plaza)
+    {
+        return null;
+    }
+    
+    /**
+     * Get performance
+     *
+     * @return string
+     */
+    public function getPerformance($plaza)
+    {
+        return "Etapa ".strtoupper($this->getEtapa()->getTipo());
+    }    
 }

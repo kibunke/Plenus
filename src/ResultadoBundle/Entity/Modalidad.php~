@@ -1,14 +1,15 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Modalidad
- * @ORM\Table(name="services_juegosba_final.Modalidad")
- * @ORM\Entity()
+ * ResultadoBundle\Entity\Modalidad
+ * @ORM\Table(name="Modalidad")
+ * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\ModalidadRepository")
  */
 class Modalidad
 {
@@ -23,7 +24,7 @@ class Modalidad
 
     /**
      * @var string $nombre
-     *
+     * @Assert\NotNull()
      * @ORM\Column(name="nombre", type="string", length=100)
      */
     protected $nombre;
@@ -41,6 +42,11 @@ class Modalidad
     private $eventos;
     
     /**
+     * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="modalidad")
+     */
+    private $segmentos;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -48,7 +54,7 @@ class Modalidad
     private $createdAt;
     
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */       
     private $createdBy;
@@ -61,7 +67,7 @@ class Modalidad
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -187,10 +193,10 @@ class Modalidad
     /**
      * Add eventos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Evento $eventos
+     * @param \ResultadoBundle\Entity\Evento $eventos
      * @return Modalidad
      */
-    public function addEvento(\JuegosBA\ResultadoBundle\Entity\Evento $eventos)
+    public function addEvento(\ResultadoBundle\Entity\Evento $eventos)
     {
         $this->eventos[] = $eventos;
 
@@ -200,9 +206,9 @@ class Modalidad
     /**
      * Remove eventos
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Evento $eventos
+     * @param \ResultadoBundle\Entity\Evento $eventos
      */
-    public function removeEvento(\JuegosBA\ResultadoBundle\Entity\Evento $eventos)
+    public function removeEvento(\ResultadoBundle\Entity\Evento $eventos)
     {
         $this->eventos->removeElement($eventos);
     }
@@ -220,10 +226,10 @@ class Modalidad
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Modalidad
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -233,7 +239,7 @@ class Modalidad
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -243,10 +249,10 @@ class Modalidad
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Modalidad
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -256,7 +262,7 @@ class Modalidad
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {

@@ -25,7 +25,7 @@ class Observada extends PlanillaEstado
     {
         if($usuario->hasRole('ROLE_ORGANIZADOR'))
         {
-            return array(new EnRevision());
+            return array(new EnRevision(),new Presentada());
         }
         
         return parent::getProximosEstados($usuario);
@@ -36,7 +36,7 @@ class Observada extends PlanillaEstado
      */    
     public function getClass()
     {
-        return "badge badge-teal";
+        return "badge badge-warning";
     }
     
     /**
@@ -46,4 +46,38 @@ class Observada extends PlanillaEstado
     {
         return "Ob.";
     }
+    
+    /**
+     * get icon
+     */    
+    public function getIcon()
+    {
+        return "reply";
+    }
+    
+    /**
+     * Get getRoute
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return 'planilla_toggle_observada';
+    }
+    
+    /**
+     * get ClassButton
+     */    
+    public function getClassButton()
+    {
+        return "warning";
+    }
+
+    /**
+     * get Title
+     */    
+    public function getTitleBefore()
+    {
+        return "Observar planilla";
+    }    
 }

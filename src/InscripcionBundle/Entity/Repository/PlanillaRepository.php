@@ -20,7 +20,8 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.segmento s
                                         JOIN s.torneo t
                                         LEFT JOIN p.equipos e
-                                        LEFT JOIN e.competidores c
+                                        LEFT JOIN e.equipoCompetidores ec
+                                        LEFT JOIN ec.competidor c                                        
                                         LEFT JOIN c.genero sex
                                         GROUP BY t.id,sex.id")
                         ->getArrayResult();

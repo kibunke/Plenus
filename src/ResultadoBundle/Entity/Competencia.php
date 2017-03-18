@@ -398,4 +398,28 @@ abstract class Competencia
     {
         return "Etapa ".strtoupper($this->getEtapa()->getTipo());
     }    
+
+    /**
+     * Add plaza
+     *
+     * @param \ResultadoBundle\Entity\Plaza $plaza
+     *
+     * @return Competencia
+     */
+    public function addPlaza(\ResultadoBundle\Entity\Plaza $plaza)
+    {
+        $this->plazas[] = $plaza;
+
+        return $this;
+    }
+
+    /**
+     * Remove plaza
+     *
+     * @param \ResultadoBundle\Entity\Plaza $plaza
+     */
+    public function removePlaza(\ResultadoBundle\Entity\Plaza $plaza)
+    {
+        $this->plazas->removeElement($plaza);
+    }
 }

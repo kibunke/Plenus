@@ -56,7 +56,8 @@ class SegmentoRepository extends EntityRepository
                                         LEFT JOIN s.eventos e
                                         LEFT JOIN s.planillas p
                                         LEFT JOIN p.equipos eq
-                                        LEFT JOIN eq.competidores com
+                                        LEFT JOIN eq.equipoCompetidores eqc
+                                        LEFT JOIN eqc.competidor com
                                         WHERE $where
                                         GROUP BY s.id
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
@@ -134,7 +135,8 @@ class SegmentoRepository extends EntityRepository
                                         LEFT JOIN s.planillas p
                                         LEFT JOIN p.estados e
                                         LEFT JOIN p.equipos eq
-                                        LEFT JOIN eq.competidores com
+                                        LEFT JOIN eq.equipoCompetidores eqc
+                                        LEFT JOIN eqc.competidor com
                                         JOIN p.municipio municipio
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador                                        

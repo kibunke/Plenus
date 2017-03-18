@@ -305,9 +305,9 @@ class PlanillaController extends Controller
                     $institucion->setTelefono($json->telefono);
             }
         }catch(\Exception $e){
-            //if(strpos($e->getMessage(), 'Plenus:') !== false){
+            if(strpos($e->getMessage(), 'Plenus:') !== false){
                 throw $e;
-            //}
+            }
             throw new \Exception('Plenus: La institucion no se pudo crear. Ocurrio un error al persistir.');
         }
         $planilla->setInstitucion($institucion);
@@ -351,8 +351,8 @@ class PlanillaController extends Controller
                         //$integrante->inscripcionValida($planilla);
                         
                         if ($integrante){
-                            if ($planilla->isOnDateRange($integrante)){
-                                $equipo->addIntegrante($integrante);
+                            if ($planilla->inDateRange($integrante)){
+                                $equipo->addIntegrante($integrante,$jsonIntegrante);
                             }else{
                                 if ($integrante->getId()){
                                     throw new \Exception('Plenus: El inscripto con DNI '.$jsonIntegrante->persona->dni.' ya existe en el sistema y su fecha de nacimiento cargada ('.$integrante->getFNacimiento()->format('d/m/Y').') se encuentra fuera del rango de fechas permitido por el segmento.');
@@ -374,6 +374,7 @@ class PlanillaController extends Controller
             if(strpos($e->getMessage(), 'Plenus:') !== false){
                 throw $e;
             }
+            throw $e;
             throw new \Exception('Plenus: Datos del Participante inválidos o incompletos.');
         }
         

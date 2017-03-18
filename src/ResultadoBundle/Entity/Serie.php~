@@ -6,11 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * ResultadoBundle\Entity\Zona
- * @ORM\Table(name="Zona")
+ * ResultadoBundle\Entity\Serie
+ * @ORM\Table(name="Serie")
  * @ORM\Entity()
  */
-class Zona
+class Serie
 {
     /**
      * @var integer $id
@@ -36,21 +36,16 @@ class Zona
     private $descripcion;
     
     /**
-     * @ORM\ManyToOne(targetEntity="CompetenciaLiga", inversedBy="zonas")
-     * @ORM\JoinColumn(name="liga", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="CompetenciaSerie", inversedBy="series")
+     * @ORM\JoinColumn(name="serie", referencedColumnName="id")
      */       
-    private $liga;
+    private $competencia;
     
     /**
-     * @ORM\OneToMany(targetEntity="PlazaZona", mappedBy="zona", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="PlazaSerie", mappedBy="serie", cascade={"all"})
      * @ORM\OrderBy({"orden" = "ASC", "ordenNatural" = "ASC"})
      */
     private $plazas;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Partido", mappedBy="zona", cascade={"all"})
-     */
-    private $partidos;
     
     /**
      * @var datetime $createdAt
@@ -126,16 +121,6 @@ class Zona
     public function getNombre()
     {
         return ucfirst($this->nombre);
-    }
-
-    /**
-     * Get nombre
-     *
-     * @return string 
-     */
-    public function getNombreSinDetalle()
-    {
-        return preg_replace('#\(([\w\s]+)\)#i','',$this->getNombre());
     }
     
     /**
@@ -254,38 +239,38 @@ class Zona
     }
     
     /**
-     * Set liga
+     * Set Competencia
      *
-     * @param \ResultadoBundle\Entity\CompetenciaLiga $liga
-     * @return Zona
+     * @param \ResultadoBundle\Entity\CompetenciaSerie $competencia
+     * @return Serie
      */
-    public function setLiga(\ResultadoBundle\Entity\CompetenciaLiga $liga = null)
+    public function setCompetencia(\ResultadoBundle\Entity\CompetenciaSerie $competencia = null)
     {
-        $this->liga = $liga;
+        $this->competencia = $competencia;
 
         return $this;
     }
 
     /**
-     * Get liga
+     * Get competencia
      *
-     * @return \ResultadoBundle\Entity\CompetenciaLiga 
+     * @return \ResultadoBundle\Entity\CompetenciaSerie
      */
-    public function getLiga()
+    public function getCompetencia()
     {
-        return $this->liga;
+        return $this->competencia;
     }
     
     /**
      * Add plaza
      *
-     * @param \ResultadoBundle\Entity\PlazaZona $plaza
+     * @param \ResultadoBundle\Entity\PlazaSerie $plaza
      * @return Competencia
      */
-    public function addPlazas(\ResultadoBundle\Entity\PlazaZona $plaza)
+    public function addPlazas(\ResultadoBundle\Entity\PlazaSerie $plaza)
     {
         $this->plazas[] = $plaza;
-        $plaza->setZona($this);
+        $plaza->setSerie($this);
 
         return $this;
     }
@@ -293,9 +278,9 @@ class Zona
     /**
      * Remove plaza
      *
-     * @param \ResultadoBundle\Entity\PlazaZona $plaza
+     * @param \ResultadoBundle\Entity\PlazaSerie $plaza
      */
-    public function removePlazas(\ResultadoBundle\Entity\PlazaZona $plaza)
+    public function removePlazas(\ResultadoBundle\Entity\PlazaSerie $plaza)
     {
         $this->plazas->removeElement($plaza);
     }
@@ -310,70 +295,27 @@ class Zona
         return $this->plazas;
     }
     
-    /**
-     * Add partido
-     *
-     * @param \ResultadoBundle\Entity\Partido $partido
-     * @return Competencia
-     */
-    public function addPartido(\ResultadoBundle\Entity\Partido $partido)
-    {
-        $this->partidos[] = $partido;
-        $partido->setZona($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove partido
-     *
-     * @param \ResultadoBundle\Entity\Partido $partido
-     */
-    public function removePartido(\ResultadoBundle\Entity\Partido $partido)
-    {
-        $this->partidos->removeElement($partido);
-    }
-
-    /** 
-     * Get partidos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPartidos()
-    {
-        return $this->partidos;
-    }
-
-    /** 
-     * Get newPartido
-     *
-     * @return \ResultadoBundle\Entity\Partido
-     */
-    public function newPartido($user = null)
-    {
-        $entity = $this->getLiga()->newPartido($user);
-        $entity->setZona($this);
-        return $entity;
-    }
 
     /** 
      * Get columnsRaw
      *
      * @return html
      */
-    public function getColumnsRaw()
+    public function getColumnRaw()
     {
-        $html = "";
-        if (count($this->getPartidos())){
-            foreach ($this->getLiga()->getColumns() as $col){
-                $html .= "<th class='text-center'>".$col."</th>";
-            }
-        }else{
-            $html = "<th class='text-center'> Aún sin datos</th>";
-        }
-        return $html;
+        return "<th>".$this->getCompetencia()->getEtiqueta()."</th>";
     }
 
+    /**
+     * Get DetalleSerieRaw
+     *
+     * @return string 
+     */
+    public function getDetalleSerieRaw($plaza,$plazaDeReferencia)
+    {
+        return "<td>".$this->getCompetencia()->aplicarMascara($plaza,$plazaDeReferencia)."</td>";
+    }
+    
     /**
      * recalcularOrdenNatural
      *
@@ -381,46 +323,7 @@ class Zona
      */
     public function recalcularOrdenNatural()
     {
-        return $this->getLiga()->recalcularOrdenNatural($this);
-    }
-    
-    /**
-     * Get DetalleZona
-     *
-     * @return array
-     */
-    public function getDetalleZona($plaza)
-    {
-        $arr = [];
-        if (count($this->getPartidos())){
-            $partidos = new ArrayCollection(
-                array_merge($plaza->getPartidosLocal()->toArray(), $plaza->getPartidosVisitante()->toArray())
-            );
-            $arr = $this->getLiga()->getRow();
-            foreach ($partidos as $partido){
-                $arr = $partido->calculate($arr,$plaza);
-            }
-        }
-        return $arr;
-    }
-    
-    /**
-     * Get DetalleZonaRaw
-     *
-     * @return string 
-     */
-    public function getDetalleZonaRaw($plaza)
-    {
-        $arr = $this->getDetalleZona($plaza);
-        if (count($arr)){
-            $html = "";
-            foreach ($arr as $val){
-                $html .= "<td class='text-center'>".$val."</td>";
-            }
-        }else{
-            $html = "<td class='text-center'> Aún sin datos</td>";
-        }
-        return $html;
+        return $this->getCompetencia()->recalcularOrdenNatural($this);
     }
     
     /**
@@ -431,43 +334,6 @@ class Zona
     public function getState()
     {
         $percent = 0;
-        $partidos = $this->getPartidos();
-        foreach ($partidos as $partido){
-            $percent += $partido->getState();
-        }
-        if ($percent)
-            $percent = $percent/count($partidos);
-        $plazas = $this->getPlazas();
-        $plazaAsignada = 0;
-        foreach ($plazas as $plaza){
-            if ($plaza->getEquipo())
-                $plazaAsignada++;
-        }
-        if ($plazaAsignada)
-            $percent += ($plazaAsignada*100)/count($plazas);
-        return round($percent/2,1);
-    }    
-
-    /**
-     * Add plazas
-     *
-     * @param \ResultadoBundle\Entity\PlazaZona $plazas
-     * @return Zona
-     */
-    public function addPlaza(\ResultadoBundle\Entity\PlazaZona $plazas)
-    {
-        $this->plazas[] = $plazas;
-
-        return $this;
-    }
-
-    /**
-     * Remove plazas
-     *
-     * @param \ResultadoBundle\Entity\PlazaZona $plazas
-     */
-    public function removePlaza(\ResultadoBundle\Entity\PlazaZona $plazas)
-    {
-        $this->plazas->removeElement($plazas);
+        return round($percent,1);
     }
 }

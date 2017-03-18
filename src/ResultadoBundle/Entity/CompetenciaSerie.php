@@ -110,4 +110,28 @@ class CompetenciaSerie extends Competencia
         $this->nombre = $nombre;
         parent::__construct($user);
     }   
+
+    /**
+     * Add series
+     *
+     * @param \ResultadoBundle\Entity\Serie $series
+     *
+     * @return CompetenciaSerie
+     */
+    public function addSeries(\ResultadoBundle\Entity\Serie $series)
+    {
+        $this->series[] = $series;
+
+        return $this;
+    }
+
+    /**
+     * Remove series
+     *
+     * @param \ResultadoBundle\Entity\Serie $series
+     */
+    public function removeSeries(\ResultadoBundle\Entity\Serie $series)
+    {
+        $this->series->removeElement($series);
+    }
 }

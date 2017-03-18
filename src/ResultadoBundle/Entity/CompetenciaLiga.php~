@@ -1,22 +1,33 @@
 <?php
 
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
+use ResultadoBundle\Form\PlazaZonaType;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\CompetenciaLiga
+ * ResultadoBundle\Entity\CompetenciaLiga
  *
  * @ORM\Entity()
  *
  */
 class CompetenciaLiga extends Competencia
-{
+{    
     /**
-     * @ORM\OneToMany(targetEntity="Zona", mappedBy="liga")
+     * @ORM\OneToMany(targetEntity="Zona", mappedBy="liga", cascade={"persist"})
      */
     private $zonas;
+    
+    /** 
+     * Get PlazaType
+     *
+     * @return \ResultadoBundle\Form\PlazaZonaType
+     */
+    public function getPlazaType()
+    {
+        return new PlazaZonaType();
+    }
     
     /**
      * Get folder
@@ -31,10 +42,10 @@ class CompetenciaLiga extends Competencia
     /**
      * Add zona
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Zona $zona
+     * @param \ResultadoBundle\Entity\Zona $zona
      * @return Competencia
      */
-    public function addZona(\JuegosBA\ResultadoBundle\Entity\Zona $zona)
+    public function addZona(\ResultadoBundle\Entity\Zona $zona)
     {
         $this->zonas[] = $zona;
         $zona->setLiga($this);
@@ -45,9 +56,9 @@ class CompetenciaLiga extends Competencia
     /**
      * Remove plaza
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Zona $zona
+     * @param \ResultadoBundle\Entity\Zona $zona
      */
-    public function removeZona(\JuegosBA\ResultadoBundle\Entity\Zona $zona)
+    public function removeZona(\ResultadoBundle\Entity\Zona $zona)
     {
         $this->zonas->removeElement($zona);
     }
@@ -88,5 +99,29 @@ class CompetenciaLiga extends Competencia
     public function getIdReload($plaza)
     {
         return $plaza->getZona()->getId();
-    }     
+    }
+    
+    /**
+     * Constructor
+     */
+    public function __construct($user = null, $nombre = "")
+    {
+        $this->zonas = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->nombre = $nombre;
+        parent::__construct($user);
+    }
+    
+    /**
+     * Get partidos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPartidos()
+    {
+        $partidos = [];
+        foreach($this->getZonas() as $zona){
+            $partidos = array_merge($zona->getPartidos()->toArray(),$partidos);
+        }
+        return $partidos;
+    }
 }

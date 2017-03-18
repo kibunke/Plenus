@@ -1,46 +1,25 @@
 <?php
-
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use JuegosBA\ResultadoBundle\Form\PartidoPuntosType;
+use ResultadoBundle\Form\PartidoPuntosType;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\PartidoPuntos
+ * ResultadoBundle\Entity\PartidoPuntos
  *
  * @ORM\Entity()
  *
  */
 class PartidoPuntos extends Partido
-{ 
-    /**
-     * @var integer $resultadoLocal
-     *
-     * @ORM\Column(name="resultadoLocal", type="integer")
+{
+    /*
+     * Construct
      */
-    private $resultadoLocal;
-    
-    /**
-     * @var integer $resultadoVisitante
-     *
-     * @ORM\Column(name="resultadoVisitante", type="integer")
-     */
-    private $resultadoVisitante;
-    
-    /**
-     * @var integer $resultadoSecundarioLocal
-     *
-     * @ORM\Column(name="resultadoSecundarioLocal", type="integer")
-     */
-    private $resultadoSecundarioLocal;
-    
-    /**
-     * @var integer $resultadoSecundarioVisitante
-     *
-     * @ORM\Column(name="resultadoSecundarioVisitante", type="integer")
-     */
-    private $resultadoSecundarioVisitante;
+    public function __construct($user = NULL, $nombre = "") {
+        $this->setNombre($nombre);
+        parent::__construct($user);
+    }
     
     /**
      * resetResultado
@@ -141,97 +120,5 @@ class PartidoPuntos extends Partido
             $row[7] = $row[5] - $row[6];
         }
         return $row;
-    }    
-
-    /**
-     * Set resultadoLocal
-     *
-     * @param integer $resultadoLocal
-     * @return PartidoPuntos
-     */
-    public function setResultadoLocal($resultadoLocal)
-    {
-        $this->resultadoLocal = $resultadoLocal;
-
-        return $this;
-    }
-
-    /**
-     * Get resultadoLocal
-     *
-     * @return integer 
-     */
-    public function getResultadoLocal()
-    {
-        return $this->resultadoLocal;
-    }
-
-    /**
-     * Set resultadoVisitante
-     *
-     * @param integer $resultadoVisitante
-     * @return PartidoPuntos
-     */
-    public function setResultadoVisitante($resultadoVisitante)
-    {
-        $this->resultadoVisitante = $resultadoVisitante;
-
-        return $this;
-    }
-
-    /**
-     * Get resultadoVisitante
-     *
-     * @return integer 
-     */
-    public function getResultadoVisitante()
-    {
-        return $this->resultadoVisitante;
-    }
-
-    /**
-     * Set resultadoSecundarioLocal
-     *
-     * @param integer $resultadoSecundarioLocal
-     * @return PartidoPuntos
-     */
-    public function setResultadoSecundarioLocal($resultadoSecundarioLocal)
-    {
-        $this->resultadoSecundarioLocal = $resultadoSecundarioLocal;
-
-        return $this;
-    }
-
-    /**
-     * Get resultadoSecundarioLocal
-     *
-     * @return integer 
-     */
-    public function getResultadoSecundarioLocal()
-    {
-        return $this->resultadoSecundarioLocal;
-    }
-
-    /**
-     * Set resultadoSecundarioVisitante
-     *
-     * @param integer $resultadoSecundarioVisitante
-     * @return PartidoPuntos
-     */
-    public function setResultadoSecundarioVisitante($resultadoSecundarioVisitante)
-    {
-        $this->resultadoSecundarioVisitante = $resultadoSecundarioVisitante;
-
-        return $this;
-    }
-
-    /**
-     * Get resultadoSecundarioVisitante
-     *
-     * @return integer 
-     */
-    public function getResultadoSecundarioVisitante()
-    {
-        return $this->resultadoSecundarioVisitante;
     }
 }

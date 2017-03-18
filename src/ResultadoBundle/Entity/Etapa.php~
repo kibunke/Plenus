@@ -1,10 +1,10 @@
 <?php
-namespace JuegosBA\ResultadoBundle\Entity;
+namespace ResultadoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JuegosBA\ResultadoBundle\Entity\Etapa
+ * ResultadoBundle\Entity\Etapa
  *
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
@@ -48,7 +48,7 @@ abstract class  Etapa
     private $evento;
     
     /**
-     * @ORM\OneToOne(targetEntity="Competencia", mappedBy="etapa", orphanRemoval=true, cascade={"all"})
+     * @ORM\OneToOne(targetEntity="Competencia", mappedBy="etapa", cascade={"all"})
      */
     private $competencia;    
     
@@ -60,9 +60,9 @@ abstract class  Etapa
     private $createdAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @var SeguridadBundle\Entity\Usuario $createdBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
@@ -75,9 +75,9 @@ abstract class  Etapa
     private $updatedAt;
     
     /**
-     * @var JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
      * 
-     * @ORM\ManyToOne(targetEntity="JuegosBA\SeguridadBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */   
     private $updatedBy;
@@ -195,10 +195,10 @@ abstract class  Etapa
     /**
      * Set evento
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Evento $evento
+     * @param \ResultadoBundle\Entity\Evento $evento
      * @return Etapa
      */
-    public function setEvento(\JuegosBA\ResultadoBundle\Entity\Evento $evento = null)
+    public function setEvento(\ResultadoBundle\Entity\Evento $evento = null)
     {
         $this->evento = $evento;
 
@@ -208,7 +208,7 @@ abstract class  Etapa
     /**
      * Get evento
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Evento 
+     * @return \ResultadoBundle\Entity\Evento 
      */
     public function getEvento()
     {
@@ -218,10 +218,10 @@ abstract class  Etapa
     /**
      * Set createdBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $createdBy
+     * @param \SeguridadBundle\Entity\Usuario $createdBy
      * @return Etapa
      */
-    public function setCreatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $createdBy = null)
+    public function setCreatedBy(\SeguridadBundle\Entity\Usuario $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -231,7 +231,7 @@ abstract class  Etapa
     /**
      * Get createdBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getCreatedBy()
     {
@@ -241,10 +241,10 @@ abstract class  Etapa
     /**
      * Set updatedBy
      *
-     * @param \JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
      * @return Etapa
      */
-    public function setUpdatedBy(\JuegosBA\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
 
@@ -254,7 +254,7 @@ abstract class  Etapa
     /**
      * Get updatedBy
      *
-     * @return \JuegosBA\SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario 
      */
     public function getUpdatedBy()
     {
@@ -264,10 +264,10 @@ abstract class  Etapa
     /**
      * Set competencia
      *
-     * @param \JuegosBA\ResultadoBundle\Entity\Competencia $competencia
+     * @param \ResultadoBundle\Entity\Competencia $competencia
      * @return Competencia
      */
-    public function setCompetencia(\JuegosBA\ResultadoBundle\Entity\Competencia $competencia = null)
+    public function setCompetencia(\ResultadoBundle\Entity\Competencia $competencia = null)
     {
         $this->competencia = $competencia;
         $competencia->setEtapa($this);
@@ -278,7 +278,7 @@ abstract class  Etapa
     /**
      * Get competencia
      *
-     * @return \JuegosBA\ResultadoBundle\Entity\Competencia 
+     * @return \ResultadoBundle\Entity\Competencia 
      */
     public function getCompetencia()
     {
@@ -319,5 +319,28 @@ abstract class  Etapa
         // 100 % completed success
         return '<span class="badge badge-success wobble animated">'.$percent.' %</span>';
         //return $percent;
+    }
+    
+    /**
+     * Get partidos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPartidos()
+    {
+        if ($this->getCompetencia())
+            return $this->getCompetencia()->getPartidos();
+        return [];
+    }
+    
+    /**
+     * get tipoValor
+     * 10 - Medallero
+     * 7 - Final
+     * 4 - Clasificacion
+     * @return integer
+     */
+    public function getTipoValor()
+    {
     }    
 }

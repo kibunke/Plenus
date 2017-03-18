@@ -738,7 +738,7 @@ class Persona
         return $this->getMunicipio()->mismoMunicipio($persona->getMunicipio());
     }
     
-    public function getJson()
+    public function toArray()
     {
         return array(
                         'id'            => $this->getId(),

@@ -36,7 +36,7 @@ class Presentada extends PlanillaEstado
      */    
     public function getClass()
     {
-        return "badge badge-teal";
+        return "badge badge-primary";
     }
     
     /**
@@ -46,4 +46,39 @@ class Presentada extends PlanillaEstado
     {
         return "Pr.";
     }
+    
+    /**
+     * get icon
+     */    
+    public function getIcon()
+    {
+        return "share";
+    }
+    
+
+    /**
+     * Get getRoute
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return 'planilla_toggle_presentada';
+    }
+    
+    /**
+     * get ClassButton
+     */    
+    public function getClassButton()
+    {
+        return "primary";
+    }
+
+    /**
+     * get Title
+     */    
+    public function getTitleBefore()
+    {
+        return "Presentar planilla";
+    }    
 }
