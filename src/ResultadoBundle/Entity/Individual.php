@@ -12,8 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Individual extends Equipo
 {
-
-
     /**
      * Add equipoCompetidore
      *

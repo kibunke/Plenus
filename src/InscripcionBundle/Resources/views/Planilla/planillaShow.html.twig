@@ -269,12 +269,14 @@
         }
         
         $.Planilla.loadEquipos = ()=>{
+            
             if (_planilla.equipos.length > 1){
+                console.log(_planilla.equipos.length);
                 $.map(_planilla.equipos,(equipo, index)=>{
                     $.map(equipo.integrantes,(integrante)=>{
                         let $tr = _tr.clone();
                         $tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.persona.id});
-                        $tr.find(':nth-child(1)').html(index + 1);
+                        $tr.find(':nth-child(1)').html($('#planillaBuenaFe tbody tr').length + 1 );
                         $tr.find(':nth-child(2)').html(integrante.persona.apellido)
                         $tr.find(':nth-child(3)').html(integrante.persona.nombre)
                         $tr.find(':nth-child(4)').html(integrante.persona.dni)
@@ -286,7 +288,7 @@
                         if (integrante.rol == 'inscripto'){
                             $('#planillaBuenaFe tbody').append($tr);
                         }else{
-                            $tr.find(':nth-child(1)').html($('#planillaBuenaFe tfoot tr').length);
+                            //$tr.find(':nth-child(1)').html($('#planillaBuenaFe tfoot tr').length);
                             $('#planillaBuenaFe tfoot').append($tr);
                         }
                     });
@@ -302,11 +304,12 @@
                 }
                 $('#planillaBuenaFe tfoot').remove();                
             }else{
+                
                 $.map(_planilla.equipos,(equipo)=>{
                     $.map(equipo.integrantes,(integrante, index)=>{
                         let $tr = _tr.clone();
                         $tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.id});
-                        $tr.find(':nth-child(1)').html(index + 1);
+                        $tr.find(':nth-child(1)').html($('#planillaBuenaFe tbody tr').length +1 );
                         $tr.find(':nth-child(2)').html(integrante.persona.apellido)
                         $tr.find(':nth-child(3)').html(integrante.persona.nombre)
                         $tr.find(':nth-child(4)').html(integrante.persona.dni)

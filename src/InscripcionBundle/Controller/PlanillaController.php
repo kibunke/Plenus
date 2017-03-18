@@ -319,9 +319,10 @@ class PlanillaController extends Controller
         $em = $this->getDoctrine()->getManager();
         if ($jsonEquipo->id > 0){
             $equipo = $em->getRepository('ResultadoBundle:Equipo')->find($jsonEquipo->id);
-            $equipo->cleanCompetidores();
-            $em->persist($equipo);
-            $em->flush();
+            $toRemove = $equipo->cleanCompetidores();
+            foreach($toRemove as $aux){
+                $em->remove($aux);
+            }
         }else{
             $equipo = $planilla->getNewEquipo();
         }

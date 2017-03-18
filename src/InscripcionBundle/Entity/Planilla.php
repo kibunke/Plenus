@@ -608,6 +608,15 @@ abstract class Planilla
                     throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse en esta planilla porque pertenece al municipio de '.$inscripto->getMunicipio()->getNombre().'. En una inscripción MUNICIPAL todos los participantes deben pertenecer al municipio indicado en la planilla.');
                 }
             }
+            if ($this->getSegmento()->getGenero()->getNombre() != 'Mixto'){
+                if ($this->getSegmento()->getGenero()->getNombre() != $inscripto->getGenero()->getNombre()){
+                    throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse en esta planilla por su sexo.');
+                }
+            }
+
+            if(in_array($inscripto,$this->getInscriptos())){
+                throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse más de una vez por planilla.');
+            }            
             foreach ($inscripto->getEquipos() as $equipo){
                 if ($this->id != $equipo->getPlanilla()->getId())
                     $this->inscripcionValida($equipo->getPlanilla());
@@ -616,6 +625,7 @@ abstract class Planilla
             $message = $e->getMessage();
             throw new \Exception(str_replace('%DNI%',$inscripto->getDni(),$message));
         }
+
         return true;
     }
     
@@ -632,6 +642,20 @@ abstract class Planilla
         return $sum;
     }
 
+    /**
+     * getInscriptos
+     */
+    public function getInscriptos()
+    {
+        $inscriptos = [];
+        foreach ($this->getEquipos() as $equipo)
+        {
+            foreach ($this->getEquipos() as $equipo)
+            $inscriptos = array_merge($inscriptos,$equipo->getCompetidores()->toArray());
+        }
+        return $inscriptos;
+    }
+    
     /**
      * Set responsableMunicipioDni
      *
@@ -676,9 +700,9 @@ abstract class Planilla
         foreach ($this->getEquipos() as $equipo)
         {
             $cantCompetidores = 0;
-            foreach ($equipo->getCompetidores() as $competidor)
+            foreach ($equipo->getEquipoCompetidores() as $aux)
             {
-                if ($competidor->getRol() == "inscripto"){
+                if ($aux->getRol() == "inscripto"){
                     $cantCompetidores ++;
                 }
             }

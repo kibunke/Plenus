@@ -127,10 +127,11 @@ class Equipo
      */
     public function __toString()
     {
+        return "Equipo - id: ".$this->getId();
         if ($this->nombre != '')
-            return $this->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre()." - ".$this->nombre;
+            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre()." - ".$this->nombre;
         else
-            return $this->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre();
+            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre();
     }
     
     /**
@@ -439,7 +440,7 @@ class Equipo
         $aux->setRol($rol);
         $aux->setCompetidor($integrante);
         $this->equipoCompetidores[] = $aux;
-
+        $integrante->addCompetidorEquipo($aux);
         return $this;
     }
     
@@ -475,12 +476,15 @@ class Equipo
      */
     public function cleanCompetidores()
     {
+        $toRemove = [];
         foreach($this->equipoCompetidores as $aux){
             $aux->setEquipo(null);
+            $aux->getCompetidor()->removeCompetidorEquipo($aux);
             $aux->setCompetidor(null);
             $this->equipoCompetidores->removeElement($aux);
+            $toRemove[] = $aux;
         }
-        //$this->competidores = [];
+        return $toRemove;
     }
 
     /**

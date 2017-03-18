@@ -177,7 +177,8 @@ class Competidor extends Persona
         
         foreach($this->competidorEquipos as $aux)
         {
-            $equipos[] = $aux->getEquipo();
+            if (is_object($aux->getEquipo()))
+                $equipos[] = $aux->getEquipo();
         }
 
         return $equipos;        

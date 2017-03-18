@@ -363,7 +363,6 @@
                         return $select;
                     }else if(thead.find(':nth-child('+ (column + 1) +')').hasClass('validate-number')){
                         return $('<input/>').on('focusout', function(){
-                            cell.parent().find(':nth-child(n+3)').addClass('validate-no-edit-td');
                             $.Planilla.loadParticipante(this.value,cell);
                         })
                     }
@@ -413,8 +412,8 @@
                 $.get('{{ path('planilla_load_participante', {'dni' : '__XX__'}) }}'.replace('__XX__', dni))
                     .done((data)=>{
                         if(data.success){
+                            $tr.find(':nth-child(n+3)').addClass('validate-no-edit-td');
                             let persona = data.participante.persona;
-                            //$tr.data({'idEquipo': equipo.id,'idIntegrante': integrante.persona.id});
                             $tr.find(':nth-child(2)').html(persona.dni);
                             $tr.find(':nth-child(3)').html(persona.apellido);
                             $tr.find(':nth-child(4)').html(persona.nombre);
@@ -425,8 +424,10 @@
                             $tr.find(':nth-child(9)').html(persona.email);
                             $tr.find(':nth-child(10)').html(persona.observacion);
                         }else{
-                            $tr.find(':nth-child(n+3)').removeClass('validate-no-edit-td');
-                            $tr.find(':nth-child(n+3)').html('');
+                            if ($tr.find(':nth-child(3)').hasClass('validate-no-edit-td')){
+                                $tr.find(':nth-child(n+3)').removeClass('validate-no-edit-td');
+                                $tr.find(':nth-child(n+3)').html('');
+                            }
                         }
                     }).fail(()=>{
                         toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
@@ -434,15 +435,9 @@
                         $td.html($td.data('pos'));
                     });
             }else{
-                $tr.find(':nth-child(2)').html('');
-                $tr.find(':nth-child(3)').html('');
-                $tr.find(':nth-child(4)').html('');
-                $tr.find(':nth-child(5)').html('');
-                $tr.find(':nth-child(6)').html('');
-                $tr.find(':nth-child(7)').html('');
-                $tr.find(':nth-child(8)').html('');
-                $tr.find(':nth-child(9)').html('');
-                $tr.find(':nth-child(10)').html('');
+                if ($tr.find(':nth-child(3)').hasClass('validate-no-edit-td')){
+                    $tr.find(':nth-child(n+3)').html('');
+                }
             }
         },
         $.Planilla.save = function(){
