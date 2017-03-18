@@ -286,6 +286,7 @@
                         if (integrante.rol == 'inscripto'){
                             $('#planillaBuenaFe tbody').append($tr);
                         }else{
+                            $tr.find(':nth-child(1)').html($('#planillaBuenaFe tfoot tr').length);
                             $('#planillaBuenaFe tfoot').append($tr);
                         }
                     });
@@ -317,6 +318,7 @@
                         if (integrante.rol == 'inscripto'){
                             $('#planillaBuenaFe tbody').append($tr);
                         }else{
+                            $tr.find(':nth-child(1)').html($('#planillaBuenaFe tfoot tr').length);
                             $('#planillaBuenaFe tfoot').append($tr);
                         }
                     });
