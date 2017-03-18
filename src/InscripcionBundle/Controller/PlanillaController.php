@@ -453,7 +453,10 @@ class PlanillaController extends Controller
         if ($planilla){
             if ($planilla->isRemovable($this->getUser())){
                 try {
-                    $planilla->prepareToDelete();
+                    $toRemove = $planilla->prepareToDelete();
+                    foreach($toRemove as $aux){
+                        $em->remove($aux);
+                    }
                     $em->remove($planilla);
                     $em->flush();
                     return new JsonResponse(array('success' => true, 'message' => 'Se eliminó la planilla!'));

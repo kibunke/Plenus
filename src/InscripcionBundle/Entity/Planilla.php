@@ -730,14 +730,15 @@ abstract class Planilla
      */
     public function prepareToDelete()
     {
+        $toRemove = [];
         foreach ($this->getEquipos() as $equipo)
         {
-            $equipo->cleanCompetidores();
+            $toRemove = array_merge($toRemove,$equipo->cleanCompetidores());
             $equipo->setDirectorTecnico = NULL;
         }
         $this->setInstitucion = NULL;
         
-        return $this;
+        return $toRemove;
     }    
     
     
