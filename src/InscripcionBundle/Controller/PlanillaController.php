@@ -261,7 +261,7 @@ class PlanillaController extends Controller
         $em = $this->getDoctrine()->getManager();
         if ($json->inscripcionInstitucional)
             $this->loadInstitucion($planilla,$json->institucion);
-        if ($json->responsableMunicipio && strlen($json->responsableMunicipio->nombre) > 2 && strlen($json->responsableMunicipio->apellido) > 2 && strlen($json->responsableMunicipio->dni) > 6){
+        if ($json->responsableMunicipio && strlen($json->responsableMunicipio->nombre) > 2 && strlen($json->responsableMunicipio->apellido) > 2 && strlen($json->responsableMunicipio->dni) >= 6){
             $planilla->setResponsableMunicipioNombre($json->responsableMunicipio->nombre);
             $planilla->setResponsableMunicipioApellido($json->responsableMunicipio->apellido);
             $planilla->setResponsableMunicipioDni($json->responsableMunicipio->dni);
@@ -283,7 +283,7 @@ class PlanillaController extends Controller
     
     private function loadDirectorTecnico($planilla, $json)
     {
-        if (strlen($json->nombre) > 2 && strlen($json->apellido) > 2 && strlen($json->dni) > 6){
+        if (strlen($json->nombre) > 2 && strlen($json->apellido) > 2 && strlen($json->dni) >= 6){
             $planilla->setDirectorTecnicoNombre($json->nombre);
             $planilla->setDirectorTecnicoApellido($json->apellido);
             $planilla->setDirectorTecnicoDni($json->dni);
@@ -330,7 +330,7 @@ class PlanillaController extends Controller
         $this->loadDirectorTecnico($planilla, $jsonEquipo->tecnico);
         try{
             foreach($jsonEquipo->integrantes as $jsonIntegrante){
-                if (strlen($jsonIntegrante->persona->dni) > 6){
+                if (strlen($jsonIntegrante->persona->dni) >= 6){
                     $jsonIntegrante = $this->loadEntities($jsonIntegrante);
                     
                     if ($jsonIntegrante && strlen($jsonIntegrante->persona->nombre) > 2 && strlen($jsonIntegrante->persona->apellido) > 2){
