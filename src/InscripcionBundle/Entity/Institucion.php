@@ -365,13 +365,8 @@ abstract class Institucion
                 else
                     $institucion = new Club($user);
                     
-                $institucion->setNombre($json->nombre);
-                $institucion->setDomicilio($json->domicilio);
-                $institucion->setTelefono($json->telefono);
-                $institucion->setResponsableNombre($json->responsable->nombre);
-                $institucion->setResponsableApellido($json->responsable->apellido);
-                $institucion->setResponsableDni($json->responsable->dni);
-                return $institucion;
+                
+                return $institucion->load($json);
             }else{
                 throw new \Exception('Plenus: La institucion no se pudo crear. Los datos del responsable estan incompletos o son erroneos.');
             }
@@ -380,7 +375,17 @@ abstract class Institucion
         }
         //return $institucion;
     }    
-
+    
+    public function load($json)
+    {
+        $this->setNombre($json->nombre);
+        $this->setDomicilio($json->domicilio);
+        $this->setTelefono($json->telefono);
+        $this->setResponsableNombre($json->responsable->nombre);
+        $this->setResponsableApellido($json->responsable->apellido);
+        $this->setResponsableDni($json->responsable->dni);
+        return $this;
+    }
     /**
      * Set domicilio
      *

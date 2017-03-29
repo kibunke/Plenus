@@ -301,8 +301,9 @@ class PlanillaController extends Controller
                 $institucion = Institucion::getInstance($this->getUser(),$json);
                 $institucion->setMunicipio($planilla->getMunicipio());
             }else{
-                if (strlen($json->telefono)>4 && strlen($institucion->getTelefono())<4)
-                    $institucion->setTelefono($json->telefono);
+                $institucion->load($json);
+                //if (strlen($json->telefono)>4 && strlen($institucion->getTelefono())<4)
+                //    $institucion->setTelefono($json->telefono);
             }
         }catch(\Exception $e){
             if(strpos($e->getMessage(), 'Plenus:') !== false){
