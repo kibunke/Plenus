@@ -247,7 +247,7 @@
             $('.btn-group .btn.disabled').click(function(event) {
               event.stopPropagation();
             });            
-            _planilla = JSON.parse('{{ planilla.getJson() | json_encode() | raw }}');
+            _planilla = JSON.parse('{{ planilla.getJson() | json_encode() | replace({"'": "´"}) | raw  }}');
             $.Planilla.loadPlanillaFooter();
             $.Planilla.loadEquipos();
         },

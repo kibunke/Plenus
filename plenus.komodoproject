@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="f4e5eb42-6c32-441e-ab2e-81ce0f72c645" kpf_version="5" name="plenus.komodoproject">
+<livefolder id="2d52db62-18cb-4d97-914c-3b85089b5a43" idref="f4e5eb42-6c32-441e-ab2e-81ce0f72c645" name="var" url="var">
+</livefolder>
+<livefolder id="33d9d91d-40dc-4e90-9e65-14447e3f8161" idref="f4e5eb42-6c32-441e-ab2e-81ce0f72c645" name="app" url="app">
+</livefolder>
+<livefolder id="d486aace-1c55-4feb-a45f-0bd6188f0b1b" idref="f4e5eb42-6c32-441e-ab2e-81ce0f72c645" name="src" url="src">
+</livefolder>
+<livefolder id="f543c510-1f04-4e31-b0c8-816e01434f4d" idref="f4e5eb42-6c32-441e-ab2e-81ce0f72c645" name="web" url="web">
+</livefolder>
+<preference-set idref="f4e5eb42-6c32-441e-ab2e-81ce0f72c645" id="project" preftype="project">
+  <long id="prefs_version">1</long>
+</preference-set>
+</project>
