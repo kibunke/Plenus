@@ -296,7 +296,8 @@ class PlanillaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         try{
-            $institucion = $em->getRepository('InscripcionBundle:Institucion')->findOneBy(array('nombre' => $json->nombre));
+            //$institucion = $em->getRepository('InscripcionBundle:Institucion')->findOneBy(array('nombre' => $json->nombre));
+            $institucion = $planilla->getInstitucion();
             if (!$institucion){
                 $institucion = Institucion::getInstance($this->getUser(),$json);
                 $institucion->setMunicipio($planilla->getMunicipio());
