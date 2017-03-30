@@ -64,13 +64,13 @@ class SegmentoController extends Controller
         $logger = $this->get('logger');
         foreach ($filter['rows'] as $segmento){
             $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
-            $logger->error('############');
-            $logger->error($inscriptos['cant']);
-            //$logger->info('############');
+            
+            $logger->error('############ ANTES ############');
+            $logger->error(json_encode($inscriptos));
+
             $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
-            //$logger->info('############');
-            //$logger->info(var_dump($inscriptos));
-            //$logger->info('############');
+            $logger->error('############ DESPUES ############');
+            $logger->error(json_encode($inscriptos));
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
