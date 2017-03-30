@@ -64,8 +64,8 @@ class SegmentoController extends Controller
         $logger = $this->get('logger');
         foreach ($filter['rows'] as $segmento){
             $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
-            $logger->info('############');
-            $logger->info($inscriptos['cant']);
+            $logger->error('############');
+            $logger->error($inscriptos['cant']);
             //$logger->info('############');
             $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
             //$logger->info('############');
