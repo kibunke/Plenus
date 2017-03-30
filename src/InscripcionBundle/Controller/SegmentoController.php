@@ -61,10 +61,16 @@ class SegmentoController extends Controller
                     "data"            => array(),
                     "state"           => array('actives' => $filter['actives'], 'inactives' => $filter['total']-$filter['actives'])
         );
-        
+        $logger = $this->get('logger');
         foreach ($filter['rows'] as $segmento){
             $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
+            $logger->info('############');
+            $logger->info(var_dump($inscriptos));
+            $logger->info('############');
             $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
+            $logger->info('############');
+            $logger->info(var_dump($inscriptos));
+            $logger->info('############');
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
