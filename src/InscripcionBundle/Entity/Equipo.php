@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Equipo extends Planilla
 {
     public function getNewEquipo(){
-        return new \ResultadoBundle\Entity\Individual();
+        return new \ResultadoBundle\Entity\Equipo();
     }
     
     public function getTemplate(){
