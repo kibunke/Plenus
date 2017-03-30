@@ -130,7 +130,7 @@ class SegmentoRepository extends EntityRepository
         $where .= " AND e.id IN (".implode(",",$estados).")". $this->applyRoleAndPlanillaFilter($user);
 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(com.id) as cant, e.nombre
+                        ->createQuery(" SELECT COUNT(DISTINCT(com.id)) as cant, e.nombre
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.planillas p
                                         LEFT JOIN p.estados e
