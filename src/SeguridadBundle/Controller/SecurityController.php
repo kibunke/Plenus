@@ -381,7 +381,8 @@ class SecurityController extends Controller
         {
             //validar con expresión regular que no tenga espacios, solo letras y números
             //\w le decimos que permitimos todo tipo de carácteres alfanuméricos incluyendo el signo _
-            if(!preg_match("/^\w+$/", $data->get('username')))
+            // [\w-ñÑ] así agregamos la ñ que no esta admitida en el \w
+            if(!preg_match("/^([\w-ñÑ])+$/", $data->get('username')))
             {            
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario es inválido, solamente    debe contener Letras, Números, guiones bajos y sin espacios intermedios.');
             }else{

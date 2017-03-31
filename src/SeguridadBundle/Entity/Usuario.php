@@ -33,8 +33,9 @@ class Usuario implements AdvancedUserInterface, \Serializable
     
     /**
      * @var string $username
+     * pattern = "/^\w+$/",
      * @Assert\Regex(
-     *                pattern = "/^\w+$/",
+     *                pattern = "/^([\w-ñÑ])+$/i",
      *                message = "El nombre de usuario es inválido, solamente debe contener Letras, Números, guiones bajos, y sin espacios intermedios."
      *              )
      * @ORM\Column(name="username", type="string", length=50, unique=true)
