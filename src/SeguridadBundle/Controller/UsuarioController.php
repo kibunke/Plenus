@@ -44,9 +44,7 @@ class UsuarioController extends Controller
         {
             $em  = $this->getDoctrine()->getManager();
             $user->setCheckData(false)
-                 ->setUpdatedBy($user)
-                 ;
-            
+                 ->setUpdatedBy($user);
             try{
                 $em->flush();
                 $this->addFlash('success','Usuario completado con éxito');
@@ -58,7 +56,7 @@ class UsuarioController extends Controller
         }elseif ($form->isSubmitted()){
             $error = (string) $form->getErrors(true, false);
                     
-            return new JsonResponse(array('success' => false, 'message' => 'Error en los datos del formulario: ' . $error ));
+             $this->addFlash('error', 'Error en los datos del formulario: ' . $error );
         }
         
         return array(
