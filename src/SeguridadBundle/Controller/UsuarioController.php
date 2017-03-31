@@ -55,6 +55,10 @@ class UsuarioController extends Controller
             catch(\Exception $e ){
                  $this->addFlash('error','Error al completar los datos de usuario');
             }
+        }elseif ($form->isSubmitted()){
+            $error = (string) $form->getErrors(true, false);
+                    
+            return new JsonResponse(array('success' => false, 'message' => 'Error en los datos del formulario: ' . $error ));
         }
         
         return array(
