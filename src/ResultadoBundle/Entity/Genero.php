@@ -76,7 +76,7 @@ class Genero
      */
     public function __construct()
     {
-        $this->eventos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->eventos   = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 

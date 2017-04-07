@@ -16,17 +16,31 @@ class PersonaSinUserType extends PersonaCheckDataType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-            $builder->add('email', EmailType::class, array('attr' => array('placeholder' => 'casilla@email.com'))
-                         );
+            $builder->add('email', EmailType::class, array(
+                                                            'attr' => array('placeholder' => 'casilla@email.com')
+                                                          )
+                          
+                         )
+                    ->add('genero', EntityType::class, array(
+                                                                'class' => 'ResultadoBundle:Genero',
+                                                                'query_builder' => function (EntityRepository $er)
+                                                                {
+                                                                    return $er->createQueryBuilder('p')
+                                                                              ->orderBy('p.nombre', 'ASC')
+                                                                              ;
+                                                                },
+                                                                'choice_label' => 'nombre',
+                                                                'placeholder'  => 'Seleccione su género',
+                                                                'label'        => 'Género'
+                                                            )
+                         )
+            ;
             
             return parent::buildForm($builder,$options);
-        
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'CommonBundle\Entity\Persona',
-        ));
+        $resolver->setDefaults(array('data_class' => 'CommonBundle\Entity\Persona'));
     }
 }
