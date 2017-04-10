@@ -67,10 +67,10 @@ class PlanillaRepository extends EntityRepository
                     t.nombre LIKE ?1 OR
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
+                    m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT p
+                        ->createQuery(" SELECT DISTINCT(p)
                                         FROM InscripcionBundle:Planilla p
                                         JOIN p.municipio municipio
                                         JOIN p.segmento s
