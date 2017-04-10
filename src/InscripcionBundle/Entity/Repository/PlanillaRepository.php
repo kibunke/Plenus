@@ -70,7 +70,7 @@ class PlanillaRepository extends EntityRepository
                     m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
                 
         return $this->getEntityManager()
-                        ->createQuery(" SELECT DISTINCT(p)
+                        ->createQuery(" SELECT p
                                         FROM InscripcionBundle:Planilla p
                                         JOIN p.municipio municipio
                                         JOIN p.segmento s
@@ -83,6 +83,7 @@ class PlanillaRepository extends EntityRepository
                                         JOIN s.genero g
                                         JOIN p.estados est
                                         WHERE $where
+                                        GROUP BY p
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
