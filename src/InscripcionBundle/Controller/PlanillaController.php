@@ -88,7 +88,8 @@ class PlanillaController extends Controller
     public function showAction(Planilla $planilla)
     {
         return $this->render($planilla->getTemplateShow(), array(
-            'planilla' => $planilla
+            'planilla' => $planilla,
+            'json' => json_encode($planilla->getJson())
         ));
     }
     

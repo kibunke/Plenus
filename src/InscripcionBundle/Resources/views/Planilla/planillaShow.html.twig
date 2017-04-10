@@ -230,6 +230,7 @@
             </table>
         </div>
     </div>
+    <textarea id="planilla_data" class="hidden">{{ json }}</textarea>
     <p><i class="fa fa-info" aria-hidden="true"></i> Por la mera circunstancia de suscribir la presente Lista de Buena Fe, el aspirante se obliga a respetar en todos sus términos y extensión el Reglamento General, que declara bajo juramento conocer y aceptar.</p>
     <p><i class="fa fa-info" aria-hidden="true"></i> Asimismo reconoce a titulo confesional como único organismo facultado para su aplicación al Tribunal de Disciplina allí establecido, o el órgano que en futuro pudiera reemplazarlo, consintiendo expresamente lo establecido por el Artículo 28 del Reglamento, en lo concerniente a la irrecurribilidad de sus decisiones.</p>
     <p><i class="fa fa-info" aria-hidden="true"></i> La presente planilla debe ser confeccionada a máquina o con letra tipo imprenta, consignándose la totalidad de los datos solicitados, que se consideran como DECLARACION JURADA.</p>
@@ -247,7 +248,7 @@
             $('.btn-group .btn.disabled').click(function(event) {
               event.stopPropagation();
             });            
-            _planilla = JSON.parse('{{ planilla.getJson() | json_encode() | replace({"'": "´"}) | raw  }}');
+            _planilla = JSON.parse($('#planilla_data').text());
             $.Planilla.loadPlanillaFooter();
             $.Planilla.loadEquipos();
         },
