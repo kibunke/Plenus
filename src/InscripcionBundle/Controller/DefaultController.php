@@ -41,7 +41,7 @@ class DefaultController extends Controller
             //'instituciones' => json_encode($arrInst)
         );
     }
-    
+
     /**
      * @Route("/list/datatable", name="inscripcion_list_segmento_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
@@ -57,7 +57,7 @@ class DefaultController extends Controller
                     "recordsFiltered" => $filter['filtered'],
                     "data"            => array()
         );
-        
+
         foreach ($filter['rows'] as $segmento){
             $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
             $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
@@ -80,17 +80,17 @@ class DefaultController extends Controller
         }
         return new JsonResponse($data);
     }
-    
+
     /**
      * @Route("/competidor/list", name="competidor_list")
      * @Template()
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_INSCRIPCION_COMPETIDORES_LIST')")
      */
     public function listCompetidorAction(Request $request)
     {
         return array();
     }
-    
+
     /**
      * @Route("/competidor/list/datatable", name="competidor_list_datatable")
      * @Security("has_role('ROLE_INSCRIPCION_COMPETIDORES_LIST')")
@@ -99,14 +99,14 @@ class DefaultController extends Controller
     {
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('ResultadoBundle:Competidor')->dataTable($request->request);
-        
+
         $data=array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
                     "data"            => array()
         );
-        
+
         foreach ($filter['rows'] as $competidor){
             $planillas = array("total" => 0, "data"=>[]);
             $municipio = "";
@@ -135,9 +135,9 @@ class DefaultController extends Controller
                                     "actions"   => ""//$this->renderView('SeguridadBundle:Usuario:actions.personas.sin.user.html.twig', array('entity' => $persona))
                                    );
         }
-        
+
         return new JsonResponse($data);
-    }    
+    }
     /**
      * @Route("/mapa", name="inscripcion_mapa")
      * @Method({"GET","POST"})
@@ -146,9 +146,9 @@ class DefaultController extends Controller
      */
     public function mapAction(Request $request)
     {
-       
+
     }
-    
+
     /**
      * @Route("/consulta/analitico", name="consulta_analitico_inscripcion")
      * @Method({"GET","POST"})
@@ -157,9 +157,9 @@ class DefaultController extends Controller
      */
     public function consultaAnaliticoAction(Request $request)
     {
-        
+
     }
-    
+
     /**
      * @Route("/consulta/resumenregional", name="consulta_resumenregional_inscripcion")
      * @Method({"GET","POST"})
@@ -168,6 +168,6 @@ class DefaultController extends Controller
      */
     public function consultaResumenRegionalAction(Request $request)
     {
-        
+
     }
 }
