@@ -29,7 +29,7 @@
                             <a  href="#1" onclick="$.Segmento.stateToggleConfirm('{{ path('segmento_state_toggle_all', { 'state': 0 }) }}','La inscripción a TODOS los segmento será cerrada!')">
                                 <i class="fa fa-lock"></i> TODOS
                             </a>
-                        </li>                        
+                        </li>
                     {% endif %}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
@@ -45,7 +45,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="{#{ path('inscripcion') }#}">
                         Inscripción
@@ -85,7 +85,7 @@
                         <th>#</th>
                         <th>Segmento</th>
                         <th title="Planillas en el segmento"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
-                        <th title="Inscriptos en el segmento"><i class="fa fa-users" aria-hidden="true"></i></th>                        
+                        <th title="Inscriptos en el segmento"><i class="fa fa-users" aria-hidden="true"></i></th>
                         <th title="Eventos del segmento"><i class="fa fa-trophy" aria-hidden="true"></i></th>
                         <th title="Coordinadores del segmento"><i class="fa fa-sitemap" aria-hidden="true"></i></th>
                         <th class="hidden-sm hidden-xs">Parámetros</th>
@@ -117,7 +117,7 @@
                         "dataSrc": function(json){
                             $('#activos_cant').html(json.state.actives);
                             $('#inactivos_cant').html(json.state.inactives);
-                            
+
                             return json.data;
                         }
                     },
@@ -166,6 +166,9 @@
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {
                         $(nRow).attr( 'id', 'row_' + aData.id );
                         return nRow;
+                    },
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('.dataTable').dataTable().fnSetFilteringDelay();
                     }
                 });
             }
@@ -232,7 +235,7 @@
                         swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
                     })
                 })
-            }            
+            }
             $.Segmento.openAjaxModal = function(url,title){
                 $.Main.openFormModal(url,title, function(){
                         $.Segmento.initDatePicker();

@@ -11,7 +11,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a> 
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -29,7 +29,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="{#{ path('inscripcion') }#}">
                         Inscripción
@@ -141,7 +141,9 @@
                         }
                     ],
                     "fnCreatedRow": function( nRow, aData, iDataIndex ) {},
-                    "fnDrawCallback": function(oSettings, json) {}
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('.dataTable').dataTable().fnSetFilteringDelay();
+                    }
                 });
             }
             //$.Default.inscripto = function(){}
@@ -178,7 +180,7 @@
                     }).fail(()=>{
                         toastr['error']('Ocurrio un error en la comunicación con el servidor', 'Cuidado!');
                     });
-            }            
+            }
             $.Default.reloadTable = function(){
                 _table.fnDraw(true);
             }
@@ -231,7 +233,7 @@
                         swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
                     })
                 })
-            }            
+            }
         })(jQuery);
         $(document).ready(function(){$.Default.init();});
     </script>

@@ -6,8 +6,8 @@
     $.Main.init = function() {
         console.log("Main functions load!");
         $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
-        Main.init();        
-    },    
+        Main.init();
+    },
     $.Main.moneyFormat = function(val){
         return val.toFixed(2).replace('.',',').replace(/(\d)(?=(\d{3})+\,)/g, '$1.');
     },
@@ -39,6 +39,36 @@
             }
     }
 })(jQuery);
+
+jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay = function ( oSettings, iDelay ) {
+   var _that = this;
+   if ( iDelay === undefined ) {
+       iDelay = 700;
+   }
+
+   this.each( function ( i ) {
+       $.fn.dataTableExt.iApiIndex = i;
+       var
+           oTimerId = null,
+           sPreviousSearch = null,
+           anControl = $( 'input', _that.fnSettings().aanFeatures.f );
+
+       anControl.unbind( 'keyup search input' ).bind( 'keyup search input', function() {
+
+           if (sPreviousSearch === null || sPreviousSearch != anControl.val()) {
+               window.clearTimeout(oTimerId);
+               sPreviousSearch = anControl.val();
+               oTimerId = window.setTimeout(function() {
+                   $.fn.dataTableExt.iApiIndex = i;
+                   _that.fnFilter( anControl.val() );
+               }, iDelay);
+           }
+       });
+
+       return this;
+   } );
+   return this;
+};
 
 var isIE8 = false,
     isIE9 = false,
