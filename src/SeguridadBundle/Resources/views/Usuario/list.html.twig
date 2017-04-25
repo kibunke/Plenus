@@ -57,7 +57,7 @@
                                                 <a  href="#1" onclick="$.Usuario.showTemplateEmail('{{ path('_show_email_template', {'item' : 'emailPaso12'})}}')">
                                                     <i class="fa fa-envelope"></i> Recuperar contraseña paso 2
                                                 </a>
-                                            </li>                    
+                                            </li>
                                             <li class="unread">
                                                 <a  href="#1" onclick="$.Usuario.showTemplateEmail('{{ path('_show_email_template', {'item' : 'nuevaCuenta'})}}')">
                                                     <i class="fa fa-envelope"></i> Nueva cuenta
@@ -160,7 +160,7 @@
                         "type": 'POST',
                         "dataSrc": function(json){
                             $('#logueados_cant').html(json.logueados);
-                            $('#anonimos_cant').html(json.anonimos);                            
+                            $('#anonimos_cant').html(json.anonimos);
                             return json.data;
                         }
                     },
@@ -257,7 +257,7 @@
                                 break;
                         }
                         $(nRow).addClass( rowClass );
-                            
+
                         return nRow;
                     },
                     "fnDrawCallback": function(oSettings) {
@@ -272,6 +272,7 @@
                         //    });
                         //}
                         $.Usuario.charts(_table.ajax.json().cantUsers);
+                        $('[data-toggle="popover"]').popover();
                     }
                 });
             },
@@ -282,7 +283,7 @@
                 $('#panel-config .modal-title').html('Template de email');
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(url);
-                $('#panel-config').modal();                
+                $('#panel-config').modal();
             }
             $.Usuario.activar = function(url){
                 swal({
@@ -313,7 +314,7 @@
                                         function(){
                                           _table.ajax.reload( null, false );
                                         });
-                                          
+
                                        }else{
                                          swal({
                                          title: "Resultado",
@@ -360,7 +361,7 @@
                                         function(){
                                           _table.ajax.reload( null, false );
                                         });
-                                          
+
                                        }else{
                                          swal({
                                          title: "Resultado",
@@ -407,7 +408,7 @@
                                         function(){
                                           _table.ajax.reload( null, false );
                                         });
-                                          
+
                                        }else{
                                          swal({
                                          title: "Resultado",
@@ -428,4 +429,4 @@
         })(jQuery);
         $(document).ready(function(){$.Usuario.init();});
     </script>
-{% endblock %}    
+{% endblock %}

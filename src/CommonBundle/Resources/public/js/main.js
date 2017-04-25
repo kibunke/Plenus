@@ -43,7 +43,7 @@
 jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay = function ( oSettings, iDelay ) {
    var _that = this;
    if ( iDelay === undefined ) {
-       iDelay = 700;
+       iDelay = 1000;
    }
 
    this.each( function ( i ) {

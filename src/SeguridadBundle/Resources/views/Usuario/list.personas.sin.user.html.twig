@@ -125,6 +125,7 @@
                                 }
                             });
                         }
+                        $('[data-toggle="popover"]').popover();
                     }
                 });
             },
@@ -146,7 +147,7 @@
                                     toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
                                 }
                                 $('#okButton').button('reset');
-                                
+
                             });
                         });
                         $('.datetimepicker').datetimepicker({
@@ -161,8 +162,8 @@
                 $('#cancelButton').html('Cerrar').addClass('btn-primary');
                 $('#okButton').addClass('hide');
                 $.Main.openFormModal(url,title, function(){
-                        
-                        
+
+
                     }
                 );
             }
@@ -170,4 +171,4 @@
         })(jQuery);
         $(document).ready(function(){$.PersonaSinUsuario.init();});
     </script>
-{% endblock %}    
+{% endblock %}
