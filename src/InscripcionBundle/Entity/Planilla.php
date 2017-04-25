@@ -34,51 +34,51 @@ abstract class Planilla
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="ResultadoBundle\Entity\Equipo", mappedBy="planilla", cascade={"persist","remove"})
      */
     private $equipos;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Institucion", cascade={"persist"})
      * @ORM\JoinColumn(name="institucion", referencedColumnName="id")
-     */       
-    private $institucion;    
-    
+     */
+    private $institucion;
+
     /**
      * @ORM\ManyToOne(targetEntity="Segmento", inversedBy="planillas")
      * @ORM\JoinColumn(name="segmento", referencedColumnName="id")
-     */       
+     */
     private $segmento;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
-     */       
+     */
     private $municipio;
-    
+
     /**
      * @var string $responsableMunicipioNombre
      *
      * @ORM\Column(name="responsableMunicipioNombre", type="string", length=100)
      */
     protected $responsableMunicipioNombre;
-    
+
     /**
      * @var string $responsableMunicipioApellido
      *
      * @ORM\Column(name="responsableMunicipioApellido", type="string", length=100)
      */
     protected $responsableMunicipioApellido;
-    
+
     /**
      * @var string $responsableMunicipioDni
      *
      * @ORM\Column(name="responsableMunicipioDni", type="string", length=100)
      */
     protected $responsableMunicipioDni;
-    
+
     /**
      * @var string $directorTecnicoDni
      *
@@ -92,31 +92,31 @@ abstract class Planilla
      * @ORM\Column(name="directorTecnicoNombre", type="string", length=100, nullable=true)
      */
     protected $directorTecnicoNombre;
-    
+
     /**
      * @var string $directorTecnicoApellido
      *
      * @ORM\Column(name="directorTecnicoApellido", type="string", length=100, nullable=true)
      */
     protected $directorTecnicoApellido;
-    
+
     /**
      * this is OneToMany because the historial is important
      * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla", cascade={"persist","remove"})
      */
     private $estados;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -129,7 +129,7 @@ abstract class Planilla
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
 
     /**
@@ -145,31 +145,31 @@ abstract class Planilla
 
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return "Planilla de ".$this->getMunicipio()->getNombre()." con ".count($this->getParticipantes())." participantes";
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getNumero()
     {
         return $this->getId() ? str_pad($this->getId(), 6, "0", STR_PAD_LEFT):'000000';
-    }    
+    }
 
     /**
      * Set descripcion
@@ -441,7 +441,7 @@ abstract class Planilla
     {
         return $this->updatedBy;
     }
-    
+
     /**
      * Set responsableMunicipioNombre
      *
@@ -520,8 +520,8 @@ abstract class Planilla
     {
         return  $this->getSegmento()->getMinFechaNacimiento() <= $integrante->getFNacimiento() &&
                 $this->getSegmento()->getMaxFechaNacimiento() >= $integrante->getFNacimiento();
-    }    
-    
+    }
+
     /**
      * Get equipos
      *
@@ -551,7 +551,7 @@ abstract class Planilla
                                                       )
                 );
     }
-    
+
     /**
      * Get equipos
      *
@@ -566,7 +566,7 @@ abstract class Planilla
                         "segmento"  => $this->getSegmento()->toArray()
                 );
     }
-    
+
     private function getEquiposJson()
     {
         $equipos = array();
@@ -574,16 +574,16 @@ abstract class Planilla
         {
             $equipos[] = $equipo->getJson();
         }
-        
-        return $equipos;        
+
+        return $equipos;
     }
-    
+
     /**
      * validarInscripcion
      */
     public function inscripcionValida($planilla)
-    {    
-        //Chequea que el participante no este inscripto en el segmento 
+    {
+        //Chequea que el participante no este inscripto en el segmento
         if ($this->getSegmento() == $planilla->getSegmento())
         {
             throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en este segmento pero en otro equipo!');
@@ -593,10 +593,10 @@ abstract class Planilla
         {
             throw new \Exception('Plenus: El participante con DNI %DNI% ya está inscripto en otro equipo por el municipio de '.$this->getMunicipio()->getNombre());
         }
-        
+
         return true;
     }
-    
+
     /**
      * validarInscripcion
      */
@@ -616,7 +616,7 @@ abstract class Planilla
 
             if(in_array($inscripto,$this->getInscriptos())){
                 throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse más de una vez por planilla.');
-            }            
+            }
             foreach ($inscripto->getEquipos() as $equipo){
                 if ($this->id != $equipo->getPlanilla()->getId())
                     $this->inscripcionValida($equipo->getPlanilla());
@@ -628,7 +628,7 @@ abstract class Planilla
 
         return true;
     }
-    
+
     /**
      * getTotalInscriptos
      */
@@ -655,7 +655,7 @@ abstract class Planilla
         }
         return $inscriptos;
     }
-    
+
     /**
      * Set responsableMunicipioDni
      *
@@ -708,11 +708,11 @@ abstract class Planilla
             }
             if ( $cantCompetidores > $this->getSegmento()->getMaxIntegrantes() || $cantCompetidores < $this->getSegmento()->getMinIntegrantes())
                 return false;
-            
+
         }
         return true;
     }
-    
+
     /**
      * Get isEditable
      *
@@ -722,7 +722,7 @@ abstract class Planilla
     {
         return $this->getEstado()->isEditable() && $user->getId() == $this->getCreatedBy()->getId();
     }
-    
+
     /**
      * Get prepareToDelete
      *
@@ -737,16 +737,16 @@ abstract class Planilla
             $equipo->setDirectorTecnico = NULL;
         }
         $this->setInstitucion = NULL;
-        
+
         return $toRemove;
-    }    
-    
-    
+    }
+
+
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-       return $this->getEstado()->getProximosEstados($usuario); 
+       return $this->getEstado()->getProximosEstados($usuario);
     }
-    
+
 
     /**
      * Set directorTecnicoNombre
@@ -795,7 +795,7 @@ abstract class Planilla
     {
         return $this->directorTecnicoApellido;
     }
-    
+
     /**
      * Get directorTecnicoDni
      *
@@ -805,7 +805,7 @@ abstract class Planilla
     {
         return $this->directorTecnicoDni;
     }
-    
+
        /**
      * Set directorTecnicoDni
      *
@@ -819,8 +819,12 @@ abstract class Planilla
 
         return $this;
     }
-    
+
     public function getTemplateShow(){
         return "InscripcionBundle:Planilla:planillaShow.html.twig";
-    }    
+    }
+
+    public function isAprobada(){
+        return $this->getEstado()->isAprobada();
+    }
 }

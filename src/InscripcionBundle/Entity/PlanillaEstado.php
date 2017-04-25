@@ -38,32 +38,32 @@ abstract class PlanillaEstado
      * @ORM\Column(name="nombre", type="string", length=150)
      */
     private $nombre;
-    
+
      /**
      * @var string $observacion
      *
      * @ORM\Column(name="observacion", type="text", nullable=true)
      */
     private $observacion;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Planilla", inversedBy="estados")
      * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
-     */       
+     */
     private $planilla;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
-    private $createdBy;    
+     */
+    private $createdBy;
 
     /**
      * Get id
@@ -170,28 +170,28 @@ abstract class PlanillaEstado
     {
         return $this->planilla;
     }
-    
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return "Estado ".$this->getNombre();
     }
-    
+
     /**
      * get NombreRaw
-     */    
+     */
     public function getNombreRaw()
     {
         return "<span title='".$this->getNombre()."' class='".$this->getClass()."'>".$this->getAbr()."</span>";
     }
-    
+
     /**
      * Get isRemovable
      *
@@ -201,7 +201,7 @@ abstract class PlanillaEstado
     {
         return false;
     }
-    
+
     /**
      * Get isEditable
      *
@@ -211,7 +211,7 @@ abstract class PlanillaEstado
     {
         return false;
     }
-    
+
     /**
      * Get getRoute
      *
@@ -220,17 +220,17 @@ abstract class PlanillaEstado
     public function getRoute()
     {
     }
-    
+
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
-        return array();    
+        return array();
     }
     /**
      * get icon
-     */    
+     */
     public function getIcon()
     {
-    }    
+    }
 
     /**
      * Set observacion
@@ -254,5 +254,9 @@ abstract class PlanillaEstado
     public function getObservacion()
     {
         return $this->observacion;
+    }
+
+    public function isAprobada(){
+        return false;
     }
 }

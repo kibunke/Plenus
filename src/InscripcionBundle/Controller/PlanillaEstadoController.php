@@ -27,7 +27,7 @@ use InscripcionBundle\Entity\Segmento;
  * @Security("has_role('ROLE_INSCRIPCION')")
  */
 class PlanillaEstadoController extends Controller
-{    
+{
     /**
      * @Route("/{id}/toggle/enviada", name="planilla_toggle_enviada", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -52,8 +52,8 @@ class PlanillaEstadoController extends Controller
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
-    
-    
+
+
     /**
      * @Route("/{id}/toggle/presentada", name="planilla_toggle_presentada", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -78,7 +78,7 @@ class PlanillaEstadoController extends Controller
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
-    
+
     /**
      * @Route("/{id}/toggle/observada", name="planilla_toggle_observada", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -107,7 +107,7 @@ class PlanillaEstadoController extends Controller
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
-    
+
     /**
      * @Route("/{id}/toggle/aprobada", name="planilla_toggle_aprobada", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -132,7 +132,7 @@ class PlanillaEstadoController extends Controller
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
-    
+
     /**
      * @Route("/{id}/toggle/enRevision", name="planilla_toggle_enrevision", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -161,9 +161,12 @@ class PlanillaEstadoController extends Controller
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no pudo cambiar de estado.'. $result));
         }
     }
-    
+
     private function canEdit($planilla, $back = false)
     {
+        if ($planilla->isAprobada() && !$this->isGranted('ROLE_ADMIN1')){
+            return "Usted no tiene los permisos necesarios para DESAPROBAR una planilla.";
+        }
         if ($planilla->isEditable($this->getUser())){
             if (!$planilla->isCompleted()){
                 return "La planilla no tiene el mínimo de participantes requerido.";
@@ -173,13 +176,13 @@ class PlanillaEstadoController extends Controller
             if ($this->getUser()->getMunicipio()->getId() != $planilla->getMunicipio()->getId())
                 return "Esta planilla no pertenece a su municipio.";
         }
-        
+
         if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO') || $back){
             return true;
         }elseif ($planilla->getSegmento()->getIsActive()){
             return true;
         }
-        
+
         return "La inscripción al segmento está cerrada!";
     }
 }

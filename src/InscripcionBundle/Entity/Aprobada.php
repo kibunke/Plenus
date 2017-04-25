@@ -20,26 +20,26 @@ class Aprobada extends PlanillaEstado
         $this->setNombre("Aprobada");
         parent::__construct();
     }
-    
+
     /**
      * get Class
-     */    
+     */
     public function getClass()
     {
         return "badge badge-success";
     }
-    
+
     /**
      * get Class
-     */    
+     */
     public function getAbr()
     {
         return "Ap.";
     }
-    
+
     /**
      * get icon
-     */    
+     */
     public function getIcon()
     {
         return "share";
@@ -54,10 +54,10 @@ class Aprobada extends PlanillaEstado
     {
         return 'planilla_toggle_aprobada';
     }
-    
+
     /**
      * get ClassButton
-     */    
+     */
     public function getClassButton()
     {
         return "success";
@@ -65,9 +65,23 @@ class Aprobada extends PlanillaEstado
 
     /**
      * get Title
-     */    
+     */
     public function getTitleBefore()
     {
         return "Aprobar planilla";
-    }    
+    }
+
+    public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
+    {
+        if($usuario->hasRole('ROLE_ADMIN'))
+        {
+            return array(new Observada());
+        }
+
+        return parent::getProximosEstados($usuario);
+    }
+
+    public function isAprobada(){
+        return true;
+    }
 }
