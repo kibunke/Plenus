@@ -32,7 +32,7 @@
 				{% if is_granted('ROLE_COORDINADOR') or is_granted('ROLE_ORGANIZADOR') %}
 					<li class="" >
 						<a href="javascript:void(0)"><i class="fa fa-cogs"></i> <span class="title"> Gestión </span><i class="icon-arrow"></i> </a>
-						
+
 						<ul class="sub-menu">
 							{% if is_granted('ROLE_ADMIN') %}
 								<li>
@@ -53,7 +53,7 @@
 							{% if is_granted('ROLE_USER_LIST') %}
 								<li>
 									<a href="javascript:void(0);">
-	
+
 										<i class="fa fa-shield"></i>
 										Seguridad <i class="icon-arrow"></i>
 									</a>
@@ -108,7 +108,7 @@
 												</a>
 											</li>
 										{% endif %}
-										{% if is_granted('ROLE_SEGMENTO') %}	
+										{% if is_granted('ROLE_SEGMENTO') %}
 											<li>
 												<a href="{{ path('segmento_list') }}">
 													<i class="fa fa-bullseye"></i>
@@ -139,8 +139,8 @@
 											</li>
 										{% endif %}
 									</ul>
-								</li>							
-								
+								</li>
+
 								<li>
 									<a href="{{ path('escenario') }}">
 										<i class="fa fa-map-marker"></i>
@@ -205,12 +205,14 @@
 									<span class="title">Acciones pendientes</span>
 								</a>
 							</li>
-							<li>
-								<a href="{{ path('planilla_mis_list') }}">
-									<i class="fa fa-list-ol"></i>
-									<span class="title">Mis planillas</span>
-								</a>
-							</li>
+							{% if is_granted('ROLE_INSCRIPCION_MIS_PLANILLAS') %}
+								<li>
+									<a href="{{ path('planilla_mis_list') }}">
+										<i class="fa fa-list-ol"></i>
+										<span class="title">Mis planillas</span>
+									</a>
+								</li>
+							{% endif %}
 							{% if is_granted('ROLE_INSCRIPCION_CONSULTA') %}
 								<li>
 									<a href="javascript:;">
@@ -264,7 +266,7 @@
 										</span>
 									</a>
 								</li>
-							{% endif %}						
+							{% endif %}
 							{% if is_granted('ROLE_SORTEO_CONSULTA') %}
 							<li>
 								<a href="javascript:;">
@@ -282,7 +284,7 @@
 							</li>
 							{% endif %}
 						</ul>
-					</li>					
+					</li>
 				{% endif %}
 				 {% if is_granted('ROLE_ACREDITACION') or is_granted('ROLE_DIRECTOR') %}
                    <li>
@@ -296,7 +298,7 @@
                                         <i class="fa fa-cogs"></i>
                                         <span class="title">Parámetros</span>
                                     </a>
-                                </li>						
+                                </li>
                             {% endif %}
                             <li>
                                 <a href="{#{ path('acreditacion_listado_area') }#}">
@@ -342,7 +344,7 @@
 							{# % if is_granted('ROLE_TESORERIA_DASHBOARD') %}
 								<li class="" style="background-color: #1e2129 !important;">
 									<a href="{{ path('dashboard_tesoreria') }}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
-								</li>			
+								</li>
 							{% endif % #}
 							{% if is_granted('ROLE_TESORERIA_FONDO') %}
 								<li>
@@ -359,7 +361,7 @@
 										Administración de Entidades
 									</a>
 								</li>
-							{% endif %}							
+							{% endif %}
 							{% if is_granted('ROLE_TESORERIA_MOVIMIENTO') %}
 								<li>
 									<a href="{#{ path('tesoreria_movimiento_list') }#}">
@@ -392,13 +394,13 @@
 												<i class="fa fa-play"></i>
 												Analítico personal
 											</a>
-										</li>										
+										</li>
 									</ul>
 								</li>
 							{% endif %}
 						</ul>
 					</li>
-				{% endif %}				
+				{% endif %}
 				{% if is_granted('ROLE_RESULTADO') %}
 					<li>
 						<a href="javascript:void(0)"><i class="fa fa-trophy"></i> <span class="title"> Resultado</span><i class="icon-arrow"></i> </a>
@@ -406,7 +408,7 @@
 							{% if is_granted('ROLE_RESULTADO_DASHBOARD') %}
 								<li class="" style="background-color: #1e2129 !important;">
 									<a href="{#{ path('dashboard_resultado') }#}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
-								</li>			
+								</li>
 							{% endif %}
 							{% if is_granted('ROLE_RESULTADO_LIST') %}
 								<li>
@@ -435,7 +437,7 @@
 											<a href="{#{ path('resultados_informeFinalistas') }#}">
 												<i class="fa fa-play"></i>
 												Listado Finalistas
-											</a>								
+											</a>
 										</li>
 									</ul>
 								</li>
@@ -458,7 +460,7 @@
 			</a>#}
 		</div>
 		<div class="col-xs-6 text-right no-padding">
-			
+
 			<a class="btn btn-sm log-out text-right" href="{{ path('_logout') }}">
 				<i class="fa fa-power-off"></i> Cerrar sesión
 			</a>

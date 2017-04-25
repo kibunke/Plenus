@@ -55,19 +55,20 @@ class PlanillaController extends Controller
             'datos' => $result
         );
     }
-    
+
     /**
      * Lists all Planilla entities.
      *
      * @Route("/list/misPlanillas", name="planilla_mis_list")
      * @Method("GET")
+     * @Security("has_role('ROLE_INSCRIPCION_MIS_PLANILLAS')")
      * @Template()
      */
     public function misPlanillasListAction()
     {
-        return array();        
+        return array();
     }
-    
+
     /**
      * Lists all Planilla entities.
      *
@@ -77,8 +78,8 @@ class PlanillaController extends Controller
      */
     public function misPendientesListAction()
     {
-        return array();        
-    }    
+        return array();
+    }
     /**
      * show a Planilla entity.
      *
@@ -92,7 +93,7 @@ class PlanillaController extends Controller
             'json' => json_encode($planilla->getJson())
         ));
     }
-    
+
     /**
      * load Participante entity.
      *
@@ -108,23 +109,24 @@ class PlanillaController extends Controller
         }
         return new JsonResponse(array('success' => false, 'error' => false, 'participante' => 'No se encontro el participante!'));
     }
-    
+
     /**
      * @Route("/list/misPlanillas/datatable", name="planilla_mis_list_datatable", condition="request.isXmlHttpRequest()")
+     * @Security("has_role('ROLE_INSCRIPCION_MIS_PLANILLAS')")
      * @Method("POST")
      */
     public function misPlanillasListDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'),false);
-        
+
         $data = array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
                     "data"            => array()
         );
-        
+
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
                 "id"        => "<strong>".$planilla->getNumero()."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
@@ -148,7 +150,7 @@ class PlanillaController extends Controller
         }
         return new JsonResponse($data);
     }
-    
+
     /**
      * @Route("/list/misPendientes/datatable", name="planilla_pendientes_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
@@ -157,14 +159,14 @@ class PlanillaController extends Controller
     {
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'),true);
-        
+
         $data = array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
                     "data"            => array()
         );
-        
+
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
                 "id"        => "<strong>".$planilla->getNumero()."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
@@ -188,14 +190,14 @@ class PlanillaController extends Controller
         }
         return new JsonResponse($data);
     }
-    
+
     /**
      * @Route("/new/{id}", name="planilla_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_INSCRIPCION_PLANILLA_NEW')")
      */
     public function newAction(Request $request, Segmento $segmento)
-    {        
+    {
         $em = $this->getDoctrine()->getManager();
         if ($segmento->getMaxIntegrantes() == 1){
             $planilla = new Individual();
@@ -203,11 +205,11 @@ class PlanillaController extends Controller
             $planilla = new Equipo();
         }
         $planilla->setSegmento($segmento);
-        
+
         if (!$this->canEdit($planilla)){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
         }
-        
+
         $form = $this->createForm(PlanillaType::class, $planilla);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -256,7 +258,7 @@ class PlanillaController extends Controller
         }
         return $error;
     }
-    
+
     private function loadPlanilla($planilla, $json)
     {
         $em = $this->getDoctrine()->getManager();
@@ -269,7 +271,7 @@ class PlanillaController extends Controller
             foreach($json->equipos as $jsonEquipo){
                 $equipo = $this->loadEquipo($jsonEquipo,$planilla);
                 if ($equipo){
-                    
+
                     $planilla->addEquipo($equipo);
                 }
             }
@@ -281,7 +283,7 @@ class PlanillaController extends Controller
         }
         return false;
     }
-    
+
     private function loadDirectorTecnico($planilla, $json)
     {
         if (strlen($json->nombre) > 2 && strlen($json->apellido) > 2 && strlen($json->dni) >= 6){
@@ -292,7 +294,7 @@ class PlanillaController extends Controller
             throw new \Exception('Plenus: El Director Técnico es obligatorio en este segmento.');
         }
     }
-    
+
     private function loadInstitucion($planilla, $json)
     {
         $em = $this->getDoctrine()->getManager();
@@ -316,7 +318,7 @@ class PlanillaController extends Controller
         $planilla->setInstitucion($institucion);
         return $institucion;
     }
-    
+
     private function loadEquipo($jsonEquipo,$planilla)
     {
         $em = $this->getDoctrine()->getManager();
@@ -329,15 +331,15 @@ class PlanillaController extends Controller
         }else{
             $equipo = $planilla->getNewEquipo();
         }
-        
+
         $this->loadDirectorTecnico($planilla, $jsonEquipo->tecnico);
         try{
             foreach($jsonEquipo->integrantes as $jsonIntegrante){
                 if (strlen($jsonIntegrante->persona->dni) >= 6){
                     $jsonIntegrante = $this->loadEntities($jsonIntegrante);
-                    
+
                     if ($jsonIntegrante && strlen($jsonIntegrante->persona->nombre) > 2 && strlen($jsonIntegrante->persona->apellido) > 2){
-                        
+
                         //Ojo que no contempla competidores que no sean participantes !
                         $integrante = $em->getRepository('ResultadoBundle:Competidor')->findOneBy(array('tipoDocumento' => $jsonIntegrante->persona->tipoDocumento , 'dni' => $jsonIntegrante->persona->dni));
                         if (!$integrante){
@@ -353,7 +355,7 @@ class PlanillaController extends Controller
                          */
                         $planilla->validarInscripcion($integrante);
                         //$integrante->inscripcionValida($planilla);
-                        
+
                         if ($integrante){
                             if ($planilla->inDateRange($integrante)){
                                 $equipo->addIntegrante($integrante,$jsonIntegrante);
@@ -381,7 +383,7 @@ class PlanillaController extends Controller
             throw $e;
             throw new \Exception('Plenus: Datos del Participante inválidos o incompletos.');
         }
-        
+
         if (count($equipo->getIntegrantes())){
             return $equipo;
         }
@@ -419,7 +421,7 @@ class PlanillaController extends Controller
         if (!$this->canEdit($planilla)){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La inscripción al segmento no está habilitada!'));
         }
-        
+
         $form = $this->createForm(PlanillaType::class, $planilla);
 
         $form->handleRequest($request);
@@ -445,7 +447,7 @@ class PlanillaController extends Controller
             'planilla' => $planilla
         ));
     }
-    
+
     /**
      * @Route("/{id}/delete", name="planilla_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -473,7 +475,7 @@ class PlanillaController extends Controller
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'La planilla no está registrada en el sistema.'));
     }
-    
+
     private function canEdit($planilla)
     {
         if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO')){
@@ -481,23 +483,23 @@ class PlanillaController extends Controller
         }elseif ($planilla->getSegmento()->getIsActive()){
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Print a Planilla entity.
      *
      * @Route("/print/{segmento}/{idPlanilla}", name="planilla_print", defaults={"idPlanilla" = null})
      * @Method("GET")
      * @Security("has_role('ROLE_INSCRIPCION_PLANILLA_PRINT')")
-     */    
+     */
     public function printAction(Request $request,Segmento $segmento, $idPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
         //var_dump($idPlanilla);
         if ($idPlanilla){
-            $planilla = $em->getRepository('InscripcionBundle:Planilla')->find($idPlanilla);    
+            $planilla = $em->getRepository('InscripcionBundle:Planilla')->find($idPlanilla);
         }else{
             if ($segmento->getMaxIntegrantes() == 1){
                 $planilla = new Individual();
@@ -534,7 +536,7 @@ class PlanillaController extends Controller
                     <tr>
                         <th style="border-bottom: 1px solid silver;width: 22%" align="left" rowspan="4">
                             <img src="'.$request->getBasePath().'/assets/images/logos/logojuegos.png'.'" style="height:250px">
-                        </th>                    
+                        </th>
                         <th style="width: 37%; text-align:center;font-size:16px;color:#999" rowspan="4">
                             <b>Solicitud de inscripción </b><br>
                             Lista de buena fe
@@ -569,7 +571,7 @@ class PlanillaController extends Controller
         $pdf->writeHTML($html, true, false, true, false, '');
         return new Response($pdf->Output($segmento->getNombreCompleto().'.pdf','D'));
     }
-    
+
     private function getTableEquiposHTML($arrPlanilla)
     {
         $blankRow =    '<tr>
@@ -623,14 +625,14 @@ class PlanillaController extends Controller
             for( $i = $cantRows; $i < $arrPlanilla['parametros']['maxEqPlanilla']; $i++){
                 $cantRows++;
                 $html .=  str_replace('%nROW%',$cantRows, $blankRow);
-                    
+
             }
         }else{
             for( $i = $cantRows; $i < $arrPlanilla['parametros']['maxIntegrantes']; $i++){
                 $cantRows++;
                 $html .=  str_replace('%nROW%',$cantRows, $blankRow);
-                    
-            }            
+
+            }
         }
         if ($arrPlanilla['parametros']['maxReemplazos'] > 0){
             $html .=    '<tr><th colspan="10" style="border:1px solid silver;background-color:#ddd;text-align:center">Sustitutos</th></tr>';
@@ -653,7 +655,7 @@ class PlanillaController extends Controller
                                     </tr>';
                     }
                 }
-            }            
+            }
             for( $i = $cantRowsSustituto; $i < $arrPlanilla['parametros']['maxReemplazos']; $i++){
                 $cantRowsSustituto++;
                 $html .=  str_replace('%nROW%',$cantRowsSustituto, $blankRow);
@@ -661,7 +663,7 @@ class PlanillaController extends Controller
         }
         return $html .='</table>';
     }
-    
+
     private function getTableFooter($arrPlanilla)
     {
         $tecnico = sizeof($arrPlanilla['equipos']) ? $arrPlanilla['equipos'][0]['tecnico'] :null;
@@ -692,7 +694,7 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
-                    </td>    
+                    </td>
                     <td>
                         <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px;float:left">
                             <tr>
@@ -715,7 +717,7 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
-                    </td>    
+                    </td>
                     <td>
                         <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px">
                             <tr>
@@ -738,7 +740,7 @@ class PlanillaController extends Controller
                                 <td style="border:1px solid silver;"></td>
                             </tr>
                         </table>
-                    </td>    
+                    </td>
                     <td>
                         <table cellspacing="0" cellpadding="1" style="width:100%;font-size:10px">
                             <tr>
@@ -764,8 +766,8 @@ class PlanillaController extends Controller
                     </td>
                 </tr>
             </table>';
-        
+
         return $html;
-    }    
-    
+    }
+
 }
