@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Municipio
  *
- * @ORM\Table(name="Municipio")
+ * @ORM\Table(name="Municipio",indexes={
+ *                                      @ORM\Index(name="search_nombre", columns={"nombre"})}
+ *)
  * @ORM\Entity(repositoryClass="CommonBundle\Entity\Repository\MunicipioRepository")
  */
 class Municipio
@@ -36,7 +38,7 @@ class Municipio
      * @ORM\Column(name="seccionElectoral", type="string", length=10)
      */
     private $seccionElectoral;
-    
+
     /**
      * @var string
      *
@@ -50,7 +52,7 @@ class Municipio
      * @ORM\Column(name="cruceRegional", type="string", length=10, nullable=true)
      */
     private $cruceRegional;
-    
+
      /**
      * @ORM\ManyToOne(targetEntity="Provincia", inversedBy="municipios")
      * @ORM\JoinColumn(name="idProvincia", referencedColumnName="id")
@@ -96,7 +98,7 @@ class Municipio
      * @ORM\Column(name="isActive", type="boolean")
      */
     protected $isActive;
-    
+
     /**
      * Constructor
      */
@@ -109,11 +111,11 @@ class Municipio
 
     /**
      * __toString
-     */    
+     */
     public function __toString(){
         return $this->getNombre();
     }
-    
+
     /**
      * Get cruceRegionalRaw
      *
@@ -122,7 +124,7 @@ class Municipio
     public function getCruceRegionalRaw()
     {
         return "<small>".str_replace($this->regionDeportiva, "</small><strong>".$this->regionDeportiva."</strong><small>",  $this->cruceRegional)."</small>";
-    }        
+    }
 
     /**
      * Get id
@@ -407,7 +409,7 @@ class Municipio
     {
         return $this->updatedBy;
     }
-    
+
     public function mismoMunicipio(Municipio $municipio)
     {
         return $this->id == $municipio->getId();

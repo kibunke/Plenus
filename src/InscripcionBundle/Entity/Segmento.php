@@ -8,7 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * InscripcionBundle\Entity\Segmento
- * @ORM\Table(name="Segmento")
+ * @ORM\Table(name="Segmento",indexes={
+ *                                      @ORM\Index(name="search_nombre", columns={"nombre"})}
+ *)
  * @ORM\Entity(repositoryClass="InscripcionBundle\Entity\Repository\SegmentoRepository")
  */
 class Segmento
@@ -21,31 +23,31 @@ class Segmento
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $nombre
-     * 
+     *
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     protected $nombre;
-    
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="ResultadoBundle\Entity\Evento", mappedBy="segmento")
      */
     private $eventos;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Planilla", mappedBy="segmento")
      */
     private $planillas;
-    
+
     /**
      * @var integer $maxIntegrantes
      * @Assert\NotNull()
@@ -65,7 +67,7 @@ class Segmento
      * @ORM\Column(name="minIntegrantes", type="integer")
      */
     protected $minIntegrantes;
-    
+
     /**
      * @var integer $maxReemplazos
      * @Assert\NotNull()
@@ -87,7 +89,7 @@ class Segmento
      * @ORM\Column(name="maxEquiposPorPlanilla", type="integer", options={"default" : 1})
      */
     protected $maxEquiposPorPlanilla;
-    
+
     /**
      * @var datetime $minFechaNacimiento
      * @Assert\NotNull()
@@ -95,7 +97,7 @@ class Segmento
      * @ORM\Column(name="minFechaNacimiento", type="datetime")
      */
     private $minFechaNacimiento;
-    
+
     /**
      * @var datetime $maxFechaNacimiento
      * @Assert\NotNull()
@@ -103,54 +105,54 @@ class Segmento
      * @ORM\Column(name="maxFechaNacimiento", type="datetime")
      */
     private $maxFechaNacimiento;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Torneo", inversedBy="segmentos")
      * @ORM\JoinColumn(name="torneo", referencedColumnName="id")
-     */       
+     */
     private $torneo;
 
     /**
      * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Categoria", inversedBy="segmentos")
      * @ORM\JoinColumn(name="categoria", referencedColumnName="id")
-     */       
+     */
     private $categoria;
 
     /**
      * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Modalidad", inversedBy="segmentos")
      * @ORM\JoinColumn(name="modalidad", referencedColumnName="id")
-     */       
+     */
     private $modalidad;
 
     /**
      * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Genero", inversedBy="segmentos")
      * @ORM\JoinColumn(name="genero", referencedColumnName="id")
-     */       
+     */
     private $genero;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Disciplina", inversedBy="segmentos")
      * @ORM\JoinColumn(name="disciplina", referencedColumnName="id")
-     */       
+     */
     private $disciplina;
 
     /**
      * @ORM\ManyToMany(targetEntity="SeguridadBundle\Entity\Usuario", inversedBy="coordina", cascade={"persist"})
      * @ORM\JoinTable(name="usuario_coordina_segmento")
-     **/    
+     **/
     private $coordinadores;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -163,16 +165,16 @@ class Segmento
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
-    
+
     /**
      * @var boolean $isActive
      *
      * @ORM\Column(name="isActive", type="boolean", options={"default" : false})
      */
     protected $isActive;
-    
+
     /**
      * Constructor
      */
@@ -239,12 +241,12 @@ class Segmento
         if ($this->getNombre())
             $name." - ".$this->getNombre();
         return $name;
-    }    
+    }
 
     /**
      * Get nombreCompletoRaw
      *
-     * @return string 
+     * @return string
      */
     public function getNombreCompletoRaw()
     {
@@ -415,7 +417,7 @@ class Segmento
     {
         return $this->maxEquiposPorPlanilla;
     }
-    
+
     /**
      * Set minFechaNacimiento
      *
@@ -740,7 +742,7 @@ class Segmento
     /**
      * Get coordinadores
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCoordinadores()
     {
@@ -769,7 +771,7 @@ class Segmento
     {
         return $this->isActive;
     }
-    
+
     /**
      * stateToggle
      *
@@ -778,10 +780,10 @@ class Segmento
     public function stateToggle()
     {
         $this->isActive = !$this->isActive;
-        
+
         return $this;
     }
-    
+
     /**
      * esCoordinador
      *
@@ -796,7 +798,7 @@ class Segmento
         }
         return false;
     }
-    
+
     /**
      * getTotalInscriptosFromQuery
      *
@@ -817,7 +819,7 @@ class Segmento
             }
         }
         return $result;
-    }    
+    }
         /**
      * Get equipos
      *
@@ -834,5 +836,5 @@ class Segmento
                         "genero" => $this->getGenero()->getNombre(),
                     );
     }
-    
+
 }

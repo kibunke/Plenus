@@ -12,6 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="Persona", uniqueConstraints={
  *          @ORM\UniqueConstraint(name="unique_dni", columns={"tipoDocumento_id", "dni"}),
  *          @ORM\UniqueConstraint(  name="unique_email", columns={"email"})
+ *      },indexes={
+ *                  @ORM\Index(name="search_nombre", columns={"nombre"}),
+ *                  @ORM\Index(name="search_apellido", columns={"apellido"})
  *      }
  * )
  * @ORM\Entity
@@ -38,7 +41,7 @@ class Persona
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $nombre
      *
@@ -51,7 +54,7 @@ class Persona
      * )
      */
     private $nombre;
-    
+
     /**
      * @var string $apellido
      *
@@ -64,10 +67,10 @@ class Persona
      * )
      */
     private $apellido;
-    
+
     /**
      * @var date $fNacimiento;
-     * 
+     *
      * @ORM\Column(name="fNacimiento", type="date", nullable=true)
      * @Assert\NotBlank(
      *      message="Falta la fecha de Nacimiento!"
@@ -75,10 +78,10 @@ class Persona
      * @Assert\Date()
      */
     private $fNacimiento;
-    
+
     /**
      * @var integer $dni
-     * 
+     *
      * @ORM\Column(name="dni", type="integer")
      * @Assert\NotBlank(
      *      message="dni missing!"
@@ -91,23 +94,23 @@ class Persona
      * )
      */
     private $dni;
-    
+
     /**
      * @var TipoDocumento $tipoDocumento
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="TipoDocumento")
      * @ORM\JoinColumn(name="tipoDocumento_id", referencedColumnName="id")
      */
     private $tipoDocumento;
-    
+
     /**
      * @var Genero $genero
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="ResultadoBundle\Entity\Genero")
      * @ORM\JoinColumn(name="genero_id", referencedColumnName="id")
      */
     private $genero;
-    
+
     /**
      * @var string $email
      *
@@ -123,16 +126,16 @@ class Persona
     /**
      * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
-     */       
+     */
     private $municipio;
-    
+
     /**
      * @var string $telefono
      *
      * @ORM\Column(name="telefono", type="string", length=100, nullable=true)
      */
     private $telefono;
-    
+
     /**
      * @var string $facebook
      *
@@ -141,7 +144,7 @@ class Persona
      *      type="string"
      * )
      */
-    private $facebook;     
+    private $facebook;
 
     /**
      * @var string $skype
@@ -152,7 +155,7 @@ class Persona
      * )
      */
     private $skype;
-     
+
     /**
      * @var string $twitter
      *
@@ -162,7 +165,7 @@ class Persona
      * )
      */
     private $twitter;
-     
+
     /**
      * @var string $linkedin
      *
@@ -172,24 +175,24 @@ class Persona
      * )
      */
     private $linkedin;
-    
+
     /**
      * @var text $avatar
      * @ORM\Column(name="avatar", type="text", nullable=true)
      **/
     private $avatar;
-    
+
     /**
      * @var text $observacion
      * @ORM\Column(name="observacion", type="text", nullable=true)
      **/
     private $observacion;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="SeguridadBundle\Entity\Usuario", mappedBy="persona")
      */
     private $usuario;
-    
+
     /**
      * @var datetime $createdAt
      *
@@ -197,10 +200,10 @@ class Persona
      * @Assert\Date()
      */
     private $createdAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
@@ -216,10 +219,10 @@ class Persona
 
     /**
      * @var SeguridadBundle\Entity\Usuario $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
 
     /**
@@ -228,10 +231,10 @@ class Persona
      * @ORM\Column(name="isActive", type="boolean")
      */
     protected $isActive;
-    
+
     /**
      * Constructor
-     */    
+     */
     public function __construct($user = null)
     {
         $this->createdBy = $user;
@@ -239,10 +242,10 @@ class Persona
         $this->isActive = true;
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * __toString
-     */    
+     */
     function __toString()
     {
         return (String)$this->dni;
@@ -305,7 +308,7 @@ class Persona
     {
         return $this->apellido;
     }
-    
+
     /**
      * Get nombreCompleto
      *
@@ -315,7 +318,7 @@ class Persona
     {
         return $this->apellido.", ".$this->nombre;
     }
-    
+
     /**
      * Set fNacimiento
      *
@@ -665,7 +668,7 @@ class Persona
     {
         $this->updatedBy = $updatedBy;
         $this->updatedAt = new \DateTime();
-        
+
         return $this;
     }
 
@@ -678,7 +681,7 @@ class Persona
     {
         return $this->updatedBy;
     }
-    
+
     /**
      * Set municipio
      *
@@ -700,7 +703,7 @@ class Persona
     public function getMunicipio()
     {
         return $this->municipio;
-    }    
+    }
 
     /**
      * Set email
@@ -725,19 +728,19 @@ class Persona
     {
         return $this->email;
     }
-    
+
     public function clearUsuario()
     {
         $this->usuario = NULL;
-        
+
         return $this;
     }
-    
+
     public function mismoMunicipio(Persona $persona)
     {
         return $this->getMunicipio()->mismoMunicipio($persona->getMunicipio());
     }
-    
+
     public function toArray()
     {
         return array(
@@ -754,7 +757,7 @@ class Persona
                         'observacion'   => $this->getObservacion()
                     );
     }
-    
+
     /**
      * Load
      */
@@ -767,7 +770,7 @@ class Persona
         if (isset($json->dni))
             $this->setDni($json->dni);
         if (isset($json->tipoDocumento) && is_object($json->tipoDocumento))
-            $this->setTipoDocumento($json->tipoDocumento);            
+            $this->setTipoDocumento($json->tipoDocumento);
         if (isset($json->fNacimiento) && is_object($json->fNacimiento))
             $this->setFNacimiento($json->fNacimiento);
         if (isset($json->telefono))
@@ -783,7 +786,7 @@ class Persona
             ($json->sexo->getNombre() == 'Masculino' || $json->sexo->getNombre() == 'Femenino')){
             $this->setGenero($json->sexo);
         }
-    }    
+    }
 
     /**
      * Set observacion
@@ -832,12 +835,12 @@ class Persona
     {
         return $this->genero;
     }
-    
+
     public function getTipoPersona()
     {
         return 'Usuario';
     }
-    
+
     public function getClass()
     {
         return 'CommonBundle:Persona';

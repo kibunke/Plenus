@@ -13,15 +13,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * SeguridadBundle\Entity\Usuario
- * 
+ *
  * @ORM\Table(name="Usuario", uniqueConstraints={
  *          @ORM\UniqueConstraint(name="unique_username", columns={"username"})
+ *      },indexes={
+ *                  @ORM\Index(name="search_username", columns={"username"})
  *      }
  * )
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\UsuarioRepository")
  */
 class Usuario implements AdvancedUserInterface, \Serializable
-{  
+{
     /**
      * @var integer $id
      *
@@ -30,7 +32,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $username
      * @Assert\Regex(
@@ -54,14 +56,14 @@ class Usuario implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="salt", type="string", length=255)
      */
     private $salt;
-    
+
     /**
      * @var string $passwordHistory
      *
      * @ORM\Column(name="passwordHistory", type="json_array")
      */
     private $passwordHistory;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Log", mappedBy="usuario")
      * @ORM\OrderBy({"id" = "DESC"})
@@ -83,30 +85,30 @@ class Usuario implements AdvancedUserInterface, \Serializable
      *      )
      */
     private $roles;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="coordinadores")
      **/
     private $coordina;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Perfil", inversedBy="usuarios")
      */
     private $perfil;
-    
+
     /**
      * @var User $cargo
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Cargo", inversedBy="usuarios")
-     */   
+     */
     private $cargo;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="CommonBundle\Entity\Persona", inversedBy="usuario", cascade={"all"})
      * @ORM\JoinColumn(name="persona_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $persona;
-    
+
     /**
      * @var boolean $changePassword
      *
@@ -120,7 +122,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="checkData", type="boolean")
      */
     protected $checkData;
-    
+
     /**
      * @var datetime $createdAt
      *
@@ -128,10 +130,10 @@ class Usuario implements AdvancedUserInterface, \Serializable
      * @Assert\Date()
      */
     private $createdAt;
-    
+
     /**
      * @var User $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
@@ -147,10 +149,10 @@ class Usuario implements AdvancedUserInterface, \Serializable
 
     /**
      * @var User $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
 
     /**
@@ -159,7 +161,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="isActive", type="boolean")
      */
     protected $isActive;
-    
+
     /**
      * Constructor
      */
@@ -173,20 +175,20 @@ class Usuario implements AdvancedUserInterface, \Serializable
         $this->logs           = new ArrayCollection();
         $this->roles          = new ArrayCollection();
     }
-    
+
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->username;
     }
-    
+
     /**
      * Get Roles implement Interface
      *
-     * @return Array 
-     */    
+     * @return Array
+     */
     public function getRoles()
     {
         $roles = array();
@@ -196,29 +198,29 @@ class Usuario implements AdvancedUserInterface, \Serializable
             foreach($this->getPerfil()->getRoles() as $rol)
             {
                 if ($rol->getIsActive())
-                    $roles[] = $rol->getName(); 
+                    $roles[] = $rol->getName();
             }
         }
-        
+
         //Agrega los roles asignados especificamente al usuario
         foreach($this->roles as $rol)
         {
-           $roles[] = $rol->getName(); 
-        }        
-        
+           $roles[] = $rol->getName();
+        }
+
         return $roles;
     }
-    
+
     /**
      * implement Interface
-     */    
+     */
     public function eraseCredentials()
     {
     }
-    
+
     /**
      * implement Interface
-     *  
+     *
      * @see \Serializable::serialize()
      */
     public function serialize()
@@ -232,10 +234,10 @@ class Usuario implements AdvancedUserInterface, \Serializable
             // $this->salt,
         ));
     }
-    
+
     /**
      * implement Interface
-     *     
+     *
      * @see \Serializable::unserialize()
     */
     public function unserialize($serialized)
@@ -249,56 +251,56 @@ class Usuario implements AdvancedUserInterface, \Serializable
             // $this->salt
         ) = unserialize($serialized);
     }
-    
+
     /**
      * implement Interface
-     */    
+     */
     public function isAccountNonExpired()
     {
         return true;
     }
-    
+
     /**
      * implement Interface
-     */     
+     */
     public function isAccountNonLocked()
     {
         return true;
     }
-    
+
     /**
      * implement Interface
-     */     
+     */
     public function isCredentialsNonExpired()
     {
         return true;
     }
-    
+
     /**
      * implement Interface
-     */     
+     */
     public function isEnabled()
     {
         return true;//$this->isActive;
-    }    
+    }
 
     /**
      * implement Interface
      *
-     */     
+     */
     public function getUsername()
     {
        return $this->username;
     }
-    
+
     /**
      * implement Interface
-     */     
+     */
     public function getSalt()
     {
         return $this->salt;
     }
-    
+
     /**
      * implement Interface
      *
@@ -379,10 +381,10 @@ class Usuario implements AdvancedUserInterface, \Serializable
         $actual = $this->getPasswordHistory();
         $actual[] = $datos;
         $this->passwordHistory = $actual;
-        
+
         return $this;
     }
-    
+
     /**
      * Get passwordHistory
      *
@@ -463,8 +465,8 @@ class Usuario implements AdvancedUserInterface, \Serializable
     public function getCheckData()
     {
         return $this->checkData;
-    }    
-    
+    }
+
     /**
      * Set createdAt
      *
@@ -701,7 +703,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return $this->getPersona()->getEmail();
     }
-    
+
     /**
      * is ValidEmail
      *
@@ -714,7 +716,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
         }
         return false;
     }
-    
+
     /**
      * get Avatar
      *
@@ -724,29 +726,29 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return $this->getPersona()->getAvatar();
     }
-    
+
     /**
      * get NombreCompleto
      *
-     */     
+     */
     public function getNombreCompleto()
     {
        return $this->persona->getNombreCompleto();
     }
-    
+
     public function clearPersona()
     {
         $this->persona->clearUsuario();
         $this->persona = NULL;
-        
+
         return $this;
     }
-    
+
     public function hasRole($role = '')
     {
         return in_array($role,$this->getRoles());
     }
-    
+
     public function mismoMunicipio(Usuario $user)
     {
         return $this->getPersona()->mismoMunicipio($user->getPersona());
@@ -809,7 +811,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return $this->cargo;
     }
-    
+
     /**
      * Get municipio
      *
@@ -818,5 +820,5 @@ class Usuario implements AdvancedUserInterface, \Serializable
     public function getMunicipio()
     {
         return $this->getPersona()->getMunicipio();
-    }    
+    }
 }

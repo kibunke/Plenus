@@ -8,7 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * InscripcionBundle\Entity\PlanillaEstado
- * @ORM\Table(name="PlanillaEstado")
+ * @ORM\Table(name="PlanillaEstado",indexes={
+ *                                      @ORM\Index(name="estado_nombre", columns={"nombre"}),
+ *                                      @ORM\Index(name="search_discr", columns={"discr"})}
+ *                )
  * @ORM\Entity(repositoryClass="InscripcionBundle\Entity\Repository\PlanillaEstadoRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
