@@ -164,7 +164,7 @@ class PlanillaEstadoController extends Controller
 
     private function canEdit($planilla, $back = false)
     {
-        if ($planilla->isAprobada() && !$this->isGranted('ROLE_ADMIN1')){
+        if ($planilla->isAprobada() && !$this->isGranted('ROLE_ADMIN')){
             return "Usted no tiene los permisos necesarios para DESAPROBAR una planilla.";
         }
         if ($planilla->isEditable($this->getUser())){
