@@ -21,15 +21,15 @@ class PlanillaRepository extends EntityRepository
                                         JOIN s.torneo t
                                         LEFT JOIN p.equipos e
                                         LEFT JOIN e.equipoCompetidores ec
-                                        LEFT JOIN ec.competidor c                                        
+                                        LEFT JOIN ec.competidor c
                                         LEFT JOIN c.genero sex
                                         GROUP BY t.id,sex.id")
                         ->getArrayResult();
-    }    
-    
+    }
+
     private $onlyPendientes = false;
     private $idEstados;
-    
+
     public function dataTable($request,$user,$auth_checker,$onlyPendientes)
     {
         //SELECT MAX(PlanillaEstado.id) FROM PlanillaEstado INNER JOIN Planilla ON (PlanillaEstado.planilla=Planilla.id) GROUP BY Planilla.id
@@ -41,7 +41,7 @@ class PlanillaRepository extends EntityRepository
                         ->getArrayResult());
         $estados[]=0;
         $this->idEstados = implode(",",$estados);
-        
+
         $this->onlyPendientes = $onlyPendientes;
         return array(
                       "total"    => $this->getTotalRows($user,$auth_checker),
@@ -49,7 +49,7 @@ class PlanillaRepository extends EntityRepository
                       "rows"     => $this->getRows($request,$user,$auth_checker),
             );
     }
-    
+
     public function getRows($request,$user,$auth_checker)
     {
         $columns = ["p.id",
@@ -68,7 +68,7 @@ class PlanillaRepository extends EntityRepository
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
-                
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT p
                                         FROM InscripcionBundle:Planilla p
@@ -90,7 +90,7 @@ class PlanillaRepository extends EntityRepository
                         ->setFirstResult($request->get('start'))
                         ->getResult();
     }
-    
+
     public function getFilteredRows($request,$user,$auth_checker)
     {
         $where = "( p.id LIKE ?1 OR
@@ -101,7 +101,7 @@ class PlanillaRepository extends EntityRepository
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
-                
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(p))
                                         FROM InscripcionBundle:Planilla p
@@ -119,7 +119,7 @@ class PlanillaRepository extends EntityRepository
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }
-    
+
     public function getTotalRows($user,$auth_checker)
     {
         $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
@@ -134,7 +134,75 @@ class PlanillaRepository extends EntityRepository
                                         WHERE $where")
                         ->getSingleScalarResult();
     }
-    
+
+
+    public function dataTableAccPendientes($request,$user,$auth_checker,$onlyPendientes)
+    {
+        //SELECT MAX(PlanillaEstado.id) FROM PlanillaEstado INNER JOIN Planilla ON (PlanillaEstado.planilla=Planilla.id) GROUP BY Planilla.id
+
+        $estados = array_map('current',$this->getEntityManager()
+                        ->createQuery(" SELECT MAX(e.id)
+                                        FROM InscripcionBundle:PlanillaEstado e
+                                        GROUP BY e.planilla")
+                        ->getArrayResult());
+        $estados[]=0;
+        $this->idEstados = implode(",",$estados);
+
+        $this->onlyPendientes = $onlyPendientes;
+        return array(
+                      "total"    => $this->getTotalAccPendientesRows($user,$auth_checker),
+                      "filtered" => $this->getFilteredAccPendientesRows($request,$user,$auth_checker),
+                      "rows"     => $this->getAccPendientesRows($request,$user,$auth_checker),
+            );
+    }
+
+    public function getAccPendientesRows($request,$user,$auth_checker)
+    {
+
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT p
+                                        FROM InscripcionBundle:Planilla p
+                                        JOIN p.municipio municipio
+                                        JOIN p.segmento s
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador
+                                        JOIN p.estados est
+                                        WHERE 1 = 1  ".$this->applyRoleFilter($user,$auth_checker)."
+                                        GROUP BY p ")
+                        ->setMaxResults($request->get('length'))
+                        ->setFirstResult($request->get('start'))
+                        ->getResult();
+    }
+
+    public function getFilteredAccPendientesRows($request,$user,$auth_checker)
+    {
+
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(DISTINCT(p))
+                                        FROM InscripcionBundle:Planilla p
+                                        JOIN p.municipio municipio
+                                        JOIN p.segmento s
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador
+                                        JOIN p.estados est
+                                        WHERE 1 = 1 ".$this->applyRoleFilter($user,$auth_checker))
+                        ->getSingleScalarResult();
+    }
+
+    public function getTotalAccPendientesRows($user,$auth_checker)
+    {
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(DISTINCT(p))
+                                        FROM InscripcionBundle:Planilla p
+                                        JOIN p.municipio municipio
+                                        JOIN p.segmento s
+                                        JOIN p.createdBy creador
+                                        LEFT JOIN s.coordinadores coordinador
+                                        JOIN p.estados est
+                                        WHERE 1 = 1 ".$this->applyRoleFilter($user,$auth_checker))
+                        ->getSingleScalarResult();
+    }
+
     private function applyRoleFilter($user,$auth_checker)
     {
         $where = " AND est.id IN (".$this->idEstados.")";
@@ -169,7 +237,7 @@ class PlanillaRepository extends EntityRepository
         }
         return $where;
     }
-    
+
     //public function findAllByEvento($evento)
     //{
     //    return $this->createQueryBuilder('i')
