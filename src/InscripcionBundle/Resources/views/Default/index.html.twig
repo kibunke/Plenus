@@ -64,8 +64,8 @@
                     <tr>
                         <th>#</th>
                         <th>Segmento</th>
-                        <th title="Planillas en el segmento"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
-                        <th title="Inscriptos en el segmento"><i class="fa fa-users" aria-hidden="true"></i></th>
+                        <!-- <th title="Planillas en el segmento"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
+                        <th title="Inscriptos en el segmento"><i class="fa fa-users" aria-hidden="true"></i></th> -->
                         <th class="hidden-sm hidden-xs">Parámetros</th>
                         <th style="width: 110px"></th>
                     </tr>
@@ -99,8 +99,8 @@
                     "columns": [
                         { "data": "id", "className": "text-center" },
                         { "data": "segmento" },
-                        { "data": "planillas", "className": "text-center" },
-                        { "data": "inscriptos", "className": "text-center" },
+                        //{ "data": "planillas", "className": "text-center" },
+                        //{ "data": "inscriptos", "className": "text-center" },
                         { "data": "parametros", "className": "hidden-sm hidden-xs" },
                         { "data": "actions" }
                     ],
@@ -112,10 +112,10 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [4,5]
+                            "targets": [2,3]
                         },
                         {
-                            "targets": 4,
+                            "targets": 2,
                             "searchable": false,
                             "orderable": false,
                             "render":   function ( data, type, full, meta ) {
