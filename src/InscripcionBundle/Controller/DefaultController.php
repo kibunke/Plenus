@@ -49,7 +49,7 @@ class DefaultController extends Controller
     public function listDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Segmento')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'));
+        $filter = $em->getRepository('InscripcionBundle:Segmento')->dataTableInscripcion($request->request,$this->getUser(),$this->get('security.authorization_checker'));
 
         $data = array(
                     "draw"            => $request->request->get('draw'),
@@ -59,15 +59,16 @@ class DefaultController extends Controller
         );
 
         foreach ($filter['rows'] as $segmento){
-            $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
-            $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
-            $planillas = $em->getRepository('InscripcionBundle:Segmento')->getTotalPlanillas($segmento,$this->getUser());
+            //$inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
+            //$inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
+            //$planillas = $em->getRepository('InscripcionBundle:Segmento')->getTotalPlanillas($segmento,$this->getUser());
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
-                "planillas"   => $planillas ? $planillas['cant'] : 0,
+                "planillas"   => 0 ,//$planillas ? $planillas['cant'] : 0,
                 //"coordinadores" => count($segmento->getPlanillas()),
-                "inscriptos"=> '<span class="text-danger" title="Planillas en cualquier estado / Planillas es estado Aprobadas">'.$inscriptos['total'].'</span> / <small class="text-success">'.$inscriptos['aprobadas'].'</small>',
+                //"inscriptos"=> '<span class="text-danger" title="Planillas en cualquier estado / Planillas es estado Aprobadas">'.$inscriptos['total'].'</span> / <small class="text-success">'.$inscriptos['aprobadas'].'</small>',
+                "inscriptos"=> '',
                 "parametros"=> array(
                     "max" => $segmento->getMaxIntegrantes(),
                     "min" => $segmento->getMinIntegrantes(),

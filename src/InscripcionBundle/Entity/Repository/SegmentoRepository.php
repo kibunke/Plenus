@@ -21,7 +21,7 @@ class SegmentoRepository extends EntityRepository
                       "actives"   => $this->getActives($user,$auth_checker)
             );
     }
-    
+
     public function getRows($request,$user,$auth_checker)
     {
         $columns = ["s.id",
@@ -31,7 +31,7 @@ class SegmentoRepository extends EntityRepository
                     ",m.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
                     "planillas",
-                    "inscriptos",                    
+                    "inscriptos",
                     "eventos",
                     "coordinadores"];
         $where = "( s.id LIKE ?1 OR
@@ -43,7 +43,7 @@ class SegmentoRepository extends EntityRepository
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)"
                     . $this->applyRoleFilter($user,$auth_checker);
-                    
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(DISTINCT(e)) AS HIDDEN eventos, COUNT(DISTINCT(u)) AS HIDDEN coordinadores, COUNT(DISTINCT(com)) as HIDDEN inscriptos, COUNT(DISTINCT(p)) as HIDDEN planillas
                                         FROM InscripcionBundle:Segmento s
@@ -66,7 +66,7 @@ class SegmentoRepository extends EntityRepository
                         ->setFirstResult($request->get('start'))
                         ->getResult();
     }
-    
+
     public function getFilteredRows($request,$user,$auth_checker)
     {
         $where = "( s.id LIKE ?1 OR
@@ -91,7 +91,7 @@ class SegmentoRepository extends EntityRepository
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }
-    
+
     public function getTotalRows($user,$auth_checker)
     {
         $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
@@ -106,7 +106,7 @@ class SegmentoRepository extends EntityRepository
     public function getActives($user,$auth_checker)
     {
         $where = "s.isActive = 1". $this->applyRoleFilter($user,$auth_checker);
-        
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(s))
                                         FROM InscripcionBundle:Segmento s
@@ -114,7 +114,7 @@ class SegmentoRepository extends EntityRepository
                                         WHERE $where")
                         ->getSingleScalarResult();
     }
-    
+
     public function getTotalInscriptos($segmento,$user)
     {
         $where = "s.id = ". $segmento->getId();
@@ -139,29 +139,29 @@ class SegmentoRepository extends EntityRepository
                                         LEFT JOIN eqc.competidor com
                                         JOIN p.municipio municipio
                                         JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador                                        
+                                        LEFT JOIN s.coordinadores coordinador
                                         WHERE $where
                                         GROUP BY s.id,e.nombre ")
                         ->getScalarResult();
     }
-    
-    
+
+
     public function getTotalPlanillas($segmento,$user)
     {
         $where = "s.id = ". $segmento->getId(). $this->applyRoleAndPlanillaFilter($user);
-        
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(p)) as cant
                                         FROM InscripcionBundle:Segmento s
                                         LEFT JOIN s.planillas p
                                         JOIN p.municipio municipio
                                         JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador                                        
+                                        LEFT JOIN s.coordinadores coordinador
                                         WHERE $where
                                         GROUP BY s.id")
                         ->getOneOrNullResult();
     }
-    
+
     private function applyRoleFilter($user,$auth_checker)
     {
         $where = '';
@@ -174,7 +174,67 @@ class SegmentoRepository extends EntityRepository
         }
         return $where;
     }
-    
+
+
+    public function dataTableInscripcion($request,$user,$auth_checker)
+    {
+        return array(
+                      "total"    => $this->getTotalInscripcionRows($user,$auth_checker),
+                      "filtered" => $this->getFilteredInscripcionRows($request,$user,$auth_checker),
+                      "rows"     => $this->getInscripcionRows($request,$user,$auth_checker),
+                      "actives"   => $this->getActives($user,$auth_checker)
+            );
+    }
+
+    public function getInscripcionRows($request,$user,$auth_checker)
+    {
+        $columns = ["s.id",
+                    "d.nombreRecursivo ".$request->get('order')[0]['dir'].
+                    ",s.nombre ",
+                    "",
+                    "",
+                    "",
+                    ""];
+        $where = "( s.id LIKE ?1 OR
+                    s.nombre LIKE ?1 OR
+                    d.nombre LIKE ?1 OR
+                    d.nombreRecursivo LIKE ?1)";
+
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT s
+                                        FROM InscripcionBundle:Segmento s
+                                        JOIN s.disciplina d
+                                        WHERE $where
+                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->setMaxResults($request->get('length'))
+                        ->setFirstResult($request->get('start'))
+                        ->getResult();
+    }
+
+    public function getFilteredInscripcionRows($request,$user,$auth_checker)
+    {
+        $where = "( s.id LIKE ?1 OR
+                    s.nombre LIKE ?1 OR
+                    d.nombre LIKE ?1 OR
+                    d.nombreRecursivo LIKE ?1)";
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(s)
+                                        FROM InscripcionBundle:Segmento s
+                                        JOIN s.disciplina d
+                                        WHERE $where")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->getSingleScalarResult();
+    }
+
+    public function getTotalInscripcionRows($user,$auth_checker)
+    {
+        return $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(DISTINCT(s))
+                                        FROM InscripcionBundle:Segmento s")
+                        ->getSingleScalarResult();
+    }
+
     private function applyRoleAndPlanillaFilter($user)
     {
         $where = '';
