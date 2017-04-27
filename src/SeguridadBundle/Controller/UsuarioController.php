@@ -400,6 +400,8 @@ class UsuarioController extends Controller
             $em->remove($log);
         }
         
+        $user->deleteSelfModified();
+        
         try{
             $em->flush();        
             $em->remove($user);            

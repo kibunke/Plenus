@@ -821,4 +821,12 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return $this->getPersona()->getMunicipio();
     }
+    
+    public function deleteSelfModified()
+    {
+        if($this->updatedBy and $this->updatedBy->getId() == $this->id)
+        {
+            $this->updatedBy = NULL;
+        }
+    }
 }
