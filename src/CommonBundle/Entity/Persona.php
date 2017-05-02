@@ -15,6 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },indexes={
  *                  @ORM\Index(name="search_nombre", columns={"nombre"}),
  *                  @ORM\Index(name="search_apellido", columns={"apellido"})
+ *                  @ORM\Index(name="search_apellido_nombre", columns={"apellido","nombre"})
+ *                  @ORM\Index(name="search_dni", columns={"dni"})
  *      }
  * )
  * @ORM\Entity

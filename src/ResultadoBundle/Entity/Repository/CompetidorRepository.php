@@ -21,14 +21,14 @@ class CompetidorRepository extends EntityRepository
                         "rows"     => $this->getRows($request)
                     );
     }
-    
+
     public function getRows($request)
     {
         $columns = ["c.id",
                     "c.apellido ".$request->get('order')[0]['dir'].",c.nombre" ,
                     "c.dni",
                     "m.nombre","","","actions"];
-            
+
         return $this->getEntityManager()
                     ->createQuery(" SELECT c
                                     FROM ResultadoBundle:Competidor c
@@ -40,28 +40,28 @@ class CompetidorRepository extends EntityRepository
                     ->setFirstResult($request->get('start'))
                     ->getResult();
     }
-    
+
     public function getFilteredRows($request)
     {
         return $this->getEntityManager()
-                    ->createQuery(" SELECT COUNT(DISTINCT(c))
+                    ->createQuery(" SELECT COUNT(c)
                                     FROM ResultadoBundle:Competidor c
                                     JOIN c.municipio m
                                     WHERE (c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1)")
                     ->setParameter(1,'%'.$request->get('search')['value'].'%')
                     ->getSingleScalarResult();
     }
-    
-    
+
+
     public function getTotalRows()
     {
         return $this->getEntityManager()
-                    ->createQuery("SELECT COUNT(DISTINCT(c))
+                    ->createQuery("SELECT COUNT(c)
                                     FROM ResultadoBundle:Competidor c
                                     JOIN c.municipio m")
                     ->getSingleScalarResult();
     }
-    
+
     public function getParticipanteSospechosos()
     {
         return $this->getEntityManager()
@@ -75,19 +75,19 @@ class CompetidorRepository extends EntityRepository
                         ->getResult();
         ;
     }
-    
+
     public function getCompetidorByDni($competidor)
     {
         return $this->getEntityManager()
                         ->createQuery(' SELECT p
-                                        FROM ResultadoBundle:Competidor p 
+                                        FROM ResultadoBundle:Competidor p
                                         WHERE p.documentoNro = ?1 AND p.id <> ?2')
                         ->setParameter(1,$competidor->getDocumentoNro())
                         ->setParameter(2,$competidor->getId()?$competidor->getId():0)
                         ->getoneornullresult();
         ;
     }
-    
+
     public function getNombresDpl()
     {
         return $this->getEntityManager()
@@ -102,7 +102,7 @@ class CompetidorRepository extends EntityRepository
                         ->getResult();
         ;
     }
-    
+
     public function getDniMay99M()
     {
         return $this->getEntityManager()
@@ -114,7 +114,7 @@ class CompetidorRepository extends EntityRepository
                         ->getResult();
         ;
     }
-    
+
     public function getDniMen1M()
     {
         return $this->getEntityManager()
@@ -124,6 +124,6 @@ class CompetidorRepository extends EntityRepository
                                         ORDER BY p.apellido,p.nombre'
                                     )
                         ->getResult();
-        ;        
+        ;
     }
 }
