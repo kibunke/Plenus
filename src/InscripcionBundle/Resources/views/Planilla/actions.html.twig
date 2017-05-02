@@ -11,7 +11,7 @@
     {% endif %}
     {% for estado in entity.getEstado().getProximosEstados(app.user) %}
         <button onclick="$.Default.changeStateConfirm('{{ path(estado.getRoute, { 'id': entity.id }) }}')" title="{{ estado.getTitleBefore() }}" class="btn btn-xs btn-{{estado.getClassButton()}}"><i class="fa fa-{{ estado.getIcon() }}"></i></button>
-    {% endfor %}  
+    {% endfor %}
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">
     <div class="btn-group">

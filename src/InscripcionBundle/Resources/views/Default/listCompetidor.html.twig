@@ -66,8 +66,8 @@
                         <th>Nombre</th>
                         <th>DNI</th>
                         <th>Municipio</th>
-                        <th title="Planillas en las que aparece"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
-                        <th title="Segmentos en los que aparece"><i class="fa fa-users" aria-hidden="true"></i></th>
+                        <!-- <th title="Planillas en las que aparece"><i class="fa fa-file-powerpoint-o" aria-hidden="true"></i></th>
+                        <th title="Segmentos en los que aparece"><i class="fa fa-users" aria-hidden="true"></i></th> -->
                         <th title="Auditoria">Auditoría</th>
                         <th style="width: 110px"></th>
                     </tr>
@@ -83,7 +83,8 @@
         (function ($) {
             /* var instituciones=; */
             // no se sobreescribe el namespace, si ya existe
-            var _table;
+            var _table,
+                _pathShow = "{{ path('competidor_show')}}";
             $.Default = $.Default || {};
             $.Default.init = function() {
                 _table = $('#competidorTable').dataTable( {
@@ -102,8 +103,8 @@
                         { "data": "name" },
                         { "data": "dni" },
                         { "data": "municipio" },
-                        { "data": "planillas", "className": "text-center" },
-                        { "data": "segmentos", "className": "text-center" },
+                        //{ "data": "planillas", "className": "text-center" },
+                        //{ "data": "segmentos", "className": "text-center" },
                         { "data": "auditoria" },
                         { "data": "actions" }
                     ],
@@ -115,51 +116,53 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [4,5,6,7]
-                        },{
+                            "targets": [4,5]
+                        },
+                        // {
+                        //     "targets": 4,
+                        //     "data": false,
+                        //     "render":   function ( data, type, full, meta ) {
+                        //                     let aux="";
+                        //                     $.map(data.data, function(ele){
+                        //                         console.log(ele);
+                        //                         aux = aux + '<li style=\'list-style:none\'><b>'+ele.numero+'</b> '+ele.municipio+'</li>';
+                        //                     })
+                        //
+                        //                     return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
+                        //                                 '<i class="fa fa-file-o fa-stack-lg"></i>'+
+                        //                                 '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
+                        //                             '</span>';
+                        //
+                        //                     //return type === 'display' ?
+                        //                     //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
+                        //                     //        '<span class="glyphicon glyphicon-info-sign"></span>'+
+                        //                     //    '</button>':
+                        //                     //    '<span class="sr-only">0</span>';
+                        //                 }
+                        // },{
+                        //     "targets": 5,
+                        //     "data": false,
+                        //     "render":   function ( data, type, full, meta ) {
+                        //                     let aux="";
+                        //                     $.map(data.data, function(ele){
+                        //                         console.log(ele);
+                        //                         aux = aux + '<li style=\'list-style:none\'><b>'+ele.id+'</b> '+ele.nombre+'</li>';
+                        //                     })
+                        //
+                        //                     return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
+                        //                                 '<i class="fa fa-file-o fa-stack-lg"></i>'+
+                        //                                 '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
+                        //                             '</span>';
+                        //
+                        //                     //return type === 'display' ?
+                        //                     //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
+                        //                     //        '<span class="glyphicon glyphicon-info-sign"></span>'+
+                        //                     //    '</button>':
+                        //                     //    '<span class="sr-only">0</span>';
+                        //                 }
+                        // },
+                        {
                             "targets": 4,
-                            "data": false,
-                            "render":   function ( data, type, full, meta ) {
-                                            let aux="";
-                                            $.map(data.data, function(ele){
-                                                console.log(ele);
-                                                aux = aux + '<li style=\'list-style:none\'><b>'+ele.numero+'</b> '+ele.municipio+'</li>';
-                                            })
-
-                                            return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
-                                                        '<i class="fa fa-file-o fa-stack-lg"></i>'+
-                                                        '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
-                                                    '</span>';
-
-                                            //return type === 'display' ?
-                                            //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
-                                            //        '<span class="glyphicon glyphicon-info-sign"></span>'+
-                                            //    '</button>':
-                                            //    '<span class="sr-only">0</span>';
-                                        }
-                        },{
-                            "targets": 5,
-                            "data": false,
-                            "render":   function ( data, type, full, meta ) {
-                                            let aux="";
-                                            $.map(data.data, function(ele){
-                                                console.log(ele);
-                                                aux = aux + '<li style=\'list-style:none\'><b>'+ele.id+'</b> '+ele.nombre+'</li>';
-                                            })
-
-                                            return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
-                                                        '<i class="fa fa-file-o fa-stack-lg"></i>'+
-                                                        '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
-                                                    '</span>';
-
-                                            //return type === 'display' ?
-                                            //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
-                                            //        '<span class="glyphicon glyphicon-info-sign"></span>'+
-                                            //    '</button>':
-                                            //    '<span class="sr-only">0</span>';
-                                        }
-                        },{
-                            "targets": 6,
                             "searchable": false,
                             "orderable": false,
                             "render":   function ( data, type, full, meta ) {
@@ -185,9 +188,11 @@
                 });
             }
             //$.Default.planilla = {},
-            //$.Default.reloadTable = function(){
-            //    _table.fnDraw(true);
-            //}
+            $.Default.show = function(id){
+                $.Main.openModal(_pathShow.replace("__00__",id),"Competidor: " + id, function(){
+                    }
+                );
+            }
         })(jQuery);
         $(document).ready(function(){$.Default.init();});
     </script>

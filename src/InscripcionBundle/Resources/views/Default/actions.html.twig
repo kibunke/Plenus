@@ -1,0 +1,22 @@
+<div class="visible-md visible-lg hidden-sm hidden-xs">
+    <button onclick="$.Default.show('{{entity.id}}')" class="btn btn-xs btn-light-azure"><i class="fa fa-eye"></i></button>
+</div>
+<div class="visible-xs visible-sm hidden-md hidden-lg">
+    <div class="btn-group">
+        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </a>
+        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+    {#        <li>
+                <a disabled role="menuitem" tabindex="-1" href="{{ path('segmento_show', { 'id': entity.id }) }}">
+                    <i class="fa fa-eye"></i> Ver
+                </a>
+            </li>
+            <li>
+                <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Segmento.editModal('{{ path('segmento_edit', { 'id': entity.id }) }}')">
+                    <i class="fa fa-edit"></i> Editar
+                </a>
+            </li>#}
+        </ul>
+    </div>
+</div>

@@ -37173,6 +37173,14 @@ $.fn.editableTableWidget.defaultOptions = {
         });
         $('#panel-config').modal();
     },
+    $.Main.openModal = function(url,title){
+        $('#okButton').button('reset');
+        $('#panel-config .modal-footer').hide();
+        $('#panel-config .modal-title').html(title);
+        $('#panel-config .modal-body').html("");
+        $('#panel-config .modal-body').load(url);
+        $('#panel-config').modal();
+    },
     $.Main.closeFormModal = function(){
         $('#panel-config').modal('hide');
     },
@@ -37193,9 +37201,8 @@ $.fn.editableTableWidget.defaultOptions = {
 
 jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay = function ( oSettings, iDelay ) {
    var _that = this;
-console.log(1)
    if ( iDelay === undefined ) {
-       iDelay = 500;
+       iDelay = 1000;
    }
 
    this.each( function ( i ) {

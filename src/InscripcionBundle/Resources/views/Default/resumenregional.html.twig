@@ -1,0 +1,260 @@
+{% extends app.request.isXmlHttpRequest()
+            ? 'CommonBundle::layout.ajax.html.twig'
+            : 'CommonBundle::layout.html.twig'
+%}
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Resumen Regionales <small>.</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                    <li class="dropdown">
+                        <a  href="{{ path('inscripcion')}}" >
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        {{ icon('home') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('inscripcion') }}">
+                        Inscripción
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('inscripcion') }}">
+                        Consultas
+                    </a>
+                </li>                
+                <li class="active">
+                    Resumen Regionales
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Arbol de Filtros <span class="text-bold">por defecto se aplica sobre todos sus eventos</span></h4>
+                </div>
+                <div class="panel-body">
+                    <div id="tree" class="tree-demo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="reloadTable" class="col-md-12">
+            {{ include ('InscripcionBundle:Inscripto:resumenregional.table.html.twig') }}
+        </div>            
+    </div>
+{% endblock %}
+
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
+{% endblock %}
+{% block otherJavascripts %}
+    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>        
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var table;
+            var totales=[];
+            $.Default = $.Default || {};
+            $.Default.init = function() {
+                $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+                $.Default.initTable();
+                // panel refresh
+                $('body').on('click', '.panel-refresh', function(e) {;
+                    var el = $(this).parents(".panel");
+                    el.block({
+                        overlayCSS: { backgroundColor: '#fff' },
+                        message: '<i class="fa fa-spinner fa-spin"></i>',
+                        css: { border: 'none', color: '#333', background: 'none' }
+                    });
+                    $('#blockContenidoContent').load('{{ path('consulta_analitico_inscripcion') }}',function(){
+                        el.unblock();
+                        $.Default.initTable();
+                    });
+                    e.preventDefault();
+                });
+                
+                $("#tree").on('ready.jstree', function (e, data) {
+                    $('#tree').jstree("deselect_all");
+                    $('#tree').jstree('close_all').on('changed.jstree', function (e, data) {
+                        var str=[];
+                        for(i = 0, j = data.selected.length; i < j; i++) {
+                            id = data.instance.get_node(data.selected[i]).id;
+                            if (id.indexOf("ev-") >= 0) {
+                                id=id.split('-');
+                                str.push(id[1]);
+                            }
+                        };
+                        var el = $('#analiticalTable').parents(".panel");
+                        el.block({
+                            overlayCSS: { backgroundColor: '#fff' },
+                            message: '<i class="fa fa-spinner fa-spin"></i>',
+                            css: { border: 'none', color: '#333', background: 'none' }
+                        });
+                        $.post( '{{ path('consulta_resumenregional_inscripcion') }}', {'eventos':str}, function(data){
+                            $('#reloadTable').html(data);
+                            el.unblock();
+                            $.Default.initTable();
+                            $.TableExport.init();
+                        });
+                    });
+                }).jstree({
+                    "core" : {
+                        "themes" : {
+                            "responsive" : false
+                        },
+                        // so that create works
+                        "check_callback" : true,
+                        'data' : {{ tree | raw }},
+                    },
+                    "types" : {
+                        "default" : {
+                            "icon" : "fa fa-folder text-red fa-lg"
+                        },
+                        "file" : {
+                            "icon" : "fa fa-file text-red fa-lg"
+                        }
+                    },
+                    "checkbox" : {
+                          "keep_selected_style" : false
+                        },                    
+                    "plugins" : ["checkbox", "types"]
+                });                
+            }
+            $.Default.initTable = function() {
+                totales=[];
+                for (i = 0; i < $('#analiticalTable').data('numcolums'); i++) {totales.push(0);}
+                table=$('#analiticalTable').dataTable( {
+                    "language": {
+                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                    },
+                    "columnDefs": [ {
+                                    "searchable": false,
+                                    "orderable": false,
+                                    "targets": 'no-search'
+                                }],
+                    "order": [[ 0, 'asc' ]],
+                    "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                        for (i = 0; i <  $('#analiticalTable').data('numcolums'); i++) {
+                            //alert(i+"-"+totales);
+                            totales[i]=totales[i]+parseInt($('td:eq('+(i+3)+')', nRow).attr('title'));
+                        }
+                    },
+                    "fnDrawCallback": function(){
+                        $tfoot=$('#analiticalTable tfoot');
+                        for (i = 0; i <  $('#analiticalTable').data('numcolums'); i++) {
+                            $tfoot.find("td:eq("+(i+1)+")").html(totales[i]);
+                        }
+                        totales=[];
+                        for (i = 0; i <  $('#analiticalTable').data('numcolums'); i++) {
+                            totales.push(0);
+                        }
+                    },
+                    "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]],
+                    "iDisplayLength" : 25
+                });                
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();$.TableExport.init()});
+        
+        (function ($) {
+            var exportTable = "#analiticalTable";
+            var ignoreColumn;
+            // no se sobreescribe el namespace, si ya existe
+            $.TableExport = $.TableExport || {};
+            $.TableExport.init = function() {
+				$(".export-excel").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'excel',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-doc").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'doc',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-csv").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'csv',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-txt").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'txt',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-sql").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'sql',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-json").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'json',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});                
+            }
+        })(jQuery);
+    </script>
+{% endblock %}

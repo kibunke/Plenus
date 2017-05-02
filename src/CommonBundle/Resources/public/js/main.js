@@ -22,6 +22,14 @@
         });
         $('#panel-config').modal();
     },
+    $.Main.openModal = function(url,title){
+        $('#okButton').button('reset');
+        $('#panel-config .modal-footer').hide();
+        $('#panel-config .modal-title').html(title);
+        $('#panel-config .modal-body').html("");
+        $('#panel-config .modal-body').load(url);
+        $('#panel-config').modal();
+    },
     $.Main.closeFormModal = function(){
         $('#panel-config').modal('hide');
     },

@@ -220,26 +220,30 @@
 										Consultas <i class="icon-arrow"></i>
 									</a>
 									<ul class="sub-menu">
-										<li>
-											<a href="{#{ path('consulta_analitico_inscripcion') }#}">
-												<i class="fa fa-play"></i>
-												Analítico
-											</a>
-										</li>
+										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_ANALITICO') %}
+											<li>
+												<a href="{{ path('consulta_analitico_inscripcion') }}">
+													<i class="fa fa-play"></i>
+													Analítico
+												</a>
+											</li>
+										{% endif %}
 										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_REGIONAL') %}
 											<li>
-												<a href="{#{ path('consulta_resumenregional_inscripcion') }#}">
+												<a href="{{ path('consulta_resumenregional_inscripcion') }}">
 													<i class="fa fa-play"></i>
 													Resumen regionales
 												</a>
 											</li>
 										{% endif %}
-										<li>
-											<a href="{#{ path('inscripcion_mapa') }#}">
-												<i class="fa fa-play"></i>
-												Mapa
-											</a>
-										</li>
+										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_MAPA') %}
+											<li>
+												<a href="{{ path('inscripcion_mapa') }}">
+													<i class="fa fa-play"></i>
+													Mapa
+												</a>
+											</li>
+										{% endif %}
 									</ul>
 								</li>
 							{% endif %}

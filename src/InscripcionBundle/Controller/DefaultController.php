@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+use ResultadoBundle\Entity\Competidor;
 /**
  * Default controller.
  *
@@ -27,19 +28,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        //$em = $this->getDoctrine()->getManager();
-        //
-        //$eventos = $em->getRepository('ResultadoBundle:Evento')->getAllByUserAndInscribe($this->get('security.context'));
-        //$instituciones = $em->getRepository('InscripcionBundle:Origen')->findAllOrderedByMunicipio();
-        //$arrInst=[];
-        //foreach($instituciones as $i){
-        //    //asi si filtro tambien por tipo
-        //    $arrInst[$i->getMunicipio()->getId()][$i->getClass()][]=$i->getNombre();
-        //}
-        return array(
-            //'eventos' => $eventos,
-            //'instituciones' => json_encode($arrInst)
-        );
+        return array();
     }
 
     /**
@@ -59,15 +48,10 @@ class DefaultController extends Controller
         );
 
         foreach ($filter['rows'] as $segmento){
-            //$inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
-            //$inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
-            //$planillas = $em->getRepository('InscripcionBundle:Segmento')->getTotalPlanillas($segmento,$this->getUser());
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
                 "planillas"   => 0 ,//$planillas ? $planillas['cant'] : 0,
-                //"coordinadores" => count($segmento->getPlanillas()),
-                //"inscriptos"=> '<span class="text-danger" title="Planillas en cualquier estado / Planillas es estado Aprobadas">'.$inscriptos['total'].'</span> / <small class="text-success">'.$inscriptos['aprobadas'].'</small>',
                 "inscriptos"=> '',
                 "parametros"=> array(
                     "max" => $segmento->getMaxIntegrantes(),
@@ -109,36 +93,60 @@ class DefaultController extends Controller
         );
 
         foreach ($filter['rows'] as $competidor){
-            $planillas = array("total" => 0, "data"=>[]);
-            $municipio = "";
-            foreach ($competidor->getPlanillas() as $planilla){
-                $planillas['total'] ++;
-                $planillas['data'][] = $planilla->toArray();
-                $municipio = $planilla->getMunicipio()->getNombre();
-            }
-            $segmentos = array("total" => 0, "data"=>[]);
-            foreach ($competidor->getSegmentos() as $segmento){
-                $segmentos['total'] ++;
-                $segmentos['data'][] = $segmento->toArray();
-            }
+            // $planillas = array("total" => 0, "data"=>[]);
+            // $municipio = "";
+            // foreach ($competidor->getPlanillas() as $planilla){
+            //     $planillas['total'] ++;
+            //     $planillas['data'][] = $planilla->toArray();
+            //     $municipio = $planilla->getMunicipio()->getNombre();
+            // }
+            // $segmentos = array("total" => 0, "data"=>[]);
+            // foreach ($competidor->getSegmentos() as $segmento){
+            //     $segmentos['total'] ++;
+            //     $segmentos['data'][] = $segmento->toArray();
+            // }
+
             $data['data'][] = array(
                                     "id"        => $competidor->getId(),
                                     "name"      => $competidor->getNombreCompleto(),
                                     "dni"       => $competidor->getDni(),
                                     "municipio" => $competidor->getMunicipio()->getNombre(),
-                                    "planillas" => $planillas,
-                                    "segmentos" => $segmentos,
+                                    //"planillas" => $planillas,
+                                    //"segmentos" => $segmentos,
                                     "auditoria" => array(
                                                         "createdBy" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getNombreCompleto() : '-',
-                                                        "municipio" => $municipio,
+                                                        "municipio" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getMunicipio()->getNombre() : '-',
                                                         "createdAt" => $competidor->getCreatedAt()->format('d/m/y H:i')
                                                     ),
-                                    "actions"   => ""//$this->renderView('SeguridadBundle:Usuario:actions.personas.sin.user.html.twig', array('entity' => $persona))
-                                   );
+                                    "actions"   => $this->renderView('InscripcionBundle:Default:actions.html.twig', array('entity' => $competidor))
+                                );
         }
 
         return new JsonResponse($data);
     }
+
+    /**
+     * @Route("/competidor/{competidor}/show", name="competidor_show", condition="request.isXmlHttpRequest()", defaults={"competidor":"__00__"})
+     * @Template("InscripcionBundle:Default:competidor.show.html.twig")
+
+     */
+    public function showCompetidorAction(Request $request, Competidor $competidor)
+    {
+        $planillas = array("total" => 0, "data"=>[]);
+        $municipio = "";
+        foreach ($competidor->getPlanillas() as $planilla){
+            $planillas['total'] ++;
+            $planillas['data'][] = $planilla->toArray();
+            $municipio = $planilla->getMunicipio()->getNombre();
+        }
+        $segmentos = array("total" => 0, "data"=>[]);
+        foreach ($competidor->getSegmentos() as $segmento){
+            $segmentos['total'] ++;
+            $segmentos['data'][] = $segmento->toArray();
+        }
+        return array('entity'=> $competidor);
+    }
+
     /**
      * @Route("/mapa", name="inscripcion_mapa")
      * @Method({"GET","POST"})
@@ -165,10 +173,10 @@ class DefaultController extends Controller
      * @Route("/consulta/resumenregional", name="consulta_resumenregional_inscripcion")
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_REGIONAL')")
-     * @Template()
+     * @Template("InscripcionBundle:De")
      */
     public function consultaResumenRegionalAction(Request $request)
     {
-
+        return array();
     }
 }

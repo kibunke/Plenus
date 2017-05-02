@@ -30,19 +30,9 @@ class PlanillaRepository extends EntityRepository
     private $onlyPendientes = false;
     private $idEstados;
 
-    public function dataTable($request,$user,$auth_checker,$onlyPendientes)
+    public function dataTable($request,$user,$auth_checker)
     {
-        //SELECT MAX(PlanillaEstado.id) FROM PlanillaEstado INNER JOIN Planilla ON (PlanillaEstado.planilla=Planilla.id) GROUP BY Planilla.id
-
-        $estados = array_map('current',$this->getEntityManager()
-                        ->createQuery(" SELECT MAX(e.id)
-                                        FROM InscripcionBundle:PlanillaEstado e
-                                        GROUP BY e.planilla")
-                        ->getArrayResult());
-        $estados[]=0;
-        $this->idEstados = implode(",",$estados);
-
-        $this->onlyPendientes = $onlyPendientes;
+        $this->onlyPendientes = false;
         return array(
                       "total"    => $this->getTotalRows($user,$auth_checker),
                       "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
@@ -53,21 +43,13 @@ class PlanillaRepository extends EntityRepository
     public function getRows($request,$user,$auth_checker)
     {
         $columns = ["p.id",
-                    "t.nombre ".$request->get('order')[0]['dir'].
-                    ",d.nombre ".$request->get('order')[0]['dir'].
-                    ",c.nombre ".$request->get('order')[0]['dir'].
-                    ",g.nombre ".$request->get('order')[0]['dir'].
-                    ",m.nombre ".$request->get('order')[0]['dir'].
+                    "d.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
                     ""];
         $where = "( p.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
-                    d.nombre LIKE ?1 OR
-                    t.nombre LIKE ?1 OR
-                    g.nombre LIKE ?1 OR
-                    c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
+                    d.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
 
         return $this->getEntityManager()
                         ->createQuery(" SELECT p
@@ -77,11 +59,6 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador
                                         JOIN s.disciplina d
-                                        JOIN s.torneo t
-                                        JOIN s.categoria c
-                                        JOIN s.modalidad m
-                                        JOIN s.genero g
-                                        JOIN p.estados est
                                         WHERE $where
                                         GROUP BY p
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
@@ -96,11 +73,7 @@ class PlanillaRepository extends EntityRepository
         $where = "( p.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
-                    d.nombre LIKE ?1 OR
-                    t.nombre LIKE ?1 OR
-                    g.nombre LIKE ?1 OR
-                    c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
+                    d.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
 
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(p))
@@ -110,11 +83,6 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador
                                         JOIN s.disciplina d
-                                        JOIN s.torneo t
-                                        JOIN s.categoria c
-                                        JOIN s.modalidad m
-                                        JOIN s.genero g
-                                        JOIN p.estados est
                                         WHERE $where ")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
@@ -130,16 +98,13 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.segmento s
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador
-                                        JOIN p.estados est
                                         WHERE $where")
                         ->getSingleScalarResult();
     }
 
 
-    public function dataTableAccPendientes($request,$user,$auth_checker,$onlyPendientes)
+    public function dataTableAccPendientes($request,$user,$auth_checker)
     {
-        //SELECT MAX(PlanillaEstado.id) FROM PlanillaEstado INNER JOIN Planilla ON (PlanillaEstado.planilla=Planilla.id) GROUP BY Planilla.id
-
         $estados = array_map('current',$this->getEntityManager()
                         ->createQuery(" SELECT MAX(e.id)
                                         FROM InscripcionBundle:PlanillaEstado e
@@ -148,7 +113,7 @@ class PlanillaRepository extends EntityRepository
         $estados[]=0;
         $this->idEstados = implode(",",$estados);
 
-        $this->onlyPendientes = $onlyPendientes;
+        $this->onlyPendientes = true;
         return array(
                       "total"    => $this->getTotalAccPendientesRows($user,$auth_checker),
                       "filtered" => $this->getFilteredAccPendientesRows($request,$user,$auth_checker),
@@ -205,7 +170,10 @@ class PlanillaRepository extends EntityRepository
 
     private function applyRoleFilter($user,$auth_checker)
     {
-        $where = " AND est.id IN (".$this->idEstados.")";
+        $where = "";
+        if ($this->onlyPendientes){
+            $where = " AND est.id IN (".$this->idEstados.")";
+        }
         if(!$auth_checker->isGranted('ROLE_ADMIN')){
             if($auth_checker->isGranted('ROLE_COORDINADOR')){
                 //COORDINADORES ven todas las planillas de sus Segmentos

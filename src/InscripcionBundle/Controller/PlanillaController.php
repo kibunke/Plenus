@@ -118,7 +118,7 @@ class PlanillaController extends Controller
     public function misPlanillasListDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'),false);
+        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'));
 
         $data = array(
                     "draw"            => $request->request->get('draw'),
@@ -158,7 +158,7 @@ class PlanillaController extends Controller
     public function misPendientesListDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatableAccPendientes($request->request,$this->getUser(),$this->get('security.authorization_checker'),true);
+        $filter = $em->getRepository('InscripcionBundle:Planilla')->datatableAccPendientes($request->request,$this->getUser(),$this->get('security.authorization_checker'));
 
         $data = array(
                     "draw"            => $request->request->get('draw'),
