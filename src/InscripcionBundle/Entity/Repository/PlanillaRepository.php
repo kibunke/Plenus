@@ -123,7 +123,9 @@ class PlanillaRepository extends EntityRepository
 
     public function getAccPendientesRows($request,$user,$auth_checker)
     {
-
+        $where = "( p.id LIKE ?1 OR
+                    s.nombre LIKE ?1 OR
+                    municipio.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
                         ->createQuery(" SELECT p
                                         FROM InscripcionBundle:Planilla p
@@ -132,8 +134,9 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador
                                         JOIN p.estados est
-                                        WHERE 1 = 1  ".$this->applyRoleFilter($user,$auth_checker)."
+                                        WHERE $where
                                         GROUP BY p ")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
                         ->setFirstResult($request->get('start'))
                         ->getResult();
@@ -141,7 +144,9 @@ class PlanillaRepository extends EntityRepository
 
     public function getFilteredAccPendientesRows($request,$user,$auth_checker)
     {
-
+        $where = "( p.id LIKE ?1 OR
+                    s.nombre LIKE ?1 OR
+                    municipio.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(p))
                                         FROM InscripcionBundle:Planilla p
@@ -150,7 +155,8 @@ class PlanillaRepository extends EntityRepository
                                         JOIN p.createdBy creador
                                         LEFT JOIN s.coordinadores coordinador
                                         JOIN p.estados est
-                                        WHERE 1 = 1 ".$this->applyRoleFilter($user,$auth_checker))
+                                        WHERE $where ")
+                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }
 
