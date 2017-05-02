@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @ORM\UniqueConstraint(  name="unique_email", columns={"email"})
  *      },indexes={
  *                  @ORM\Index(name="search_nombre", columns={"nombre"}),
- *                  @ORM\Index(name="search_apellido", columns={"apellido"})
- *                  @ORM\Index(name="search_apellido_nombre", columns={"apellido","nombre"})
+ *                  @ORM\Index(name="search_apellido", columns={"apellido"}),
+ *                  @ORM\Index(name="search_apellido_nombre", columns={"apellido","nombre"}),
  *                  @ORM\Index(name="search_dni", columns={"dni"})
  *      }
  * )
