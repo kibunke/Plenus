@@ -268,7 +268,7 @@ class SegmentoRepository extends EntityRepository
             WHERE 1 = 1";
 
         if ($security && !$security->isGranted('ROLE_DIRECTOR')){
-            $q = $this->getEntityManager()->createQuery($q." AND ?1 MEMBER OF e.coordinadores ORDER BY t.id,d.id,s.id")
+            $q = $this->getEntityManager()->createQuery($q." AND ?1 MEMBER OF s.coordinadores ORDER BY t.id,d.id,s.id")
                         ->setParameter(1, $security->getToken()->getUser()->getId());
         }else{
             $q = $this->getEntityManager()->createQuery($q." ORDER BY t.id,d.id,s.id");

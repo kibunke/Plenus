@@ -177,7 +177,7 @@ class PlanillaEstadoController extends Controller
                 return "Esta planilla no pertenece a su municipio.";
         }
 
-        if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO') || $back){
+        if ($this->isGranted('ROLE_INSCRIPCION_FUERA_TERMINO_ESTADO') || $back){
             return true;
         }elseif ($planilla->getSegmento()->getIsActive()){
             return true;
