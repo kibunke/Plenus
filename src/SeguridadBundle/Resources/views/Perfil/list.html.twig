@@ -166,14 +166,14 @@
                                         resultado = '';
                                         if(row.id > 0)
                                         {
-                                            resultado += '<a href='+ url_edit + ' title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
+                                            resultado += '<a class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar" href='+ url_edit + ' title="Editar"><i class="fa fa-edit fa-lg"></i></a> ';
                                         }
                                         
                                         url_delete  = "'" + _path_delete_perfil.replace('__00__',row.id) + "'";
                                         
                                         if(!row.roles && !row.usuarios)
                                         {
-                                            resultado += '<a href="#2" onclick="$.Perfiles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+                                            resultado += '<a href="#2" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar" onclick="$.Perfiles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg"></i></a>';
                                         }
                                         
                                         return resultado;

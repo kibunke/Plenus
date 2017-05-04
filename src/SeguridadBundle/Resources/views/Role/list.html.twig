@@ -164,14 +164,14 @@
                                         resultado = '';
                                         if(row.id > 0)
                                         {
-                                            resultado += '<a href="#2" onclick="$.Roles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a>';
+                                            resultado += '<a href="#2" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar" onclick="$.Roles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a> ';
                                         }
                                         
                                         url_delete  = "'" + _path_delete_role.replace('__00__',row.id) + "'";
                                         
                                         if(!row.perfiles)
                                         {
-                                            resultado += '<a href="#2" onclick="$.Roles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+                                            resultado += '<a href="#2" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar" onclick="$.Roles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg"></i></a>';
                                         }
                                         
                                         return resultado;
