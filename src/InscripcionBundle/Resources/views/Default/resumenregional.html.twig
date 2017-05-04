@@ -1,7 +1,5 @@
-{% extends app.request.isXmlHttpRequest()
-            ? 'CommonBundle::layout.ajax.html.twig'
-            : 'CommonBundle::layout.html.twig'
-%}
+{% extends 'CommonBundle::layout.html.twig' %}
+
 {% block contenidoToolbar %}
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
@@ -14,11 +12,6 @@
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
-                    <li class="dropdown">
-                        <a  href="{{ path('inscripcion')}}" >
-                            <i class="fa fa-arrow-left"></i> VOLVER
-                        </a>
-                    </li>
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -31,19 +24,19 @@
             <ol class="breadcrumb">
                 <li>
                     <a href="{{ path('homepage') }}">
-                        {{ icon('home') }}
+                        <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path('inscripcion') }}">
+                    <a href="#1">
                         Inscripción
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path('inscripcion') }}">
+                    <a href="#1">
                         Consultas
                     </a>
-                </li>                
+                </li>
                 <li class="active">
                     Resumen Regionales
                 </li>
@@ -56,31 +49,151 @@
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Arbol de Filtros <span class="text-bold">por defecto se aplica sobre todos sus eventos</span></h4>
+                    <h4 class="panel-title">Arbol de Filtros <span class="text-bold">seleccione los segmentos para filtrar</span></h4>
+                    <div class="panel-tools">
+                        {{ include('CommonBundle::dropdownTables.html.twig') }}
+                    </div>
                 </div>
                 <div class="panel-body">
                     <div id="tree" class="tree-demo"></div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div id="reloadTable" class="col-md-12">
-            {{ include ('InscripcionBundle:Inscripto:resumenregional.table.html.twig') }}
-        </div>            
+            {% include 'InscripcionBundle:Default:resumenregional.table.html.twig' %}
+        </div>
     </div>
 {% endblock %}
 
 {% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/common/jstree/dist/themes/default/style.css') }}">
 {% endblock %}
 {% block otherJavascripts %}
-    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
+{#
+    <script>
+
+        (function ($) {
+            /* var instituciones=; */
+            // no se sobreescribe el namespace, si ya existe
+            var _table,
+                _pathShow = "{{ path('competidor_show')}}";
+            $.Default = $.Default || {};
+            $.Default.init = function() {
+                _table = $('#competidorTable').dataTable( {
+                    "autoWidth": false,
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('competidor_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "id", "className": "text-center" },
+                        { "data": "name" },
+                        { "data": "dni" },
+                        { "data": "municipio" },
+                        //{ "data": "planillas", "className": "text-center" },
+                        //{ "data": "segmentos", "className": "text-center" },
+                        { "data": "auditoria" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [4,5]
+                        },
+                        // {
+                        //     "targets": 4,
+                        //     "data": false,
+                        //     "render":   function ( data, type, full, meta ) {
+                        //                     let aux="";
+                        //                     $.map(data.data, function(ele){
+                        //                         console.log(ele);
+                        //                         aux = aux + '<li style=\'list-style:none\'><b>'+ele.numero+'</b> '+ele.municipio+'</li>';
+                        //                     })
+                        //
+                        //                     return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
+                        //                                 '<i class="fa fa-file-o fa-stack-lg"></i>'+
+                        //                                 '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
+                        //                             '</span>';
+                        //
+                        //                     //return type === 'display' ?
+                        //                     //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
+                        //                     //        '<span class="glyphicon glyphicon-info-sign"></span>'+
+                        //                     //    '</button>':
+                        //                     //    '<span class="sr-only">0</span>';
+                        //                 }
+                        // },{
+                        //     "targets": 5,
+                        //     "data": false,
+                        //     "render":   function ( data, type, full, meta ) {
+                        //                     let aux="";
+                        //                     $.map(data.data, function(ele){
+                        //                         console.log(ele);
+                        //                         aux = aux + '<li style=\'list-style:none\'><b>'+ele.id+'</b> '+ele.nombre+'</li>';
+                        //                     })
+                        //
+                        //                     return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
+                        //                                 '<i class="fa fa-file-o fa-stack-lg"></i>'+
+                        //                                 '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
+                        //                             '</span>';
+                        //
+                        //                     //return type === 'display' ?
+                        //                     //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
+                        //                     //        '<span class="glyphicon glyphicon-info-sign"></span>'+
+                        //                     //    '</button>':
+                        //                     //    '<span class="sr-only">0</span>';
+                        //                 }
+                        // },
+                        {
+                            "targets": 4,
+                            "searchable": false,
+                            "orderable": false,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    '<div>'+
+                                                        '<i title="Competidor creado por '+ data.createdBy +'" class="fa fa-user text-info" aria-hidden="true"></i> '+ data.createdBy +
+                                                    '</div><small><div>'+
+                                                        ' <i title="Compite por el municipio '+ data.municipio +'" class="fa fa-map-marker text-orange" aria-hidden="true"></i> '+ data.municipio +
+                                                    '</div><div>'+
+                                                        '<i title="Competidor creado el '+ data.createdAt +'" class="fa fa-calendar-o text-success" aria-hidden="true"></i> '+ data.createdAt +
+                                                    '</div></small>'
+                                                :'';
+                                        }
+                        }
+                    ],
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        $(nRow).attr( 'id', 'row_'+aData.id );
+                        return nRow;
+                    },
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('[data-toggle="popover"]').popover();
+                    }
+                });
+            }
+            //$.Default.planilla = {},
+            $.Default.show = function(id){
+                $.Main.openModal(_pathShow.replace("__00__",id),"Competidor: " + id, function(){
+                    }
+                );
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();});
     <script src="{{ asset('bundles/common/plugins/tableExport/tableExport.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/tableExport/jquery.base64.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>        
+    <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
+#}
+    <script src="{{ asset('assets/common/jstree/dist/jstree.min.js') }}"></script>
     <script>
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
@@ -88,8 +201,9 @@
             var totales=[];
             $.Default = $.Default || {};
             $.Default.init = function() {
-                $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+                //$(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
                 $.Default.initTable();
+                {#
                 // panel refresh
                 $('body').on('click', '.panel-refresh', function(e) {;
                     var el = $(this).parents(".panel");
@@ -104,7 +218,7 @@
                     });
                     e.preventDefault();
                 });
-                
+                #}
                 $("#tree").on('ready.jstree', function (e, data) {
                     $('#tree').jstree("deselect_all");
                     $('#tree').jstree('close_all').on('changed.jstree', function (e, data) {
@@ -116,6 +230,7 @@
                                 str.push(id[1]);
                             }
                         };
+                        console.log(str);
                         var el = $('#analiticalTable').parents(".panel");
                         el.block({
                             overlayCSS: { backgroundColor: '#fff' },
@@ -136,7 +251,12 @@
                         },
                         // so that create works
                         "check_callback" : true,
-                        'data' : {{ tree | raw }},
+                        'data' : {
+                            'url' : "{{ path('segmento_tree') }}",
+                            'data' : function (node) {
+                                return { 'id' : node.id };
+                            }
+                        }
                     },
                     "types" : {
                         "default" : {
@@ -148,16 +268,16 @@
                     },
                     "checkbox" : {
                           "keep_selected_style" : false
-                        },                    
+                        },
                     "plugins" : ["checkbox", "types"]
-                });                
+                });
             }
             $.Default.initTable = function() {
                 totales=[];
                 for (i = 0; i < $('#analiticalTable').data('numcolums'); i++) {totales.push(0);}
                 table=$('#analiticalTable').dataTable( {
                     "language": {
-                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
                     },
                     "columnDefs": [ {
                                     "searchable": false,
@@ -183,11 +303,11 @@
                     },
                     "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]],
                     "iDisplayLength" : 25
-                });                
+                });
             }
         })(jQuery);
         $(document).ready(function(){$.Default.init();$.TableExport.init()});
-        
+
         (function ($) {
             var exportTable = "#analiticalTable";
             var ignoreColumn;
@@ -253,7 +373,7 @@
 						ignoreColumn: '['+ignoreColumn+']'
 					});
                     $('#analiticalTable thead>tr').toggle();
-				});                
+				});
             }
         })(jQuery);
     </script>

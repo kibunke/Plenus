@@ -16,7 +16,7 @@ class EventoRepository extends EntityRepository
     public function getAllPorUsuarioSinSoloInscribe($security){
         return $this->getAllPorUsuarioSinSoloInscribeBuilder($security)->getQuery()->getResult();
     }
-    
+
     public function getAllPorUsuarioSinSoloInscribeBuilder($security)
     {
         $q = $this->createQueryBuilder('e')
@@ -25,13 +25,13 @@ class EventoRepository extends EntityRepository
         if (!($security->isGranted('ROLE_DIRECTOR') || $security->isGranted('ROLE_DATAENTRY') || $security->isGranted('ROLE_CONTROL_COMPETENCIA'))){
             $q->andwhere('?1 MEMBER OF e.coordinadores')->setParameter(1, $security->getToken()->getUser()->getId());
         }
-        return $q->orderBy('e.nombre');        
+        return $q->orderBy('e.nombre');
     }
-    
+
     public function getAllPorUsuarioSinDesiertos($security){
         return $this->getAllPorUsuarioSinDesiertosBuilder($security)->getQuery()->getResult();
     }
-    
+
     public function getAllPorUsuarioSinDesiertosBuilder($security)
     {
         $q = $this->createQueryBuilder('e')
@@ -40,14 +40,14 @@ class EventoRepository extends EntityRepository
         if (!($security->isGranted('ROLE_DIRECTOR') || $security->isGranted('ROLE_DATAENTRY') || $security->isGranted('ROLE_CONTROL_COMPETENCIA'))){
             $q->andwhere('?1 MEMBER OF e.coordinadores')->setParameter(1, $security->getToken()->getUser()->getId());
         }
-        return $q->orderBy('e.nombre');        
+        return $q->orderBy('e.nombre');
     }
-    
-    
+
+
     public function getAllByUserAndInscribe($security){
         return $this->getAllByUserAndInscribeBuilder($security)->getQuery()->getResult();
     }
-    
+
     public function getAllByUserAndInscribeBuilder($security)
     {
         $q = $this->createQueryBuilder('e')
@@ -58,7 +58,7 @@ class EventoRepository extends EntityRepository
         }
         return $q;//
     }
-    
+
     public function getAllConNombre($security=NULL,$conSoloInscribe=true)
     {
         $q=" SELECT t.id as torneo,
@@ -82,28 +82,28 @@ class EventoRepository extends EntityRepository
         }else{
             $q = $this->getEntityManager()->createQuery($q." ORDER BY t.id,d.id,e.id");
         }
-        
+
         return $q->getArrayResult();
     }
-    
+
     public function getCoordinadoresAsArray($evento)
     {
         return $this->getEntityManager()
-                        ->createQuery(' SELECT e.id FROM ResultadoBundle:Evento e 
+                        ->createQuery(' SELECT e.id FROM ResultadoBundle:Evento e
                                         JOIN e.coordinadores c
                                         WHERE e = ?1')
                         ->setParameter(1,$evento)
                         ->getArrayResult();
         ;
     }
-    
+
     public function getAnaliticoDeEvento($evento=NULL)
     {
         if (!$evento) return [];
         $query= '
-                SELECT q.municipio,mun.nombre as municipioNombre, mun.cruceRegional as regional, 
-                    SUM(q.h1) as cantidadMasculinosMunicipio, 
-                    SUM(q.m1) as cantidadFemeninosMunicipio, 
+                SELECT q.municipio,mun.nombre as municipioNombre, mun.cruceRegional as regional,
+                    SUM(q.h1) as cantidadMasculinosMunicipio,
+                    SUM(q.m1) as cantidadFemeninosMunicipio,
                     SUM(q.h2) as cantidadMasculinosEscuela,
                     SUM(q.m2) as cantidadFemeninosEscuela,
                     SUM(q.h3) as cantidadMasculinosOtro,
@@ -122,9 +122,9 @@ class EventoRepository extends EntityRepository
                     LEFT JOIN Origen as o ON i.origen = o.id
                     WHERE o.discr = "Municipio"
                     GROUP BY i.evento, i.municipio
-                    
+
                     UNION ALL
-                    
+
                     SELECT i.evento, i.municipio,
                     0 as h1,
                     0 as m1,
@@ -137,9 +137,9 @@ class EventoRepository extends EntityRepository
                     LEFT JOIN Origen as o ON i.origen = o.id
                     WHERE o.discr = "Escuela"
                     GROUP BY i.evento, i.municipio
-                    
+
                     UNION ALL
-                    
+
                     SELECT i.evento, i.municipio,
                     0 as h1,
                     0 as m1,
@@ -159,14 +159,14 @@ class EventoRepository extends EntityRepository
         $query.=" GROUP BY q.municipio";
         return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
     }
-    
+
     public function getAnaliticoDeFinalistas($evento=NULL)
     {
         if (!$evento) return [];
         $query= '
                 SELECT q.municipio,mun.nombre as municipioNombre, mun.cruceRegional as regional,
                     mun.regionDeportiva as reg,
-                    SUM(q.cantEquipos) as cantEquipos, 
+                    SUM(q.cantEquipos) as cantEquipos,
                     SUM(q.cantParticipantes) as cantParticipantes
                 FROM
                 (
@@ -175,9 +175,9 @@ class EventoRepository extends EntityRepository
                         0 as cantParticipantes
                     FROM Equipo as e
                     GROUP BY e.municipio,e.evento
-                    
+
                     UNION ALL
-                    
+
                     SELECT e.evento, e.municipio,
                         0 as cantEquipos,
                         COUNT(p.id) as cantParticipantes
@@ -193,10 +193,10 @@ class EventoRepository extends EntityRepository
         $query.=" GROUP BY q.municipio";
         return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
     }
-    
+
     public function getConEquiposDelMunicipio($municipio,$security){
         $q="SELECT e
-            FROM ResultadoBundle:Evento e 
+            FROM ResultadoBundle:Evento e
             JOIN e.equipos eq
             JOIN eq.municipio mun
             WHERE mun = ?1";
@@ -207,35 +207,35 @@ class EventoRepository extends EntityRepository
         }else{
             $q = $this->getEntityManager()->createQuery($q)->setParameter(1,$municipio);
         }
-        
-        return $q->getResult();      
+
+        return $q->getResult();
     }
-    
-    public function getResumenRegionalPorEventos($evento=NULL)
-    {
-        if (!$evento) return [];
-        $query= '
-                SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,i.evento,SUM(i.cantidadMasculinos + i.cantidadFemeninos) as inscripcion
-                FROM Municipio as m
-                LEFT JOIN (
-                    SELECT *
-                    FROM Inscripto as ii';
-        if ($evento)
-            $query .= ' WHERE ii.evento in ('.implode(',', $evento).')';
-        $query.=') as i ON i.municipio = m.id
-                WHERE m.idProvincia = 1
-                GROUP BY m.id,i.evento
-                ORDER BY m.id,i.evento
-            ';
-        //print_r($this->getEntityManager()->getConnection()->query($query));die();
-        return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
-    }
-    
-    
+
+    // public function getResumenRegionalPorEventos($evento=NULL)
+    // {
+    //     if (!$evento) return [];
+    //     $query= '
+    //             SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,i.evento,SUM(i.cantidadMasculinos + i.cantidadFemeninos) as inscripcion
+    //             FROM Municipio as m
+    //             LEFT JOIN (
+    //                 SELECT *
+    //                 FROM Inscripto as ii';
+    //     if ($evento)
+    //         $query .= ' WHERE ii.evento in ('.implode(',', $evento).')';
+    //     $query.=') as i ON i.municipio = m.id
+    //             WHERE m.idProvincia = 1
+    //             GROUP BY m.id,i.evento
+    //             ORDER BY m.id,i.evento
+    //         ';
+    //     //print_r($this->getEntityManager()->getConnection()->query($query));die();
+    //     return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
+    // }
+
+
     /*
-     * ESTO VA EN BLOQUE ES PARA ARMAR EL ARBOL DE EVENTOS DESDE DISCIPLINA    
+     * ESTO VA EN BLOQUE ES PARA ARMAR EL ARBOL DE EVENTOS DESDE DISCIPLINA
     */
-    
+
     public function getArbolAsArrayByEventos($eventos)
     {
         $eventosValidosIds=[];
@@ -250,7 +250,7 @@ class EventoRepository extends EntityRepository
         return $this->getArbolAsArray($disciplinas,$disciplinasValidasIds,$eventosValidosIds);
     }
     public function getOnlyRoot()
-    {          
+    {
         return $this->getEntityManager()
                         ->createQuery(' SELECT d
                                         FROM ResultadoBundle:Disciplina d
@@ -258,7 +258,7 @@ class EventoRepository extends EntityRepository
                                         ORDER BY d.nombre')
                         ->getResult();
     }
-    
+
     public function getArbolAsArray($disciplinas,$disciplinasValidasIds,$eventosValidosIds)
     {
         $resultado = array();
@@ -277,7 +277,7 @@ class EventoRepository extends EntityRepository
                                        'icon'=>"fa fa-thumb-tack text-green fa-lg"
                                        );
                     }
-                }                
+                }
                 if (count($item->getHijos()))
                 {
                     $aux['children'] = array_merge($this->getArbolAsArray($item->getHijos(),$disciplinasValidasIds,$eventosValidosIds),$evAux);
@@ -297,19 +297,19 @@ class EventoRepository extends EntityRepository
                     //}
                     $aux['children'] = $evAux;
                     $aux["icon"] = "fa fa-folder text-red fa-lg";
-                        
+
                 }
                 $resultado[]=$aux;
             }
         }
-        
+
         return $resultado;
     }
-    
+
     /*
-     * HASTA ACA EL BLOQUE PARA ARMAR EL ARBOL DE EVENTOS DESDE DISCIPLINA    
+     * HASTA ACA EL BLOQUE PARA ARMAR EL ARBOL DE EVENTOS DESDE DISCIPLINA
     */
-    
+
     public function getByIds($ids)
     {
         return $this->getEntityManager()
@@ -320,14 +320,14 @@ class EventoRepository extends EntityRepository
                     ->getResult();
         ;
     }
-    
+
     public function getAllSinSoloInscribe()
     {
         $q = $this->createQueryBuilder('e')
             ->where('e.soloInscribe = 0 OR e.soloInscribe IS NULL');
-        return $q->orderBy('e.nombre');        
+        return $q->orderBy('e.nombre');
     }
-    
+
     public function getAllPorMunicipio($municipio)
     {
         return $this->getEntityManager()
@@ -337,9 +337,9 @@ class EventoRepository extends EntityRepository
                                     WHERE eq.municipio <> ?1")
                     ->setParameter(1,$municipio)
                     ->getResult();
-        ;      
+        ;
     }
-    
+
     public function dataTable($request)
     {
         return array(
@@ -348,7 +348,7 @@ class EventoRepository extends EntityRepository
                       "rows"     => $this->getRows($request)
             );
     }
-    
+
     public function getRows($request)
     {
         $columns = ["e.id","e.orden","d.nombre ".$request->get('order')[0]['dir'].", e.orden","e.nombre,d.nombreRecursivo,c.nombre,g.nombre,m.nombre"];
@@ -360,7 +360,7 @@ class EventoRepository extends EntityRepository
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)";
-                
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT e
                                         FROM ResultadoBundle:Evento e
@@ -369,14 +369,14 @@ class EventoRepository extends EntityRepository
                                         JOIN e.categoria c
                                         JOIN e.modalidad m
                                         JOIN e.genero g
-                                        WHERE $where 
+                                        WHERE $where
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
                         ->setFirstResult($request->get('start'))
                         ->getResult();
     }
-    
+
     public function getFilteredRows($request)
     {
         $where = "( e.id LIKE ?1 OR
@@ -387,7 +387,7 @@ class EventoRepository extends EntityRepository
                     g.nombre LIKE ?1 OR
                     c.nombre LIKE ?1 OR
                     m.nombre LIKE ?1)";
-                
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(e)
                                         FROM ResultadoBundle:Evento e
@@ -395,17 +395,17 @@ class EventoRepository extends EntityRepository
                                         JOIN e.torneo t
                                         JOIN e.categoria c
                                         JOIN e.modalidad m
-                                        JOIN e.genero g                                        
+                                        JOIN e.genero g
                                         WHERE $where ")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }
-    
+
     public function getTotalRows()
     {
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(e)
                                         FROM ResultadoBundle:Evento e")
                         ->getSingleScalarResult();
-    }        
+    }
 }

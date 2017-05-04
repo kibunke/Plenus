@@ -93,19 +93,6 @@ class DefaultController extends Controller
         );
 
         foreach ($filter['rows'] as $competidor){
-            // $planillas = array("total" => 0, "data"=>[]);
-            // $municipio = "";
-            // foreach ($competidor->getPlanillas() as $planilla){
-            //     $planillas['total'] ++;
-            //     $planillas['data'][] = $planilla->toArray();
-            //     $municipio = $planilla->getMunicipio()->getNombre();
-            // }
-            // $segmentos = array("total" => 0, "data"=>[]);
-            // foreach ($competidor->getSegmentos() as $segmento){
-            //     $segmentos['total'] ++;
-            //     $segmentos['data'][] = $segmento->toArray();
-            // }
-
             $data['data'][] = array(
                                     "id"        => $competidor->getId(),
                                     "name"      => $competidor->getNombreCompleto(),
@@ -173,10 +160,73 @@ class DefaultController extends Controller
      * @Route("/consulta/resumenregional", name="consulta_resumenregional_inscripcion")
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_REGIONAL')")
-     * @Template("InscripcionBundle:De")
+     * @Template("InscripcionBundle:Default:resumenregional.html.twig")
      */
     public function consultaResumenRegionalAction(Request $request)
     {
-        return array();
+        $em = $this->getDoctrine()->getManager();
+        //$result = $em->getRepository('InscripcionBundle:Segmento')->getTree());
+        $referencia=array('segmentos'=>array());
+        $resumen = array();
+        $segmentos = array();
+        /*
+        * controla que el array que viene por post no traiga ids de eventos q no puede ver
+        * en tal caso reemplaza el array con el los ids que si puede ver
+        */
+        if ($request->getMethod() == 'POST') {
+            $arr=$request->request->get('eventos');
+            if (is_array($arr) && count($arr)>0){
+                // if (count(array_diff($arr, $result['ids']))==0){
+                //     $result['ids']=$arr;
+                // }
+                $eventos=[];
+                foreach ($arr as $id){
+                    $seg = $em->getRepository('InscripcionBundle:Segmento')->find($id);
+                    $segmentos[$id]=$seg->getNombreCompleto();
+                }
+                $resumen = $this->parserResumenRegionalData($em->getRepository('InscripcionBundle:Segmento')->getResumenRegionalPorSegmentos($arr),$arr);
+                $referencia = array_values($resumen)[0];
+            }
+            return $this->render(
+                'InscripcionBundle:Default:resumenregional.table.html.twig',
+                array(
+                      'resumen' => $resumen,
+                      'segmentos' => $segmentos,
+                      'referencia' => $referencia
+                    )
+            );
+        }
+        return array(
+            'resumen' => $resumen,
+            'segmentos' => $segmentos,
+            'referencia' => $referencia,
+        );
+    }
+
+    private function parserResumenRegionalData($rows,$ids){
+        $em = $this->getDoctrine()->getManager();
+        $matriz = $this->parseMatriz($rows,$ids);
+        foreach($rows as $row)
+        {
+            /* descarta los null que pueden venir en la query de eventos por el left joi*/
+            if ($row['segmento'] > 0){
+                $matriz[$row['id']]['segmentos'][$row['segmento']] = $row['inscripcion'];
+            }
+        }
+        return $matriz;
+    }
+
+    private function parseMatriz($rows,$ids)
+    {
+        $matriz=array();
+        $arrRow=array();
+        foreach($ids as $id){
+            $arrRow[$id] = 0;
+        }
+        foreach($rows as $row){
+            $cruce = "<small>".str_replace($row['regionDeportiva'], "</small><strong>".$row['regionDeportiva']."</strong><small>",  $row['cruceRegional'])."</small>";
+            $matriz[$row['id']]=array('municipio'=>$row['nombre'],'region' => $row['regionDeportiva'],'regional' => $cruce,'segmentos'=>$arrRow);
+        }
+        return $matriz;
     }
 }

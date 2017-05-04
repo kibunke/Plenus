@@ -2,65 +2,7 @@
     <div class="panel-heading">
         <h4 class="panel-title">Resumen <span class="text-bold">de regionales </span></h4>
         <div class="panel-tools">
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cloud-download"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a href="#1" class="export-csv">
-                            <i class="fa fa-file-text-o"></i> Guardar como CSV
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-txt">
-                            <i class="fa fa-file-text-o"></i> Guardar como TXT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-sql">
-                            <i class="fa fa-file-text-o"></i> Guardar como SQL
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-json">
-                            <i class="fa fa-file-text-o"></i> Guardar como JSON
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-excel">
-                            <i class="fa fa-file-text-o"></i> Exportar como Excel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#1" class="export-doc">
-                            <i class="fa fa-file-text-o"></i> Exportar como Word
-                        </a>
-                    </li>
-                </ul>
-            </div>            
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cog"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a class="panel-collapse collapses" href="#">
-                            <i class="fa fa-angle-up"></i> <span>Minimizar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-refresh" href="#">
-                            <i class="fa fa-refresh"></i> <span>Recargar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-expand" href="#">
-                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            {{ include('CommonBundle::dropdownTables.html.twig') }}
         </div>
     </div>
     <style>
@@ -85,31 +27,31 @@
             font-size: 10px;
         }
     </style>
-    {#% set referencia = resumen | first %#}      
+    {#% set referencia = resumen | first %#}
     <div class="panel-body">
-        <table id="analiticalTable" class="table table-striped table-hover table-responsive" data-numcolums="{{ (eventos | length) +1 }}">
+        <table id="analiticalTable" class="table table-striped table-hover table-responsive" data-numcolums="{{ (segmentos | length) +1 }}">
             <thead>
                 <tr style="display: none">
                     <th>#</th>
                     <th>Municipio</th>
                     <th></th>
-                    {% for key,item in referencia.eventos %}
-                        <th>{{ eventos[key] }}</th>
+                    {% for key,item in referencia.segmentos %}
+                        <th>{{ segmentos[key] }}</th>
                     {% endfor %}
                     <th>Total</th>
-                </tr>                 
+                </tr>
                 <tr>
                     <th rowspan="2" style="min-width: 75px">#</th>
                     <th rowspan="2" style="min-width: 230px;">Municipio</th>
                     <th rowspan="2"></th>
-                    <th colspan="{{ (referencia.eventos | length) + 1 }}" class="totales">Cada columna referencia a un evento, el cual se detalla al final de la tabla</th>
+                    <th colspan="{{ (referencia.segmentos | length) + 1 }}" class="totales">Cada columna referencia a un evento, el cual se detalla al final de la tabla</th>
                 </tr>
                 <tr>
-                    {% for key,item in referencia.eventos %}
-                        <th class="totales no-search tableth" title="{{ eventos[key] }}">{{ eventos[key] | replace ({'-':'<br>'}) | raw }}</th>
+                    {% for key,item in referencia.segmentos %}
+                        <th class="totales no-search tableth" title="{{ segmentos[key] }}">{{ segmentos[key] | replace ({'-':'<br>'}) | raw }}</th>
                     {% endfor %}
                     <th class="totales no-search" title="Total de fila">Total</th>
-                </tr>               
+                </tr>
             <tbody>
                 {% for row in resumen %}
                     {% set totalFila = 0 %}
@@ -120,32 +62,32 @@
                         </td>
                         <td style="text-align: left">{{ row.municipio }}</td>
                         <td></td>
-                        {% for evento in row.eventos %}
-                            {% if evento > 0 %}
-                                {% set totalFila = totalFila + evento %}
-                                <td class="conInscripcion" title="{{ evento }}">SI</td>
+                        {% for segmento in row.segmentos %}
+                            {% if segmento > 0 %}
+                                {% set totalFila = totalFila + segmento %}
+                                <td class="conInscripcion" title="{{ segmento }}">SI</td>
                             {% else %}
-                                <td class="sinInscripcion" title="{{ evento }}">NO</td>
+                                <td class="sinInscripcion" title="{{ segmento }}">NO</td>
                             {% endif %}
                         {% endfor %}
                         <td class="totalesFinal" title="Total de fila"><span>{{ totalFila }}</span></td>
                     </tr>
-                {% endfor %}        
+                {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="3" class="totalesFinal">TOTALES</td>
-                    {% for key,item in referencia.eventos %}
+                    {% for key,item in referencia.segmentos %}
                         <td class="totalesFinal"><i class="fa fa-refresh fa-spin"></i></td>
                     {% endfor %}
                     <td class="totalesFinal"><i class="fa fa-refresh fa-spin"></i></td>
-                </tr>                        
-            </tfoot> 
+                </tr>
+            </tfoot>
         </table>
         <div class="col-sm-12">
-            {% for key,item in referencia.eventos %}
-                <li>{{ key }} - {{ eventos[key] }}</li>
-            {% endfor %}            
+            {% for key,item in referencia.segmentos %}
+                <li>{{ key }} - {{ segmentos[key] }}</li>
+            {% endfor %}
         </div>
     </div>
 </div>

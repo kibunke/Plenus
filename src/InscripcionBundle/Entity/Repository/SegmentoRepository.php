@@ -252,4 +252,47 @@ class SegmentoRepository extends EntityRepository
         }
         return $where;
     }
+
+    public function getAllConNombre($security = NULL)
+    {
+        $q=" SELECT t.id as torneo,
+                    d.id as disciplina,
+                    s.id as segmento,
+                    CONCAT(t.nombre,'-',d.nombre,'-',c.nombre,'-',g.nombre,'-',m.nombre) as nombre
+            FROM InscripcionBundle:Segmento s
+            JOIN s.torneo t
+            JOIN s.disciplina d
+            JOIN s.categoria c
+            JOIN s.modalidad m
+            JOIN s.genero g
+            WHERE 1 = 1";
+
+        if ($security && !$security->isGranted('ROLE_DIRECTOR')){
+            $q = $this->getEntityManager()->createQuery($q." AND ?1 MEMBER OF e.coordinadores ORDER BY t.id,d.id,s.id")
+                        ->setParameter(1, $security->getToken()->getUser()->getId());
+        }else{
+            $q = $this->getEntityManager()->createQuery($q." ORDER BY t.id,d.id,s.id");
+        }
+
+        return $q->getArrayResult();
+    }
+
+    public function getResumenRegionalPorSegmentos($segmentos)
+    {
+        if (!$segmentos) return [];
+        $query= '
+                SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, COUNT(pla.id) as "inscripcion"
+                FROM Municipio as m
+                LEFT JOIN (
+                    SELECT *
+                    FROM Planilla as p
+                    WHERE p.segmento in ('.implode(',', $segmentos).')
+                ) as pla ON pla.municipio = m.id
+                WHERE m.idProvincia = 1
+                GROUP BY m.id,pla.segmento
+                ORDER BY m.id,pla.segmento
+            ';
+        //print_r($this->getEntityManager()->getConnection()->query($query));die();
+        return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
+    }
 }

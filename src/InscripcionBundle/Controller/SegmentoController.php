@@ -24,15 +24,128 @@ class SegmentoController extends Controller
     /**
      * Lists all Segmento entities.
      *
+     * @Route("/tree", name="segmento_tree", condition="request.isXmlHttpRequest()")
+     * @Method("GET")
+     */
+    public function treeAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $result = $this->parseSegmentos($em->getRepository('InscripcionBundle:Segmento')->getAllConNombre());
+        return new JsonResponse($result['tree']);
+    }
+
+    private function addNodeDisciplina($aux,$segmento)
+    {
+        return [
+                "text" => $aux[1],
+                "children" => [$this->addNodeSegmento($aux,$segmento)]
+            ];
+    }
+    private function addNodeSegmento($aux,$segmento)
+    {
+        return [
+                    "text" => $segmento['segmento']."-".$aux[2]."-".$aux[3]."-".$aux[4],
+                    "icon" => "fa fa-thumb-tack text-green fa-lg",
+                    "id" => "ev-".$segmento['segmento']
+            ];
+    }
+
+    private function parseSegmentos($segmentos)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tree = [
+                "text"=>"Todos mis segmentos",
+                "state" => ["selected" => true],
+                "children" => []
+            ];
+        $torneoIdAux=0;
+        $disciplinaIdAux=0;
+        $segmentosIds=[];
+        foreach($segmentos as $segmento)
+        {
+            $aux = explode('-', $segmento['nombre']);
+            $segmentosIds[] = $segmento['segmento'];
+            $objDisciplina = $em->getRepository('ResultadoBundle:Disciplina')->find($segmento['disciplina']);
+            $aux[1] = $objDisciplina->getNombreCompleto();
+            if ($torneoIdAux == 0){
+                $torneoAux = [
+                                "text" => $aux[0],
+                                "children" => []
+                            ];
+                $disciplinaAux = $this->addNodeDisciplina($aux,$segmento);
+                $disciplinaIdAux = $segmento['disciplina'];
+                $torneoIdAux = $segmento['torneo'];
+            }else{
+                if ($segmento['torneo'] == $torneoIdAux){
+                    if ($segmento['disciplina'] == $disciplinaIdAux){
+                        $disciplinaAux['children'][] = $this->addNodeSegmento($aux,$segmento);
+                    }
+                    else{
+                        $torneoAux['children'][] = $disciplinaAux;
+                        $disciplinaIdAux = $segmento['disciplina'];
+                        $disciplinaAux = $this->addNodeDisciplina($aux,$segmento);
+                    }
+                }else{
+                    $torneoAux['children'][] = $disciplinaAux;
+                    $tree['children'][] = $torneoAux;
+                    $torneoIdAux = $segmento['torneo'];
+                    $disciplinaIdAux = $segmento['disciplina'];
+                    $torneoAux = [
+                                    "text" => $aux[0],
+                                    "children" => []
+                                ];
+                    $disciplinaAux = $this->addNodeDisciplina($aux,$segmento);
+                }
+            }
+        }
+        $torneoAux['children'][] = $disciplinaAux;
+        $tree['children'][] = $torneoAux;
+        return array('tree'=>$tree,'ids'=>$segmentosIds);
+    }
+    // private function parseSegmentos($disciplinas = null)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+    //     if (!$disciplinas){
+    //         $disciplinas = $em->getRepository('ResultadoBundle:Disciplina')->getOnlyRoot();
+    //     }
+    //
+    //     $resultado = array();
+    //     foreach ($disciplinas as $item)
+    //     {
+    //         $aux = array();
+    //         $aux['text']  = $item->getNombre();
+    //         $aux['id']  = $item->getId();
+    //         if (count($item->getHijos())){
+    //             $aux['children'] = $this->parseSegmentos($item->getHijos());
+    //             $aux['state'] = array('opened'=>true);
+    //             $aux["icon"] = "fa fa-folder text-red fa-lg";
+    //         }else{
+    //             $aux["icon"] = "fa fa-folder text-blue fa-lg";
+    //         }
+    //         foreach ($item->getSegmentos() as $segmento){
+    //             $aux['children'][] = array(
+    //                     'id' => $segmento->getId(),
+    //                     'text' => $segmento->getNombre(),
+    //                     'icon' => "fa fa-thumb-tack text-green fa-lg"
+    //                 );
+    //         }
+    //         $resultado[]=$aux;
+    //     }
+    //     return $resultado;
+    // }
+
+    /**
+     * Lists all Segmento entities.
+     *
      * @Route("/list", name="segmento_list")
      * @Method("GET")
      * @Template()
      */
     public function listAction()
     {
-        return array();        
+        return array();
     }
-    
+
     /**
      * show a Segmento entiti.
      *
@@ -42,9 +155,9 @@ class SegmentoController extends Controller
      */
     public function showAction()
     {
-        return array();        
+        return array();
     }
-    
+
     /**
      * @Route("/list/datatable", name="segmento_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
@@ -84,7 +197,7 @@ class SegmentoController extends Controller
         }
         return new JsonResponse($data);
     }
-    
+
     /**
      * @Route("/new", name="segmento_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
@@ -98,7 +211,7 @@ class SegmentoController extends Controller
         $form = $this->createForm(SegmentoType::class, $segmento);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {            
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $segmento->setCreatedBy($this->getUser());
                 $em->persist($segmento);
@@ -113,7 +226,7 @@ class SegmentoController extends Controller
                 'form' => $form->createView(),
             );
     }
-    
+
     /**
      * @Route("/{id}/edit", name="segmento_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
@@ -124,12 +237,12 @@ class SegmentoController extends Controller
     {
         if (!$this->canEdit($segmento)){
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'No puede modificar este segmento!'));
-        }        
+        }
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(SegmentoType::class, $segmento);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {            
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $segmento->setUpdatedAt(new \DateTime());
                 $segmento->setUpdatedBy($this->getUser());
@@ -144,7 +257,7 @@ class SegmentoController extends Controller
                 'form' => $form->createView(),
             );
     }
-    
+
     /**
      * @Route("/{id}/toggleState", name="segmento_state_toggle", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -165,7 +278,7 @@ class SegmentoController extends Controller
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
     }
-    
+
     /**
      * @Route("/{state}/toggleState/all", name="segmento_state_toggle_all", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -187,7 +300,7 @@ class SegmentoController extends Controller
             return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Ocurrio un error al intentar guardar los datos!', 'debug' => $e->getMessage()));
         }
     }
-    
+
     /**
      * @Route("/{id}/delete", name="segmento_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -212,7 +325,7 @@ class SegmentoController extends Controller
         }
         return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El segmento no exite'));
     }
-    
+
     private function canEdit($segmento)
     {
         if ($this->isGranted('ROLE_ADMIN')){
@@ -220,7 +333,7 @@ class SegmentoController extends Controller
         }elseif ($segmento->esCoordinador($this->getUser())){
             return true;
         }
-        
+
         return false;
     }
 }
