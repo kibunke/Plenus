@@ -1,0 +1,112 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/highcharts.css') }}">
+{% endblock %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-tachometer"></i> Dashboard <small>Aquí encontrara los indicadores del módulo de inscripción</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{#{ path('inscripcion') }#}">
+                        Inscripción
+                    </a>
+                </li>
+                <li class="active">
+                    Dashboard
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-blue">
+                <div class="panel-body padding-20 text-center">
+                    <div class="space10">
+                        <h5 class="text-white semi-bold no-margin p-b-5">Today</h5>
+                        <h3 class="text-white no-margin"><span class="text-small">$</span>1,450</h3>
+                        253 Sales
+                    </div>
+                    <div class="sparkline-4 space10">
+                        <span><canvas width="88" height="70" style="display: inline-block; width: 88px; height: 70px; vertical-align: top;"></canvas></span>
+                    </div>
+                    <span class="text-light"><i class="fa fa-clock-o"></i> 1 hour ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="inscripcion_widget" class="row"></div>
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script src="{{ asset('assets/js/highcharts.js') }}" type="text/javascript" charset="utf8"></script>
+    <script>
+        {% for torneo in datos %}
+            $('#container_{{ loop.index }}').highcharts({
+                credits:{'enabled':false},
+                chart: {
+                    type: 'pie',
+                    backgroundColor:'transparent'
+                },
+                title: {
+                    text: '',
+                    style: {'display':'none'}
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.percentage:.1f}%</b><br>{point.y} de {{ torneo.datos.inscriptos.total }}'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: false
+                    }
+                },
+                series: [{
+                    name: 'Inscriptos',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Masculino',
+                        y: {{ torneo.datos.inscriptos.Masculino }}
+                    }, {
+                        name: 'Femenino',
+                        y: {{ torneo.datos.inscriptos.Femenino }},
+                        sliced: true,
+                        selected: true
+                    }]
+                }]
+            });
+        {% endfor %}
+    </script>
+{% endblock %}

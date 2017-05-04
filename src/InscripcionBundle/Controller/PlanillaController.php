@@ -30,33 +30,6 @@ use CommonBundle\PDFs\DocumentoPDF;
 class PlanillaController extends Controller
 {
     /**
-     * @Route("/dashboard", name="planilla_dashboard")
-     * @Method({"GET"})
-     * @Security("has_role('ROLE_INSCRIPCION_DASHBOARD')")
-     * @Template()
-     */
-    public function dashboardAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $torneos = $em->getRepository('ResultadoBundle:Torneo')->findAll();
-        $result = [];
-        foreach ($torneos as $torneo){
-            $result[$torneo->getId()] = $torneo->getJson();
-        }
-        $datos = $em->getRepository('InscripcionBundle:Planilla')->getDashboard();
-        foreach ($datos as $dato){
-            $result[$dato['id']]['datos']['inscriptos'][$dato['sexoNombre']] += $dato['sexo'];
-            $result[$dato['id']]['datos']['inscriptos']['total'] += $dato['sexo'];
-            $result[$dato['id']]['datos']['planillas'] += $dato['planillas'];
-            $result[$dato['id']]['datos']['equipos'] += $dato['equipos'];
-        }
-        //var_dump($result);die;
-        return array(
-            'datos' => $result
-        );
-    }
-
-    /**
      * Lists all Planilla entities.
      *
      * @Route("/list/misPlanillas", name="planilla_mis_list")

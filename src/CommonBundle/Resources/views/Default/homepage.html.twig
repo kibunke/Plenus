@@ -38,7 +38,7 @@
                     <h4><i class="fa fa-spinner"></i> Sorteo</h4>
                     <p>
                         Gracias a este subsistema, resultará simple y vistoso registrar los resultados del sorteo de zonas y orden de participación para la Etapa Final.
-                    </p>                    
+                    </p>
 
                 </div>
                 <div class="col-md-6">
@@ -130,7 +130,7 @@
                        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
                        Lo más importante del deporte no es ganar, sino participar, porque lo esencial en la vida no es el éxito, sino esforzarse por conseguirlo.<br>
                        <small>Barón Pierre De Coubertin (Fundador de los Juegos Olímpicos)</small>
-                    </p>                    
+                    </p>
                     <p style="margin-top: 25px;">
                         <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
                         Siempre hay que tratar de ser el mejor, pero nunca creerse el mejor.<br>
@@ -175,7 +175,7 @@
                         Ningún jugador es tan bueno como todos juntos.<br>
                         <small>Alfredo Di Stefano (Futbolsita)</small>
                     </p>
-                {% endif %}                
+                {% endif %}
             </blockquote>
             <table class="table table-striped" style="font-size: 13px">
                 <thead>
@@ -192,13 +192,13 @@
                         <td>General Pueyrredon</td>
                         <td>La Matanza</td>
                         <td>Florencio Varela</td>
-                    </tr>                    
+                    </tr>
                     <tr>
                         <td>2015</td>
                         <td>Quilmes</td>
                         <td>La Matanza</td>
                         <td>La Plata</td>
-                    </tr>                    
+                    </tr>
                     <tr>
                         <td>2014</td>
                         <td>Quilmes</td>
@@ -235,4 +235,28 @@
     </div>
 {% endblock %}
 {% block otherStylesheets %}{% endblock %}
-{% block otherJavascripts %}{% endblock %}
+{% block otherJavascripts %}
+    <script>
+        (function ($) {
+            "use strict";
+            // no se sobreescribe el namespace, si ya existe
+            $.HomePage = $.HomePage || {};
+            $.HomePage.init = function() {
+                swal({
+                    title: 'Atención',
+                    text:   '<p>SE INFORMA A LOS SEÑORES <strong>“ORGANIZADORES MUNICIPALES”</strong> QUE SE HA CONCRETADO EL CIERRE DE INSCRIPCIÓN. ESTE CIERRE DEJO DENTRO DEL SISTEMA TODAS LAS PLANILLAS INGRESADAS (INCLUSO LAS QUE SE ENCUENTRAN EN ESTADO “(Ca) CARGADA”).</p>'+
+                            '<p style="text-align:left"><b>*</b> A PARTIR DEL CIERRE NO SE PUEDE INGRESAR A NINGÚN PARTICIPANTE.</p>'+
+                            '<p style="text-align:left"><b>*</b> LOS MUNICIPIOS PUEDEN CAMBIAR DE ESTADO PLANILLAS, INCLUSIVE LAS (Ca) HASTA EL <strong>PRÓXIMO 10 DE MAYO</strong>. FECHA EN QUE CIERRA TOTALMENTE TODO TIPO DE ACCIÓN SOBRE LAS MISMAS.</p>',
+                    html: true,
+                    closeOnConfirm: false,
+                    type: "warning"
+                });
+                // swal('Atención!',   'SE INFORMA A LOS SEÑORES <strong>“ORGANIZADORES MUNICIPALES”</strong> QUE SE HA CONCRETADO EL CIERRE DE INSCRIPCIÓN. ESTE CIERRE DEJO DENTRO DEL SISTEMA TODAS LAS PLANILLAS INGRESADAS (INCLUSO LAS QUE SE ENCUENTRAN EN ESTADO “(Ca) CARGADA”).'+
+                //                     '<li>*A PARTIR DEL CIERRE NO SE PUEDE INGRESAR A NINGÚN PARTICIPANTE.</li>'+
+                //                     '<li>*LOS MUNICIPIOS PUEDEN CAMBIAR DE ESTADO PLANILLAS, INCLUSIVE LAS (Ca) HASTA EL PRÓXIMO 10 DE MAYO. FECHA EN QUE CIERRA TOTALMENTE TODO TIPO DE ACCIÓN SOBRE LAS MISMAS.</li>'
+                // ,'warning');
+            }
+        })(jQuery);
+        $(document).ready(function(){$.HomePage.init();});
+    </script>
+{% endblock %}
