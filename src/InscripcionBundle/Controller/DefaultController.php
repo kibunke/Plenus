@@ -224,8 +224,8 @@ class DefaultController extends Controller
             $arrRow[$id] = 0;
         }
         foreach($rows as $row){
-            $cruce = "<small>".str_replace($row['regionDeportiva'], "</small><strong>".$row['regionDeportiva']."</strong><small>",  $row['cruceRegional'])."</small>";
-            $matriz[$row['id']]=array('municipio'=>$row['nombre'],'region' => $row['regionDeportiva'],'regional' => $cruce,'segmentos'=>$arrRow);
+            //$cruce = "<small>".str_replace($row['regionDeportiva'], "</small><strong>".$row['regionDeportiva']."</strong><small>",  $row['cruceRegional'])."</small>";
+            $matriz[$row['id']]=array('municipio'=>$row['nombre'],'region' => $row['regionDeportiva'],'regional' => $row['regionDeportiva'],'segmentos'=>$arrRow);
         }
         return $matriz;
     }

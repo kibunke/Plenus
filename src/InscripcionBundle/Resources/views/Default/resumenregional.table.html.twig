@@ -57,7 +57,7 @@
                     {% set totalFila = 0 %}
                     <tr data-region="{{ row.region }}">
                         <td>
-                            <i class="fa fa-random" title="Regional"></i>
+                            <!-- <i class="fa fa-random" title="Regional"></i> -->
                             {{ row.regional | raw }}<span class="sr-only">{{ row.region }}</span>
                         </td>
                         <td style="text-align: left">{{ row.municipio }}</td>
@@ -85,9 +85,9 @@
             </tfoot>
         </table>
         <div class="col-sm-12">
-            {% for key,item in referencia.segmentos %}
+            {#% for key,item in referencia.segmentos %}
                 <li>{{ key }} - {{ segmentos[key] }}</li>
-            {% endfor %}
+            {% endfor %#}
         </div>
     </div>
 </div>
