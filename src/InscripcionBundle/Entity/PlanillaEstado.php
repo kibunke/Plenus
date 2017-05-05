@@ -266,7 +266,7 @@ abstract class PlanillaEstado
     static function getEstadosPosibles(){
         return  array(
                         "Cargada" => ["nombre" => "Cargada", "nombrePlural" => "Cargadas","cantidad" => 0,"porcentaje" => 0, "color" => "#777"],
-                        "EnRevision" => ["nombre" => "En Revision","nombrePlural" => "En Revision","cantidad" => 0,"porcentaje" => 0, "color" => "#c9302c"],
+                        "En Revisión" => ["nombre" => "En Revisión","nombrePlural" => "En Revisión","cantidad" => 0,"porcentaje" => 0, "color" => "#c9302c"],
                         "Enviada" => ["nombre" => "Enviada", "nombrePlural" => "Enviadas", "cantidad" => 0,"porcentaje" => 0, "color" => "#269abc"],
                         "Observada" => ["nombre" => "Observada","nombrePlural" => "Observadas","cantidad" => 0,"porcentaje" => 0, "color" => "#ec971f"],
                         "Presentada" => ["nombre" => "Presentada","nombrePlural" => "Presentadas","cantidad" => 0,"porcentaje" => 0, "color" => "#204d74"],
