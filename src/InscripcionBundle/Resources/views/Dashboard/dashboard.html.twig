@@ -46,7 +46,7 @@
     </div>
 {% endblock %}
 {% block contenidoContent %}
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-3">
             <div class="panel panel-blue">
                 <div class="panel-body padding-20 text-center">
@@ -55,21 +55,211 @@
                         <h3 class="text-white no-margin"><span class="text-small">$</span>1,450</h3>
                         253 Sales
                     </div>
-                    <div class="sparkline-4 space10">
-                        <span><canvas width="88" height="70" style="display: inline-block; width: 88px; height: 70px; vertical-align: top;"></canvas></span>
-                    </div>
+                    <div id="sp" class="sparkline-4 space10"></div>
                     <span class="text-light"><i class="fa fa-clock-o"></i> 1 hour ago</span>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="inscripcion_widget" class="row"></div>
+    </div> -->
+    <div id="estados_widget" class="row"></div>
+    <div id="inscriptos_widget" class="row"></div>
 {% endblock %}
 
 {% block otherJavascripts %}
+    <style>
+        .highcharts-background{
+            fill:transparent !important;
+        }
+        .highcharts-color-0{
+            color:#FFF !important;
+            fill:#FFF !important;
+            stroke:#FFF !important;
+        }
+        .highcharts-container {
+            overflow: visible !important;
+        }
+        .highcharts-root {
+            overflow: visible !important;
+        }
+        .easy-pie-chart .number {
+            position: relative;
+            display: inline-block;
+            width: 110px;
+            height: 110px;
+            text-align: center;
+        }
+        .percent {
+            display: inline-block;
+            line-height: 110px;
+            z-index: 2;
+            font-weight: 800;
+            font-size: 16px;
+        }
+        .percent:after {
+            content: '%';
+            margin-left: 0.1em;
+            font-size: .8em;
+        }
+        .easy-pie-chart canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
     <script src="{{ asset('assets/js/highcharts.js') }}" type="text/javascript" charset="utf8"></script>
+    <script src="{{ asset('assets/js/jquery.easypiechart.min.js') }}" type="text/javascript" charset="utf8"></script>
     <script>
-        {% for torneo in datos %}
+        (function ($) {
+            "use strict";
+            // no se sobreescribe el namespace, si ya existe
+            $.Dashboard = $.Dashboard || {};
+            var _pathEstados = "{{ path('inscripcion_dashboard_estados') }}",
+                _pathInscriptos = "{{ path('inscripcion_dashboard_inscriptos') }}";
+            $.Dashboard.init = function() {
+                $.Dashboard.loadEstadosWidget();
+                $.Dashboard.loadInscriptosWidget();
+            }
+            $.Dashboard.loadEstadosWidget = function(){
+                $('#estados_widget').load(_pathEstados,function(){
+                    $('#estados_widget .chart').each(function(){
+                        $(this).easyPieChart(
+                            {
+                                barColor: $(this).data('barcolor'),
+                                scaleLength: 7,
+                                lineWidth: 5,
+                                scaleColor: "#bbb"
+                            }
+                        );
+                    });
+                });
+            },
+            $.Dashboard.loadInscriptosWidget = function(){
+                $('#inscriptos_widget').load(_pathInscriptos,function(){});
+            }
+
+        })(jQuery);
+        $(document).ready(function(){$.Dashboard.init();});
+
+        /**
+         * Create a constructor for sparklines that takes some sensible defaults and merges in the individual
+         * chart options. This function is also available from the jQuery plugin as $(element).highcharts('SparkLine').
+         */
+        Highcharts.SparkLine = function (a, b, c) {
+            var hasRenderToArg = typeof a === 'string' || a.nodeName,
+                options = arguments[hasRenderToArg ? 1 : 0],
+                defaultOptions = {
+                    chart: {
+                        renderTo: (options.chart && options.chart.renderTo) || this,
+                        borderWidth: 0,
+                        type: 'line',
+                        margin: [2, 5, 2, 5],
+                        height: 120,
+                        style: {
+                            overflow: 'visible'
+                        },
+
+                        // small optimalization, saves 1-2 ms each sparkline
+                        skipClone: true
+                    },
+                    title: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        labels: {
+                            enabled: false
+                        },
+                        title: {
+                            text: null
+                        },
+                        startOnTick: false,
+                        endOnTick: false,
+                        tickPositions: [0],
+                        visible:false
+                    },
+                    yAxis: {
+                        endOnTick: false,
+                        startOnTick: false,
+                        labels: {
+                            enabled: false
+                        },
+                        title: {
+                            text: null
+                        },
+                        tickPositions: [0],
+                        visible:false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        borderWidth: 0,
+                        shadow: false,
+                        //useHTML: true,
+                        hideDelay: 0,
+                        shared: true,
+                        padding: 5,
+                        positioner: function (w, h, point) {
+                            return { x: point.plotX - w / 2, y: point.plotY - h };
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            colorIndex: 1,
+                            animation: false,
+                            lineWidth: 1,
+                            shadow: false,
+                            states: {
+                                hover: {
+                                    lineWidth: 2
+                                }
+                            },
+                            marker: {
+                                radius: 2,
+                                states: {
+                                    hover: {
+                                        radius: 5
+                                    }
+                                }
+                            },
+                            fillOpacity: 0.25
+                        },
+                        // column: {
+                        //     negativeColor: '#910000',
+                        //     borderColor: 'silver'
+                        // }
+                    }
+                };
+
+            options = Highcharts.merge(defaultOptions, options);
+            //options = options
+
+            return hasRenderToArg ?
+                new Highcharts.Chart(a, options, c) :
+                new Highcharts.Chart(options, b);
+        };
+
+        // Creating 153 sparkline charts is quite fast in modern browsers, but IE8 and mobile
+        // can take some seconds, so we split the input into chunks and apply them in timeouts
+        // in order avoid locking up the browser process and allow interaction.
+        function doChunk() {
+            $('#sp').highcharts('SparkLine', {
+                series: [{
+                    data: [10,30,5,80,40,120],
+                    pointStart: 1
+                }],
+                tooltip: {
+                    headerFormat: '',//'<span style="font-size: 10px">' + '?' + ', Q{point.x}:</span><br/>',
+                    pointFormat: '<b>{point.y}</b>'
+                },
+                chart: {}
+            });
+        }
+        doChunk();
+
+        {#% for torneo in datos %}
             $('#container_{{ loop.index }}').highcharts({
                 credits:{'enabled':false},
                 chart: {
@@ -107,6 +297,6 @@
                     }]
                 }]
             });
-        {% endfor %}
+        {% endfor %#}
     </script>
 {% endblock %}

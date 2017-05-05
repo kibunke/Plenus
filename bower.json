@@ -17,6 +17,7 @@
     "jstree": "^3.3.3",
     "bower-jvectormap-2": "*",
     "velocity": "^1.4.0",
-    "jquery.scrollTo": "^2.1.2"
+    "jquery.scrollTo": "^2.1.2",
+    "jquery.easy-pie-chart": "^2.1.6"
   }
 }

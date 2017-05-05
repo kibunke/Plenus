@@ -1,0 +1,21 @@
+{% for estado in estados %}
+    <div class="col-xs-6 col-sm-4 col-lg-2">
+        <div class="panel">
+            <div class="panel-body">
+                <div class="easy-pie-chart text-center">
+                    <span class="cpu number appear chart" data-percent="{{ estado.porcentaje }}" data-barcolor="{{ estado.color }}">
+                        <span class="percent">{{ estado.porcentaje }}</span>
+                    </span>
+
+                    <div class="label-chart">
+                        <h4 class="no-margin">{{ estado.nombrePlural }}<br><small>{{ estado.cantidad }}</small></h4>
+                    </div>
+                </div>
+                <!-- <div class="small-text text-center space15">
+                    <span class="block">Recommended</span><span class="label label-danger vertical-align-bottom">85%</span>
+                </div> -->
+                <!-- <span class="text-light"><i class="fa fa-clock-o"></i> 15 nuevos en la ultima hora</span> -->
+            </div>
+        </div>
+    </div>
+{% endfor %}

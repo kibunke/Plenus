@@ -24,7 +24,8 @@ module.exports = function (grunt) {
                     'js/sweetalert.js': 'sweetalert/dist/sweetalert.min.js',
                     'js/select2.js': 'select2/dist/js/select2.min.js',
                     'js/highcharts.js': 'highcharts/js/highcharts.js',
-                    'js/highstock.js': 'highcharts/js/highstock.js'
+                    'js/highstock.js': 'highcharts/js/highstock.js',
+                    'js/jquery.easypiechart.min.js': 'jquery.easy-pie-chart/dist/jquery.easypiechart.min.js'
                 }
             },
             stylesheets: {
@@ -128,7 +129,7 @@ module.exports = function (grunt) {
                     'src/SeguridadBundle/Resources/public/js/*.js'
                 ],
                 dest: 'web/assets/js/login.js'
-            }            
+            }
         },
         copy: {
             images: {

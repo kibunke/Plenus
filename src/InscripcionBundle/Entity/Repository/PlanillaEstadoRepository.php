@@ -10,4 +10,20 @@ namespace InscripcionBundle\Entity\Repository;
  */
 class PlanillaEstadoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getInformeEstados()
+    {
+        $estados = array_map('current',$this->getEntityManager()
+                        ->createQuery(" SELECT MAX(pe.id)
+                                        FROM InscripcionBundle:PlanillaEstado pe
+                                        GROUP BY pe.planilla")
+                        ->getArrayResult());
+
+        return  $this->getEntityManager()
+                        ->createQuery(" SELECT pe.nombre, COUNT(pe) as cantidad
+                                        FROM InscripcionBundle:PlanillaEstado pe
+                                        WHERE pe.id IN (?1)
+                                        GROUP BY pe.nombre")
+                        ->setParameter(1,$estados)
+                        ->getArrayResult();
+    }
 }

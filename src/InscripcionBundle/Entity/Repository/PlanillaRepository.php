@@ -12,6 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class PlanillaRepository extends EntityRepository
 {
+    public function count()
+    {
+        return  $this->getEntityManager()
+                        ->createQuery(" SELECT COUNT(p)
+                                        FROM InscripcionBundle:Planilla p")
+                        ->getArrayResult();
+    }
+
     public function getDashboard()
     {
         return  $this->getEntityManager()
