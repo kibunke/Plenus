@@ -187,10 +187,28 @@
 							{% endif %}
 							{% if is_granted('ROLE_INSCRIPCION_COMPETIDORES_LIST') %}
 								<li>
-									<a href="{{ path('competidor_list') }}">
-										<i class="fa fa-list-ol"></i>
-										<span class="title">Competidores</span>
+									<a href="javascript:;">
+										<i class="fa fa-users"></i>
+										Competidores <i class="icon-arrow"></i>
 									</a>
+									<ul class="sub-menu">
+											<li>
+												<a href="{{ path('competidor_list') }}">
+													<i class="fa fa-list-ol"></i>
+													<span class="title">Listado</span>
+												</a>
+											</li>
+											{% if is_granted('ROLE_INSCRIPCION_ACTIVIDADES_SOSPECHOSAS') %}
+												<li>
+													<a href="{{ path('inscripcion_actividadesSospechosas') }}">
+														<span class="title">
+															<span class="fa fa-crosshairs"></span>
+															Actividades Sospechosas
+														</span>
+													</a>
+												</li>
+											{% endif %}
+									</ul>
 								</li>
 							{% endif %}
 							<li>

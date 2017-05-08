@@ -199,12 +199,17 @@ class SegmentoRepository extends EntityRepository
                     s.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
                     d.nombreRecursivo LIKE ?1)";
-
+        if($user->hasRole('ROLE_COORDINADOR')){
+            //COORDINADORES ven los sus Segmentos
+            $where .= " AND (coordinador.id = " . $user->getId().")";
+        }
         return $this->getEntityManager()
                         ->createQuery(" SELECT s
                                         FROM InscripcionBundle:Segmento s
                                         JOIN s.disciplina d
+                                        LEFT JOIN s.coordinadores coordinador
                                         WHERE $where
+                                        GROUP BY s
                                         ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->setMaxResults($request->get('length'))
@@ -218,10 +223,15 @@ class SegmentoRepository extends EntityRepository
                     s.nombre LIKE ?1 OR
                     d.nombre LIKE ?1 OR
                     d.nombreRecursivo LIKE ?1)";
+        if($user->hasRole('ROLE_COORDINADOR')){
+            //COORDINADORES ven los sus Segmentos
+            $where .= " AND (coordinador.id = " . $user->getId().")";
+        }
         return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(s)
+                        ->createQuery(" SELECT COUNT(DISTINCT(s))
                                         FROM InscripcionBundle:Segmento s
                                         JOIN s.disciplina d
+                                        LEFT JOIN s.coordinadores coordinador
                                         WHERE $where")
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
@@ -229,9 +239,16 @@ class SegmentoRepository extends EntityRepository
 
     public function getTotalInscripcionRows($user,$auth_checker)
     {
+        $where = '';
+        if($user->hasRole('ROLE_COORDINADOR')){
+            //COORDINADORES ven los sus Segmentos
+            $where = " coordinador.id = " . $user->getId();
+        }
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(s))
-                                        FROM InscripcionBundle:Segmento s")
+                                        FROM InscripcionBundle:Segmento s
+                                        LEFT JOIN s.coordinadores coordinador
+                                        WHERE $where ")
                         ->getSingleScalarResult();
     }
 
