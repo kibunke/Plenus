@@ -67,7 +67,7 @@ class CompetidorController extends Controller
 
     /**
      * @Route("/competidor/{competidor}/show", name="competidor_show", condition="request.isXmlHttpRequest()", defaults={"competidor":"__00__"})
-     * @Template("InscripcionBundle:Default:competidor.show.html.twig")
+     * @Template("InscripcionBundle:Competidor:competidor.show.html.twig")
      */
     public function showCompetidorAction(Request $request, Competidor $competidor)
     {
