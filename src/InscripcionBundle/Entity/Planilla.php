@@ -720,7 +720,10 @@ abstract class Planilla
      */
     public function isEditable($user)
     {
+        if ($user->hasRole('ROLE_INSCRIPCION_PLANILLA_SUPER_EDIT'))
+            return true;
         return $this->getEstado()->isEditable() && $user->getId() == $this->getCreatedBy()->getId();
+
     }
 
     /**
