@@ -6,11 +6,11 @@
     .header-planilla td{
         text-align: left;
     }
-    
+
     input.error {
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
         -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;	
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px red;
         outline: thin auto red;
     }
     .validate-no-edit-td{
@@ -23,7 +23,7 @@
     }
     .sello{
         height: 60px;
-    }    
+    }
     .firmaysello{
         height: 95px;
     }
@@ -107,7 +107,7 @@
         </div>
     </div>
     <div class="row planillaFooter">
-        <h4> Tipo inscripción : 
+        <h4> Tipo inscripción :
             <div class="btn-group" data-toggle="buttons" id="tipoInscripcionButtons">
                 <label class="btn btn-default active">
                     <input type="radio" name="tipoInscripcion" value="inscripcionMunicipal" autocomplete="off" checked> Municipal
@@ -117,7 +117,7 @@
                 </label>
                 <label class="btn btn-default">
                     <input type="radio" name="tipoInscripcion" value="inscripcionInstitucionalClub" autocomplete="off"> Otra <small>(Club)</small>
-                </label>                
+                </label>
             </div>
         </h4>
         <div class="table-responsive col-sm-3">
@@ -174,7 +174,7 @@
                     <tr class="sello">
                         <th>Sello</th>
                         <td class="validate-no-edit-td"></td>
-                    </tr>                    
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -259,7 +259,7 @@
             validateNumber = (value) => {
                 if (!isNaN(parseFloat(value))
                         && isFinite(value)
-                        && value > 100000 && value < 100000000){
+                        && value > 100000 && value < 900000000){ //Límite alto para habilitar pasaportes
                     //$.Planilla.loadParticipante(value);
                     return true;
                 }
@@ -281,7 +281,7 @@
             },
             validateEmail = (value) => {
                 return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(value);
-            };            
+            };
         element.find('td').each(function (evt) {
             var cell = $(this),
                 column = cell.index();
@@ -329,13 +329,13 @@
                     $('#datosResponsableInstitucion,#datosInstitucion')
                         .removeClass('table-not-allowed')
                         .find('.validate-change').removeClass('validate-no-edit-td');
-                }                
+                }
             });
             $.Planilla.loadPlanillaFooter();
             $.Planilla.loadEquipos();
             $('#planillaBuenaFe').editableTableWidget({
                 changeEditorFunction : function(obj){
-                    var 
+                    var
                         thead = $('#planillaBuenaFe').find('thead tr'),
                         cell = $(obj),
                         column = cell.index();
@@ -381,11 +381,11 @@
                 $('#datosInstitucion .nombre').text(_planilla.institucion.nombre);
                 $('#datosInstitucion .domicilio').text(_planilla.institucion.domicilio);
                 $('#datosInstitucion .telefono').text(_planilla.institucion.telefono);
-                    
+
                 $('#datosResponsableInstitucion .nombre').text(_planilla.institucion.responsable.nombre);
                 $('#datosResponsableInstitucion .apellido').text(_planilla.institucion.responsable.apellido);
                 $('#datosResponsableInstitucion .dni').text(_planilla.institucion.responsable.dni);
-            }            
+            }
         }
         $.Planilla.getJsonPersona = function($tr){
             return  {
@@ -404,7 +404,7 @@
         },
         $.Planilla.loadParticipante = function(dni,$cell)
         {
-            
+
             let $tr = $cell.parent('tr');
             let $td = $tr.find(':nth-child(1)');
             if (dni.length >= 6){
@@ -459,7 +459,7 @@
                     nombre : $('#datosResponsableInstitucion .nombre').text(),
                     apellido : $('#datosResponsableInstitucion .apellido').text(),
                     tipoDocumento : 'DNI',
-                    dni : $('#datosResponsableInstitucion .dni').text()                        
+                    dni : $('#datosResponsableInstitucion .dni').text()
                 }
             };
             $.Planilla.readEquipos();
