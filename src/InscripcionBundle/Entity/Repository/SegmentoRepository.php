@@ -304,7 +304,7 @@ class SegmentoRepository extends EntityRepository
                 SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, pla.planillas, pla.equipos, pla.inscriptos
                 FROM Municipio as m
                 LEFT JOIN (
-                    SELECT p.id,p.segmento, p.municipio, COUNT(p.id) as "planillas", COUNT(Equipo.id) as "equipos", COUNT(EquiposCompetidores.id) as "inscriptos"
+                    SELECT p.segmento, p.municipio, COUNT(p.id) as "planillas", COUNT(Equipo.id) as "equipos", COUNT(EquiposCompetidores.id) as "inscriptos"
                     FROM Planilla as p
                     INNER JOIN Equipo ON Equipo.planilla = p.id
                     INNER JOIN EquiposCompetidores ON EquiposCompetidores.equipo_id = Equipo.id
