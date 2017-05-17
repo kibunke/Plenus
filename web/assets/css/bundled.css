@@ -12934,6 +12934,9 @@ textarea.autosize {
 /* ---------------------------------------------------------------------- */
 /*  Tables
 /* ---------------------------------------------------------------------- */
+.tableexport-caption{
+    display: none;
+}
 /* line 4, ../sass/partials/_tables.scss */
 .table > thead > tr > th {
   border-bottom: 1px solid #dfe1e5;
@@ -18425,23 +18428,23 @@ body.error-full-page {
     opacity: 0.7;
     font-size: 20px;
     padding: 5px 0px;
-    text-align: center;   
+    text-align: center;
 }
 .control-left{
     top: -40px;
-    right: 50px;    
+    right: 50px;
 }
 .control-right{
     top: -40px;
-    right: 10px;    
+    right: 10px;
 }
 .control-table-left{
     top: 10px;
-    right: 50px;    
+    right: 50px;
 }
 .control-table-right{
     top: 10px;
-    right: 10px;    
+    right: 10px;
 }
 
 .val_stimated_down i, .val_stimated_up i{
@@ -18450,13 +18453,14 @@ body.error-full-page {
 .val_stimated_down{
     color: #d9534f !important;
     font-size: 25px;
-    font-weight: 600;    
+    font-weight: 600;
 }
 .val_stimated_up{
     color: #5cb85c !important;
     font-size: 25px;
-    font-weight: 600;    
+    font-weight: 600;
 }
+
 /*  Theme Default
 /* ---------------------------------------------------------------------- */
 /* line 10, ../../sass/themes/theme-default.scss */

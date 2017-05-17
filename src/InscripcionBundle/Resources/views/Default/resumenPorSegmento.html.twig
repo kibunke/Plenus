@@ -194,6 +194,8 @@
     <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
 #}
     <script src="{{ asset('assets/common/jstree/dist/jstree.min.js') }}"></script>
+    <script src="{{ asset('assets/js/fileSaver.min.js') }}"></script>
+    <script src="{{ asset('assets/js/tableexport.min.js') }}"></script>
     <script>
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
@@ -316,64 +318,47 @@
             // no se sobreescribe el namespace, si ya existe
             $.TableExport = $.TableExport || {};
             $.TableExport.init = function() {
+            //     /* Excel Binary spreadsheet (.xls) */
+            //     $.fn.tableExport.xls = {
+            //         defaultClass: "xls",
+            //         buttonContent: "Export to xls",
+            //         separator: "\t",
+            //         mimeType: "application/vnd.ms-excel",
+            //         fileExtension: ".xls"
+            //     };
+            //     /* Comma Separated Values (.csv) */
+            //     $.fn.tableExport.csv = {
+            //         defaultClass: "csv",
+            //         buttonContent: "Export to csv",
+            //         separator: ",",
+            //         mimeType: "application/csv",
+            //         fileExtension: ".csv"
+            //     };
+            //     /* Plain Text (.txt) */
+            //     $.fn.tableExport.txt = {
+            //         defaultClass: "txt",
+            //         buttonContent: "Export to txt",
+            //         separator: "  ",
+            //         mimeType: "text/plain",
+            //         fileExtension: ".txt"
+            //     };
+                var table = $(exportTable).tableExport();
 				$(".export-excel").on("click", function(e) {
 					e.preventDefault();
                     $('#analiticalTable thead>tr').toggle();
-					$(exportTable).tableExport({
-						type: 'excel',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-                    $('#analiticalTable thead>tr').toggle();
-				});
-				$(".export-doc").on("click", function(e) {
-					e.preventDefault();
-                    $('#analiticalTable thead>tr').toggle();
-					$(exportTable).tableExport({
-						type: 'doc',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
+					$('.tableexport-caption>.xls').trigger('click');
                     $('#analiticalTable thead>tr').toggle();
 				});
 				$(".export-csv").on("click", function(e) {
 					e.preventDefault();
                     $('#analiticalTable thead>tr').toggle();
-					$(exportTable).tableExport({
-						type: 'csv',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
+                    $('.tableexport-caption>.csv').trigger('click');
                     $('#analiticalTable thead>tr').toggle();
 				});
 				$(".export-txt").on("click", function(e) {
 					e.preventDefault();
                     $('#analiticalTable thead>tr').toggle();
-					$(exportTable).tableExport({
-						type: 'txt',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-                    $('#analiticalTable thead>tr').toggle();
-				});
-				$(".export-sql").on("click", function(e) {
-					e.preventDefault();
-                    $('#analiticalTable thead>tr').toggle();
-					$(exportTable).tableExport({
-						type: 'sql',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
-                    $('#analiticalTable thead>tr').toggle();
-				});
-				$(".export-json").on("click", function(e) {
-					e.preventDefault();
-                    $('#analiticalTable thead>tr').toggle();
-					$(exportTable).tableExport({
-						type: 'json',
-						escape: 'false',
-						ignoreColumn: '['+ignoreColumn+']'
-					});
+					$('.tableexport-caption>.txt').trigger('click');
                     $('#analiticalTable thead>tr').toggle();
 				});
             }

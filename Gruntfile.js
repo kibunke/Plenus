@@ -25,7 +25,9 @@ module.exports = function (grunt) {
                     'js/select2.js': 'select2/dist/js/select2.min.js',
                     'js/highcharts.js': 'highcharts/js/highcharts.js',
                     'js/highstock.js': 'highcharts/js/highstock.js',
-                    'js/jquery.easypiechart.min.js': 'jquery.easy-pie-chart/dist/jquery.easypiechart.min.js'
+                    'js/jquery.easypiechart.min.js': 'jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+                    'js/fileSaver.min.js': 'file-saverjs/FileSaver.min.js',
+                    'js/tableexport.min.js': 'tableexport.js/dist/js/tableexport.min.js'
                 }
             },
             stylesheets: {

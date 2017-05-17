@@ -75,8 +75,7 @@
                     {% set totalFila = 0 %}
                     <tr data-region="{{ row.region }}">
                         <td>
-                            <!-- <i class="fa fa-random" title="Regional"></i> -->
-                            {{ row.regional | raw }}<span class="sr-only">{{ row.region }}</span>
+                            {{ row.regional | raw }}
                         </td>
                         <td style="text-align: left">{{ row.municipio }}</td>
                         <td></td>
