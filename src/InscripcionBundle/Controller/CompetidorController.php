@@ -25,7 +25,7 @@ class CompetidorController extends Controller
      * @Route("/competidor/list", name="competidor_list")
      * @Template()
      */
-    public function listCompetidorAction(Request $request)
+    public function indexAction(Request $request)
     {
         return array();
     }
@@ -51,8 +51,6 @@ class CompetidorController extends Controller
                                     "name"      => $competidor->getNombreCompleto(),
                                     "dni"       => $competidor->getDni(),
                                     "municipio" => $competidor->getMunicipio()->getNombre(),
-                                    //"planillas" => $planillas,
-                                    //"segmentos" => $segmentos,
                                     "auditoria" => array(
                                                         "createdBy" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getNombreCompleto() : '-',
                                                         "municipio" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getMunicipio()->getNombre() : '-',

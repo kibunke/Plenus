@@ -86,7 +86,7 @@
 										<li>
 											<a href="{{ path('persona_sin_user_list') }}">
 												<i class="fa fa-users"></i>
-												<span class="title"> Personas sin Usuario </span>
+												<span class="title"> Personas sin usuario </span>
 											</a>
 										</li>
 										{% endif %}
@@ -192,22 +192,20 @@
 										Competidores <i class="icon-arrow"></i>
 									</a>
 									<ul class="sub-menu">
-											<li>
-												<a href="{{ path('competidor_list') }}">
-													<i class="fa fa-list-ol"></i>
-													<span class="title">Listado</span>
-												</a>
-											</li>
-											{% if is_granted('ROLE_INSCRIPCION_ACTIVIDADES_SOSPECHOSAS') %}
-												<li>
-													<a href="{{ path('inscripcion_actividadesSospechosas') }}">
-														<span class="title">
-															<span class="fa fa-crosshairs"></span>
-															Actividades Sospechosas
-														</span>
-													</a>
-												</li>
-											{% endif %}
+										<li>
+											<a href="{{ path('competidor_list') }}">
+												<i class="fa fa-list-ol"></i>
+												<span class="title">Listado</span>
+											</a>
+										</li>
+										<li>
+											<a href="#1{#{ path('inscripcion_actividadesSospechosas') }#}">
+												<span class="title">
+													<span class="fa fa-crosshairs"></span>
+													Actividades sospechosas
+												</span>
+											</a>
+										</li>
 									</ul>
 								</li>
 							{% endif %}
@@ -246,11 +244,19 @@
 												</a>
 											</li>
 										{% endif %}
-										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_REGIONAL') %}
+										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_SEGMENTO') %}
 											<li>
-												<a href="{{ path('consulta_resumenregional_inscripcion') }}">
+												<a href="{{ path('consulta_resumenPorSegmento_inscripcion') }}">
 													<i class="fa fa-play"></i>
-													Resumen regionales
+													Resumen por segmento
+												</a>
+											</li>
+										{% endif %}
+										{% if is_granted('ROLE_INSCRIPCION_CONSULTA_TORNEO') %}
+											<li>
+												<a href="{{ path('consulta_resumenTorneo_inscripcion') }}">
+													<i class="fa fa-play"></i>
+													Resumen por torneo
 												</a>
 											</li>
 										{% endif %}
@@ -284,7 +290,7 @@
 									<a href="{#{ path('resultado_actividades_sospechosas') }#}">
 										<span class="title">
 											<span class="fa fa-crosshairs"></span>
-											Actividades Sospechosas
+											Actividades sospechosas
 										</span>
 									</a>
 								</li>
@@ -372,7 +378,7 @@
 								<li>
 									<a href="{#{ path('tesoreria_fondo_list') }#}">
 										<i class="fa fa-money"></i>
-										Administración de Fondos
+										Administración de fondos
 									</a>
 								</li>
 							{% endif %}
@@ -380,7 +386,7 @@
 								<li>
 									<a href="{#{ path('tesoreria_entidad_list') }#}">
 										<i class="fa fa-university"></i>
-										Administración de Entidades
+										Administración de entidades
 									</a>
 								</li>
 							{% endif %}
@@ -388,7 +394,7 @@
 								<li>
 									<a href="{#{ path('tesoreria_movimiento_list') }#}">
 										<i class="fa fa-usd"></i>
-										<span class="title"> Administración de Movimientos </span>
+										<span class="title"> Administración de movimientos </span>
 									</a>
 								</li>
 							{% endif %}
@@ -436,7 +442,7 @@
 								<li>
 									<a href="{#{ path('resultados') }#}">
 										<i class="fa fa-bullseye"></i>
-										Listado Eventos
+										Listado eventos
 									</a>
 								</li>
 							{% endif %}

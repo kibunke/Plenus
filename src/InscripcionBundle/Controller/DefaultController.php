@@ -89,15 +89,51 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/consulta/resumenregional", name="consulta_resumenregional_inscripcion")
-     * @Method({"GET","POST"})
-     * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_REGIONAL')")
-     * @Template("InscripcionBundle:Default:resumenregional.html.twig")
+     * @Route("/consulta/resumenTorneo", name="consulta_resumenTorneo_inscripcion")
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_TORNEO')")
+     * @Template("InscripcionBundle:Default:resumenTorneo.html.twig")
      */
-    public function consultaResumenRegionalAction(Request $request)
+    public function consultaResumenTorneoAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        //$result = $em->getRepository('InscripcionBundle:Segmento')->getTree());
+        $data = $em->getRepository('ResultadoBundle:Torneo')->getResumenPorMunicipio();
+        $municipios = $em->getRepository('CommonBundle:Municipio')->getAllArray();
+        $resumen = [];
+        $torneos = [];
+        foreach ($data['torneos'] as $row) {
+            $torneos[$row['id']] = array(
+                'id' => $row['id'],
+                'nombre' => $row['nombre'],
+                'parcial' => 0
+            );
+        }
+        foreach ($municipios as $municipio){
+            $resumen[$municipio['id']] = array(
+                "id" => $municipio['id'],
+                "nombre" => $municipio['nombre'],
+                'region' => $municipio['region'],
+                "data" => $torneos
+            );
+        }
+        foreach ($data['totalPorMunicipio'] as $row){
+            $resumen[$row['municipioId']]['data'][$row['torneoId']]['parcial'] = $row['total'];
+        }
+        return array(
+            'resumen' => $resumen,
+            'data' => $data
+        );
+    }
+
+    /**
+     * @Route("/consulta/resumenPorSegmento", name="consulta_resumenPorSegmento_inscripcion")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_SEGMENTO')")
+     * @Template("InscripcionBundle:Default:resumenPorSegmento.html.twig")
+     */
+    public function consultaResumenPorSegmentoAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
         $referencia=array('segmentos'=>array());
         $resumen = array();
         $segmentos = array();
@@ -108,19 +144,16 @@ class DefaultController extends Controller
         if ($request->getMethod() == 'POST') {
             $arr=$request->request->get('eventos');
             if (is_array($arr) && count($arr)>0){
-                // if (count(array_diff($arr, $result['ids']))==0){
-                //     $result['ids']=$arr;
-                // }
                 $eventos=[];
                 foreach ($arr as $id){
                     $seg = $em->getRepository('InscripcionBundle:Segmento')->find($id);
                     $segmentos[$id]=$seg->getNombreCompleto();
                 }
-                $resumen = $this->parserResumenRegionalData($em->getRepository('InscripcionBundle:Segmento')->getResumenRegionalPorSegmentos($arr),$arr);
+                $resumen = $this->parserResumenPorSegmentoData($em->getRepository('InscripcionBundle:Segmento')->getResumenPorSegmentos($arr),$arr);
                 $referencia = array_values($resumen)[0];
             }
             return $this->render(
-                'InscripcionBundle:Default:resumenregional.table.html.twig',
+                'InscripcionBundle:Default:resumenPorSegmento.table.html.twig',
                 array(
                       'resumen' => $resumen,
                       'segmentos' => $segmentos,
@@ -135,14 +168,14 @@ class DefaultController extends Controller
         );
     }
 
-    private function parserResumenRegionalData($rows,$ids){
+    private function parserResumenPorSegmentoData($rows,$ids){
         $em = $this->getDoctrine()->getManager();
         $matriz = $this->parseMatriz($rows,$ids);
         foreach($rows as $row)
         {
-            /* descarta los null que pueden venir en la query de eventos por el left joi*/
+            /* descarta los null que pueden venir en la query de eventos por el left join*/
             if ($row['segmento'] > 0){
-                $matriz[$row['id']]['segmentos'][$row['segmento']] = $row['inscripcion'];
+                $matriz[$row['id']]['segmentos'][$row['segmento']] = $row['inscriptos'];
             }
         }
         return $matriz;

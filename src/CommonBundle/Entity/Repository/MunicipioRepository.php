@@ -12,6 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class MunicipioRepository extends EntityRepository
 {
+    public function getAllArray()
+    {
+        return $this->getEntityManager()
+                    ->createQuery(" SELECT mun.id, mun.nombre,mun.regionDeportiva as region
+                                    FROM CommonBundle:Municipio mun")
+                    ->getArrayResult();
+    }
+
     public function dataTable($request)
     {
         return array(
@@ -20,7 +28,7 @@ class MunicipioRepository extends EntityRepository
                       "rows"     => $this->getRows($request)
             );
     }
-    
+
     public function getRows($request)
     {
         $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva","m.cruceRegional"];
@@ -29,7 +37,7 @@ class MunicipioRepository extends EntityRepository
                     m.regionDeportiva LIKE ?1 OR
                     m.seccionElectoral LIKE ?1 OR
                     m.cruceRegional LIKE ?1)";
-                
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT m
                                         FROM CommonBundle:Municipio m
@@ -40,7 +48,7 @@ class MunicipioRepository extends EntityRepository
                         ->setFirstResult($request->get('start'))
                         ->getResult();
     }
-    
+
     public function getFilteredRows($request)
     {
         $columns = ["m.id","m.nombre","m.seccionElectoral","m.regionDeportiva","m.cruceRegional"];
@@ -49,7 +57,7 @@ class MunicipioRepository extends EntityRepository
                     m.regionDeportiva LIKE ?1 OR
                     m.seccionElectoral LIKE ?1 OR
                     m.cruceRegional LIKE ?1)";
-                
+
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(m)
                                         FROM CommonBundle:Municipio m
@@ -57,7 +65,7 @@ class MunicipioRepository extends EntityRepository
                         ->setParameter(1,'%'.$request->get('search')['value'].'%')
                         ->getSingleScalarResult();
     }
-    
+
     public function getTotalRows()
     {
         return $this->getEntityManager()

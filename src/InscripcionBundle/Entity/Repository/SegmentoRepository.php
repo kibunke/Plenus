@@ -270,6 +270,9 @@ class SegmentoRepository extends EntityRepository
         return $where;
     }
 
+    /*
+     * Se utiliza para armar el arbol de segmentos de inscripcion
+    */
     public function getAllConNombre($security = NULL)
     {
         $q=" SELECT t.id as torneo,
@@ -294,22 +297,23 @@ class SegmentoRepository extends EntityRepository
         return $q->getArrayResult();
     }
 
-    public function getResumenRegionalPorSegmentos($segmentos)
+    public function getResumenPorSegmentos($segmentos)
     {
         if (!$segmentos) return [];
         $query= '
-                SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, COUNT(pla.id) as "inscripcion"
+                SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, pla.planillas, pla.equipos, pla.inscriptos
                 FROM Municipio as m
                 LEFT JOIN (
-                    SELECT *
+                    SELECT p.id,p.segmento, p.municipio, COUNT(p.id) as "planillas", COUNT(Equipo.id) as "equipos", COUNT(EquiposCompetidores.id) as "inscriptos"
                     FROM Planilla as p
+                    INNER JOIN Equipo ON Equipo.planilla = p.id
+                    INNER JOIN EquiposCompetidores ON EquiposCompetidores.equipo_id = Equipo.id
                     WHERE p.segmento in ('.implode(',', $segmentos).')
+                    GROUP BY p.segmento,p.municipio
                 ) as pla ON pla.municipio = m.id
                 WHERE m.idProvincia = 1
-                GROUP BY m.id,pla.segmento
                 ORDER BY m.id,pla.segmento
             ';
-        //print_r($this->getEntityManager()->getConnection()->query($query));die();
         return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
     }
 }

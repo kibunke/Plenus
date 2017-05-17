@@ -184,6 +184,7 @@
                     },
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
+                        $('.dataTable').dataTable().fnSetFilteringDelay();
                     }
                 });
             }

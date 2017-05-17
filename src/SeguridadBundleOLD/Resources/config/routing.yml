@@ -1,4 +1,0 @@
-#import routes from a controller directory
-all_routing:
-    resource: "@SeguridadBundle/Controller"
-    type:     annotation

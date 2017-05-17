@@ -1,0 +1,218 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i> Resumen por Torneo. <small>Filtre y acceda a la información sobre los totaltes de inscripctos.</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="toolbar-tools pull-right">
+                <!-- start: TOP NAVIGATION MENU -->
+                <ul class="nav navbar-right">
+                    <!-- start: TO-DO DROPDOWN -->
+                </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#1">
+                        Inscripción
+                    </a>
+                </li>
+                <li>
+                    <a href="#1">
+                        Consultas
+                    </a>
+                </li>
+                <li class="active">
+                    Resumen por torneo
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Listado de totaltes por Torneo <span class="text-bold">segmentado por Municipio</span></h4>
+                    <div class="panel-tools">
+                        {{ include('CommonBundle::dropdownTables.html.twig') }}
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table id="analiticalTable" class="table table-striped table-hover table-responsive" data-numcolums="{{ data.torneos | length + 1}}">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Municipio</th>
+                                <th class="no-search"></th>
+                                {% for item in data.torneos %}
+                                    <th class="text-center">{{ item.nombre }}</th>
+                                {% endfor %}
+                                <th class="text-center info">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in resumen %}
+                                {% set totalRow = 0 %}
+                                <tr data-region="{{ row.region }}">
+                                    <td>
+                                        {{ row.region }}
+                                    </td>
+                                    <td style="text-align: left">{{ row.nombre }}</td>
+                                    <td></td>
+                                    {% for col in row.data %}
+                                        {% set totalRow = totalRow + col.parcial %}
+                                        <td class="text-center" title="Cantidad de inscriptos">{{ col.parcial }}</td>
+                                    {% endfor %}
+                                    <td class="text-center info" title="Total de fila"><span>{{ totalRow }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-right success"><b>TOTALES</b></td>
+                                {% for item in data.torneos %}
+                                    <td class="text-center success"><i class="fa fa-refresh fa-spin"></i></td>
+                                {% endfor %}
+                                <td class="text-center success"><i class="fa fa-refresh fa-spin"></i></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <p><b>Importante</b><br/>* Tener en cuenta que la suma total por columna es sobre las filas que estan en pantalla. Para ver el total general debe seleccionar "Todas" en el combo "Mostrar [...] filas"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block otherStylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/common/jstree/dist/themes/default/style.css') }}">
+{% endblock %}
+{% block otherJavascripts %}
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            var table,
+                totales = [],
+                numcolums = 0;
+            $.Default = $.Default || {};
+            $.Default.init = function() {
+                //$(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+                numcolums = $('#analiticalTable').data('numcolums');
+                for (i = 0; i < numcolums; i++) {totales.push(0);}
+                table = $('#analiticalTable').dataTable( {
+                    "language": {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columnDefs": [ {
+                                    "searchable": false,
+                                    "orderable": false,
+                                    "targets": 'no-search'
+                                }],
+                    "order": [[ 0, 'asc' ]],
+                    "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                        for (i = 0; i <  numcolums; i++) {
+                            totales[i] = totales[i] + parseInt($('td:eq('+(i+3)+')', nRow).text());
+                        }
+                    },
+                    "fnDrawCallback": function(){
+                        $tfoot=$('#analiticalTable tfoot');
+                        for (i = 0; i <  numcolums; i++) {
+                            $tfoot.find("td:eq("+(i+1)+")").html(totales[i]);
+                        }
+                        totales=[];
+                        for (i = 0; i <  numcolums; i++) {totales.push(0);}
+                    },
+                    "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]],
+                    "iDisplayLength" : 25
+                });
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();$.TableExport.init()});
+
+        (function ($) {
+            var exportTable = "#analiticalTable";
+            var ignoreColumn;
+            // no se sobreescribe el namespace, si ya existe
+            $.TableExport = $.TableExport || {};
+            $.TableExport.init = function() {
+				$(".export-excel").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'excel',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-doc").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'doc',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-csv").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'csv',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-txt").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'txt',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-sql").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'sql',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+				$(".export-json").on("click", function(e) {
+					e.preventDefault();
+                    $('#analiticalTable thead>tr').toggle();
+					$(exportTable).tableExport({
+						type: 'json',
+						escape: 'false',
+						ignoreColumn: '['+ignoreColumn+']'
+					});
+                    $('#analiticalTable thead>tr').toggle();
+				});
+            }
+        })(jQuery);
+    </script>
+{% endblock %}
