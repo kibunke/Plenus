@@ -122,18 +122,10 @@ class CompetidorController extends Controller
 
     private function validarCombinacion($competidorBase,$competidores)
     {
-        $arrMunicipios = [];
-        foreach ($competidorBase->getPlanillas() as $planilla) {
-            $arrMunicipios[$planilla->getMunicipio()->getId()] = true;
-        }
         foreach ($competidores as $competidor) {
             foreach ($competidor->getPlanillas() as $planilla) {
-                $arrMunicipios[$planilla->getMunicipio()->getId()] = true;
                 $planilla->validarCombinacion($competidorBase);
             }
-        }
-        if (count($arrMunicipios) > 1){
-            throw new \Exception('La combinación no es posible porque los participantes estan asociados a planillas con diferentes municipios.');
         }
     }
 }

@@ -154,7 +154,9 @@
                             .done((data)=>{
                                 if (data.success){
                                     swal('Excelente!',data.message,'success')
-                                    _table.fnDraw(true);
+                                    _table1.fnDraw(true);
+                                    _table2.fnDraw(true);
+                                    $("#panelFusion .combRow").remove();
                                 }else{
                                     swal('Cuidado!',data.message,'error')
                                 }
@@ -170,7 +172,7 @@
             $.Default.combinar.add = function(ele)
             {
                 if (_hasRole){
-                    $tr = $('<tr></tr>').append('<td class="text-center">'+ $row.find('td:eq(0)').text() +'</td>')
+                    $tr = $('<tr class="combRow"></tr>').append('<td class="text-center">'+ $row.find('td:eq(0)').text() +'</td>')
                                         .append('<td>'+ $row.find('td:eq(1)').html() + '<br><small>'+ $row.find('td:eq(2)').text() +'</small></td>')
                                         .append('<td class="text-center"><a class="btn btn-red btn-xs" href="#" onClick="$.Default.combinar.remove(this)"><i class="fa fa-times fa fa-white"></i></a></td>');
                     if ($("#panelFusion .table tr").length < 5){
