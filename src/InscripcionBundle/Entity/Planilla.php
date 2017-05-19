@@ -618,8 +618,11 @@ abstract class Planilla
                 throw new \Exception('Plenus: El participante con DNI %DNI% no puede inscribirse más de una vez por planilla.');
             }
             foreach ($inscripto->getEquipos() as $equipo){
-                if ($this->id != $equipo->getPlanilla()->getId())
+                if ($this->id != $equipo->getPlanilla()->getId()){
                     $this->inscripcionValida($equipo->getPlanilla());
+                }else{
+                    //
+                }
             }
         }catch(\Exception $e){
             $message = $e->getMessage();
@@ -823,11 +826,19 @@ abstract class Planilla
         return $this;
     }
 
-    public function getTemplateShow(){
+    public function getTemplateShow()
+    {
         return "InscripcionBundle:Planilla:planillaShow.html.twig";
     }
 
-    public function isAprobada(){
+    public function isAprobada()
+    {
         return $this->getEstado()->isAprobada();
+    }
+
+    public function validarCombinacion($competidorBase)
+    {
+        return $this->validarInscripcion($competidorBase);
+        $this->getEstado()->isAprobada();
     }
 }

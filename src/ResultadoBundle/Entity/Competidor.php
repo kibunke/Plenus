@@ -12,12 +12,12 @@ use CommonBundle\Entity\Persona;
  *
  */
 class Competidor extends Persona
-{    
+{
     /**
      * @ORM\OneToMany(targetEntity="EquiposCompetidores", mappedBy="competidor", cascade={"all"})
      * */
     protected $competidorEquipos;
-    
+
     /**
      * Constructor
      */
@@ -26,12 +26,12 @@ class Competidor extends Persona
         $this->competidorEquipos = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct($user);
     }
-    
+
     /**
      * validarAsignacion
      * valida que el competidor no este en dos equipos del mismo torneo
      * Esto no va as er necesario porque lo resuelve la PLANILLA DE INSCRIPCION
-     * 
+     *
      */
     public function validarAsignacion($participante)
     {
@@ -42,7 +42,7 @@ class Competidor extends Persona
          * 1- no estar en dos eventos del area de cultura
          * 2- no estar en dos eventos del area de deportes, salvo que uno de los dos sea una competencia de posta
          */
-        
+
         //$torneos = new \Doctrine\Common\Collections\ArrayCollection();
         //$diciplinas = [];//METO TODAS LAS DISCIPLINAS DONDE PARTICIPA EL INSCRIPTO, las que ya esta isncripto y la que se quiere inscribir
         //foreach ( $this->getEquipos() as $item ){
@@ -62,7 +62,7 @@ class Competidor extends Persona
         //            // si es una inscripcion doble en cultura lo patea de una
         //            return false;
         //        }
-        //        
+        //
         //    }
         //}
         //$cont = 0;// cuenta cuantas disciplinas no son de posta
@@ -76,11 +76,11 @@ class Competidor extends Persona
         //}
         //return true;
     }
-    
+
     /**
      * Get nombreCompletoRaw
      *
-     * @return string 
+     * @return string
      */
     public function getNombreCompletoRaw()
     {
@@ -93,10 +93,10 @@ class Competidor extends Persona
     /**
      * Get medallero
      *
-     * @return array 
+     * @return array
      */
     public function getMedallero()
-    {    
+    {
         $eventos = [];
         foreach ($this->getEquipos() as $equipo) {
             if ($equipo->hasMedalla()) {
@@ -109,10 +109,10 @@ class Competidor extends Persona
     /**
      * Get municipios
      *
-     * @return string 
+     * @return string
      */
     public function getMunicipios()
-    {    
+    {
         $mun = [];
         foreach ($this->getEquipos() as $equipo) {
             if (!in_array($equipo->getMunicipio()->getNombre(),$mun)){
@@ -121,7 +121,7 @@ class Competidor extends Persona
         }
         return $mun;
     }
-    
+
     public function getJson($aux = null)
     {
         return array(
@@ -129,7 +129,7 @@ class Competidor extends Persona
                 'persona' => parent::toArray(),
             );
     }
-    
+
     /**
      * Load
      */
@@ -137,17 +137,17 @@ class Competidor extends Persona
     {
         return parent::loadFromJson($json->persona);
     }
-    
+
     public function getTipoPersona()
     {
         return 'Competidor';
     }
-    
+
     public function getClass()
     {
         return 'ResultadoBundle:Competidor';
     }
-    
+
     public function getPlanillas()
     {
         $planillas = [];
@@ -156,7 +156,7 @@ class Competidor extends Persona
         }
         return $planillas;
     }
-    
+
     public function getSegmentos()
     {
         $segmentosIds = [];
@@ -165,25 +165,25 @@ class Competidor extends Persona
             $segmento = $equipo->getPlanilla()->getSegmento();
             if (!in_array($segmento->getId(), $segmentosIds)){
                 $segmentosIds[] = $segmento->getId();
-                $segmentos[] = $segmento;        
+                $segmentos[] = $segmento;
             }
         }
         return $segmentos;
     }
-    
+
     public function getEquipos()
     {
         $equipos = [];
-        
+
         foreach($this->competidorEquipos as $aux)
         {
             if (is_object($aux->getEquipo()))
                 $equipos[] = $aux->getEquipo();
         }
 
-        return $equipos;        
+        return $equipos;
     }
-    
+
     /**
      * Add competidorEquipo
      *
@@ -216,5 +216,16 @@ class Competidor extends Persona
     public function getCompetidorEquipos()
     {
         return $this->competidorEquipos;
+    }
+
+    /**
+     * prepareToDelete
+     *
+     * @return ''
+     */
+    public function prepareToDelete()
+    {
+        $this->competidorEquipos = [];
+        return $this;
     }
 }

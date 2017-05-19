@@ -92,21 +92,48 @@ class CompetidorController extends Controller
     public function combinarAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $competidores = $em->getRepository('ResultadoBundle:Competidor')->find(["id"]);
-        var_dump($request->request->get('ids'));die;
-        return array();
+        $competidores = $request->request->get('ids');
+        $competidorBase = array_shift($competidores);
+        $competidorBase = $em->getRepository('ResultadoBundle:Competidor')->find($competidorBase);
+        $competidores = $em->getRepository('ResultadoBundle:Competidor')->findBy(['id' => $competidores]);
+        try{
+            $this->validarCombinacion($competidorBase,$competidores);
+        }catch(\Exception $e ){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => $e->getMessage(), 'debug' => $e->getMessage()));
+        }
+
+        foreach ($competidores as $competidor) {
+            foreach ($competidor->getCompetidorEquipos() as $competidorEquipo) {
+                $competidorEquipo->setCompetidor($competidorBase);
+                // $equipo->removeCompetidor($competidor);
+                // $equipo->addIntegrante($competidorBase,'');
+            }
+            //$competidor->prepareToDelete();
+            $em->remove($competidor->prepareToDelete());
+        }
+        try{
+            $em->flush();
+        }catch(\Exception $e ){
+            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'No se pudo persistir la información', 'debug' => $e->getMessage()));
+        }
+        //var_dump(count($competidores));die;
+        return new JsonResponse(array('success' => true, 'error' => false, 'message' => 'La combinación fue exitosa!'));
     }
 
-    private function validarCombinacion($competidores)
+    private function validarCombinacion($competidorBase,$competidores)
     {
         $arrMunicipios = [];
+        foreach ($competidorBase->getPlanillas() as $planilla) {
+            $arrMunicipios[$planilla->getMunicipio()->getId()] = true;
+        }
         foreach ($competidores as $competidor) {
             foreach ($competidor->getPlanillas() as $planilla) {
                 $arrMunicipios[$planilla->getMunicipio()->getId()] = true;
+                $planilla->validarCombinacion($competidorBase);
             }
         }
         if (count($arrMunicipios) > 1){
-            return "";
+            throw new \Exception('La combinación no es posible porque los participantes estan asociados a planillas con diferentes municipios.');
         }
     }
 }

@@ -22,18 +22,18 @@ class EquiposCompetidores
      * @var integer $id
      */
     protected $id;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="Competidor", inversedBy="competidorEquipos", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Competidor", inversedBy="competidorEquipos", cascade={"persist"})
      * @ORM\JoinColumn(name="competidor_id", referencedColumnName="id")
      * */
     protected $competidor;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="Equipo", inversedBy="equipoCompetidores", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Equipo", inversedBy="equipoCompetidores", cascade={"persist"})
      * @ORM\JoinColumn(name="equipo_id", referencedColumnName="id")
      * */
-    protected $equipo;    
+    protected $equipo;
 
     /**
      * @var string $rol
@@ -41,7 +41,7 @@ class EquiposCompetidores
      * @ORM\Column(name="rol", type="string", length=100)
      */
     protected $rol;
-    
+
     /**
      * Constructor
      */
