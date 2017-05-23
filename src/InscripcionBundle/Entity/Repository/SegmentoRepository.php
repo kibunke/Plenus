@@ -278,7 +278,7 @@ class SegmentoRepository extends EntityRepository
         $q=" SELECT t.id as torneo,
                     d.id as disciplina,
                     s.id as segmento,
-                    CONCAT(t.nombre,'-',d.nombre,'-',c.nombre,'-',g.nombre,'-',m.nombre,'-',s.nombre) as nombre
+                    CONCAT(t.nombre,'-',d.nombre,'-',c.nombre,'-',g.nombre,'-',m.nombre) as nombre
             FROM InscripcionBundle:Segmento s
             JOIN s.torneo t
             JOIN s.disciplina d

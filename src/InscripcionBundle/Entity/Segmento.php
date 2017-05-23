@@ -239,7 +239,7 @@ class Segmento
         if ($this->getModalidad())
             $name .= " - ".$this->getModalidad()->getNombre();
         if ($this->getNombre())
-            $name." - ".$this->getNombre();
+            $name = $name." - ".$this->getNombre();
         return $name;
     }
 
