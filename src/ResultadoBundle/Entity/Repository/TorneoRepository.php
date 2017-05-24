@@ -33,6 +33,13 @@ class TorneoRepository extends EntityRepository
                         'totalPorMunicipio' => []
                     );
         if ($soloAprobadas){
+            $estados = array_map('current',$this->getEntityManager()
+                            ->createQuery(" SELECT MAX(e.id)
+                                            FROM InscripcionBundle:PlanillaEstado e
+                                            GROUP BY e.planilla")
+                            ->getArrayResult());
+            $estados[]=0;
+
             $result['totalPorMunicipio'] = $this->getEntityManager()
                                                         ->createQuery(" SELECT t.id as torneoId, mun.id as municipioId, mun.nombre as municipio, t.nombre,COUNT(eqc.id) as total
                                                                         FROM ResultadoBundle:Torneo t
@@ -42,9 +49,10 @@ class TorneoRepository extends EntityRepository
                                                                         JOIN pla.municipio mun
                                                                         JOIN pla.equipos eq
                                                                         JOIN eq.equipoCompetidores eqc
-                                                                        WHERE plaes.nombre = ?1
+                                                                        WHERE plaes.nombre = ?1 AND plaes IN (?2)
                                                                         GROUP BY t.id,mun.id")
                                                         ->setParameter(1,"Aprobada")
+                                                        ->setParameter(2,implode(",",$estados))
                                                         ->getArrayResult();
         }else{
             $result['totalPorMunicipio'] = $this->getEntityManager()
