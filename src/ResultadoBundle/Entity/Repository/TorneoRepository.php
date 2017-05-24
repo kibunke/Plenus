@@ -49,7 +49,7 @@ class TorneoRepository extends EntityRepository
                                                                         JOIN pla.municipio mun
                                                                         JOIN pla.equipos eq
                                                                         JOIN eq.equipoCompetidores eqc
-                                                                        WHERE plaes.nombre = ?1 AND plaes IN (?2)
+                                                                        WHERE plaes.nombre = ?1 AND plaes.id IN (?2)
                                                                         GROUP BY t.id,mun.id")
                                                         ->setParameter(1,"Aprobada")
                                                         ->setParameter(2,implode(",",$estados))
