@@ -54,7 +54,7 @@ class TorneoRepository extends EntityRepository
                                                                         JOIN eq.equipoCompetidores eqc
                                                                         WHERE plaes.id IN (?2)
                                                                         GROUP BY t.id,mun.id")
-                                                        ->setParameter(2,implode(",",$estados))
+                                                        ->setParameter(2,$estados)
                                                         ->getArrayResult();
         }else{
             $result['totalPorMunicipio'] = $this->getEntityManager()
