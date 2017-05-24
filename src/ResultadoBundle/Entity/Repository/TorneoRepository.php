@@ -34,12 +34,15 @@ class TorneoRepository extends EntityRepository
                     );
         if ($soloAprobadas){
             $estados = array_map('current',$this->getEntityManager()
-                            ->createQuery(" SELECT MAX(e.id)
-                                            FROM InscripcionBundle:PlanillaEstado e
-                                            GROUP BY e.planilla")
-                            ->getArrayResult());
+                                                    ->createQuery(" SELECT MAX(e.id)
+                                                                    FROM InscripcionBundle:PlanillaEstado e
+                                                                    WHERE e.nombre = ?1
+                                                                    GROUP BY e.planilla")
+                                                    ->setParameter(1,"Aprobada")
+                                                    ->getArrayResult()
+                                );
             $estados[]=0;
-
+            var_dump(implode(",",$estados));die();
             $result['totalPorMunicipio'] = $this->getEntityManager()
                                                         ->createQuery(" SELECT t.id as torneoId, mun.id as municipioId, mun.nombre as municipio, t.nombre,COUNT(eqc.id) as total
                                                                         FROM ResultadoBundle:Torneo t
@@ -49,9 +52,8 @@ class TorneoRepository extends EntityRepository
                                                                         JOIN pla.municipio mun
                                                                         JOIN pla.equipos eq
                                                                         JOIN eq.equipoCompetidores eqc
-                                                                        WHERE plaes.nombre = ?1 AND plaes.id IN (?2)
+                                                                        WHERE plaes.id IN (?2)
                                                                         GROUP BY t.id,mun.id")
-                                                        ->setParameter(1,"Aprobada")
                                                         ->setParameter(2,implode(",",$estados))
                                                         ->getArrayResult();
         }else{
