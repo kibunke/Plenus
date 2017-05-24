@@ -42,7 +42,7 @@ class TorneoRepository extends EntityRepository
                                                     ->getArrayResult()
                                 );
             $estados[]=0;
-            var_dump(implode(",",$estados));die();
+            //var_dump(implode(",",$estados));die();
             $result['totalPorMunicipio'] = $this->getEntityManager()
                                                         ->createQuery(" SELECT t.id as torneoId, mun.id as municipioId, mun.nombre as municipio, t.nombre,COUNT(eqc.id) as total
                                                                         FROM ResultadoBundle:Torneo t
