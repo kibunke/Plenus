@@ -6,12 +6,26 @@
             <div class="page-header">
                 <h1><i class="fa fa-list-ol"></i> Resumen por Torneo. <small>Filtre y acceda a la información sobre los totaltes de inscripctos.</small></h1>
             </div>
+
         </div>
         <div class="col-sm-6 col-xs-12">
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
+                    {% if soloAprobadas %}
+                        <li class="dropdown">
+                            <a  href="{{ path('consulta_resumenTorneo_inscripcion') }}">
+                                <i class="fa fa-cubes"></i> TODAS
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="dropdown">
+                            <a  href="{{ path('consulta_resumenTorneo_inscripcion', {param: 'soloAprobadas'}) }}">
+                                <i class="fa fa-cube"></i> APROBADAS
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>

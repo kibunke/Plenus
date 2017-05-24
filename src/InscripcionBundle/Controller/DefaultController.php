@@ -89,15 +89,16 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/consulta/resumenTorneo", name="consulta_resumenTorneo_inscripcion")
+     * @Route("/consulta/resumenTorneo/{param}", name="consulta_resumenTorneo_inscripcion", defaults={"param" = null})
      * @Method({"GET"})
      * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_TORNEO')")
      * @Template("InscripcionBundle:Default:resumenTorneo.html.twig")
      */
-    public function consultaResumenTorneoAction(Request $request)
+    public function consultaResumenTorneoAction(Request $request,$param)
     {
+        $param = ($param == 'soloAprobadas') ? TRUE : FALSE;
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('ResultadoBundle:Torneo')->getResumenPorMunicipio();
+        $data = $em->getRepository('ResultadoBundle:Torneo')->getResumenPorMunicipio($param);
         $municipios = $em->getRepository('CommonBundle:Municipio')->getAllArray();
         $resumen = [];
         $torneos = [];
@@ -121,7 +122,8 @@ class DefaultController extends Controller
         }
         return array(
             'resumen' => $resumen,
-            'data' => $data
+            'data' => $data,
+            'soloAprobadas' => $param
         );
     }
 
@@ -142,7 +144,7 @@ class DefaultController extends Controller
         * en tal caso reemplaza el array con el los ids que si puede ver
         */
         if ($request->getMethod() == 'POST') {
-            $arr=$request->request->get('eventos');
+            $arr = $request->request->get('eventos');
             if (is_array($arr) && count($arr)>0){
                 $eventos=[];
                 foreach ($arr as $id){

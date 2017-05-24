@@ -26,21 +26,39 @@ class TorneoRepository extends EntityRepository
                     ->getArrayResult();
     }
 
-    public function getResumenPorMunicipio()
+    public function getResumenPorMunicipio($soloAprobadas = FALSE)
     {
-        return array(
+        $result = array(
                         'torneos' => $this->getResumen(),
-                        'totalPorMunicipio' => $this->getEntityManager()
-                                                    ->createQuery(" SELECT t.id as torneoId, mun.id as municipioId, mun.nombre as municipio, t.nombre,COUNT(eqc.id) as total
-                                                                    FROM ResultadoBundle:Torneo t
-                                                                    JOIN t.segmentos seg
-                                                                    JOIN seg.planillas pla
-                                                                    JOIN pla.municipio mun
-                                                                    JOIN pla.equipos eq
-                                                                    JOIN eq.equipoCompetidores eqc
-                                                                    GROUP BY t.id,mun.id")
-                                                    ->getArrayResult()
+                        'totalPorMunicipio' => []
                     );
+        if ($soloAprobadas){
+            $result['totalPorMunicipio'] = $this->getEntityManager()
+                                                        ->createQuery(" SELECT t.id as torneoId, mun.id as municipioId, mun.nombre as municipio, t.nombre,COUNT(eqc.id) as total
+                                                                        FROM ResultadoBundle:Torneo t
+                                                                        JOIN t.segmentos seg
+                                                                        JOIN seg.planillas pla
+                                                                        JOIN pla.estados plaes
+                                                                        JOIN pla.municipio mun
+                                                                        JOIN pla.equipos eq
+                                                                        JOIN eq.equipoCompetidores eqc
+                                                                        WHERE plaes.nombre = ?1
+                                                                        GROUP BY t.id,mun.id")
+                                                        ->setParameter(1,"Aprobada")
+                                                        ->getArrayResult();
+        }else{
+            $result['totalPorMunicipio'] = $this->getEntityManager()
+                                                        ->createQuery(" SELECT t.id as torneoId, mun.id as municipioId, mun.nombre as municipio, t.nombre,COUNT(eqc.id) as total
+                                                                        FROM ResultadoBundle:Torneo t
+                                                                        JOIN t.segmentos seg
+                                                                        JOIN seg.planillas pla
+                                                                        JOIN pla.municipio mun
+                                                                        JOIN pla.equipos eq
+                                                                        JOIN eq.equipoCompetidores eqc
+                                                                        GROUP BY t.id,mun.id")
+                                                        ->getArrayResult();
+        }
+        return $result;
     }
 
     public function dataTable($request)
