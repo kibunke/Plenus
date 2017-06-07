@@ -78,7 +78,7 @@ class PlanillaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $participante = $em->getRepository('ResultadoBundle:Competidor')->findOneBy(array('dni' => $dni));
         if ($participante){
-            return new JsonResponse(array('success' => true, 'error' => false, 'participante' => $participante->getJson()));
+            return new JsonResponse(array('success' => true, 'error' => false, 'participante' => $participante->toArray()));
         }
         return new JsonResponse(array('success' => false, 'error' => false, 'participante' => 'No se encontro el participante!'));
     }

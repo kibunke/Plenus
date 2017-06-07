@@ -28,7 +28,7 @@ class Evento
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     protected $nombre;
-    
+
      /**
      * @var string $descripcion
      *
@@ -42,7 +42,7 @@ class Evento
      * @ORM\Column(name="eventoAdaptado", type="boolean", nullable=true)
      */
     private $eventoAdaptado;
-    
+
     /**
      * @var integer $orden
      * @Assert\NotNull()
@@ -54,65 +54,60 @@ class Evento
      * @ORM\OneToMany(targetEntity="Etapa", mappedBy="evento")
      */
     private $etapas;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Equipo", mappedBy="evento")
-     */
-    private $equipos;     
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Torneo", inversedBy="eventos")
      * @ORM\JoinColumn(name="torneo", referencedColumnName="id")
-     */       
+     */
     private $torneo;
 
     /**
      * @ORM\ManyToOne(targetEntity="Categoria", inversedBy="eventos")
      * @ORM\JoinColumn(name="categoria", referencedColumnName="id")
-     */       
+     */
     private $categoria;
 
     /**
      * @ORM\ManyToOne(targetEntity="Modalidad", inversedBy="eventos")
      * @ORM\JoinColumn(name="modalidad", referencedColumnName="id")
-     */       
+     */
     private $modalidad;
 
     /**
      * @ORM\ManyToOne(targetEntity="Genero", inversedBy="eventos")
      * @ORM\JoinColumn(name="genero", referencedColumnName="id")
-     */       
+     */
     private $genero;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="eventos")
      * @ORM\JoinColumn(name="disciplina", referencedColumnName="id")
-     */       
+     */
     private $disciplina;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Segmento", inversedBy="eventos")
      * @ORM\JoinColumn(name="segmento", referencedColumnName="id")
      * @Assert\NotNull()
-     */       
+     */
     private $segmento;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Cronograma", mappedBy="eventos")
-     **/    
+     **/
     private $cronogramas;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -125,20 +120,20 @@ class Evento
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
 
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->getNombreCompleto();
     }
-    
+
     /**
      * hasAccess
-     */    
+     */
     public function hasAccess($user)
     {
         $idUser=$user->getId();
@@ -149,12 +144,12 @@ class Evento
         }
         return false;
     }
-    
-    
+
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -177,7 +172,7 @@ class Evento
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
@@ -187,7 +182,7 @@ class Evento
     /**
      * Get nombreCompleto
      *
-     * @return string 
+     * @return string
      */
     public function getNombreCompleto()
     {
@@ -204,7 +199,7 @@ class Evento
     /**
      * Get nombreCompletoRaw
      *
-     * @return string 
+     * @return string
      */
     public function getNombreCompletoRaw()
     {
@@ -218,7 +213,7 @@ class Evento
                 "</div>";
 
         return $nom;
-    
+
         //$nom =  "<div title='".$this->getNombreCompleto()."'>".
         //            "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
         //            "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
@@ -232,7 +227,7 @@ class Evento
     /**
      * Get nombreCompletoRaw
      *
-     * @return string 
+     * @return string
      */
     public function getAuditoriaRaw()
     {
@@ -259,7 +254,7 @@ class Evento
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -282,7 +277,7 @@ class Evento
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -305,7 +300,7 @@ class Evento
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -328,7 +323,7 @@ class Evento
     /**
      * Get torneo
      *
-     * @return \ResultadoBundle\Entity\Torneo 
+     * @return \ResultadoBundle\Entity\Torneo
      */
     public function getTorneo()
     {
@@ -351,7 +346,7 @@ class Evento
     /**
      * Get categoria
      *
-     * @return \ResultadoBundle\Entity\Categoria 
+     * @return \ResultadoBundle\Entity\Categoria
      */
     public function getCategoria()
     {
@@ -374,7 +369,7 @@ class Evento
     /**
      * Get modalidad
      *
-     * @return \ResultadoBundle\Entity\Modalidad 
+     * @return \ResultadoBundle\Entity\Modalidad
      */
     public function getModalidad()
     {
@@ -397,7 +392,7 @@ class Evento
     /**
      * Get genero
      *
-     * @return \ResultadoBundle\Entity\Genero 
+     * @return \ResultadoBundle\Entity\Genero
      */
     public function getGenero()
     {
@@ -420,7 +415,7 @@ class Evento
     /**
      * Get disciplina
      *
-     * @return \ResultadoBundle\Entity\Disciplina 
+     * @return \ResultadoBundle\Entity\Disciplina
      */
     public function getDisciplina()
     {
@@ -430,7 +425,7 @@ class Evento
     /**
      * Get coordinadores
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCoordinadores()
     {
@@ -453,7 +448,7 @@ class Evento
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -476,7 +471,7 @@ class Evento
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -505,7 +500,7 @@ class Evento
     {
         return $this->eventoAdaptado;
     }
-    
+
     /**
      * Set orden
      *
@@ -527,7 +522,7 @@ class Evento
     public function getOrden()
     {
         return $this->orden;
-    }    
+    }
 
     /**
      * Add etapas
@@ -555,7 +550,7 @@ class Evento
     /**
      * Get etapas
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEtapas()
     {
@@ -588,7 +583,7 @@ class Evento
     /**
      * Get equipos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEquipos()
     {
@@ -597,8 +592,8 @@ class Evento
         usort($return, function ($a, $b){
                 return $a->getMunicipio()->getRegionDeportiva() > $b->getMunicipio()->getRegionDeportiva();
             }
-        );        
-        return $return;        
+        );
+        return $return;
     }
 
     /**
@@ -637,7 +632,7 @@ class Evento
         }
         return $cantPlazasAsignadas."/".$cantPlazas;
     }
-    
+
     /**
      * Get state
      *
@@ -682,10 +677,10 @@ class Evento
     /**
      * Get cronogramas
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCronogramas()
-    {        
+    {
         $cronogramas = $this->cronogramas->toArray();
         usort($cronogramas, function ($a, $b){
                 if ($a->getFecha() > $b->getFecha()){
@@ -695,31 +690,30 @@ class Evento
                 }
                 return false;
             }
-        );                
+        );
         return $cronogramas;
     }
-    
+
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->etapas = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cronogramas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * Get partidos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPartidos()
     {
         $partidos=[];
         foreach($this->getEtapas() as $etapa){
-            $partidos=array_merge($etapa->getPartidos(),$partidos);            
+            $partidos=array_merge($etapa->getPartidos(),$partidos);
         }
         usort($partidos, function ($a, $b){
                 //return $a->getCronograma()->getFecha() > $b->getCronograma()->getFecha();
@@ -728,17 +722,17 @@ class Evento
                 }elseif ($a->getCronograma()->getFecha() == $b->getCronograma()->getFecha()){
                     return $a->getNombre() > $b->getNombre();
                 }
-                return false;            
+                return false;
             }
-        );        
+        );
         return $partidos;
     }
 
     /**
      * Get PlazasMedallero
      *
-     * @return \Doctrine\Common\Collections\Collection 
-     */    
+     * @return \Doctrine\Common\Collections\Collection
+     */
     function getPlazasMedallero(){
         return $this->getEtapas()->last()->getCompetencia()->getPlazas();
     }
@@ -766,7 +760,7 @@ class Evento
     {
         return $this->segmento;
     }
-    
+
     /**
      * Set DimensionesFromSegmento
      *
@@ -781,7 +775,19 @@ class Evento
         $this->setModalidad($segmento->getModalidad());
         $this->setNombre($segmento->getNombre());
         $this->setSegmento($segmento);
-        
+
         return $this;
-    }    
+    }
+
+    /**
+     * agregarEquipoClasificado
+     *
+     * @return \InscripcionBundle\Entity\Evento
+     */
+    public function agregarEquipoClasificado($equipo)
+    {
+        // $
+        // $equipo->
+        // return $this->segmento;
+    }
 }

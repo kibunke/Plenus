@@ -31,7 +31,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                
+                </li>
                 <li>
                     <a href="{{ path('homepage_gestion') }}">
                         Gestion
@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-md-12">
             {% include 'GestionBundle:Municipio:list.html.twig' %}
-        </div>        
+        </div>
     </div>
 {% endblock %}
 {% block otherJavascripts %}
@@ -90,12 +90,12 @@
                     ],
                     "initComplete": function( oSettings ) {}
                 });
-            }         
+            }
             $.Municipio.openAjaxForm = function(url,title) {
                 $.Main.openFormModal(url,title, function(){
                         $('#panel-config form').submit(function(event){
-                            $('#municipioTable').parents('panel').block($.Main.defaultBlockConf());
-                            $('#tree').parents('panel').block($.Main.defaultBlockConf());
+                            $('#municipioTable').parents('.panel').block($.Main.defaultBlockConf());
+                            $('#tree').parents('.panel').block($.Main.defaultBlockConf());
                             $('#okButton').button('loading')
                             event.preventDefault();
                             $.post(url, $('#panel-config form').serialize(), function(data){
@@ -119,4 +119,4 @@
         })(jQuery);
         $(document).ready(function(){$.Municipio.init();});
     </script>
-{% endblock %}    
+{% endblock %}

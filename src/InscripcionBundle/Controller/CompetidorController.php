@@ -22,7 +22,7 @@ use ResultadoBundle\Entity\Competidor;
 class CompetidorController extends Controller
 {
     /**
-     * @Route("/competidor/list", name="competidor_list")
+     * @Route("/list", name="competidor_list")
      * @Template()
      */
     public function indexAction(Request $request)
@@ -36,7 +36,7 @@ class CompetidorController extends Controller
     public function listCompetidorDatatableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('ResultadoBundle:Competidor')->dataTable($request->request);
+        $filter = $em->getRepository('ResultadoBundle:Competidor')->dataTable($request->request,$this->getUser());
 
         $data=array(
                     "draw"            => $request->request->get('draw'),
@@ -105,10 +105,7 @@ class CompetidorController extends Controller
         foreach ($competidores as $competidor) {
             foreach ($competidor->getCompetidorEquipos() as $competidorEquipo) {
                 $competidorEquipo->setCompetidor($competidorBase);
-                // $equipo->removeCompetidor($competidor);
-                // $equipo->addIntegrante($competidorBase,'');
             }
-            //$competidor->prepareToDelete();
             $em->remove($competidor->prepareToDelete());
         }
         try{

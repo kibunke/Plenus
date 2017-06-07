@@ -14,24 +14,25 @@ use Symfony\Component\Security\Core\Security;
 
 use Doctrine\ORM\EntityManager;
 use SeguridadBundle\Entity\Log;
+use SeguridadBundle\Entity\LogLogin;
 
 class LoginFailureListener//  extends DefaultAuthenticationFailureHandler
 {
 	/** @var \Doctrine\ORM\EntityManager */
 	private $em;
-	
+
 	/** @var Symfony\Component\Routing\Router */
 	protected $router;
-	
+
 	protected $request;
-	
+
 	//"@http_kernel", "@security.http_utils",@doctrine.orm.entity_manager,@router
     public function __construct($kernel, $utils, EntityManager $entityManager, Router $router, $request)
     {
         $this->em = $entityManager;
         $this->router = $router;
 		$this->request = $request;
-    }	
+    }
 
 	public function onAuthenticationFailure(AuthenticationFailureEvent $event)
 	{
@@ -49,9 +50,16 @@ class LoginFailureListener//  extends DefaultAuthenticationFailureHandler
 			$log->setActivity('wrongUser');
 			$log->setDescription("Intento de login con usuario incorrecto : ".$request->request->get('_username'));
 		}
-		$request->getSession()->getFlashBag()->add('error', 'Error en los datos.');
+		$logLogin = $this->em->getRepository('SeguridadBundle:LogLogin')->find($request->getClientIp());
+		if (!$logLogin){
+			$logLogin = new LogLogin($request->getClientIp());
+		}
+		$logLogin->incrementar();
+		$request->getSession()->getFlashBag()->add('error', 'Error en las credenciales de acceso, chequee los datos.');
 		$this->em->persist($log);
+		$this->em->persist($logLogin);
 		$this->em->flush($log);
-        return new RedirectResponse($this->router->generate('_login'));   
+		$this->em->flush($logLogin);
+        return new RedirectResponse($this->router->generate('_login'));
 	}
 }

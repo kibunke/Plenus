@@ -14,3 +14,7 @@ inscripcion:
     resource: "@InscripcionBundle/Controller/"
     type:     annotation
     prefix:   /inscripcion
+resultado:
+    resource: "@ResultadoBundle/Controller/"
+    type:     annotation
+    prefix:   /resultado

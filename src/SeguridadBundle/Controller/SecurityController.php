@@ -38,7 +38,7 @@ class SecurityController extends Controller
     {
         return $this->redirectToRoute('homepage', array(), 301);
     }
-    
+
     /**
      * @Route("/system/users/logout", name="logout_all_users")
      * @Security("has_role('ROLE_ADMIN')")
@@ -47,7 +47,7 @@ class SecurityController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $sesiones = $em->getRepository('SeguridadBundle:Sessions')->findAll();
-       
+
         foreach($sesiones as $sesion)
         {
             $datos = stream_get_contents($sesion->getSessData());
@@ -64,10 +64,10 @@ class SecurityController extends Controller
         {
             $this->addFlash('error','No pudieron ser deslogueados los usuarios');
         }
-        
+
         return $this->redirectToRoute('user_list');
     }
-    
+
     private function getUserIdFromStream($datos)
     {
         $haystak = 'haveUser";i:';
@@ -78,10 +78,10 @@ class SecurityController extends Controller
             $fin    = stripos($datos,';',$inicio);
             return intval(substr($datos,$inicio,$fin - $inicio));
         }
-        
+
         return 0;
     }
-    
+
     /**
      * @Route("/system/force/{user}/logout", name="force_logout_user", defaults={"user":"__00__"})
      * @Security("has_role('ROLE_ADMIN')")
@@ -90,7 +90,7 @@ class SecurityController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $sesiones = $em->getRepository('SeguridadBundle:Sessions')->findAll();
-       
+
         foreach($sesiones as $sesion)
         {
             $datos = stream_get_contents($sesion->getSessData());
@@ -100,7 +100,7 @@ class SecurityController extends Controller
                 $em->remove($sesion);
             }
         }
-        
+
         try{
             $em->flush();
             return new JsonResponse(array('resultado' => 0, 'mensaje' => 'Usuario deslogueado con éxito'));
@@ -109,7 +109,7 @@ class SecurityController extends Controller
              return new JsonResponse(array('resultado' => 1, 'mensaje' => 'Error al desloguear el usuario' . $e->getMessage()));
         }
     }
-    
+
     /**
      * @Route("/login", name="_login")
      * @Template("SeguridadBundle:Security:login.html.twig")
@@ -124,18 +124,15 @@ class SecurityController extends Controller
         $authenticationUtils = $this->get('security.authentication_utils');
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        //var_dump($error);
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        $d1 = new \DateTime();
-        $d1->modify('-1 hour');
-        /* recupera los intentos de login en la ultima hora */
-        $logs = $em->getRepository('SeguridadBundle:Log')->getLoginActivitySinceByIp($request->getClientIp(),$d1);
+        /* recupera los intentos de login desde la ip */
+        $log = $em->getRepository('SeguridadBundle:LogLogin')->find($request->getClientIp());
         //
         $builder = new CaptchaBuilder();
         $builder->build();
         $captchaPhrase = null;
-        if (count($logs) < 2){
+        if (!$log || $log->getIntentos() < 5){
             $captchaPhrase = $builder->getPhrase();
         }
         $request->getSession()->set('captcha',$builder->getPhrase());
@@ -181,11 +178,11 @@ class SecurityController extends Controller
                 break;
             case 'activacionDeCuenta':
                     return new Response($this->renderView('SeguridadBundle:Usuario:cuenta.activada.email.html.twig', array()));
-                break;            
+                break;
         }
         return new Response($this->renderView('SeguridadBundle:Security:resetPasswordStep1.email.html.twig', array('link' => 'xxxxxxxx')));
     }
-    
+
     /**
      * @Route("/resetPassword/{salt}/{user}", name="_reset_password_step2")
      * @Template()
@@ -206,7 +203,7 @@ class SecurityController extends Controller
                 //Si pasó menos de 120 minutos
                 if ($diff < 120){
                         $newPassword = $this->resetPassword($user);
-                        
+
                         $message = \Swift_Message::newInstance()
                             ->setSubject("PLENUS - Recupero de clave")
                             ->setFrom($this->container->getParameter('mail_from_no_reply'))
@@ -217,10 +214,10 @@ class SecurityController extends Controller
                                 ),
                                 'text/html'
                             );
-                            
+
                         $log = new Log($user,$request->getClientIp(),"resetPassword","Step-2");
                         $log->setDescription("Regeneración de Clave Paso 2 | diff = ".$diff);
-                        
+
                         try {
                             $em->persist($log);
                             $em->flush();
@@ -230,7 +227,7 @@ class SecurityController extends Controller
                         catch(\Exception $e )
                         {
                             $error = "Ocurrio un error al intentar enviar el email.";
-                        }                  
+                        }
                 }else{
                     $error = "El link de recuperación esta vencido. Vuelva a generarlo y tenga en cuenta que la duración es de 2 Hs";
                 }
@@ -247,7 +244,7 @@ class SecurityController extends Controller
                 $em->flush();
                 $this->addFlash('error', $error);
         }else{
-            $this->addFlash('success', "Se envió un e-mail a su cuenta registrada con una clave provisoria que deberá modificar la proxima vez que ingrese al sistema.");        
+            $this->addFlash('success', "Se envió un e-mail a su cuenta registrada con una clave provisoria que deberá modificar la proxima vez que ingrese al sistema.");
         }
         return $this->redirectToRoute('_login');
     }
@@ -259,7 +256,7 @@ class SecurityController extends Controller
     public function resetPasswordStep1SuccessAction(Request $request)
     {
     }
-    
+
     /**
      * Create resetPassword Form
      */
@@ -270,7 +267,7 @@ class SecurityController extends Controller
                     ->add('_email', EmailType::class, array("attr" => array('placeholder' => 'Ingrese su e-mail registrado')))
                     ->getForm();
     }
-        
+
     /**
      * @Route("/resetPassword", name="_reset_password_step1")
      * @Method({"GET", "POST"})
@@ -280,10 +277,10 @@ class SecurityController extends Controller
         if ($this->get('app.plenusConfig')->isResetPasswordActive()){
             $em = $this->getDoctrine()->getManager();
             $error = "Los datos no son válidos!";
-    
+
             $form = $this->createResetPasswordForm();
             $form->handleRequest($request);
-    
+
             if ($form->isSubmitted() && $form->isValid()) {
                 $user = $em->getRepository('SeguridadBundle:Usuario')->findOneBy(array('username' => $form["_username"]->getData()));
                 if ($user && $user->isValidEmail($form["_email"]->getData())){
@@ -310,7 +307,7 @@ class SecurityController extends Controller
                         );
                     $log = new Log($user,$request->getClientIp(),"resetPassword","Step-1");
                     $log->setDescription("Regeneración de Clave Paso 1");
-                    
+
                     try {
                         $em->persist($log);
                         $em->flush();
@@ -321,11 +318,11 @@ class SecurityController extends Controller
                     {
                         //echo $e->getMessage();die;
                         $error = "Ocurrio un error al intentar enviar el email. Disculpe las molestias.";
-                    }                    
+                    }
                 }
                 return new JsonResponse(array('success' => false, 'message' => $error));
             }
-                
+
             return $this->render("SeguridadBundle:Security:renderResetPasswordForm.html.twig",
                 array(
                     'form' => $form->createView(),
@@ -335,7 +332,7 @@ class SecurityController extends Controller
             return new Response('<div class="alert alert-warning"><h4>Atención!</h4><p>El servicio de <strong>recuperacipon</strong> de contraseñas se encuentra <strong>inhabilitado</strong> por el momento.</p><p> Disculpe las molestias, gracias por utilizar Plenus!.</p>');
         }
     }
-    
+
     private function resetPassword($user)
     {
         $factory = $this->container->get('security.encoder_factory');
@@ -364,9 +361,9 @@ class SecurityController extends Controller
         //return $this->createFormBuilder(array())
         //            ->add('username', TextType::class, array("attr" => array('placeholder' => 'Ingrese un nombre de usuario')))
         //            ->add('persona', PersonaType
-        //            
+        //
         //            ->getForm();
-    }                        
+    }
 
     /**
      * @Route("/new/account/check", name="_new_account_check_data")
@@ -383,7 +380,7 @@ class SecurityController extends Controller
             //\w le decimos que permitimos todo tipo de carácteres alfanuméricos incluyendo el signo _
             // [\w-ñÑ] así agregamos la ñ que no esta admitida en el \w
             if(!preg_match("/^([\w-ñÑ])+$/", $data->get('username')))
-            {            
+            {
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario es inválido, solamente    debe contener Letras, Números, guiones bajos y sin espacios intermedios.');
             }else{
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => false, 'message' => '');
@@ -393,7 +390,7 @@ class SecurityController extends Controller
         if ($data->get('username') != ''){
             $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository('SeguridadBundle:Usuario')->findBy(array("username" => $data->get('username')));
-            if ($user){            
+            if ($user){
                 $response['states'][] = array('type' => 'usuario_username', 'hasError' => true, 'message' => 'El nombre de usuario ya está en uso.');
             }else{
                 if(preg_match("/^\w+$/", $data->get('username')))
@@ -402,11 +399,11 @@ class SecurityController extends Controller
                 }
             }
         }
-        
+
         if ($data->get('nroDocumento') != ''){
             $em = $this->getDoctrine()->getManager();
             $persona = $em->getRepository('CommonBundle:Persona')->findBy(array("tipoDocumento" => $data->get('tipoDocumento'),"dni" => $data->get('nroDocumento')));
-            if ($persona){            
+            if ($persona){
                 $response['states'][] = array('type' => 'usuario_persona_dni','hasError' => true, 'message' => 'El dni ya existe.');
             }else{
                 $response['states'][] = array('type' => 'usuario_persona_dni','hasError' => false, 'message' => '');
@@ -420,10 +417,10 @@ class SecurityController extends Controller
             }else{
                 $response['states'][] = array('type' => 'usuario_persona_email', 'hasError' => false, 'message' => '');
             }
-        }        
+        }
         return new JsonResponse($response);
     }
-    
+
     /**
      * @Route("/new/account", name="_new_account")
      * @Method({"GET", "POST"})
@@ -438,11 +435,11 @@ class SecurityController extends Controller
             $form = $this->createForm(UsuarioType::class, $user);
             //$form = $this->createNewAccountForm($user);
             $form->handleRequest($request);
-       
+
             if ($form->isSubmitted() && $form->isValid())
             {
                 $newPassword = $this->resetPassword($user);
-                        
+
                 $message = \Swift_Message::newInstance()
                     ->setSubject("PLENUS - Nueva cuenta de usuario")
                     ->setFrom($this->container->getParameter('mail_from_no_reply'))
@@ -453,10 +450,10 @@ class SecurityController extends Controller
                         ),
                         'text/html'
                     );
-                    
+
                 $log = new Log($user,$request->getClientIp(),"newAccount","");
                 $log->getDescription("Se creo la cuenta de usuario");
-                
+
                 try {
                     $em->persist($user);
                     $em->persist($log);
@@ -466,7 +463,7 @@ class SecurityController extends Controller
                 }
                 catch(\Exception $e ){
                     // $error = 'DEBUG '.$e->getMessage();
-                    
+
                     if (strpos($e->getMessage(), 'constraint violation') === false )
                         $error = 'Ocurrio un error al intentar enviar el email.';
                     elseif(strpos($e->getMessage(), 'unique_dni') === false)
@@ -475,7 +472,7 @@ class SecurityController extends Controller
                         {
                             if(strpos($e->getMessage(), 'unique_username') === false)
                             {
-                                $error = 'Ocurrio un error al intentar guardar los datos. Si el error persiste, contacte al adminsitrador.';   
+                                $error = 'Ocurrio un error al intentar guardar los datos. Si el error persiste, contacte al adminsitrador.';
                             }else{
                                 $error = 'El nombre de usuario ya esta en uso.';
                             }
@@ -486,17 +483,17 @@ class SecurityController extends Controller
                         $error = 'El DNI ingresado ya esta registrado en el sistema.';
                     }
                 }
-                
+
                 return new JsonResponse(array('success' => false, 'message' => $error));
             }else{
                 if($form->isSubmitted() && !$form->isValid())
                 {
                     $error = (string) $form->getErrors(true, false);
-                    
+
                     return new JsonResponse(array('success' => false, 'message' => 'Error en los datos del formulario: ' . $error ));
                 }
             }
-            
+
             return $this->render("SeguridadBundle:Security:renderNewAccountForm.html.twig",
                                                                                             array(
                                                                                                 'form' => $form->createView(),
@@ -506,7 +503,7 @@ class SecurityController extends Controller
             return new Response('<div class="alert alert-warning"><h4>Atención!</h4><p>La <strong>creación</strong> de cuentas de usuario se encuentra <strong>inhabilitada</strong> por el momento.</p><p> Disculpe las molestias, gracias por utilizar Plenus!.</p>');
         }
     }
-    
+
     /**
      * @Route("/error403", name="error403")
      * @Template()
@@ -515,7 +512,7 @@ class SecurityController extends Controller
     {
         return array();
     }
-    
+
     /**
      * @Route("perfil/{perfil}/data", name="perfil_data", defaults={"perfil":"__00__"})
      * @Method({"POST"})

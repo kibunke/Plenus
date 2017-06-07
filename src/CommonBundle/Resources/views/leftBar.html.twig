@@ -438,12 +438,42 @@
 									<a href="{#{ path('dashboard_resultado') }#}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
 								</li>
 							{% endif %}
+							{% if is_granted('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL') %}
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-random"></i>
+										Clasificación <i class="icon-arrow"></i>
+									</a>
+									<ul class="sub-menu">
+										<li>
+											<a href="{{ path('resultados_clasificacionMunicipal_competidor_list') }}">
+												<i class="fa fa-angle-right"></i>
+												Municipal
+											</a>
+										</li>
+										<li>
+											<a href="{#{ path('resultados_informeFinalistas') }#}">
+												<i class="fa fa-angle-double-right"></i>
+												Regional
+											</a>
+										</li>
+									</ul>
+								</li>
+							{% endif %}
 							{% if is_granted('ROLE_RESULTADO_LIST') %}
 								<li>
-									<a href="{#{ path('resultados') }#}">
-										<i class="fa fa-bullseye"></i>
-										Listado eventos
+									<a href="javascript:;">
+										<i class="fa fa-question-circle"></i>
+										Final <i class="icon-arrow"></i>
 									</a>
+									<ul class="sub-menu">
+										<li>
+											<a href="{#{ path('resultados') }#}">
+												<i class="fa fa-bullseye"></i>
+												Listado eventos
+											</a>
+										</li>
+									</ul>
 								</li>
 							{% endif %}
 							{% if is_granted('ROLE_CRONOGRAMA_LIST') %}

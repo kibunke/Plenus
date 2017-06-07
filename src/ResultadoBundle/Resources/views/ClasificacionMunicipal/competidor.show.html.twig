@@ -1,0 +1,22 @@
+<table class="table table-bordered table-condensed">
+	<tr class="success"><th>Nombre</th><th>Apellido</th></tr>
+	<tr><td>{{ entity.nombre }}</td><td>{{ entity.apellido }}</td></tr>
+	<tr class="success"><th>Municipio</th><th>DNI</th></tr>
+	<tr><td>{{ entity.municipio.nombre }}</td><td>{{ entity.dni }}</td></tr>
+</table>
+
+<table class="table table-bordered table-condensed">
+	<tr class="info"><th>{{ entity.planillas | length }} - Planillas</th><th>{{ entity.segmentos | length }} - Segmentos</th></tr>
+	<tr>
+        <td>
+            {% for planilla in entity.planillas %}
+                <li>{{ planilla.getNumero() }}</li>
+            {% endfor %}
+        </td>
+        <td>
+            {% for segmento in entity.segmentos %}
+                <li>{{ segmento.getNombreCompleto() }}</li>
+            {% endfor %}
+        </td>
+    </tr>
+</table>

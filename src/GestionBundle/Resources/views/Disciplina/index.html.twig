@@ -39,7 +39,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                
+                </li>
                 <li>
                     <a href="{{ path('homepage_gestion') }}">
                         Gestion
@@ -99,7 +99,7 @@
         </div>
         <div class="col-md-8">
             {% include 'GestionBundle:Disciplina:list.html.twig' %}
-        </div>        
+        </div>
     </div>
 {% endblock %}
 {% block otherJavascripts %}
@@ -163,11 +163,11 @@
                             $('#tree_4_search').val(this.value);
                             $('#tree').jstree(true).search(this.value);
                         })
-                        $('#disciplinaTable').parents('panel').unblock();
+                        $('#disciplinaTable').parents('.panel').unblock();
                     }
                 });
                 $("#tree").on('ready.jstree refresh.jstree', function (e, data) {
-                    $('#tree').parents('panel').unblock();
+                    $('#tree').parents('.panel').unblock();
                     $('.jstree-anchor').on('dblclick',function(){
                         $.Default.openAjaxForm('{{ path('disciplina_edit', { 'id': 0 }) }}'.replace('0',$(this).parent().attr('id')),'Editar Disciplina')
                     });
@@ -195,12 +195,12 @@
                     },
                     "plugins" : ["search", "types"]
                 });
-            }         
+            }
             $.Default.openAjaxForm = function(url,title) {
                 $.Main.openFormModal(url,title, function(){
                         $('#panel-config form').submit(function(event){
-                            $('#disciplinaTable').parents('panel').block($.Main.defaultBlockConf());
-                            $('#tree').parents('panel').block($.Main.defaultBlockConf());
+                            $('#disciplinaTable').parents('.panel').block($.Main.defaultBlockConf());
+                            $('#tree').parents('.panel').block($.Main.defaultBlockConf());
                             $('#okButton').button('loading')
                             event.preventDefault();
                             $.post(url, $('#panel-config form').serialize(), function(data){
@@ -258,8 +258,8 @@
                 }).fail(()=>{
                     swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
                 })
-            }            
+            }
         })(jQuery);
         $(document).ready(function(){$.Default.init();});
     </script>
-{% endblock %}    
+{% endblock %}

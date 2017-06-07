@@ -27,86 +27,87 @@ class Equipo
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     protected $nombre;
-    
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="EquiposCompetidores", mappedBy="equipo", cascade={"all"})
      * */
     protected $equipoCompetidores;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="DirectorTecnico", inversedBy="equipos", cascade={"persist"})
      * @ORM\JoinColumn(name="tecnico", referencedColumnName="id")
-     */       
+     */
     private $directorTecnico;
-    
+
     /**
      * @var boolean
      *
      * @ORM\Column(name="sortea", type="boolean", nullable=true)
      */
     private $sortea;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Plaza", mappedBy="equipo")
      */
     private $plazas;
-   
+
     /**
      * @ORM\ManyToOne(targetEntity="InscripcionBundle\Entity\Planilla", inversedBy="equipos", cascade={"persist"})
      * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
-     */       
+     */
     private $planilla;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Evento", inversedBy="equipos")
-     * @ORM\JoinColumn(name="evento", referencedColumnName="id")
-     */       
-    private $evento;
-    
+
+     /**
+      * Many Etapas have Many Equipos.
+      * @ORM\ManyToMany(targetEntity="Etapa", inversedBy="equipos")
+      * @ORM\JoinTable(name="etapas_equipos")
+      */
+    private $etapas;
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
-    
+
     /**
      * @var datetime $updatedAt
      *
      * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
      */
     private $updatedAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
-    
+
     /*
      * Construct
      */
@@ -118,7 +119,8 @@ class Equipo
         //$this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
         $this->equipoCompetidores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->plazas = new \Doctrine\Common\Collections\ArrayCollection();
-    }    
+        $this->etapas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * __toString
@@ -133,11 +135,11 @@ class Equipo
         else
             return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -160,22 +162,22 @@ class Equipo
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
         return $this->nombre;
     }
-    
+
     /**
      * Get nombreCompletoRaw
      *
-     * @return string 
+     * @return string
      */
     public function getNombreCompletoRaw()
     {
         return "<strong>".$this->getMunicipio()."</strong><br><small>".$this->nombre."</small>";
-    }    
+    }
 
     /**
      * Set descripcion
@@ -193,7 +195,7 @@ class Equipo
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -216,7 +218,7 @@ class Equipo
     /**
      * Get sortea
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getSortea()
     {
@@ -239,7 +241,7 @@ class Equipo
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -262,7 +264,7 @@ class Equipo
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -298,7 +300,7 @@ class Equipo
     /**
      * Get plazas
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPlazas()
     {
@@ -321,7 +323,7 @@ class Equipo
     /**
      * Get evento
      *
-     * @return \ResultadoBundle\Entity\Evento 
+     * @return \ResultadoBundle\Entity\Evento
      */
     public function getEvento()
     {
@@ -344,7 +346,7 @@ class Equipo
     /**
      * Get municipio
      *
-     * @return \CommonBundle\Entity\Municipio 
+     * @return \CommonBundle\Entity\Municipio
      */
     public function getMunicipio()
     {
@@ -367,7 +369,7 @@ class Equipo
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -390,7 +392,7 @@ class Equipo
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -405,8 +407,8 @@ class Equipo
     public function hasPlazas()
     {
         return (count($this->getPlazas())>0);
-    }    
-    
+    }
+
     /**
      * Add Competidor
      *
@@ -443,7 +445,7 @@ class Equipo
         $integrante->addCompetidorEquipo($aux);
         return $this;
     }
-    
+
     /**
      * get Integrante
      *
@@ -454,7 +456,7 @@ class Equipo
     {
         return $this->getCompetidores() ;
     }
-    
+
     /**
      * Remove Competidor
      *
@@ -490,12 +492,12 @@ class Equipo
     /**
      * Get competidores
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCompetidores()
     {
-        $competidores = new \Doctrine\Common\Collections\ArrayCollection();        
-        
+        $competidores = new \Doctrine\Common\Collections\ArrayCollection();
+
         foreach($this->equipoCompetidores as $aux)
         {
             $competidores[] = $aux->getCompetidor();
@@ -503,7 +505,7 @@ class Equipo
 
         return $competidores;
     }
-    
+
     /**
      * Get mejorResultado
      *
@@ -527,7 +529,7 @@ class Equipo
             return "No participó.";
         }
     }
-    
+
     /**
      * Get hasMedalla
      *
@@ -590,7 +592,7 @@ class Equipo
     {
         return $this->planilla;
     }
-    
+
     public function getJson()
     {
         return array(
@@ -615,14 +617,14 @@ class Equipo
         }
 
         return $integrantes;
-    
-    
+
+
         //$integrantes = [];
         //foreach($this->getIntegrantes() as $integrante){
         //    $integrantes[] = $integrante->getJson();
         //}
         //return $integrantes;
-    }    
+    }
 
     /**
      * Add equipoCompetidore

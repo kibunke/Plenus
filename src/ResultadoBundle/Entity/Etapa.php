@@ -10,10 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *                          "etapa"             = "Etapa",
- *                          "etapaClasificacion"= "EtapaClasificacion", 
+ *                          "etapaMunicipal"    = "EtapaMunicipal",
+ *                          "etapaRegional"     = "EtapaRegional",
+ *                          "etapaClasificacion"= "EtapaClasificacion",
  *                          "etapaFinal"        = "EtapaFinal",
- *                          "etapaMedallero"        = "EtapaMedallero"
+ *                          "etapaMedallero"    = "EtapaMedallero"
  *                      })
  */
 abstract class  Etapa
@@ -26,74 +27,81 @@ abstract class  Etapa
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string", length=100)
      */
     private $nombre;
-    
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Evento", inversedBy="etapas")
      * @ORM\JoinColumn(name="evento", referencedColumnName="id")
-     */       
+     */
     private $evento;
-    
+
+    /**
+      * Many Equipos have Many Etapas.
+      * @ORM\ManyToMany(targetEntity="Equipo", mappedBy="etapas")
+      */
+    private $equipos;
+
     /**
      * @ORM\OneToOne(targetEntity="Competencia", mappedBy="etapa", cascade={"all"})
      */
-    private $competencia;    
-    
+    private $competencia;
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
-    
+
     /**
      * @var datetime $updatedAt
      *
      * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
      */
     private $updatedAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
-    
+
     /**
      * Construct
      */
     public function __construct($user = NULL) {
        $this->createdAt = new \DateTime();
        $this->createdBy = $user;
-    }    
+       $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -116,7 +124,7 @@ abstract class  Etapa
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
@@ -139,7 +147,7 @@ abstract class  Etapa
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -162,7 +170,7 @@ abstract class  Etapa
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -185,7 +193,7 @@ abstract class  Etapa
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -208,7 +216,7 @@ abstract class  Etapa
     /**
      * Get evento
      *
-     * @return \ResultadoBundle\Entity\Evento 
+     * @return \ResultadoBundle\Entity\Evento
      */
     public function getEvento()
     {
@@ -231,7 +239,7 @@ abstract class  Etapa
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -254,13 +262,13 @@ abstract class  Etapa
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
         return $this->updatedBy;
     }
-    
+
     /**
      * Set competencia
      *
@@ -278,13 +286,13 @@ abstract class  Etapa
     /**
      * Get competencia
      *
-     * @return \ResultadoBundle\Entity\Competencia 
+     * @return \ResultadoBundle\Entity\Competencia
      */
     public function getCompetencia()
     {
         return $this->competencia;
     }
-    
+
     /**
      * Get state
      *
@@ -297,9 +305,9 @@ abstract class  Etapa
             $percent = $this->getCompetencia()->getState();
         //return $percent;
         return round($percent,1);
-        
+
     }
-    
+
     /**
      * Get state
      *
@@ -320,11 +328,11 @@ abstract class  Etapa
         return '<span class="badge badge-success wobble animated">'.$percent.' %</span>';
         //return $percent;
     }
-    
+
     /**
      * Get partidos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPartidos()
     {
@@ -332,7 +340,7 @@ abstract class  Etapa
             return $this->getCompetencia()->getPartidos();
         return [];
     }
-    
+
     /**
      * get tipoValor
      * 10 - Medallero
@@ -342,5 +350,5 @@ abstract class  Etapa
      */
     public function getTipoValor()
     {
-    }    
+    }
 }

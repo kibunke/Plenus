@@ -122,11 +122,23 @@ class Competidor extends Persona
         return $mun;
     }
 
-    public function getJson($aux = null)
+    public function toArray($aux = null)
     {
+        $eventos = [];
+        foreach ($this->getSegmentos() as $segmento) {
+            foreach ($segmento->getEventos() as $evento) {
+                $eventos[] = [
+                    "id" => $evento->getId(),
+                    "nombre" => $evento->getNombreCompleto(),
+                    "nombreRaw" => $evento->getNombreCompletoRaw(),
+                    "existe" => false
+                ];
+            }
+        }
         return array(
                 'rol' => is_object($aux)?$aux->getRol():'',
                 'persona' => parent::toArray(),
+                'eventos'=> $eventos
             );
     }
 

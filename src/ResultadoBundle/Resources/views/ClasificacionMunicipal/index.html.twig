@@ -1,0 +1,222 @@
+{% extends 'CommonBundle::layout.html.twig' %}
+
+{% block contenidoToolbar %}
+    <div class="toolbar row">
+        <div class="col-sm-6 hidden-xs">
+            <div class="page-header">
+                <h1><i class="fa fa-list-ol"></i>Listado de Participantes <small>Busque y seleccione los ganadores municipales de cada evento.</small></h1>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <a href="#" onclick="$('.page-header h1').toggle();" class="close-subviews ">
+                <i class="fa fa-arrow-left"></i> VOLVER
+            </a>
+            <div class="toolbar-tools pull-right"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoBreadcrumb %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ path('homepage') }}">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    Resultado
+                </li>
+                <li>
+                    Clasificación
+                </li>
+                <li class="active">
+                    Municipal
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block contenidoContent %}
+    <style>
+        .dataTables_filter,.dataTables_paginate{
+            margin-right: 5px;
+        }
+        .dataTables_length,.dataTables_info{
+            margin-left: 5px;
+        }
+        .dataTables_filter input{
+            max-width: 140px;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Tabla <span class="text-bold">de inscriptos</span></h4>
+                    <div class="panel-tools">
+                        {{ include('CommonBundle::dropdownTables.html.twig') }}
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="competidorTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>DNI</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Tabla de eventos disponibles para: <span class="text-bold"></span></h4>
+                    <div class="panel-tools">
+                        {{ include('CommonBundle::dropdownTables.html.twig') }}
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="eventoTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Nombre</th>
+                                <th class="text-center">Inscripto</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-danger text-center">Debe seleccionar un participante</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block otherJavascripts %}
+    <script>
+        (function ($) {
+            /* var instituciones=; */
+            // no se sobreescribe el namespace, si ya existe
+            var _tableCompetidor,
+                _tableEvento,
+                _aCombinar = [],
+                _pathShow = "{{ path('competidor_show')}}",
+                _pathLoad = "{{ path('resultados_clasificacionMunicipal_competidor_json')}}",
+                _pathGanador = "{#{ path('evento_ganadorMunicipal')}#}";
+                {# _hasRole = {% if is_granted('ROLE_INSCRIPCION_COMPETIDORES_COMBINAR') %} true {% else %} false {% endif %}; #}
+            $.Default = $.Default || {};
+
+            $.Default.init = function()
+            {
+                $('#competidorTable').dataTable( {
+                    "autoWidth": false,
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('competidor_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "id", "className": "text-center" },
+                        { "data":  "name"},
+                        { "data": "dni" },
+                        //{ "data": "municipio" },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [3]
+                        },
+                        {
+                            "targets": 1,
+                            "searchable": true,
+                            "orderable": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    full.name + '<br><small>' + full.municipio + '</small>'
+                                                :'';
+                                        }
+                        },
+                        {
+                            "targets": 3,
+                            "searchable": true,
+                            "orderable": true,
+                            "render":   function ( data, type, full, meta ) {
+                                            return type === 'display' ?
+                                                    $(data).append('<button onclick="$.Default.select('+full.id+')" class="btn btn-xs btn-orange"><i class="fa fa-arrow-right"></i></button>').html()
+                                                :'';
+                                        }
+                        }
+                    ],
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        $(nRow).attr({'id': 'row_'+aData.id,'draggable': true})
+                            .on('dragstart',function(ev){
+                                ev.originalEvent.dataTransfer.setData("row",ev.target.id);
+                        });
+                        return nRow;
+                    },
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('[data-toggle="popover"]').popover();
+                    }
+                });
+            }
+            $.Default.show = function(id){
+                $.Main.openModal(_pathShow.replace("__00__",id),"Competidor: " + id, function(){});
+            }
+            $.Default.select = function(id)
+            {
+                $('#competidorTable tr').removeClass('info');
+                $tbody = $('#eventoTable tbody');
+                let $panel = $('#eventoTable').parents('.panel');
+                let $row = $('#row_'+id);
+                $row.addClass('info');
+                $panel.block($.Main.defaultBlockConf());
+                $.get(_pathLoad.replace('__00__',id)).done((data)=>{
+                    console.log(data);
+                    $panel.find('.panel-title span').html(data.persona.apellido+", "+data.persona.nombre);
+                    $tbody.html('');
+                    $.map(data.eventos,(data)=>{
+                        let str =   '<tr>'+
+                                        '<td class="text-center">'+data.id+'</td>'+
+                                        '<td>'+data.nombreRaw+'</td>';
+                        if (data.existe){
+                            str = str + '<td class="text-center"><i class="fa fa-check text-success"></i></td>'+
+                                    '<td><button onclick="$.Default.deselectPost(' + id + ',' + data.id + ')" class="btn btn-xs btn-green"><i class="fa fa-times"></i></button></td>';
+                        }else{
+                            str = str + '<td class="text-center"><i class="fa fa-times text-danger"></i></td>'+
+                            '<td><button onclick="$.Default.selectPost(' + id + ',' + data.id + ')" class="btn btn-xs btn-green"><i class="fa fa-check"></i></button></td>';
+                        }
+                        str = str + '</tr>';
+                        $tbody.append(str);
+                        console.log(data);
+                    })
+                }).always(()=>{
+                    setTimeout(function(){
+                        $panel.unblock();
+                    },200);
+                })
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Default.init();});
+    </script>
+{% endblock %}
