@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *                          "competencia"                               = "Competencia",
  *                          "competenciaLiga"                           = "CompetenciaLiga",
  *                          "competenciaLigaPuntos"                     = "CompetenciaLigaPuntos",
  *                          "competenciaLigaTantos"                     = "CompetenciaLigaTantos",
@@ -37,70 +36,70 @@ abstract class Competencia
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string", length=100)
      */
     private $nombre;
-    
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-   
+
     /**
     * @var string $parametros
     *
     * @ORM\Column(name="parametros", type="text", nullable=true)
     */
     private $parametros;
-   
+
     /**
      * @ORM\OneToOne(targetEntity="Etapa", inversedBy="competencia")
      * @ORM\JoinColumn(name="etapa", referencedColumnName="id")
-     */       
+     */
     private $etapa;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Plaza", mappedBy="competencia", cascade={"persist"})
      * @ORM\OrderBy({"orden" = "ASC"})
      */
     private $plazas;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
     private $createdBy;
-    
+
     /**
      * @var datetime $updatedAt
      *
      * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
      */
     private $updatedAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
-    
+
     public function __construct($user = NULL) {
        $this->createdAt = new \DateTime();
        $this->createdBy = $user;
@@ -115,11 +114,11 @@ abstract class Competencia
     {
         return $this->nombre;
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -142,7 +141,7 @@ abstract class Competencia
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
@@ -165,7 +164,7 @@ abstract class Competencia
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -188,7 +187,7 @@ abstract class Competencia
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -211,7 +210,7 @@ abstract class Competencia
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -234,7 +233,7 @@ abstract class Competencia
     /**
      * Get etapa
      *
-     * @return \ResultadoBundle\Entity\Etapa 
+     * @return \ResultadoBundle\Entity\Etapa
      */
     public function getEtapa()
     {
@@ -265,16 +264,16 @@ abstract class Competencia
         $this->plazas->removeElement($plaza);
     }
 
-    /** 
+    /**
      * Get plazas
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPlazas()
     {
         return $this->plazas;
     }
- 
+
     /**
      * Set createdBy
      *
@@ -291,7 +290,7 @@ abstract class Competencia
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -314,7 +313,7 @@ abstract class Competencia
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -337,7 +336,7 @@ abstract class Competencia
     /**
      * Get parametros
      *
-     * @return string 
+     * @return string
      */
     public function getParametros()
     {
@@ -348,7 +347,7 @@ abstract class Competencia
         }
         return "{'PG': 3,'PE': 1,'PP': 0}";
     }
-    
+
     /**
      * Get state
      *
@@ -358,7 +357,7 @@ abstract class Competencia
     {
         //Calculado en las subClases
     }
-    
+
     /**
      * Get idReload
      *
@@ -368,17 +367,17 @@ abstract class Competencia
     {
         return $this->getId();
     }
-    
+
     /**
      * Get partidos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPartidos()
     {
         return array();
     }
-    
+
     /**
      * Get folder
      *
@@ -388,7 +387,7 @@ abstract class Competencia
     {
         return null;
     }
-    
+
     /**
      * Get performance
      *
@@ -397,7 +396,7 @@ abstract class Competencia
     public function getPerformance($plaza)
     {
         return "Etapa ".strtoupper($this->getEtapa()->getTipo());
-    }    
+    }
 
     /**
      * Add plaza

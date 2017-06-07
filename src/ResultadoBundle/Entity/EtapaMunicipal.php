@@ -45,10 +45,15 @@ class EtapaMunicipal extends Etapa
 
     /**
      * isEtapaMunicipal
-     * @return integer
+     * @return boolean
      */
     public function isEtapaMunicipal()
     {
         return true;
+    }
+
+    public function getNombreInicial()
+    {
+        return 'Etapa Municipal';
     }
 }

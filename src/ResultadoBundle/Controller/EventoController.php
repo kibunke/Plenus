@@ -25,7 +25,7 @@ class EventoController extends Controller
     /**
      * Edit Evento entity.
      *
-     * @Route("/{id}/evento", name="resultado_evento_edit")
+     * @Route("/{evento}/evento", name="resultado_evento_edit")
      * @Method("GET")
      * @Template()
      */
@@ -56,7 +56,7 @@ class EventoController extends Controller
     /**
      * Delete a Etapa entity.
      *
-     * @Route("/{id}/remove", name="resultado_evento_etapas_remove")
+     * @Route("/{evento}/remove", name="resultado_evento_etapas_remove")
      * @Method("GET")
      * @Security("has_role('ROLE_ETAPA_DELETE')")
      * @Template()
@@ -77,7 +77,7 @@ class EventoController extends Controller
     /**
      * Deletes a Etapa entity.
      *
-     * @Route("/{id}/delete", name="resultado_evento_etapas_delete")
+     * @Route("/{evento}/delete", name="resultado_evento_etapas_delete")
      * @Security("has_role('ROLE_ETAPA_DELETE')")
      * @Method("DELETE")
      */
@@ -108,7 +108,7 @@ class EventoController extends Controller
     /**
      * Edit Evento entity.
      *
-     * @Route("/{id}/evento/stats/ganadores", name="resultado_evento_stats_ganadores")
+     * @Route("/{evento}/evento/stats/ganadores", name="resultado_evento_stats_ganadores")
      * @Method("GET")
      */
     public function statsGanadoresAction(Evento $evento)
@@ -119,7 +119,7 @@ class EventoController extends Controller
     /**
      * Edit Evento entity.
      *
-     * @Route("/{id}/evento/stats/plazas", name="resultado_evento_stats_plazas")
+     * @Route("/{evento}/evento/stats/plazas", name="resultado_evento_stats_plazas")
      * @Method("GET")
      */
     public function statsPlazasAction(Evento $evento)
@@ -130,11 +130,105 @@ class EventoController extends Controller
     /**
      * Edit Evento entity.
      *
-     * @Route("/{id}/evento/stats/avance", name="resultado_evento_stats_avance")
+     * @Route("/{evento}/evento/stats/avance", name="resultado_evento_stats_avance")
      * @Method("GET")
      */
     public function statsAvanceAction(Evento $evento)
     {
         return new JsonResponse($evento->getState());
-    }        
+    }
+    
+    /**
+     * Listado de etpas de un Evento $evento
+     *
+     * @Route("/{evento}/evento/etapas", name="resultado_evento_etapas")
+     * @Method("GET")
+     */
+    public function etapasAction(Request $request,Evento $evento)
+    {
+        return new JsonResponse($evento->getEtapasAsArray());
+    }
+    
+    
+    /**
+     * Listado de etpas de un Evento $evento
+     *
+     * @Route("/evento/{evento}/ordenar/etapas", name="resultado_evento_ordenar_etapas")
+     * @Method("POST")
+     */
+    public function ordenarEtapasAction(Request $request,Evento $evento)
+    {
+        $etapas = json_decode($request->get('etapas',array()));
+        
+        if(!$etapas)
+        {
+            return new JsonResponse(['resultado' => 0 , 'mensaje' => 'No se pudieron obtener las etapas']);
+        }
+        
+        if(sizof($etapas) != $evento->getEtapas()->count())
+        {
+            return new JsonResponse(['resultado' => 0 , 'mensaje' => 'No conicide la cantidad de etapas enviadas con la cantidad que posee el evento ' . $evento->getId()]);
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $i  = 0;
+        
+        foreach($etapas as $etapa)
+        {
+            $etapaObj = $em->getRepository('ResultadoBundle:Etapa')->find($etapa);
+            
+            if($etapaObj)
+            {
+                return new JsonResponse(['resultado' => 1 , 'mensaje' => 'No se pudo encontrar la etapa ' . $etapa]);
+            }
+            
+            if($etapaObj->getEvento()->getId() != $evento->getId())
+            {
+                return new JsonResponse(['resultado' => 1 , 'mensaje' => 'La etapa ' . $etapa . ' no pertenece al evento ' . $evento->getId()]);
+            }
+            
+            $etapaObj->setOrden($i++);
+        }
+        
+        $em->flush();
+        
+        return new JsonResponse(['resultado' => 0 , 'mensaje' => 'Las etapas fueron guardadas con éxito']);
+    }
+    
+    /**
+     * Agregar nueva etapa al final de un Evento $evento
+     *
+     * @Route("/evento/{evento}/agregar/etapa", name="resultado_evento_agregar_etapa")
+     * @Method("POST")
+     */
+    public function agregarEtapaAction(Request $request,Evento $evento)
+    {
+        $etapa = $request->get('etapa','');
+        
+        try{
+            $etapaObj = new $etapa;
+        }catch(\Exception $e )
+        {
+            return new JsonResponse(['resultado' => 0 , 'mensaje' => 'Error al crear la nueva etapa']);
+        }
+       
+        $evento->addEtapaAtTheEnd($etapaObj);
+        
+        $em->persist($etapaObj);
+        $em->flush();
+        
+        return new JsonResponse(['resultado' => 0 , 'etapas' => $evento->getEtapasAsArray()]);
+    }
+    
+    /**
+     * Show Evento $evento
+     *
+     * @Route("/{evento}/show", name="resultado_evento_show")
+     * @Template("ResultadoBundle:Evento:show.html.twig")
+     * @Method("GET")
+     */
+    public function showAction(Request $request,Evento $evento)
+    {
+        return array('entity' => $evento);
+    }
 }
