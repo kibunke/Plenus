@@ -351,4 +351,68 @@ abstract class  Etapa
     public function getTipoValor()
     {
     }
+
+    /**
+     * isEtapaMunicipal
+     * @return integer
+     */
+    public function isEtapaMunicipal()
+    {
+        return false;
+    }
+
+    /**
+     * Add equipo
+     *
+     * @param \ResultadoBundle\Entity\Equipo $equipo
+     * @return Evento
+     */
+    public function addEquipo(\ResultadoBundle\Entity\Equipo $equipo)
+    {
+        $this->equipos[] = $equipo;
+
+        return $this;
+    }
+
+    /**
+     * Remove equipo
+     *
+     * @param \ResultadoBundle\Entity\Equipo $equipo
+     */
+    public function removeEquipo(\ResultadoBundle\Entity\Equipo $equipo)
+    {
+        $this->equipos->removeElement($equipo);
+    }
+
+    /**
+     * Get equipos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEquipos()
+    {
+        //return $this->equipos;
+        $return = $this->equipos->toArray();
+        usort($return, function ($a, $b){
+                return $a->getPlanilla()->getMunicipio()->getRegionDeportiva() > $b->getPlanilla()->getMunicipio()->getRegionDeportiva();
+            }
+        );
+        return $return;
+    }
+
+    /**
+     * Get statsEquipos
+     *
+     * @return string
+     */
+    public function getStatsEquipos()
+    {
+        $cantEqAsigando = 0;
+        foreach ($this->equipos as $equipo){
+            if ($equipo->hasPlazas()){
+                $cantEqAsigando++;
+            }
+        }
+        return $cantEqAsigando."/".count($this->equipos);
+    }
 }

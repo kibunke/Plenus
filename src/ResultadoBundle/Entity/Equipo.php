@@ -131,9 +131,9 @@ class Equipo
     {
         return "Equipo - id: ".$this->getId();
         if ($this->nombre != '')
-            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre()." - ".$this->nombre;
+            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->nombre;
         else
-            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getMunicipio()->getNombre();
+            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre();
     }
 
     /**
@@ -176,7 +176,7 @@ class Equipo
      */
     public function getNombreCompletoRaw()
     {
-        return "<strong>".$this->getMunicipio()."</strong><br><small>".$this->nombre."</small>";
+        return "<strong>".$this->getPlanilla()->getMunicipio()."</strong><br><small>".$this->nombre."</small>";
     }
 
     /**
@@ -328,29 +328,6 @@ class Equipo
     public function getEvento()
     {
         return $this->evento;
-    }
-
-    /**
-     * Set municipio
-     *
-     * @param \CommonBundle\Entity\Municipio $municipio
-     * @return Equipo
-     */
-    public function setMunicipio(\CommonBundle\Entity\Municipio $municipio = null)
-    {
-        $this->municipio = $municipio;
-
-        return $this;
-    }
-
-    /**
-     * Get municipio
-     *
-     * @return \CommonBundle\Entity\Municipio
-     */
-    public function getMunicipio()
-    {
-        return $this->municipio;
     }
 
     /**

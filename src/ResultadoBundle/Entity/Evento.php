@@ -558,58 +558,13 @@ class Evento
     }
 
     /**
-     * Add equipos
-     *
-     * @param \ResultadoBundle\Entity\Equipo $equipos
-     * @return Evento
-     */
-    public function addEquipo(\ResultadoBundle\Entity\Equipo $equipos)
-    {
-        $this->equipos[] = $equipos;
-
-        return $this;
-    }
-
-    /**
-     * Remove equipos
-     *
-     * @param \ResultadoBundle\Entity\Equipo $equipos
-     */
-    public function removeEquipo(\ResultadoBundle\Entity\Equipo $equipos)
-    {
-        $this->equipos->removeElement($equipos);
-    }
-
-    /**
-     * Get equipos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEquipos()
-    {
-        //return $this->equipos;
-        $return = $this->equipos->toArray();
-        usort($return, function ($a, $b){
-                return $a->getMunicipio()->getRegionDeportiva() > $b->getMunicipio()->getRegionDeportiva();
-            }
-        );
-        return $return;
-    }
-
-    /**
      * Get statsEquipos
      *
      * @return string
      */
     public function getStatsEquipos()
     {
-        $cantEqAsigando = 0;
-        foreach ($this->equipos as $equipo){
-            if ($equipo->hasPlazas()){
-                $cantEqAsigando++;
-            }
-        }
-        return $cantEqAsigando."/".count($this->equipos);
+        echo "REFACtoRIZAR";die(); // Esto se paso a etapa 
     }
 
     /**
@@ -786,8 +741,20 @@ class Evento
      */
     public function agregarEquipoClasificado($equipo)
     {
-        // $
-        // $equipo->
-        // return $this->segmento;
+        $etapaMunicipal = null;
+        /*
+         * Si no tiene etapas crea una, si tiene recupera la primera y verifica que se de clasificación municipal.
+         * sino, lanza una Exception porque deben ser reacomodadas.
+         */
+        if (count($this->etapas)){
+            $etapaMunicipal = $this->etapas->first();
+            if (!$etapaMunicipal->isEtapaMunicipal()){
+                throw new \Exception('Plenus: El evento tiene etapas creadas y la primera no es la de clasificación. Debe reacomodar las etapas antes de continuar.');
+            }
+        }else{
+            $etapaMunicipal = new EtapaMunicipal();
+        }
+
+        $etapaMunicipal->addEquipo($equipo);
     }
 }

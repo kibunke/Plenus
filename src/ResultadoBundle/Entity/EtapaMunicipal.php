@@ -42,4 +42,13 @@ class EtapaMunicipal extends Etapa
     {
         return 44;
     }
+
+    /**
+     * isEtapaMunicipal
+     * @return integer
+     */
+    public function isEtapaMunicipal()
+    {
+        return true;
+    }
 }
