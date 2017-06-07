@@ -53,13 +53,10 @@ class EtapaController extends Controller
 
         if ($form->isValid()) {
             $clasificacion = new EtapaClasificacion($this->getUser());
-            $clasificacion->setNombre("Etapa de Clasificación");
             $clasificacion->setEvento($evento);
             $final = new EtapaFinal($this->getUser());
-            $final->setNombre("Etapa Final");
             $final->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             
             $em = $this->getDoctrine()->getManager();
@@ -92,7 +89,6 @@ class EtapaController extends Controller
      */
     public function createFinalAction(Request $request, Evento $evento)
     {
-
         $form =  $this->createEtapaFinalForm($evento);
         $form->handleRequest($request);
         
@@ -110,10 +106,8 @@ class EtapaController extends Controller
         
         if ($form->isValid()) {
             $final = new EtapaFinal($this->getUser());
-            $final->setNombre("Etapa Final");
             $final->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);                        
             $em = $this->getDoctrine()->getManager();
             
@@ -266,5 +260,18 @@ class EtapaController extends Controller
     public function statsAvanceAction(Etapa $etapa)
     {
         return new JsonResponse($etapa->getStateBadgeRaw());
-    }    
+    }
+    
+    
+    /**
+     * Get Etapas Disponibles.
+     *
+     * @Route("/etapas/disponibles", name="resultado_etapa_disponibles")
+     * @Method("GET")
+     */
+    public function etapasDisponiblesAction(Request $request)
+    {
+        return new JsonResponse(Etapa::getEtapasDisponiblesAsArray());
+    }
+    
 }

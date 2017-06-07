@@ -41,5 +41,10 @@ class EtapaClasificacion extends Etapa
     public function getTipoValor()
     {
         return 4;
-    }    
+    }
+    
+    public function getNombreInicial()
+    {
+        return 'Etapa de Clasificación';
+    }
 }

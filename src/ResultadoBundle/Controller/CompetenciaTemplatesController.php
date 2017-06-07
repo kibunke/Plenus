@@ -101,13 +101,10 @@ class CompetenciaTemplatesController extends Controller
         
         if ($form->isValid()) {
             $etapaClasificacion = new EtapaClasificacion($this->getUser());
-            $etapaClasificacion->setNombre("Etapa de Clasificación");
             $etapaClasificacion->setEvento($evento);
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             /* ETAPA DE CLASIFICACION */
             $tipo = "ResultadoBundle\Entity\CompetenciaLiga".$disciplinaParam->tipo;
@@ -349,13 +346,10 @@ class CompetenciaTemplatesController extends Controller
         
         if ($form->isValid()) {
             $etapaClasificacion = new EtapaClasificacion($this->getUser());
-            $etapaClasificacion->setNombre("Etapa de Clasificación");
             $etapaClasificacion->setEvento($evento);
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             /* ETAPA DE CLASIFICACION */
             $tipo = "ResultadoBundle\Entity\CompetenciaLiga".$disciplinaParam->tipo;
@@ -929,10 +923,8 @@ class CompetenciaTemplatesController extends Controller
             $etapaClasificacion->setNombre("Etapa de Clasificación");
             $etapaClasificacion->setEvento($evento);
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             /* ETAPA DE CLASIFICACION */
             $tipo = "ResultadoBundle\Entity\CompetenciaLiga".$disciplinaParam->tipo;
@@ -1267,13 +1259,10 @@ class CompetenciaTemplatesController extends Controller
         
         if ($form->isValid()) {
             $etapaClasificacion = new EtapaClasificacion($this->getUser());
-            $etapaClasificacion->setNombre("Etapa de Clasificación");
             $etapaClasificacion->setEvento($evento);
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             /* ETAPA DE CLASIFICACION */
             $tipo = "ResultadoBundle\Entity\CompetenciaLiga".$disciplinaParam->tipo;
@@ -1742,10 +1731,8 @@ class CompetenciaTemplatesController extends Controller
         
         if ($form->isValid()) {
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             
             /* ETAPA FINAL */
@@ -1832,10 +1819,8 @@ class CompetenciaTemplatesController extends Controller
         
         if ($form->isValid()) {
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             
             /* ETAPA FINAL */
@@ -1931,15 +1916,12 @@ class CompetenciaTemplatesController extends Controller
         if ($form->isValid()) {
             //Etapa de clasificación
             $etapaClasificacion = new EtapaClasificacion($this->getUser());
-            $etapaClasificacion->setNombre("Etapa de Clasificación");
             $etapaClasificacion->setEvento($evento);            
             //Etapa final
             $etapaFinal = new EtapaFinal($this->getUser());
-            $etapaFinal->setNombre("Etapa Final");
             $etapaFinal->setEvento($evento);
             //medallero
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setNombre("Medallero");
             $medallero->setEvento($evento);
             
             /* ETAPA FINAL */

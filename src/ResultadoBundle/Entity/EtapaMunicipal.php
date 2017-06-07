@@ -42,4 +42,9 @@ class EtapaMunicipal extends Etapa
     {
         return 44;
     }
+    
+    public function getNombreInicial()
+    {
+        return 'Etapa Municipal';
+    }
 }

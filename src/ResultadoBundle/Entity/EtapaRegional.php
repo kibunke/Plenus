@@ -42,4 +42,9 @@ class EtapaRegional extends Etapa
     {
         return 444;
     }
+    
+    public function getNombreInicial()
+    {
+        return 'Etapa Regional';
+    }
 }

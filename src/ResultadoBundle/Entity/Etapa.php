@@ -60,6 +60,13 @@ abstract class  Etapa
     private $competencia;
 
     /**
+     * @var integer $orden
+     *
+     * @ORM\Column(name="orden", type="integer")
+     */
+    private $orden;
+    
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -92,10 +99,13 @@ abstract class  Etapa
     /**
      * Construct
      */
-    public function __construct($user = NULL) {
+    public function __construct($user = NULL)
+    {
        $this->createdAt = new \DateTime();
        $this->createdBy = $user;
-       $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
+       $this->equipos   = new \Doctrine\Common\Collections\ArrayCollection();
+       $this->nombre    = $this->getNombreInicial();
+       $this->orden     = 0;
     }
 
     /**
@@ -350,5 +360,61 @@ abstract class  Etapa
      */
     public function getTipoValor()
     {
+    }
+    
+    public function toArray()
+    {
+        return [
+                  'id'     => $this->id,
+                  'nombre' => $this->nombre,
+                  'orden'  => $this->orden
+               ];
+    }
+    
+    /**
+     * Set orden
+     *
+     * @return Etapa
+     */
+    public function setOrden($orden = 0)
+    {
+        $this->orden = $orden;
+        
+        return $this;
+    }
+    
+    /**
+     * Get orden
+     *
+     * @return integer
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+    
+    static function getEtapasDisponiblesAsArray()
+    {
+        $etapas = [
+                    new EtapaClasificacion(),
+                    new EtapaFinal(),
+                    new EtapaMedallero(),
+                    new EtapaMunicipal(),
+                    new EtapaRegional()
+                  ];
+        
+        $resultado = [];
+        
+        foreach($etapas as $etapa )
+        {
+            $resultado[] = [
+                             'nombre' => $etapa->getNombreInicial(),
+                             'clase'  => get_class($etapa),
+                             'icon'   => $etapa->getIcon(),
+                             'tipo'   => $etapa->getTipo()
+                           ];
+        }
+    
+        return $resultado;   
     }
 }

@@ -50,4 +50,9 @@ class EtapaMedallero extends Etapa
     {
         return 10;
     }
+    
+    public function getNombreInicial()
+    {
+        return 'Etapa Medallero';
+    }
 }

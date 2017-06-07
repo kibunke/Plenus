@@ -790,4 +790,23 @@ class Evento
         // $equipo->
         // return $this->segmento;
     }
+    
+    public function getEtapasAsArray()
+    {
+        $resultado = [];
+        foreach($this->etapas as $etapa)
+        {
+            $resultado[] = $etapa->toArray();
+        }
+        
+        return $resultado;
+    }
+    
+    public function addEtapaAtTheEnd(Etapa $etapa)
+    {
+        $etapa->setOrden($this->etapas->count() + 1);
+        $this->addEtapa($etapa);
+        
+        return $this;
+    }
 }

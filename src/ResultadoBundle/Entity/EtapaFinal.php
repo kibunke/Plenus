@@ -52,4 +52,9 @@ class EtapaFinal extends Etapa
     {
         return 7;
     }
+    
+    public function getNombreInicial()
+    {
+        return 'Etapa Final';
+    }
 }
