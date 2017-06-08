@@ -149,9 +149,8 @@
                         $tfoot=$('#analiticalTable tfoot');
                         for (i = 0; i <  numcolums; i++) {
                             $tfoot.find("td:eq("+(i+1)+")").html(totales[i]);
+                            totales[i] = 0;
                         }
-                        totales=[];
-                        for (i = 0; i <  numcolums; i++) {totales.push(0);}
                     },
                     "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]],
                     "iDisplayLength" : 25
