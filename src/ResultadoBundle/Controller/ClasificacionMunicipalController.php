@@ -21,6 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 // use InscripcionBundle\Entity\Segmento;
 use ResultadoBundle\Entity\Competidor;
 use ResultadoBundle\Entity\Evento;
+use ResultadoBundle\Entity\Equipo;
 // use CommonBundle\PDFs\DocumentoPDF;
 
 /**
@@ -49,7 +50,7 @@ class ClasificacionMunicipalController extends Controller
      */
     public function competidorJsonAction(Request $request, Competidor $competidor)
     {
-        return new JsonResponse($competidor->toArray());
+        return new JsonResponse($competidor->toFullArray());
     }
 
     /**
@@ -67,21 +68,44 @@ class ClasificacionMunicipalController extends Controller
     }
 
     /**
-     * Add a Competidor entity into a Etapa entity.
+     * Add a Competidor entity into a EtapaMunicipal collection.
      *
-     * @Route("/ganador/competidor/{competidor}/evento/{evento}", name="resultados_clasificacionMunicipal_competidor_show", condition="request.isXmlHttpRequest()")
-     * @Method("GET")
+     * @Route("/ganador/equipo/{equipo}/evento/{evento}/toggle", name="resultados_clasificacionMunicipal_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__EQ__","evento":"__EV__"})
+     * @Method("POST")
      */
-    public function ganadorAction(Competidor $competidor, Evento $evento)
+    public function ganadorAction(Equipo $equipo, Evento $evento)
     {
-        // return $this->render($planilla->getTemplateShow(), array(
-        //     'planilla' => $planilla,
-        //     'json' => json_encode($planilla->getJson())
-        // ));
+        try{
+            if ($this->canEdit($equipo,$evento)){
+                $em = $this->getDoctrine()->getManager();
+                $etapa = $evento->agregarEquipoClasificado($equipo);
+                $em->persist($etapa);
+                $em->flush();
+                return new JsonResponse(array('success' => true, 'message' =>'OK'));
+            }
+        }catch (Exception $e) {
+            return new JsonResponse(array('success' => false, 'message' => $e->getMessage()));
+        }
     }
 
-    private function canEdit($entity)
+    private function canEdit($equipo,$evento)
     {
-
+        $user = $this->getUser();
+        if ($user->hasRole('ROLE_ADMIN')){
+            return true;
+        }
+        if ($user->hasRole('ROLE_COORDINADOR')){
+            if ($evento->hasAccess($user)){
+                return true;
+            }
+            throw new \Exception('Plenus: No tiene los permisos necesarios para operar sobre eventos que no coordina.');
+        }
+        if ($user->hasRole('ROLE_ORGANIZADOR')){
+            if ($user->getMunicipio() == $equipo->getPlanilla()->getMunicipio()){
+                return true;
+            }
+            throw new \Exception('Plenus: No tiene los permisos necesarios para operar sobre equipos que no pertenecen a su municipio.');
+        }
+        throw new \Exception('Plenus: No tiene los permisos necesarios para realizar esta acción.');
     }
 }

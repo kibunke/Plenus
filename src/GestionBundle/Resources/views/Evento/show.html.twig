@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" class="close-subviews">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a>            
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -33,14 +33,14 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="{{ path('resultados') }}">
                         Resultados
                     </a>
                 </li>
                 <li class="active">
-                    Evento : {{ evento }}
+                    Evento : {{ entity }}
                 </li>
             </ol>
         </div>
@@ -50,8 +50,8 @@
     {{entity}}
 {% endblock %}
 {% block otherStylesheets %}
-    
+
 {% endblock %}
 {% block otherJavascripts %}
-    
-{% endblock %}    
+
+{% endblock %}

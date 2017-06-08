@@ -115,8 +115,8 @@ class Competidor extends Persona
     {
         $mun = [];
         foreach ($this->getEquipos() as $equipo) {
-            if (!in_array($equipo->getMunicipio()->getNombre(),$mun)){
-                $mun[] = $equipo->getMunicipio()->getNombre();
+            if (!in_array($equipo->getPlanilla()->getMunicipio()->getNombre(),$mun)){
+                $mun[] = $equipo->getPlanilla()->getMunicipio()->getNombre();
             }
         }
         return $mun;
@@ -124,21 +124,48 @@ class Competidor extends Persona
 
     public function toArray($aux = null)
     {
-        $eventos = [];
-        foreach ($this->getSegmentos() as $segmento) {
-            foreach ($segmento->getEventos() as $evento) {
-                $eventos[] = [
-                    "id" => $evento->getId(),
-                    "nombre" => $evento->getNombreCompleto(),
-                    "nombreRaw" => $evento->getNombreCompletoRaw(),
-                    "existe" => false
+        return array(
+                'rol' => is_object($aux)?$aux->getRol():'',
+                'persona' => parent::toArray(),
+            );
+    }
+
+    public function toFullArray($aux = null)
+    {
+        $equipos = [];
+        foreach ($this->getEquipos() as $equipo) {
+            if ($equipo->getPlanilla()->isAprobada()){
+                $eventos = [];
+
+                foreach ($equipo->getPlanilla()->getSegmento()->getEventos() as $evento) {
+                    $eventos[] = [
+                        "id" => $evento->getId(),
+                        "nombre" => $evento->getNombreCompleto(),
+                        "nombreRaw" => $evento->getNombreCompletoRaw(),
+                        "existe" => $evento->containsEquipo($equipo)
+                    ];
+                }
+
+                $cant = count($equipo->getEquipoCompetidores());
+                $nombre = ($cant > 1) ? $this->getNombreCompleto()." + ".$cant-1 : $this->getNombreCompleto();
+                $equipos[] = [
+                    "id" => $equipo->getId(),
+                    "cant" => $cant,
+                    "nombre" => $nombre,
+                    "planilla" => [
+                        "id" => $equipo->getPlanilla()->getId(),
+                    ],
+                    "segmento" => [
+                        "data" => $equipo->getPlanilla()->getSegmento()->toArray(),
+                        "eventos" => $eventos
+                    ]
                 ];
             }
         }
         return array(
                 'rol' => is_object($aux)?$aux->getRol():'',
                 'persona' => parent::toArray(),
-                'eventos'=> $eventos
+                'equipos'=> $equipos
             );
     }
 

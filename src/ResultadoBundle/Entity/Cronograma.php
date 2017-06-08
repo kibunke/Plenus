@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ResultadoBundle\Entity\Cronograma
- *
+ * @ORM\Table(name="Cronograma")
  * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\CronogramaRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -33,20 +33,20 @@ class Cronograma
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Escenario", inversedBy="cronogramas")
      * @ORM\JoinColumn(name="escenario", referencedColumnName="id")
-     */       
+     */
     private $escenario;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Evento", inversedBy="cronogramas")
      * @ORM\JoinTable(name="evento_cronograma")
@@ -59,11 +59,11 @@ class Cronograma
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -76,7 +76,7 @@ class Cronograma
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
 
     /**
@@ -88,11 +88,11 @@ class Cronograma
         $this->createdBy = $user;
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * Get raw
      *
-     * @return string 
+     * @return string
      */
     public function getRaw()
     {
@@ -109,16 +109,16 @@ class Cronograma
                         $f2.
                     "</strong><br>
                     <small>".
-                        $this->getEscenario().                        
+                        $this->getEscenario().
                     "</small>
                 </div>"
         ;
     }
-    
+
         /**
      * Get raw
      *
-     * @return string 
+     * @return string
      */
     public function descripcionFrontRaw($evento = null)
     {
@@ -144,21 +144,21 @@ class Cronograma
                     <strong><small>".
                         $evento.
                     " </small>".
-                        
+
                     "</strong><br>
                     <small>".
                         $this->getDescripcion().
                     "</small>
-                </div>";            
+                </div>";
         }
         return  $str;
         ;
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -181,7 +181,7 @@ class Cronograma
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -204,7 +204,7 @@ class Cronograma
     /**
      * Get fecha
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFecha()
     {
@@ -227,13 +227,13 @@ class Cronograma
     /**
      * Get escenario
      *
-     * @return Cronograma 
+     * @return Cronograma
      */
     public function getEscenario()
     {
         return $this->escenario;
     }
-    
+
     /**
      * Set createdAt
      *
@@ -250,7 +250,7 @@ class Cronograma
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -273,7 +273,7 @@ class Cronograma
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -296,7 +296,7 @@ class Cronograma
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -319,13 +319,13 @@ class Cronograma
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
         return $this->updatedBy;
     }
-    
+
     /**
      * Get idReload
      *
@@ -335,7 +335,7 @@ class Cronograma
     {
         //return $this->getEvento()->getId();
     }
-    
+
     /**
      * Can Delete
      *
@@ -344,7 +344,7 @@ class Cronograma
     public function canDelete()
     {
         return true;
-    }    
+    }
 
     /**
      * Add eventos
@@ -372,11 +372,11 @@ class Cronograma
     /**
      * Get eventos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEventos()
     {
         return $this->eventos;
     }
-    
+
 }

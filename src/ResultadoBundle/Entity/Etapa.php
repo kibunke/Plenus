@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ResultadoBundle\Entity\Etapa
  *
- * @ORM\Entity
+ * @ORM\Table(name="Etapa")
+ * @ORM\Entity()
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
@@ -49,9 +50,10 @@ abstract class  Etapa
     private $evento;
 
     /**
-      * Many Equipos have Many Etapas.
-      * @ORM\ManyToMany(targetEntity="Equipo", mappedBy="etapas")
-      */
+     * Many Etapas have Many Equipos.
+     * @ORM\ManyToMany(targetEntity="Equipo", inversedBy="etapas")
+     * @ORM\JoinTable(name="etapas_equipos")
+     */
     private $equipos;
 
     /**
@@ -480,5 +482,15 @@ abstract class  Etapa
         }
 
         return $resultado;
+    }
+
+    public function containsEquipo($equipo)
+    {
+        foreach($this->getEquipos() as $eq){
+            if ($eq == $equipo){
+                return true;
+            }
+        }
+        return false;
     }
 }

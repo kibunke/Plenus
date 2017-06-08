@@ -20,17 +20,17 @@ use ResultadoBundle\Entity\EtapaMedallero;
 /**
  * Etapa controller.
  *
- * @Route("/resultados/etapa")
- * @Security("has_role('ROLE_ETAPA')")
+ * @Route("/etapa")
+ * @Security("has_role('ROLE_RESULTADO_ETAPA')")
  */
 class EtapaController extends Controller
-{    
+{
     /**
      * Creates a new EtapaClasificacion + EtapaFInal entities by evento.
      *
      * @Route("/{id}/clasificacion/new", name="resultado_etapaClasificacion_create")
      * @Method("POST")
-     * @Security("has_role('ROLE_ETAPA_NEW')")
+     * @Security("has_role('ROLE_RESULTADO_ETAPA_NEW')")
      * @Template()
      */
     public function createClasificacionAction(Request $request, Evento $evento)
@@ -38,13 +38,13 @@ class EtapaController extends Controller
 
         $form =  $this->createEtapaClasificacionForm($evento);
         $form->handleRequest($request);
-        
+
         /* CHEQUEA QUE EL USUARIO TENGA ACCESO AL EVENTO*/
         if(!$this->getUser()->hasAccessAtEvento($evento)){
             $this->addFlash('primary', 'No puede ver información de un evento que no coordina.');
             return $this->redirect($this->getRequest()->headers->get('referer'));
         }
-        
+
         /* CHEQUEA QUE EL EVENTO NO TENGA ETAPAS CREADAS */
         if(count($evento->getEtapas())){
             $this->addFlash('primary', 'Este evento ya posee etapas de competencia. Antes de crear nuevas, elimine las actuales');
@@ -58,9 +58,9 @@ class EtapaController extends Controller
             $final->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
             $medallero->setEvento($evento);
-            
+
             $em = $this->getDoctrine()->getManager();
-            
+
             $em->persist($clasificacion);
             $em->persist($final);
             $em->persist($medallero);
@@ -84,14 +84,14 @@ class EtapaController extends Controller
      *
      * @Route("/{id}/final/new", name="resultado_etapaFinal_create")
      * @Method("POST")
-     * @Security("has_role('ROLE_ETAPA_NEW')")
+     * @Security("has_role('ROLE_RESULTADO_ETAPA_NEW')")
      * @Template()
      */
     public function createFinalAction(Request $request, Evento $evento)
     {
         $form =  $this->createEtapaFinalForm($evento);
         $form->handleRequest($request);
-        
+
         /* CHEQUEA QUE EL USUARIO TENGA ACCESO AL EVENTO*/
         if(!$this->getUser()->hasAccessAtEvento($evento)){
             $this->addFlash('primary', 'No puede ver información de un evento que no coordina.');
@@ -103,14 +103,14 @@ class EtapaController extends Controller
             $this->addFlash('primary', 'Este evento ya posee etapas de competencia. Antes de crear nuevas, elimine las actuales');
             return $this->redirect($this->getRequest()->headers->get('referer'));
         }
-        
+
         if ($form->isValid()) {
             $final = new EtapaFinal($this->getUser());
             $final->setEvento($evento);
             $medallero = new EtapaMedallero($this->getUser());
-            $medallero->setEvento($evento);                        
+            $medallero->setEvento($evento);
             $em = $this->getDoctrine()->getManager();
-            
+
             $em->persist($final);
             $em->persist($medallero);
             try{
@@ -127,7 +127,7 @@ class EtapaController extends Controller
             'form'   => $form->createView(),
         );
     }
-    
+
     /**
      * Creates a form to create a EtapaClasificacion entity.
      *
@@ -143,7 +143,7 @@ class EtapaController extends Controller
                             ->getForm();
         ;
     }
-    
+
     /**
      * Creates a form to create a EtapaFinal entity.
      *
@@ -159,13 +159,13 @@ class EtapaController extends Controller
                             ->getForm();
         ;
     }
-    
+
     /**
      * Displays a view to create a new Etapa entity.
      *
      * @Route("/{id}/new", name="resultado_etapa_new")
      * @Method("GET")
-     * @Security("has_role('ROLE_ETAPA_NEW')")
+     * @Security("has_role('ROLE_RESULTADO_ETAPA_NEW')")
      * @Template()
      */
     public function newAction(Request $request, Evento $evento)
@@ -173,17 +173,17 @@ class EtapaController extends Controller
         if (!$request->isXMLHttpRequest()){
             return $this->redirect($this->getRequest()->headers->get('referer'));
         }
-        
-        $formFinal =  $this->createEtapaFinalForm($evento);                    
+
+        $formFinal =  $this->createEtapaFinalForm($evento);
         $formClasificacion =  $this->createEtapaClasificacionForm($evento);
-        
+
         return array(
             'evento' => $evento,
             'formEtapaFinal'=>$formFinal->createView(),
             'formEtapaClasificacion'=>$formClasificacion->createView(),
         );
     }
-    
+
     /**
      * Creates a form to delete a Etapa entity by id.
      *
@@ -200,7 +200,7 @@ class EtapaController extends Controller
             ->getForm()
         ;
     }
-    
+
     /**
      * Delete a Etapa entity.
      *
@@ -214,14 +214,14 @@ class EtapaController extends Controller
         if (!$request->isXMLHttpRequest()){
             return $this->redirect($this->getRequest()->headers->get('referer'));
         }
-        
-        $form =  $this->createDeleteForm($etapa);                    
-        
+
+        $form =  $this->createDeleteForm($etapa);
+
         return array(
             'form' => $form->createView(),
         );
     }
-    
+
     /**
      * Deletes a Etapa entity.
      *
@@ -235,7 +235,7 @@ class EtapaController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            
+
             if (!$etapa) {
                 throw $this->createNotFoundException('No existe la etapa.');
             }
@@ -250,7 +250,7 @@ class EtapaController extends Controller
         }
         return new JsonResponse(array('success' => true, 'reload' =>true));
     }
-    
+
     /**
      * Get state etapa.
      *
@@ -261,8 +261,8 @@ class EtapaController extends Controller
     {
         return new JsonResponse($etapa->getStateBadgeRaw());
     }
-    
-    
+
+
     /**
      * Get Etapas Disponibles.
      *
@@ -273,5 +273,5 @@ class EtapaController extends Controller
     {
         return new JsonResponse(Etapa::getEtapasDisponiblesAsArray());
     }
-    
+
 }

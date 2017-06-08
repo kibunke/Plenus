@@ -110,11 +110,10 @@
             // no se sobreescribe el namespace, si ya existe
             var _tableCompetidor,
                 _tableEvento,
-                _aCombinar = [],
+                _aCombinaciones = [],
                 _pathShow = "{{ path('competidor_show')}}",
                 _pathLoad = "{{ path('resultados_clasificacionMunicipal_competidor_json')}}",
-                _pathGanador = "{#{ path('evento_ganadorMunicipal')}#}";
-                {# _hasRole = {% if is_granted('ROLE_INSCRIPCION_COMPETIDORES_COMBINAR') %} true {% else %} false {% endif %}; #}
+                _pathGanador = "{{ path('resultados_clasificacionMunicipal_competidor_ganador') }}";
             $.Default = $.Default || {};
 
             $.Default.init = function()
@@ -191,29 +190,88 @@
                 let $row = $('#row_'+id);
                 $row.addClass('info');
                 $panel.block($.Main.defaultBlockConf());
+                $('#eventoTable').data('competidor',id);
                 $.get(_pathLoad.replace('__00__',id)).done((data)=>{
                     console.log(data);
-                    $panel.find('.panel-title span').html(data.persona.apellido+", "+data.persona.nombre);
-                    $tbody.html('');
-                    $.map(data.eventos,(data)=>{
-                        let str =   '<tr>'+
-                                        '<td class="text-center">'+data.id+'</td>'+
-                                        '<td>'+data.nombreRaw+'</td>';
-                        if (data.existe){
-                            str = str + '<td class="text-center"><i class="fa fa-check text-success"></i></td>'+
-                                    '<td><button onclick="$.Default.deselectPost(' + id + ',' + data.id + ')" class="btn btn-xs btn-green"><i class="fa fa-times"></i></button></td>';
-                        }else{
-                            str = str + '<td class="text-center"><i class="fa fa-times text-danger"></i></td>'+
-                            '<td><button onclick="$.Default.selectPost(' + id + ',' + data.id + ')" class="btn btn-xs btn-green"><i class="fa fa-check"></i></button></td>';
-                        }
-                        str = str + '</tr>';
-                        $tbody.append(str);
-                        console.log(data);
-                    })
+                    if (data.equipos.length > 0){
+                        $panel.find('.panel-title span').html(data.persona.apellido+", "+data.persona.nombre);
+                        _aCombinaciones = [];
+                        $.map(data.equipos,(equipo)=>{
+                            $.map(equipo.segmento.eventos,(evento,index)=>{
+                                _aCombinaciones.push({'evento': evento, 'equipo': equipo});
+                                let str =   '<tr>'+
+                                                '<td class="text-center">'+evento.id+'</td>'+
+                                                '<td>'+evento.nombreRaw+'</td>';
+                                if (evento.existe){
+                                    str = str + '<td class="text-center"><i class="fa fa-check text-success"></i></td>'+
+                                            '<td><button onclick="$.Default.toggle(' + index + ')" class="btn btn-xs btn-green"><i class="fa fa-times"></i></button></td>';
+                                }else{
+                                    str = str + '<td class="text-center"><i class="fa fa-times text-danger"></i></td>'+
+                                    '<td><button onclick="$.Default.toggle(' + index + ')" class="btn btn-xs btn-green"><i class="fa fa-check"></i></button></td>';
+                                }
+                                str = str + '</tr>';
+                                $tbody.append(str);
+                            })
+                        })
+                    }else{
+                        $tbody.html('<tr><td colspan="4" class="text-danger text-center">El participante no tiene planillas aprobadas en ningún segmento.</td></tr>');
+                    }
                 }).always(()=>{
                     setTimeout(function(){
                         $panel.unblock();
                     },200);
+                })
+            }
+            $.Default.toggle = function(index)
+            {
+                let combinacion = _aCombinaciones[index],
+                    $panel = $('#blockContenidoContent'),
+                    title = "",
+                    text = combinacion.evento.nombreRaw
+                    btnText = 'Si, agregar!',
+                    btnColor = '#3085d6';
+                if (combinacion.evento.existe){
+                    title = 'Realmente desea eliminar a '+ combinacion.equipo.nombre +' de';
+                    btnText = 'Si, eliminar!';
+                    btnColor = '#e66b6b';
+                }else{
+                    title = 'Realmente desea agregar a '+ combinacion.equipo.nombre +' en';
+                }
+
+                $panel.block($.Main.defaultBlockConf());
+                swal({
+                    title: '¿ ' + title + ' ?',
+                    text: text,
+                    type: 'warning',
+                    html: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    showCancelButton: true,
+                    confirmButtonColor: btnColor,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: btnText,
+                    closeOnCancel: false
+                },function (isConfirm) {
+                    if (isConfirm){
+                        console.log(_pathGanador);
+                        $.post(_pathGanador.replace('__EQ__', combinacion.equipo.id).replace('__EV__', combinacion.evento.id))
+                            .done((data)=>{
+                                if (data.success){
+                                    swal('Excelente!',data.message,'success');
+                                    $.Default.select($('#eventoTable').data('competidor'));
+                                }else{
+                                    swal('Cuidado!',data.message,'error')
+                                }
+                            })
+                            .fail(()=>{
+                                swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                            }).always(()=>{
+                                $panel.unblock();
+                            })
+                    } else {
+                            swal.close();
+
+                    }
                 })
             }
         })(jQuery);

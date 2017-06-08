@@ -525,15 +525,15 @@ class Evento
     }
 
     /**
-     * Add etapas
+     * Add etapa
      *
-     * @param \ResultadoBundle\Entity\Etapa $etapas
+     * @param \ResultadoBundle\Entity\Etapa $etapa
      * @return Evento
      */
-    public function addEtapa(\ResultadoBundle\Entity\Etapa $etapas)
+    public function addEtapa(\ResultadoBundle\Entity\Etapa $etapa)
     {
-        $this->etapas[] = $etapas;
-
+        $this->etapas[] = $etapa;
+        $etapa->setEvento($this);
         return $this;
     }
 
@@ -564,7 +564,7 @@ class Evento
      */
     public function getStatsEquipos()
     {
-        echo "REFACtoRIZAR";die(); // Esto se paso a etapa 
+        echo "REFACtoRIZAR";die(); // Esto se paso a etapa
     }
 
     /**
@@ -737,13 +737,13 @@ class Evento
     /**
      * agregarEquipoClasificado
      *
-     * @return \InscripcionBundle\Entity\Evento
+     * @return \InscripcionBundle\Entity\Etapa
      */
     public function agregarEquipoClasificado($equipo)
     {
         $etapaMunicipal = null;
         /*
-         * Si no tiene etapas crea una, si tiene recupera la primera y verifica que se de clasificación municipal.
+         * Si no tiene etapas crea una, si tiene recupera la primera y verifica que sea de clasificación municipal.
          * sino, lanza una Exception porque deben ser reacomodadas.
          */
         if (count($this->etapas)){
@@ -753,11 +753,26 @@ class Evento
             }
         }else{
             $etapaMunicipal = new EtapaMunicipal();
+            $this->addEtapa($etapaMunicipal);
         }
-
-        $etapaMunicipal->addEquipo($equipo);
+        if ($etapaMunicipal->containsEquipo($equipo)){
+            $etapaMunicipal->removeEquipo($equipo);
+        }else{
+            $etapaMunicipal->addEquipo($equipo);
+        }
+        return $etapaMunicipal;
     }
-    
+
+    public function containsEquipo($equipo)
+    {
+        foreach($this->etapas as $etapa){
+            if ($etapa->containsEquipo($equipo)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getEtapasAsArray()
     {
         $resultado = [];
@@ -765,15 +780,15 @@ class Evento
         {
             $resultado[] = $etapa->toArray();
         }
-        
+
         return $resultado;
     }
-    
+
     public function addEtapaAtTheEnd(Etapa $etapa)
     {
         $etapa->setOrden($this->etapas->count() + 1);
         $this->addEtapa($etapa);
-        
+
         return $this;
     }
 }

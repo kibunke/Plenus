@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" class="close-subviews">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a>            
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -33,7 +33,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="{{ path('resultados') }}">
                         Resultados
@@ -73,7 +73,7 @@
                 <div class="pull-right" style="font-size: 20px" title="Total de plazas asignadas">
                     <i class="fa fa-users text-azure"></i><span class="text-bold change-value"> {{ evento.getStatsPlazas() }}</span>
                 </div>
-            </li>            
+            </li>
             <li class="stats" data-update="{{ path('resultado_evento_stats_avance', {'id':evento.id}) }}">
                 <div class="rate" title="% completado del evento">
                     <span class="value change-value">{{ evento.getState() }}</span><span class="percentage">%</span>
@@ -83,8 +83,8 @@
                 {{ include('CommonBundle::dropdownTables.html.twig') }}
             </li>
         </ul>
-    </div>    
-    <div class="panel-body">      
+    </div>
+    <div class="panel-body">
         {% if evento.etapas | length  %}
             {{ include('ResultadoBundle:Evento:edit.definido.html.twig') }}
         {% else %}
@@ -97,13 +97,13 @@
                     <li>En caso contrario contacte a un usuario con más privilegios.</li>
                 </p>
                 <p>
-                    {% if is_granted('ROLE_ETAPA_NEW') %}
+                    {% if is_granted('ROLE_RESULTADO_ETAPA_NEW') %}
                         <a href="#example-subview-1" onclick="$.Evento.etapa.add('{{ path('resultado_etapa_new', { 'id': evento.id }) }}')" class="btn btn-green tooltips show-sv" data-placement="top" data-original-title="Crear" data-startFrom="right">
                             <span class="fa fa-edit"></span> Crear etapa de competencia
                         </a>
                         <a href="#example-subview-1" onclick="$.Evento.etapa.add('{{ path('resultado_competencia_template', { 'id': evento.id }) }}')" class="btn btn-orange tooltips show-sv" data-placement="top" data-original-title="Crear" data-startFrom="right">
                             <span class="fa fa-edit"></span> Ver Templates disponibles
-                        </a>                        
+                        </a>
                     {% endif %}
                     <a href="{{ path('resultados') }}" class="btn btn-light-grey">
                         <span class="fa fa-arrow-left"></span> Cancelar y volver.
@@ -114,7 +114,7 @@
         <!-- start: SUBVIEW EXAMPLE FOR THIS PAGE ONLY -->
         <div id="example-subview-1" class="no-display">
             <div class="col-md-10 col-md-offset-1 ajax-cont"></div>
-        </div>        
+        </div>
     </div>
 {% endblock %}
 {% block otherStylesheets %}
@@ -133,12 +133,12 @@
         }
         .ui-sortable-placeholder td {
             border-bottom: 2px solid red;
-        }  
+        }
     </style>
 {% endblock %}
 
 {% block otherJavascripts %}
-    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>    
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
     <script>
         (function ($) {
             var _modoEdicion = false;
@@ -160,14 +160,14 @@
                 $('.nav-tabs li').on('click',function(){
                     if (_modoEdicion){
                         alert("Salga del modo edición para realizar esta tarea!")
-                        return false;                        
+                        return false;
                     }
                 })
                 $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
                 $('.sb-toggle-left').trigger('click');
                 $('#okButton').on('click',function(){
                     $('#panel-config form').submit();
-                });       
+                });
             }
             $.Evento.etapa = function() {}
             $.Evento.etapa.add = function(url) {
@@ -196,8 +196,8 @@
                             $('#deleteFormAux form').submit();
                         }
                     });
-                });                
-            }            
+                });
+            }
             $.Evento.etapa.competencia = function() {}
             $.Evento.etapa.competencia.habilitarEdicion = function(id) {
                 _modoEdicion = true;
@@ -221,7 +221,7 @@
                             orden++;
                         });
                     }
-                });                
+                });
             }
             $.Evento.etapa.competencia.terminarEdicion = function(id,reset) {
                 reset = reset || false;
@@ -247,11 +247,11 @@
                     }else{
                         swal("Cuidado! Imposible guardar", data.msj, "error");
                     }
-                });            
+                });
             }
             $.Evento.etapa.competencia.request = function($form) {
                 var $node = $('#'+$form.data('idreload'))
-                
+
                 if (!$node) {
                     alert("Ocurrio un error en la actualización");
                     location.reload();
@@ -278,7 +278,7 @@
                         //stats-ganadores,
                         $('.stats').each(function(){
                             $node = $(this);
-                            (function($node){ 
+                            (function($node){
                                 $.get($node.data('update'),function(data){
                                     /*
                                      * si existe la clase 'change-value' reemplaza ahí
@@ -290,9 +290,9 @@
                                         $node.html(" "+data);
                                     }
                                     $node.unblock();
-                                }) 
+                                })
                             })($node);
-                        })                   
+                        })
                     }else{
                         if (data.msj){
                             toastr['warning'](data.msj, 'Cuidado');
@@ -332,7 +332,7 @@
                         return false;
                     });
                 });
-                $('#panel-config').modal();                
+                $('#panel-config').modal();
             }
             $.Evento.etapa.competencia.plaza.remove = function(url) {
                 jQuery.get(url, function(data){
@@ -357,7 +357,7 @@
                             $('#deleteFormAux form').submit();
                         }
                     });
-                });                
+                });
             }
         })(jQuery);
         $(document).ready(function(){$.Evento.init();});

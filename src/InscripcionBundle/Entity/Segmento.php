@@ -833,7 +833,7 @@ class Segmento
                         "torneo" => $this->getTorneo()->getNombre(),
                         "categoria" => $this->getCategoria()->getNombre(),
                         "disciplina" => $this->getDisciplina()->getNombreCompleto(),
-                        "genero" => $this->getGenero()->getNombre(),
+                        "genero" => $this->getGenero()->getNombre()
                     );
     }
 

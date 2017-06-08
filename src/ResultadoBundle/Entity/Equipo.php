@@ -71,10 +71,9 @@ class Equipo
      */
     private $planilla;
 
-     /**
-      * Many Etapas have Many Equipos.
-      * @ORM\ManyToMany(targetEntity="Etapa", inversedBy="equipos")
-      * @ORM\JoinTable(name="etapas_equipos")
+    /**
+      * Many Equipos have Many Etapas.
+      * @ORM\ManyToMany(targetEntity="Etapa", mappedBy="equipos")
       */
     private $etapas;
 
@@ -115,7 +114,6 @@ class Equipo
     {
         $this->createdAt = new \DateTime();
         $this->createdBy = $user;
-        //$this->setEvento($evento);
         //$this->setNombre("Equipo ".(count($evento->getEquipos()) + 1));
         $this->equipoCompetidores = new \Doctrine\Common\Collections\ArrayCollection();
         $this->plazas = new \Doctrine\Common\Collections\ArrayCollection();
@@ -305,29 +303,6 @@ class Equipo
     public function getPlazas()
     {
         return $this->plazas;
-    }
-
-    /**
-     * Set evento
-     *
-     * @param \ResultadoBundle\Entity\Evento $evento
-     * @return Equipo
-     */
-    public function setEvento(\ResultadoBundle\Entity\Evento $evento = null)
-    {
-        $this->evento = $evento;
-
-        return $this;
-    }
-
-    /**
-     * Get evento
-     *
-     * @return \ResultadoBundle\Entity\Evento
-     */
-    public function getEvento()
-    {
-        return $this->evento;
     }
 
     /**
@@ -635,5 +610,37 @@ class Equipo
     public function getEquipoCompetidores()
     {
         return $this->equipoCompetidores;
+    }
+
+    /**
+     * Add etapa
+     *
+     * @param \ResultadoBundle\Entity\Etapa $etapa
+     * @return Evento
+     */
+    public function addEtapa(\ResultadoBundle\Entity\Etapa $etapa)
+    {
+        $this->etapas[] = $etapa;
+        return $this;
+    }
+
+    /**
+     * Remove etapa
+     *
+     * @param \ResultadoBundle\Entity\Etapa $etapa
+     */
+    public function removeEtapa(\ResultadoBundle\Entity\Etapa $etapa)
+    {
+        $this->etapas->removeElement($etapa);
+    }
+
+    /**
+     * Get etapas
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEtapas()
+    {
+        return $this->etapas;
     }
 }

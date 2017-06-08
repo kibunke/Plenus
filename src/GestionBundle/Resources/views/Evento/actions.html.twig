@@ -1,7 +1,7 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
-    <button disabled href="#0" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></button>
-    <button onclick="$.Default.openAjaxForm('{{ path('evento_edit', { 'id': entity.id }) }}','Editar Evento')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
-    <button title="El evento no debe tener etapas ni equipos asociados" onclick="$.Default.deleteConfirm('{{ path('evento_delete', { 'id': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
+    <a href="{{ path('gention_evento_show', {'evento': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+    <button onclick="$.Default.openAjaxForm('{{ path('evento_edit', { 'evento': entity.id }) }}','Editar Evento')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
+    <button title="El evento no debe tener etapas ni equipos asociados" onclick="$.Default.deleteConfirm('{{ path('evento_delete', { 'evento': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
 </div>
 <div class="visible-xs visible-sm hidden-md hidden-lg">
     <div class="btn-group">
@@ -10,17 +10,17 @@
         </a>
         <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
             <li>
-                <a disabled role="menuitem" tabindex="-1" href="#0">
+                <a role="menuitem" tabindex="-1" href="{{ path('gention_evento_show', {'evento': entity.id }) }}">
                     <i class="fa fa-eye"></i> Ver
                 </a>
             </li>
             <li>
-                <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Default.openAjaxForm('{{ path('evento_edit', { 'id': entity.id }) }}','Editar Evento')">
+                <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Default.openAjaxForm('{{ path('evento_edit', { 'evento': entity.id }) }}','Editar Evento')">
                     <i class="fa fa-edit"></i> Editar
                 </a>
             </li>
             <li>
-                <a role="menuitem" tabindex="-1" href="#2" onclick="$.Default.deleteConfirm('{{ path('evento_delete', { 'id': entity.id }) }}')">
+                <a role="menuitem" tabindex="-1" href="#2" onclick="$.Default.deleteConfirm('{{ path('evento_delete', { 'evento': entity.id }) }}')">
                     <i class="fa fa-times"></i> Eliminar
                 </a>
             </li>
