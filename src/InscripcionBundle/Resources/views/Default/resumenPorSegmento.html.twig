@@ -173,7 +173,6 @@
                         }
                     },
                     "fnDrawCallback": function(){
-                        totales=[];
                         $tfoot=$('#analiticalTable tfoot');
                         for (i = 0; i <  numcolums; i++) {
                             $tfoot.find("td:eq("+(i+1)+")").html(totales[i]);
@@ -181,6 +180,7 @@
                         if (!modoTexto){
                             $.Default.toggleModoNumerico(false);
                         }
+                        totales=[];
                     },
                     "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]],
                     "iDisplayLength" : 25
