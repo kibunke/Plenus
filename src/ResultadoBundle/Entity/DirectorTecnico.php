@@ -26,8 +26,8 @@ class DirectorTecnico extends Persona
         $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct($user);
     }
-    
-    public function getJson()
+
+    public function toArray()
     {
         return array(
                 'nombre' => $this->getNombre(),
@@ -36,12 +36,12 @@ class DirectorTecnico extends Persona
                 'dni' => $this->getDni()
             );
     }
-    
+
     public function getTipoPersona()
     {
         return 'Director Técnico';
     }
-    
+
     public function getClass()
     {
         return 'ResultadoBundle:DirectorTecnico';

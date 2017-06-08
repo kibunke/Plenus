@@ -63,7 +63,7 @@ class ClasificacionMunicipalController extends Controller
     {
         // return $this->render($planilla->getTemplateShow(), array(
         //     'planilla' => $planilla,
-        //     'json' => json_encode($planilla->getJson())
+        //     'json' => json_encode($planilla->toArray())
         // ));
     }
 
@@ -83,7 +83,7 @@ class ClasificacionMunicipalController extends Controller
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' =>'OK'));
             }
-        }catch (Exception $e) {
+        }catch (\Exception $e) {
             return new JsonResponse(array('success' => false, 'message' => $e->getMessage()));
         }
     }
@@ -91,21 +91,25 @@ class ClasificacionMunicipalController extends Controller
     private function canEdit($equipo,$evento)
     {
         $user = $this->getUser();
-        if ($user->hasRole('ROLE_ADMIN')){
-            return true;
+        if (!$equipo->getPlanilla()->isAprobada()){
+            throw new \Exception('Plenus: El participante/equipo no tiene la planilla aprobada.');
         }
-        if ($user->hasRole('ROLE_COORDINADOR')){
-            if ($evento->hasAccess($user)){
-                return true;
+        if ($equipo->getPlanilla()->getSegmento() != $evento->getSegmento()){
+            throw new \Exception('Plenus: El participante/equipo no pertenece al segmento del evento.');
+        }
+        if (!$user->hasRole('ROLE_ADMIN')){
+            if ($user->hasRole('ROLE_COORDINADOR')){
+                if (!$evento->hasAccess($user)){
+                    throw new \Exception('Plenus: No tiene los permisos necesarios para operar sobre eventos que no coordina.');
+                }
+            }elseif ($user->hasRole('ROLE_ORGANIZADOR')){
+                if ($user->getMunicipio() != $equipo->getPlanilla()->getMunicipio()){
+                    throw new \Exception('Plenus: No tiene los permisos necesarios para operar sobre equipos que no pertenecen a su municipio.');
+                }
+            }else{
+                throw new \Exception('Plenus: No tiene los permisos necesarios para realizar esta acción.');
             }
-            throw new \Exception('Plenus: No tiene los permisos necesarios para operar sobre eventos que no coordina.');
         }
-        if ($user->hasRole('ROLE_ORGANIZADOR')){
-            if ($user->getMunicipio() == $equipo->getPlanilla()->getMunicipio()){
-                return true;
-            }
-            throw new \Exception('Plenus: No tiene los permisos necesarios para operar sobre equipos que no pertenecen a su municipio.');
-        }
-        throw new \Exception('Plenus: No tiene los permisos necesarios para realizar esta acción.');
+        return true;
     }
 }

@@ -147,14 +147,14 @@ class EventoController extends Controller
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:edit.html.twig")
      */
-    public function editAction(Request $request, Evento $entity)
+    public function editAction(Request $request, Evento $evento)
     {
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(EventoType::class, $entity);
+        $form = $this->createForm(EventoType::class, $evento);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->setUpdatedBy($this->getUser());
-            $entity->setUpdatedAt(new \DateTime());
+            $evento->setUpdatedBy($this->getUser());
+            $evento->setUpdatedAt(new \DateTime());
             try{
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' => 'El evento fue modificado.'));
@@ -164,7 +164,7 @@ class EventoController extends Controller
             }
         }
         return array(
-            'entity' => $entity,
+            'entity' => $evento,
             'form'   => $form->createView(),
         );
     }

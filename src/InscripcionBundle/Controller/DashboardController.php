@@ -41,7 +41,7 @@ class DashboardController extends Controller
         $torneos = $em->getRepository('ResultadoBundle:Torneo')->findAll();
         $result = [];
         foreach ($torneos as $torneo){
-            $result[$torneo->getId()] = $torneo->getJson();
+            $result[$torneo->getId()] = $torneo->toArray();
         }
         $datos = $em->getRepository('InscripcionBundle:Planilla')->getDashboard();
         foreach ($datos as $dato){

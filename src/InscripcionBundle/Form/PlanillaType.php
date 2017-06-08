@@ -28,7 +28,7 @@ class PlanillaType extends AbstractType
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -52,7 +52,7 @@ class PlanillaType extends AbstractType
                                                 'disabled' => !$user->hasRole('ROLE_COORDINADOR')
                                             )
                   )
-            ->add('data', TextareaType::class, array("mapped" => false,"data" => json_encode($entity->getJson())))
+            ->add('data', TextareaType::class, array("mapped" => false,"data" => json_encode($entity->toFullArray())))
         ;
     }
 

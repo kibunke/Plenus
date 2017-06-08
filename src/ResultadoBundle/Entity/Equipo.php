@@ -545,13 +545,13 @@ class Equipo
         return $this->planilla;
     }
 
-    public function getJson()
+    public function toArray()
     {
         return array(
                 "id" => $this->getId(),
                 "nombre" => $this->getNombre(),
                 "integrantes" => $this->getIntegrantesJson(),
-                //"tecnico"=> $this->getDirectorTecnico() ? $this->getDirectorTecnico()->getJson() : []
+                //"tecnico"=> $this->getDirectorTecnico() ? $this->getDirectorTecnico()->toArray() : []
                 "tecnico" => array(
                                     'nombre' => $this->getPlanilla()->getDirectorTecnicoNombre(),
                                     'apellido' => $this->getPlanilla()->getDirectorTecnicoApellido(),
@@ -565,17 +565,10 @@ class Equipo
 
         foreach($this->equipoCompetidores as $aux)
         {
-            $integrantes[] = $aux->getCompetidor()->getJson($aux);
+            $integrantes[] = $aux->getCompetidor()->toArray($aux);
         }
 
         return $integrantes;
-
-
-        //$integrantes = [];
-        //foreach($this->getIntegrantes() as $integrante){
-        //    $integrantes[] = $integrante->getJson();
-        //}
-        //return $integrantes;
     }
 
     /**

@@ -34,66 +34,66 @@ abstract class Institucion
      * @ORM\Column(name="nombre", type="string", length=150)
      */
     private $nombre;
- 
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="municipio", referencedColumnName="id")
-     */       
+     */
     private $municipio;
- 
+
     /**
      * @var string $domicilio
      *
      * @ORM\Column(name="domicilio", type="string", length=150)
      */
     private $domicilio;
-    
+
     /**
      * @var string $telefono
      *
      * @ORM\Column(name="telefono", type="string", length=150, nullable=true)
      */
     private $telefono;
-    
+
     /**
      * @var string $responsableNombre
      *
      * @ORM\Column(name="responsableNombre", type="string", length=100)
      */
     protected $responsableNombre;
-    
+
     /**
      * @var string $responsableApellido
      *
      * @ORM\Column(name="responsableApellido", type="string", length=100)
      */
     protected $responsableApellido;
-    
+
     /**
      * @var string $responsableDni
      *
      * @ORM\Column(name="responsableDni", type="string", length=100)
      */
     protected $responsableDni;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -106,8 +106,8 @@ abstract class Institucion
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
-    private $updatedBy;    
+     */
+    private $updatedBy;
 
     /**
      * Constructor
@@ -116,19 +116,19 @@ abstract class Institucion
     {
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->getNombre();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -151,7 +151,7 @@ abstract class Institucion
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
@@ -161,7 +161,7 @@ abstract class Institucion
     /**
      * Get icono
      *
-     * @return string 
+     * @return string
      */
     public function getIcono()
     {
@@ -184,7 +184,7 @@ abstract class Institucion
     /**
      * Get color
      *
-     * @return string 
+     * @return string
      */
     public function getColor()
     {
@@ -207,7 +207,7 @@ abstract class Institucion
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -230,7 +230,7 @@ abstract class Institucion
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -253,7 +253,7 @@ abstract class Institucion
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -276,7 +276,7 @@ abstract class Institucion
     /**
      * Get municipio
      *
-     * @return \CommonBundle\Entity\Municipio 
+     * @return \CommonBundle\Entity\Municipio
      */
     public function getMunicipio()
     {
@@ -299,7 +299,7 @@ abstract class Institucion
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -322,19 +322,19 @@ abstract class Institucion
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
         return $this->updatedBy;
     }
-    
+
     /**
      * Get json
      *
      * @return json
      */
-    public function getJson()
+    public function toArray()
     {
         return array(
                     "id" => $this->getId(),
@@ -364,8 +364,8 @@ abstract class Institucion
                     $institucion = new Escuela($user);
                 else
                     $institucion = new Club($user);
-                    
-                
+
+
                 return $institucion->load($json);
             }else{
                 throw new \Exception('Plenus: La institucion no se pudo crear. Los datos del responsable estan incompletos o son erroneos.');
@@ -374,8 +374,8 @@ abstract class Institucion
             throw new \Exception('Plenus: La institucion no se pudo crear. Los datos estan incompletos o son erroneos.');
         }
         //return $institucion;
-    }    
-    
+    }
+
     public function load($json)
     {
         $this->setNombre($json->nombre);
@@ -480,7 +480,7 @@ abstract class Institucion
     public function getResponsableApellido()
     {
         return $this->responsableApellido;
-    }  
+    }
 
     /**
      * Set responsableDni

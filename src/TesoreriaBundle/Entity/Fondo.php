@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="TesoreriaBundle\Entity\Repository\FondoRepository")
  */
 class Fondo {
-    
+
     /**
      * @var integer $id
      *
@@ -20,7 +20,7 @@ class Fondo {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $nombre
      *
@@ -34,53 +34,53 @@ class Fondo {
      * @ORM\Column(name="abreviatura", type="string", length=6)
      */
     private $abreviatura;
-    
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @var string $modeloRecibo
-     * 
+     *
      * @ORM\Column(name="modeloRecibo", type="text")
      */
     private $modeloRecibo;
-    
+
     /**
      * @var float $monto
-     * 
+     *
      * @ORM\Column(name="monto", type="float")
      */
     private $monto;
-    
+
     /**
      * @var Entidad $entidad
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Entidad", inversedBy="fondos")
      * @ORM\JoinColumn(name="entidad_id", referencedColumnName="id")
      */
     private $entidad;
-    
+
     /**
      * @var ArrayCollection $movimientos
-     * 
+     *
      * @ORM\OneToMany(targetEntity="Movimiento", mappedBy="fondo")
      */
     private $movimientos;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
@@ -95,12 +95,12 @@ class Fondo {
 
     /**
      * @var SeguridadBundle\Entity\Usuario $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
-    
+
     /**
      * Constructor
      */
@@ -113,7 +113,7 @@ class Fondo {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -136,27 +136,27 @@ class Fondo {
     /**
      * Get monto
      *
-     * @return float 
+     * @return float
      */
     public function getMonto()
     {
         return $this->monto;
     }
-    
+
     /**
      * Get montoDisponible
      *
-     * @return float 
+     * @return float
      */
     public function getMontoDisponible()
     {
         return $this->monto-$this->getMontoReservado()-$this->getMontoUtilizado();
-    }    
+    }
 
     /**
      * Get montoReservado
      *
-     * @return float 
+     * @return float
      */
     public function getMontoReservado()
     {
@@ -171,7 +171,7 @@ class Fondo {
     /**
      * Get montoDisponible
      *
-     * @return float 
+     * @return float
      */
     public function getMontoUtilizado()
     {
@@ -182,7 +182,7 @@ class Fondo {
         }
         return $sum;
     }
-    
+
     /**
      * Set createdAt
      *
@@ -199,7 +199,7 @@ class Fondo {
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -222,7 +222,7 @@ class Fondo {
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -245,7 +245,7 @@ class Fondo {
     /**
      * Get Entidad
      *
-     * @return \TesoreriaBundle\Entity\Entidad 
+     * @return \TesoreriaBundle\Entity\Entidad
      */
     public function getEntidad()
     {
@@ -280,7 +280,7 @@ class Fondo {
     /**
      * Get movimientos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMovimientos()
     {
@@ -303,7 +303,7 @@ class Fondo {
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -326,7 +326,7 @@ class Fondo {
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -349,7 +349,7 @@ class Fondo {
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
@@ -359,7 +359,7 @@ class Fondo {
     /**
      * Get abreviatura
      *
-     * @return string 
+     * @return string
      */
     public function getAbreviatura()
     {
@@ -378,7 +378,7 @@ class Fondo {
 
         return $this;
     }
-    
+
     /**
      * Set descripcion
      *
@@ -391,37 +391,37 @@ class Fondo {
 
         return $this;
     }
-    
+
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
         return $this->descripcion;
     }
-    
+
     /**
      * deleteCheck
      *
-     * @return boolean 
+     * @return boolean
      */
     public function deleteCheck()
     {
         return ($this->getMontoDisponible() == $this->monto);
     }
-    
+
     /**
      * editCheck
      *
-     * @return boolean 
+     * @return boolean
      */
     public function editCheck()
     {
         return ($this->monto > $this->getMontoReservado() + $this->getMontoUtilizado());
     }
-    
+
     /**
      * get MovimientosJson
      *
@@ -441,7 +441,7 @@ class Fondo {
         foreach($this->movimientos as $mov){
             if ( array_key_exists($mov->getEstado()->getTxt(),$arr)){
                 $arr[$mov->getEstado()->getTxt()]['total'] += $mov->getMonto();
-                $arr[$mov->getEstado()->getTxt()]['cantidad'] ++;                
+                $arr[$mov->getEstado()->getTxt()]['cantidad'] ++;
             }
             $arr['data']['movimientos'][] = array(
                     "id" => $mov->getId(),
@@ -449,10 +449,10 @@ class Fondo {
                     "destinatario" => $mov->getDestinatario()->getId(),
                     "tipo" => $mov->getEstado()
             );
-            //$arr['data']['destinatarios'][] = $mov->getDestinatario()->getJson(false);
+            //$arr['data']['destinatarios'][] = $mov->getDestinatario()->toArray(false);
         }
         return $arr;
-    }    
+    }
 
     /**
      * Set modeloRecibo
@@ -470,7 +470,7 @@ class Fondo {
     /**
      * Get modeloRecibo
      *
-     * @return string 
+     * @return string
      */
     public function getModeloRecibo()
     {

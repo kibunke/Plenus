@@ -239,7 +239,7 @@ class SegmentoRepository extends EntityRepository
 
     public function getTotalInscripcionRows($user,$auth_checker)
     {
-        $where = '';
+        $where = '1 = 1';
         if($user->hasRole('ROLE_COORDINADOR')){
             //COORDINADORES ven los sus Segmentos
             $where = " coordinador.id = " . $user->getId();

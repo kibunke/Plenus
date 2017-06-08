@@ -63,7 +63,7 @@ class PlanillaController extends Controller
     {
         return $this->render($planilla->getTemplateShow(), array(
             'planilla' => $planilla,
-            'json' => json_encode($planilla->getJson())
+            'json' => json_encode($planilla->toFullArray())
         ));
     }
 
@@ -532,7 +532,7 @@ class PlanillaController extends Controller
                         <td style="text-align:left;font-size:12px;">'.$txtModalidad.'</td>
                     </tr>
                 </table>';
-        $arrPlanilla = $planilla->getJson();
+        $arrPlanilla = $planilla->toFullArray();
         $html .= $this->getTableEquiposHTML($arrPlanilla);
         $html .= $this->getTableFooter($arrPlanilla);
         $html .= '<div style="font-size:7px">
@@ -573,7 +573,6 @@ class PlanillaController extends Controller
                         <th style="width:16%;text-align:center;border:1px solid silver">E-mail</th>
                         <th style="width:5%;border:1px solid silver">Obs.</th>
                     </tr>';
-        //$arrPlanilla = $planilla->getJson();
         $cantRows = 0;
         foreach( $arrPlanilla['equipos'] as $equipo ){
             foreach( $equipo['integrantes'] as $competidor ){

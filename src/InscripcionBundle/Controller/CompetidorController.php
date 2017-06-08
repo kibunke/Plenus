@@ -27,6 +27,9 @@ class CompetidorController extends Controller
      */
     public function indexAction(Request $request)
     {
+        if (!$this->getUser()->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+            return $this->render('InscripcionBundle:Competidor:listCompetidor.html.twig', array());
+        }
         return array();
     }
 

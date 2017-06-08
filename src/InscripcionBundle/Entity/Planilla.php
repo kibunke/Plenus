@@ -523,11 +523,11 @@ abstract class Planilla
     }
 
     /**
-     * Get equipos
+     * toArray
      *
      * @return json
      */
-    public function getJson()
+    public function toFullArray()
     {
         $segmento = $this->getSegmento();
         return array(
@@ -541,9 +541,9 @@ abstract class Planilla
                                                 "fechaMax"       => $segmento->getMaxFechaNacimiento(),
                                                 "genero"         => $segmento->getGenero()->getNombre(),
                                             ),
-                      "equipos"                  => $this->getEquiposJson(),
+                      "equipos"                  => $this->getEquiposArray(),
                       "inscripcionInstitucional" => $this->getInstitucion() ? true : false,
-                      "institucion"              => $this->getInstitucion() ? $this->getInstitucion()->getJson() : [],
+                      "institucion"              => $this->getInstitucion() ? $this->getInstitucion()->toArray() : [],
                       "responsableMunicipio" => array(
                                                         "nombre"   => $this->getResponsableMunicipioNombre(),
                                                         "apellido" => $this->getResponsableMunicipioApellido(),
@@ -567,12 +567,12 @@ abstract class Planilla
                 );
     }
 
-    private function getEquiposJson()
+    private function getEquiposArray()
     {
         $equipos = array();
         foreach ($this->getEquipos() as $equipo)
         {
-            $equipos[] = $equipo->getJson();
+            $equipos[] = $equipo->toArray();
         }
 
         return $equipos;

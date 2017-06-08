@@ -20,17 +20,17 @@ class DatosTesoreria {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string $empleadoPublico
-     * 
+     *
      * @ORM\Column(name="empleadoPublico", type="string")
      */
     private $empleadoPublico;
-    
+
     /**
      * @var string $legajo
-     * 
+     *
      * @ORM\Column(name="legajo", type="string", nullable=true)
      * @Assert\Type(
      *     type="string",
@@ -38,10 +38,10 @@ class DatosTesoreria {
      * )
      */
     private $legajo;
-    
+
     /**
      * @var string $cbu
-     * 
+     *
      * @ORM\Column(name="cbu", type="string", nullable=true)
      * @Assert\Type(
      *     type="string",
@@ -49,19 +49,19 @@ class DatosTesoreria {
      * )
      */
     private $cbu;
-    
+
     /**
      * @var Partido $pagoProvincia
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Provincia")
      * @ORM\JoinColumn(name="pagoProvincia", referencedColumnName="id")
      * @Assert\NotNull(groups={"datosTesoreria"})
      */
     private $pagoProvincia;
-    
+
     /**
      * @var Partido $pagoPartido
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="CommonBundle\Entity\Municipio")
      * @ORM\JoinColumn(name="pagoPartido", referencedColumnName="id")
      * @Assert\NotNull(groups={"datosTesoreria"})
@@ -69,16 +69,16 @@ class DatosTesoreria {
     private $pagoPartido;
     /**
      * @var CategoriaPago $categoriaPago
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="CategoriaPago")
      * @ORM\JoinColumn(name="categoriaPago", referencedColumnName="id")
      * @Assert\NotNull(groups={"datosTesoreria"})
      */
     private $categoriaPago;
-    
+
     /**
      * @var float $pagoEspecifico
-     * 
+     *
      * @ORM\Column(name="pagoEspecifico", type="float", nullable=true)
      * @Assert\Type(
      *     type="float",
@@ -86,30 +86,30 @@ class DatosTesoreria {
      * )
      */
     private $pagoEspecifico;
-    
+
     /**
      * @var PersonalJuegos $personalJuegos
-     * 
+     *
      * @ORM\OneToOne(targetEntity="AcreditacionBundle\Entity\PersonalJuegos", inversedBy="datosTesoreria")
      * @ORM\JoinColumn(name="personalJuegos", referencedColumnName="id")
      */
     private $personalJuegos;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Egreso", mappedBy="destinatario")
      */
     private $movimientos;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @var SeguridadBundle\Entity\Usuario $createdBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
      */
@@ -124,15 +124,15 @@ class DatosTesoreria {
 
     /**
      * @var SeguridadBundle\Entity\Usuario $updatedBy
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
 
-    
-    
-    
+
+
+
     /**
      * Constructor
      */
@@ -144,7 +144,7 @@ class DatosTesoreria {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -167,7 +167,7 @@ class DatosTesoreria {
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -190,7 +190,7 @@ class DatosTesoreria {
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -213,7 +213,7 @@ class DatosTesoreria {
     /**
      * Get categoriaPago
      *
-     * @return \TesoreriaBundle\Entity\CategoriaPago 
+     * @return \TesoreriaBundle\Entity\CategoriaPago
      */
     public function getCategoriaPago()
     {
@@ -236,7 +236,7 @@ class DatosTesoreria {
     /**
      * Get personalJuegos
      *
-     * @return \AcreditacionBundle\Entity\PersonalJuegos 
+     * @return \AcreditacionBundle\Entity\PersonalJuegos
      */
     public function getPersonalJuegos()
     {
@@ -259,7 +259,7 @@ class DatosTesoreria {
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -282,7 +282,7 @@ class DatosTesoreria {
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -305,7 +305,7 @@ class DatosTesoreria {
     /**
      * Get pagoEspecifico
      *
-     * @return float 
+     * @return float
      */
     public function getPagoEspecifico()
     {
@@ -328,7 +328,7 @@ class DatosTesoreria {
     /**
      * Get legajo
      *
-     * @return string 
+     * @return string
      */
     public function getLegajo()
     {
@@ -351,29 +351,29 @@ class DatosTesoreria {
     /**
      * Get cbu
      *
-     * @return string 
+     * @return string
      */
     public function getCbu()
     {
         return $this->cbu;
-    }   
+    }
 
     /**
      * Get pagoProvincia
      *
-     * @return /CommonBundle/Entity/Provincia 
+     * @return /CommonBundle/Entity/Provincia
      */
     public function getPagoProvincia()
     {
         return $this->pagoProvincia;
     }
 
-   
+
 
     /**
      * Get pagoPartido
      *
-     * @return /CommonBundle/Entity/Partido 
+     * @return /CommonBundle/Entity/Partido
      */
     public function getPagoPartido()
     {
@@ -422,7 +422,7 @@ class DatosTesoreria {
     /**
      * Get empleadoPublico
      *
-     * @return string 
+     * @return string
      */
     public function getEmpleadoPublico()
     {
@@ -457,13 +457,13 @@ class DatosTesoreria {
     /**
      * Get movimientos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMovimientos()
     {
         return $this->movimientos;
     }
-    
+
     /**
      * hasPagoOrReserva
      *
@@ -473,7 +473,7 @@ class DatosTesoreria {
     {
         return count($this->movimientos);
     }
-    
+
     /**
      * Get remuneracion
      *
@@ -484,12 +484,12 @@ class DatosTesoreria {
         if ($this->pagoEspecifico == 0)
             return $this->categoriaPago->getMonto();
         return $this->pagoEspecifico;
-    }    
+    }
 
     /**
      * Get ultMovimiento
      *
-     * @return string 
+     * @return string
      */
     public function getUltMovimiento()
     {
@@ -498,7 +498,7 @@ class DatosTesoreria {
         }
         return null;
     }
-    
+
     /**
      * Get estadoIcon
      *
@@ -522,11 +522,11 @@ class DatosTesoreria {
             return $aux;
         }
         return false;
-    }    
+    }
     /**
      * Get estadoText
      *
-     * @return string 
+     * @return string
      */
     public function getEstadoText()
     {
@@ -561,13 +561,13 @@ class DatosTesoreria {
         }
         return $arr;
     }
-    
+
     /**
      * Get json
      *
-     * @return string 
+     * @return string
      */
-    public function getJson($encode = true)
+    public function toArray($encode = true)
     {
         $arr = array(
                 "id" => $this->getId(),

@@ -28,35 +28,35 @@ class Torneo
      * @ORM\Column(name="nombre", type="string", length=100)
      */
     protected $nombre;
-    
+
      /**
      * @var string $descripcion
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Evento", mappedBy="torneo")
      */
     private $eventos;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="InscripcionBundle\Entity\Segmento", mappedBy="torneo")
      */
     private $segmentos;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -69,16 +69,16 @@ class Torneo
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
-     */   
+     */
     private $updatedBy;
-    
+
     /**
      * @var boolean $isActive
      *
      * @ORM\Column(name="isAdultosMayores", type="boolean", options={"default" : false})
      */
     protected $isAdultosMayores;
-    
+
     /**
      * Constructor
      */
@@ -90,16 +90,16 @@ class Torneo
 
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->getNombre();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -122,7 +122,7 @@ class Torneo
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
@@ -132,7 +132,7 @@ class Torneo
     /**
      * Get area
      *
-     * @return string 
+     * @return string
      */
     public function getArea()
     {
@@ -143,14 +143,14 @@ class Torneo
     /**
      * Get area
      *
-     * @return string 
+     * @return string
      */
     public function getSubArea()
     {
         $nom = explode(")",explode("(",$this->nombre)[1])[0];
         return trim($nom);
     }
-    
+
     /**
      * Set descripcion
      *
@@ -167,7 +167,7 @@ class Torneo
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -190,7 +190,7 @@ class Torneo
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -213,7 +213,7 @@ class Torneo
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -246,7 +246,7 @@ class Torneo
     /**
      * Get eventos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEventos()
     {
@@ -269,7 +269,7 @@ class Torneo
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -292,7 +292,7 @@ class Torneo
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -356,8 +356,8 @@ class Torneo
     {
         return $this->segmentos;
     }
-    
-    public function getJson()
+
+    public function toArray()
     {
         return array(
                 'id' => $this->getId(),
@@ -368,9 +368,9 @@ class Torneo
                     'inscriptos' => array(
                         'total' => 0,
                         'Femenino' => 0,
-                        'Masculino' => 0,                        
+                        'Masculino' => 0,
                     )
                 )
             );
-    }    
+    }
 }

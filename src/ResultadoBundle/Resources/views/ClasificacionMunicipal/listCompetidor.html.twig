@@ -1,4 +1,4 @@
-{% extends 'CommonBundle::layout.html.twig' %}
+% extends 'CommonBundle::layout.html.twig' %}
 
 {% block contenidoToolbar %}
     <div class="toolbar row">
@@ -16,13 +16,6 @@
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
-                    {#% if is_granted('ROLE_INSCRIPCION_NEW') %}
-                        <li class="dropdown">
-                            <a  href="#1" onclick="$.Default.inscripto.newModal('{{ path('inscripto_new') }}')">
-                                <i class="fa fa-user"></i> NUEVO
-                            </a>
-                        </li>
-                    {% endif %#}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>

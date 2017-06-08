@@ -147,7 +147,7 @@ class Competidor extends Persona
                 }
 
                 $cant = count($equipo->getEquipoCompetidores());
-                $nombre = ($cant > 1) ? $this->getNombreCompleto()." + ".$cant-1 : $this->getNombreCompleto();
+                $nombre = ($cant > 1) ? "al EQUIPO con ".($cant)." participantes" : $this->getNombreCompleto();
                 $equipos[] = [
                     "id" => $equipo->getId(),
                     "cant" => $cant,

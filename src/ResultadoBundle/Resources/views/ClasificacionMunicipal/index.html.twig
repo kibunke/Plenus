@@ -194,6 +194,7 @@
                 $.get(_pathLoad.replace('__00__',id)).done((data)=>{
                     console.log(data);
                     if (data.equipos.length > 0){
+                        $tbody.html('');
                         $panel.find('.panel-title span').html(data.persona.apellido+", "+data.persona.nombre);
                         _aCombinaciones = [];
                         $.map(data.equipos,(equipo)=>{
@@ -204,10 +205,10 @@
                                                 '<td>'+evento.nombreRaw+'</td>';
                                 if (evento.existe){
                                     str = str + '<td class="text-center"><i class="fa fa-check text-success"></i></td>'+
-                                            '<td><button onclick="$.Default.toggle(' + index + ')" class="btn btn-xs btn-green"><i class="fa fa-times"></i></button></td>';
+                                            '<td><button onclick="$.Default.toggle(' + (_aCombinaciones.length - 1) + ')" class="btn btn-xs btn-red"><i class="fa fa-times"></i></button></td>';
                                 }else{
                                     str = str + '<td class="text-center"><i class="fa fa-times text-danger"></i></td>'+
-                                    '<td><button onclick="$.Default.toggle(' + index + ')" class="btn btn-xs btn-green"><i class="fa fa-check"></i></button></td>';
+                                    '<td><button onclick="$.Default.toggle(' + (_aCombinaciones.length - 1) + ')" class="btn btn-xs btn-green"><i class="fa fa-check"></i></button></td>';
                                 }
                                 str = str + '</tr>';
                                 $tbody.append(str);
@@ -253,7 +254,6 @@
                     closeOnCancel: false
                 },function (isConfirm) {
                     if (isConfirm){
-                        console.log(_pathGanador);
                         $.post(_pathGanador.replace('__EQ__', combinacion.equipo.id).replace('__EV__', combinacion.evento.id))
                             .done((data)=>{
                                 if (data.success){
@@ -269,8 +269,8 @@
                                 $panel.unblock();
                             })
                     } else {
-                            swal.close();
-
+                        swal.close();
+                        $panel.unblock();
                     }
                 })
             }

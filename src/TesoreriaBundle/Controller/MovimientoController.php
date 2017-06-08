@@ -42,14 +42,14 @@ class MovimientoController extends Controller
         $personal = $em->getRepository('AcreditacionBundle:PersonalJuegos')->findAll();
         $fondos = $em->getRepository('TesoreriaBundle:Fondo')->findAll();
         $areas = $em->getRepository('AcreditacionBundle:Area')->findAll();
-        
+
         return array(
             'personal' => $personal,
             'fondos' => $fondos,
             'areas' => $areas
         );
     }
-    
+
     /**
      * Consulta analiticoPersonal.
      *
@@ -65,7 +65,7 @@ class MovimientoController extends Controller
             'personal' => $entities,
         );
     }
-    
+
     /**
      * @Route("/list/datatable", name="tesoreria_movimiento_list_datatable")
      */
@@ -83,7 +83,7 @@ class MovimientoController extends Controller
             //$user = $log->getUsuario()?$log->getUsuario()->getNombreCompleto():'-';
             $data['data'][] = array(
                 "activo"    => $persona->getActivo(),
-                "persona"   => $persona->getDatosTesoreria()->getJson(false),
+                "persona"   => $persona->getDatosTesoreria()->toArray(false),
                 "avatar"    => '',//$persona->getAvatar()->getArchivo(),
                 "actions"   => ''
             );
@@ -98,11 +98,11 @@ class MovimientoController extends Controller
     {
         $data = array();
         foreach ($area->getPersonal() as $persona){
-            $data[] = $persona->getDatosTesoreria()->getJson(false);
+            $data[] = $persona->getDatosTesoreria()->toArray(false);
         }
         return new JsonResponse(array('success' => true, 'data'=> $data));
-    }    
-    
+    }
+
     /**
      * @Route("/list/areas", name="tesoreria_movimiento_list_areas")
      * @Template("TesoreriaBundle:Movimiento:areas.table.html.twig")
@@ -114,9 +114,9 @@ class MovimientoController extends Controller
 
         return array(
             'areas' => $areas
-        );        
+        );
     }
-    
+
     /**
      * Asigna Movimientos en estado RESERVA al personal que llega como aprametro.
      *
@@ -130,13 +130,13 @@ class MovimientoController extends Controller
         $aWarning = [];
         $jPersonas = json_decode($request->request->get('personas'));
         $jFondo = $request->request->get('fondo');
-        
+
         $em = $this->getDoctrine()->getManager();
         $fondo = $em->getRepository('TesoreriaBundle:Fondo')->find($jFondo['id']);
         foreach($jPersonas as $jPersona){
             $persona = $em->getRepository('TesoreriaBundle:DatosTesoreria')->find($jPersona->id);
             if (!$persona->tieneMovimiento() && $persona->getRemuneracion()<$fondo->getMontoDisponible()){
-                
+
                 $movimiento = new Egreso;
                 $movimiento->setEstado(new Reservado);
                 $movimiento->setDestinatario($persona);
@@ -157,7 +157,7 @@ class MovimientoController extends Controller
         }
         return new JsonResponse(array('success' => true,'success' => $aSuccess, 'warning'=> $aWarning, 'error'=> $aError));
     }
-    
+
     /**
      * Cambia el estado del Movimiento a completado.
      *
@@ -170,7 +170,7 @@ class MovimientoController extends Controller
         $aError = [];
         $aWarning = [];
         $jPersonas = json_decode($request->request->get('personas'));;
-        
+
         $em = $this->getDoctrine()->getManager();
         foreach($jPersonas as $jPersona){
             $persona = $em->getRepository('TesoreriaBundle:DatosTesoreria')->find($jPersona->id);
@@ -179,11 +179,11 @@ class MovimientoController extends Controller
                 $recibo = new Recibo();
                 $recibo->setCreatedBy($this->getUser());
                 $movimiento->setRecibo($recibo);
-                
+
                 $movimiento->setEstado(new Completado);
-                $movimiento->setUpdatedAt(new \DateTime);            
+                $movimiento->setUpdatedAt(new \DateTime);
                 $movimiento->setUpdatedBy($this->getUser());
-                
+
                 try{
                     $em->flush();
                     $aSuccess[] = $jPersona;
@@ -196,7 +196,7 @@ class MovimientoController extends Controller
         }
         return new JsonResponse(array('success' => true,'success' => $aSuccess, 'warning'=> $aWarning, 'error'=> $aError));
     }
-    
+
     /**
      * Cambia el estado del Movimiento de completado a reservado.
      *
@@ -209,7 +209,7 @@ class MovimientoController extends Controller
         $aError = [];
         $aWarning = [];
         $jPersonas = json_decode($request->request->get('personas'));;
-        
+
         $em = $this->getDoctrine()->getManager();
         foreach($jPersonas as $jPersona){
             $persona = $em->getRepository('TesoreriaBundle:DatosTesoreria')->find($jPersona->id);
@@ -220,11 +220,11 @@ class MovimientoController extends Controller
                 $recibo->setFechaAnulacion(new \DateTime());
                 $recibo->setAnuladoPor($this->getUser());
                 $movimiento->setRecibo(null);
-        
+
                 $movimiento->setEstado(new Reservado);
-                $movimiento->setUpdatedAt(new \DateTime);            
-                $movimiento->setUpdatedBy($this->getUser());                            
-                
+                $movimiento->setUpdatedAt(new \DateTime);
+                $movimiento->setUpdatedBy($this->getUser());
+
                 try{
                     $em->flush();
                     $aSuccess[] = $jPersona;
@@ -237,7 +237,7 @@ class MovimientoController extends Controller
         }
         return new JsonResponse(array('success' => true,'success' => $aSuccess, 'warning'=> $aWarning, 'error'=> $aError));
     }
-    
+
     /**
      * elimina el Movimiento si esta en esto reservado.
      *
@@ -250,14 +250,14 @@ class MovimientoController extends Controller
         $aError = [];
         $aWarning = [];
         $jPersonas = json_decode($request->request->get('personas'));;
-        
+
         $em = $this->getDoctrine()->getManager();
         foreach($jPersonas as $jPersona){
             $persona = $em->getRepository('TesoreriaBundle:DatosTesoreria')->find($jPersona->id);
             $movimiento = $persona->tieneMovimiento();
             if ($movimiento && !$movimiento->estaCompletado()){
-                
-                $em->remove($movimiento);           
+
+                $em->remove($movimiento);
                 try{
                     $em->flush();
                     $aSuccess[] = $jPersona;
