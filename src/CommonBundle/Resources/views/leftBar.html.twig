@@ -198,7 +198,7 @@
 												<span class="title">Listado</span>
 											</a>
 										</li>
-										{% if is_granted('ROLE_INSCRIPCION_COMPETIDORES_DUDOSO') %}
+										{% if is_granted('ROLE_INSCRIPCION_ACTIVIDADES_SOSPECHOSAS') %}
 										<li>
 											<a href="#1{#{ path('inscripcion_actividadesSospechosas') }#}">
 												<span class="title">
