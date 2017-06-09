@@ -82,7 +82,7 @@ class Zona
      */
     public function __construct($user = null, $nombre = "")
     {
-        $this->nombre = $nombre;        
+        $this->nombre    = $nombre;        
         $this->createdAt = new \DateTime();
         $this->createdBy = $user;
     }
@@ -239,7 +239,8 @@ class Zona
     public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
-
+        $this->updatedAt = new \DateTime();
+        
         return $this;
     }
 
@@ -469,5 +470,10 @@ class Zona
     public function removePlaza(\ResultadoBundle\Entity\PlazaZona $plazas)
     {
         $this->plazas->removeElement($plazas);
+    }
+    
+    public function getEtapa()
+    {
+        return $this->getLiga()->getEtapa();
     }
 }
