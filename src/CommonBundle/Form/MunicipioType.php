@@ -19,9 +19,10 @@ class MunicipioType extends AbstractType
             ->add('seccionElectoral')
             ->add('regionDeportiva')
             ->add('cruceRegional')
+            ->add('habitantes')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

@@ -36,7 +36,7 @@ class EventoType extends AbstractType
                                                 'required' => true,
                                                 'empty_data'  => null
                                             )
-                  )            
+                  )
             ->add('categoria', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Categoria',
                                                 'choice_label' => 'nombre',
@@ -71,7 +71,7 @@ class EventoType extends AbstractType
                   )
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

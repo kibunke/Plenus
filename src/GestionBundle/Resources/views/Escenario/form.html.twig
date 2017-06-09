@@ -1,0 +1,42 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<div class="row">
+    <div class="col-sm-12">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_row(form.nombre) }}
+            </div>
+            <div class="col-sm-12">
+                {{ form_row(form.descripcion) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
+                {{ form_row(form.localidad) }}
+            </div>
+            <div class="col-sm-5">
+                {{ form_row(form.calle) }}
+            </div>
+            <div class="col-sm-2">
+                {{ form_row(form.numero) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                {{ form_row(form.entreCalle1) }}
+            </div>
+            <div class="col-sm-4">
+                {{ form_row(form.entreCalle2) }}
+            </div>
+            <div class="col-sm-4">
+                {{ form_row(form.esquina) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_row(form.latLng) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>

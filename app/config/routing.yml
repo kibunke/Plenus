@@ -1,7 +1,7 @@
 common:
     resource: "@CommonBundle/Controller/"
     type:     annotation
-    prefix:   /system
+    prefix:   /common
 seguridad:
     resource: "@SeguridadBundle/Controller/"
     type:     annotation
@@ -9,7 +9,7 @@ seguridad:
 gestion:
     resource: "@GestionBundle/Controller/"
     type:     annotation
-    prefix:   /system
+    prefix:   /gestion
 inscripcion:
     resource: "@InscripcionBundle/Controller/"
     type:     annotation

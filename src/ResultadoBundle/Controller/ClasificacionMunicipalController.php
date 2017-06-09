@@ -69,7 +69,6 @@ class ClasificacionMunicipalController extends Controller
 
     /**
      * Add a Competidor entity into a EtapaMunicipal collection.
-     *
      * @Route("/ganador/equipo/{equipo}/evento/{evento}/toggle", name="resultados_clasificacionMunicipal_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__EQ__","evento":"__EV__"})
      * @Method("POST")
      */
@@ -91,6 +90,10 @@ class ClasificacionMunicipalController extends Controller
     private function canEdit($equipo,$evento)
     {
         $user = $this->getUser();
+        if (!$user->hasRole('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL_EDIT')){
+            throw new \Exception('Plenus: No tiene los permisos necesarios para realizar esta acción.');
+        }
+
         if (!$equipo->getPlanilla()->isAprobada()){
             throw new \Exception('Plenus: El participante/equipo no tiene la planilla aprobada.');
         }

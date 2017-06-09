@@ -33,9 +33,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path('homepage_gestion') }}">
-                        Gestion
-                    </a>
+                    Gestion
                 </li>
                 <li class="active">
                     Municipios
@@ -72,6 +70,7 @@
                     "columns": [
                         { "data": "municipio.id", "className": "text-center" },
                         { "data": "municipio.nombre" },
+                        { "data": "municipio.habitantes", "className": "text-center" },
                         { "data": "municipio.seccionElectoral", "className": "text-center" },
                         { "data": "municipio.regionDeportiva", "className": "text-center" },
                         { "data": "municipio.cruceRegional", "className": "text-center" },
@@ -85,7 +84,7 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [5]
+                            "targets": [6]
                         }
                     ],
                     "initComplete": function( oSettings ) {}
@@ -93,27 +92,28 @@
             }
             $.Municipio.openAjaxForm = function(url,title) {
                 $.Main.openFormModal(url,title, function(){
-                        $('#panel-config form').submit(function(event){
-                            $('#municipioTable').parents('.panel').block($.Main.defaultBlockConf());
-                            $('#tree').parents('.panel').block($.Main.defaultBlockConf());
-                            $('#okButton').button('loading')
-                            event.preventDefault();
-                            $.post(url, $('#panel-config form').serialize(), function(data){
-                                if(data.success){
-                                    toastr['success'](data.message, 'Excelente!');
-                                    _table.fnDraw(true);
-                                    $.Main.closeFormModal();
-                                }else if(data.error){
-                                    toastr['error'](data.message, 'Cuidado!');
-                                }else{
-                                    $("#panel-config form").html($(data).find('form').html());
-                                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
-                                }
-                                $('#okButton').button('reset');
-                            });
+                    $('#panel-config form').submit(function(event){
+                        $('#municipioTable').parents('.panel').block($.Main.defaultBlockConf());
+                        $('#tree').parents('.panel').block($.Main.defaultBlockConf());
+                        $('#okButton').button('loading')
+                        event.preventDefault();
+                        $.post(url, $('#panel-config form').serialize(), function(data){
+                            if(data.success){
+                                toastr['success'](data.message, 'Excelente!');
+                                _table.fnDraw(true);
+                                $.Main.closeFormModal();
+                            }else if(data.error){
+                                toastr['error'](data.message, 'Cuidado!');
+                            }else{
+                                $("#panel-config form").html($(data).find('form').html());
+                                toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
+                            }
+                            $('#okButton').button('reset');
+                        }).always(()=>{
+                            $('#municipioTable').parents('.panel').unblock();
                         });
-                    }
-                );
+                    });
+                });
             }
             $.Municipio.remove = function(url,title) {}
         })(jQuery);

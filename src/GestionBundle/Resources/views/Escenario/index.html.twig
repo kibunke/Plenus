@@ -1,7 +1,4 @@
 {% extends 'CommonBundle::layout.html.twig' %}
-{% block otherStylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/common/plugins/jstree/dist/themes/default/style.css') }}">
-{% endblock %}
 
 {% block contenidoToolbar %}
     <div class="toolbar row">
@@ -16,9 +13,11 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a  href="{{ path('escenario_new') }}">
-                            <i class="fa fa-plus"></i> NUEVO
-                        </a>
+                        <li class="dropdown">
+                            <a onclick="$.Default.openAjaxForm('{{ path('escenario_new') }}','Nuevo Escenario')">
+                                <i class="fa fa-plus"></i> NUEVO
+                            </a>
+                        </li>
                     </li>
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
@@ -34,11 +33,9 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                
+                </li>
                 <li>
-                    <a href="{{ path('homepage_gestion') }}">
-                        Gestion
-                    </a>
+                    Gestion
                 </li>
                 <li class="active">
                     Escenario
@@ -50,39 +47,10 @@
 {% block contenidoData %}
     <div class="panel-heading">
         <h4 class="panel-title">Tabla <span class="text-bold"> de Escenarios</span></h4>
-        <div class="panel-tools">
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
-                    <i class="fa fa-cog"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
-                    <li>
-                        <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
-                    </li>
-                    <li>
-                        <a class="panel-refresh" href="#">
-                            <i class="fa fa-refresh"></i> <span>Refresh</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-config" href="#panel-config" data-toggle="modal">
-                            <i class="fa fa-wrench"></i> <span>Configurations</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="panel-expand" href="#">
-                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <a class="btn btn-xs btn-link panel-close" href="#">
-                <i class="fa fa-times"></i>
-            </a>
-        </div>
+        <div class="panel-tools"></div>
     </div>
     <div class="panel-body">
-        <table id="eventoTable" class="table table-striped table-hover">
+        <table id="escenarioTable" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th class="center"><span class="fa fa-building-o"></span></th>
@@ -92,76 +60,98 @@
                     <th style="min-width: 95px"></th>
                 </tr>
             </thead>
-            <tbody>
-                {% for entity in entities %}
-                    <tr>
-                        <td class="center"><span class="fa fa-building-o"></span></td>
-                        <td>{{ entity }}</td>
-                        <td>{{ entity.getDireccionRaw() | raw }}</td>
-                        <td class="center">
-                            {% if (entity.latLng) %}
-                                <span class="fa fa-lg text-red fa-map-marker" title="Escenario Georeferenciado"></span>
-                            {% endif %}
-                        </td>
-                        <td class="center">
-                            <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                <a href="{{ path('escenario_show', { 'id': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
-                                <a href="{{ path('escenario_edit', { 'id': entity.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></a>
-                                <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></a>
-                            </div>
-                            <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                <div class="btn-group">
-                                    <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
-                                        <i class="fa fa-cog"></i> <span class="caret"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="{{ path('escenario_show', { 'id': entity.id }) }}">
-                                                <i class="fa fa-eye"></i> Ver
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="{{ path('escenario_edit', { 'id': entity.id }) }}">
-                                                <i class="fa fa-edit"></i> Editar
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a role="menuitem" tabindex="-1" href="#">
-                                                <i class="fa fa-times"></i> Eliminar
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
         </table>
     </div>
 {% endblock %}
 {% block otherJavascripts %}
-    <script src="{{ asset('bundles/common/plugins/jstree/dist/jstree.min.js') }}"></script>
     <script>
         (function ($) {
             // no se sobreescribe el namespace, si ya existe
-            var table;
+            var _table
+                _pathDelete = "{{ path('escenario_delete') }}";
             $.Default = $.Default || {};
-            $.Default.init = function() {        
-                table=$('#eventoTable').dataTable( {
+            $.Default.init = function() {
+                _table=$('#escenarioTable').dataTable( {
                     "autoWidth": false,
-                    "language": {
-                        "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
-                    },                
-                    "columnDefs": [ {
-                        "searchable": false,
-                        "orderable": false,
-                        "targets": [4]
-                    } ],
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": '{{ path('escenario_list_datatable') }}',
+                        "type": 'POST'
+                    },
+                    "language" : {
+                        "url" : "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columns": [
+                        { "data": "icon", "className": "text-center" },
+                        { "data": "nombre"},
+                        { "data": "direccion" },
+                        { "data": "georreferencia", "className": "text-center"  },
+                        { "data": "actions" }
+                    ],
+                    "bLengthChange" : true,
+                    "bFilter" : true,
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 25,
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": [0,4]
+                        }
+                    ],
                     "order": [[ 1, 'asc' ]]
                 });
             }
+            $.Default.openAjaxForm = function(url,title) {
+                $.Main.openFormModal(url,title, function(){
+                        $('#panel-config form').submit(function(event){
+                            $('#escenarioTable').parents('.panel').block($.Main.defaultBlockConf());
+                            $('#okButton').button('loading')
+                            event.preventDefault();
+                            $.post(url, $('#panel-config form').serialize(), function(data){
+                                if(data.success){
+                                    toastr['success'](data.message, 'Excelente!');
+                                    _table.fnDraw(true);
+                                    $.Main.closeFormModal();
+                                }else if(data.error){
+                                    toastr['error'](data.message, 'Cuidado!');
+                                }else{
+                                    $("#panel-config form").html($(data).find('form').html());
+                                    toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado!');
+                                }
+                                $('#okButton').button('reset');
+                            }).always(()=>{
+                                $('#escenarioTable').parents('.panel').unblock();
+                            });
+                        });
+                    }
+                );
+            }
+            $.Default.deleteConfirm = function(id){
+                swal({
+                    title: 'Esta seguro?',
+                    text: "El escenario será borrado!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e66b6b',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, borrar!'
+                },function () {
+                    $.post(_pathDelete.replace('__00__',id),{})
+                    .done((data)=>{
+                        if (data.success){
+                            swal('Borrado!',data.message,'success')
+                            _table.fnDraw(true);
+                        }else{
+                            swal('Cuidado!',data.message,'error')
+                        }
+                    }).fail(()=>{
+                        swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                    })
+                })
+            }
         })(jQuery);
-        $(document).ready(function(){$.Default.init();});   
+        $(document).ready(function(){$.Default.init();});
     </script>
-{% endblock %}    
+{% endblock %}

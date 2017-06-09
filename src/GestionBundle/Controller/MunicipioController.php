@@ -33,7 +33,7 @@ class MunicipioController extends Controller
     {
         return array();
     }
-    
+
     /**
      * @Route("/list/datatable", name="municipio_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
@@ -42,19 +42,20 @@ class MunicipioController extends Controller
     {
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('CommonBundle:Municipio')->datatable($request->request);
-        
+
         $data = array(
                     "draw"            => $request->request->get('draw'),
                     "recordsTotal"    => $filter['total'],
                     "recordsFiltered" => $filter['filtered'],
                     "data"            => array()
         );
-        
+
         foreach ($filter['rows'] as $municipio){
             $data['data'][] = array(
                 "municipio"  => array(
                                     "id" => $municipio->getId(),
                                     "nombre" => $municipio->getNombre(),
+                                    "habitantes" => $municipio->getHabitantes(),
                                     "seccionElectoral" => $municipio->getSeccionElectoral(),
                                     "regionDeportiva" => $municipio->getRegionDeportiva(),
                                     "cruceRegional" => $municipio->getCruceRegional(),
@@ -63,8 +64,8 @@ class MunicipioController extends Controller
             );
         }
         return new JsonResponse($data);
-    }    
-    
+    }
+
     /**
      * Creates a new Municipio entity.
      *
@@ -93,8 +94,8 @@ class MunicipioController extends Controller
         //    'entity' => $entity,
         //    'form'   => $form->createView(),
         //);
-    } 
-    
+    }
+
     /**
      * Finds and displays a Municipio entity.
      *
@@ -120,7 +121,7 @@ class MunicipioController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entity->setUpdatedBy($this->getUser());
-            $entity->setUpdatedAt(new \DateTime());       
+            $entity->setUpdatedAt(new \DateTime());
             try{
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' => 'El Municipio fue modificado.'));
@@ -134,7 +135,7 @@ class MunicipioController extends Controller
             'form'   => $form->createView(),
         );
     }
-    
+
     /**
      * @Route("/{id}/delete", name="municipio_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
@@ -153,5 +154,5 @@ class MunicipioController extends Controller
         //    }
         //}
         //return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El municipio no exite'));
-    }    
+    }
 }

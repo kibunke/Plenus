@@ -65,6 +65,12 @@ class Municipio
     private $localidades;
 
     /**
+     * @var integer $habitantes
+     * @ORM\Column(name="habitantes", type="integer")
+     */
+    protected $habitantes;
+
+    /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -360,6 +366,30 @@ class Municipio
     public function getLocalidades()
     {
         return $this->localidades;
+    }
+
+    /**
+     * Set habitantes
+     *
+     * @param integer $habitantes
+     *
+     * @return Segmento
+     */
+    public function setHabitantes($habitantes)
+    {
+        $this->habitantes = $habitantes;
+
+        return $this;
+    }
+
+    /**
+     * Get habitantes
+     *
+     * @return integer
+     */
+    public function getHabitantes()
+    {
+        return $this->habitantes;
     }
 
     /**

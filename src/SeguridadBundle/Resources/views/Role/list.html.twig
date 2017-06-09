@@ -13,8 +13,13 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
+                        <a  href="{{ path('perfil_list') }}">
+                            <i class="fa fa-sitemap"></i> PERFILES
+                        </a>
+                    </li>
+                    <li class="dropdown">
                         <a  href="#1" onclick="$.Roles.nuevo()">
-                            <i class="fa fa-id-card"></i> NUEVO
+                            <i class="fa fa-plus"></i> NUEVO
                         </a>
                     </li>
                 </ul>
@@ -166,18 +171,18 @@
                                         {
                                             resultado += '<a href="#2" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar" onclick="$.Roles.editar(' + url_edit + ')" title="Editar"><i class="fa fa-edit fa-lg"></i></a> ';
                                         }
-                                        
+
                                         url_delete  = "'" + _path_delete_role.replace('__00__',row.id) + "'";
-                                        
+
                                         if(!row.perfiles)
                                         {
                                             resultado += '<a href="#2" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar" onclick="$.Roles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg"></i></a>';
                                         }
-                                        
+
                                         return resultado;
                                     }
                        }
-                       
+
                     ],
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
@@ -226,7 +231,7 @@
                                     _table.ajax.reload( null, false );
                                     $('#panel-config').modal('toggle');
                                   });
-                                    
+
                                   }else{
                                     swal({
                                     title: "Resultado",
@@ -246,7 +251,7 @@
                         //return false;
                     });
                 });
-                $('#panel-config').modal();  
+                $('#panel-config').modal();
             },
             $.Roles.editar = function(url){
                 $.Roles.crearModal(url,"Editar Rol");
@@ -261,4 +266,4 @@
         })(jQuery);
         $(document).ready(function(){$.Roles.init();});
     </script>
-{% endblock %}    
+{% endblock %}

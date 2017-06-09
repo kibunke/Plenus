@@ -13,8 +13,13 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a  href="{{path('perfil_new')}}">
-                            <i class="fa fa-id-card"></i> NUEVO
+                        <a  href="{{ path('role_list') }}">
+                            <i class="fa fa-id-card"></i> ROLES
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a  href="{{ path('perfil_new') }}">
+                            <i class="fa fa-plus"></i> NUEVO
                         </a>
                     </li>
                 </ul>
@@ -168,18 +173,18 @@
                                         {
                                             resultado += '<a class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar" href='+ url_edit + ' title="Editar"><i class="fa fa-edit fa-lg"></i></a> ';
                                         }
-                                        
+
                                         url_delete  = "'" + _path_delete_perfil.replace('__00__',row.id) + "'";
-                                        
+
                                         if(!row.roles && !row.usuarios)
                                         {
                                             resultado += '<a href="#2" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar" onclick="$.Perfiles.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg"></i></a>';
                                         }
-                                        
+
                                         return resultado;
                                     }
                        }
-                       
+
                     ],
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
@@ -228,7 +233,7 @@
                                     _table.ajax.reload( null, false );
                                     $('#panel-config').modal('toggle');
                                   });
-                                    
+
                                   }else{
                                     swal({
                                     title: "Resultado",
@@ -248,7 +253,7 @@
                         //return false;
                     });
                 });
-                $('#panel-config').modal();  
+                $('#panel-config').modal();
             },
             $.Perfiles.editar = function(url){
                 $.Perfiles.crearModal(url,"Editar Perfil");
@@ -259,4 +264,4 @@
         })(jQuery);
         $(document).ready(function(){$.Perfiles.init();});
     </script>
-{% endblock %} 
+{% endblock %}

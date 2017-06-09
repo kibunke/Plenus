@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * ResultadoBundle\Entity\Escenario
  * @ORM\Table(name="Escenario")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="ResultadoBundle\Entity\Repository\EscenarioRepository")
  */
 class Escenario
 {
@@ -27,14 +27,14 @@ class Escenario
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
-    
+
     /**
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string")
      */
     private $nombre;
-    
+
     /**
      * @var string $calle
      *
@@ -55,7 +55,7 @@ class Escenario
      * @ORM\Column(name="entreCalle1", type="string", nullable=true)
      */
     private $entreCalle1;
-    
+
     /**
      * @var string $entreCalle2
      *
@@ -69,7 +69,7 @@ class Escenario
      * @ORM\Column(name="esquina", type="string", nullable=true)
      */
     private $esquina;
-    
+
     /**
      * @var string $latlng
      *
@@ -80,21 +80,21 @@ class Escenario
     /**
      * @ORM\ManyToOne(targetEntity="\CommonBundle\Entity\Localidad")
      * @ORM\JoinColumn(name="localidad", referencedColumnName="id")
-     */       
+     */
     private $localidad;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Cronograma", mappedBy="escenario")
      */
     private $cronogramas;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
@@ -116,17 +116,17 @@ class Escenario
 
     /**
      * __toString
-     * @return string 
+     * @return string
      */
     public function __toString()
     {
         return $this->nombre;
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -149,26 +149,26 @@ class Escenario
     /**
      * Get nombre
      *
-     * @return string 
+     * @return string
      */
     public function getNombre()
     {
         return $this->nombre;
-    }    
-    
+    }
+
     /**
      * Get direccion
      *
-     * @return string 
+     * @return string
      */
     public function getDireccionRaw()
     {
         if ($this->numero)
-            return "<strong>".$this->calle."</strong><small> N° ".$this->numero."</small>";
+            return "<strong>".$this->calle."</strong><small> N° ".$this->numero.", ".$this->getLocalidad()->getNombre()."</small>";
         else
-            return "<strong>".$this->calle."</strong><small> esq. ".$this->esquina."</small>";
+            return "<strong>".$this->calle."</strong><small> esq. ".$this->esquina.", ".$this->getLocalidad()->getNombre()."</small>";
     }
-    
+
     /**
      * Set calle
      *
@@ -185,7 +185,7 @@ class Escenario
     /**
      * Get calle
      *
-     * @return string 
+     * @return string
      */
     public function getCalle()
     {
@@ -208,13 +208,13 @@ class Escenario
     /**
      * Get latlng
      *
-     * @return string 
+     * @return string
      */
     public function getLatlng()
     {
         return $this->latlng;
-    }    
-    
+    }
+
     /**
      * Add cronograma
      *
@@ -239,16 +239,16 @@ class Escenario
         $this->cronogramas->removeElement($cronograma);
     }
 
-    /** 
+    /**
      * Get cronogramas
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCronogramas()
     {
         return $this->cronogramas;
     }
-    
+
     /**
      * Set createdAt
      *
@@ -265,7 +265,7 @@ class Escenario
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -288,7 +288,7 @@ class Escenario
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -311,7 +311,7 @@ class Escenario
     /**
      * Get createdBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getCreatedBy()
     {
@@ -334,7 +334,7 @@ class Escenario
     /**
      * Get updatedBy
      *
-     * @return \SeguridadBundle\Entity\Usuario 
+     * @return \SeguridadBundle\Entity\Usuario
      */
     public function getUpdatedBy()
     {
@@ -366,7 +366,7 @@ class Escenario
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -389,7 +389,7 @@ class Escenario
     /**
      * Get numero
      *
-     * @return string 
+     * @return string
      */
     public function getNumero()
     {
@@ -412,7 +412,7 @@ class Escenario
     /**
      * Get entreCalle1
      *
-     * @return string 
+     * @return string
      */
     public function getEntreCalle1()
     {
@@ -435,7 +435,7 @@ class Escenario
     /**
      * Get entreCalle2
      *
-     * @return string 
+     * @return string
      */
     public function getEntreCalle2()
     {
@@ -458,7 +458,7 @@ class Escenario
     /**
      * Get localidad
      *
-     * @return \CommonBundle\Entity\Localidad 
+     * @return \CommonBundle\Entity\Localidad
      */
     public function getLocalidad()
     {
@@ -481,7 +481,7 @@ class Escenario
     /**
      * Get esquina
      *
-     * @return string 
+     * @return string
      */
     public function getEsquina()
     {

@@ -5,6 +5,8 @@ namespace ResultadoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EscenarioType extends AbstractType
 {
@@ -23,14 +25,14 @@ class EscenarioType extends AbstractType
             ->add('entreCalle2')
             ->add('esquina')
             ->add('latLng')
-            ->add('localidad', 'entity', array(
+            ->add('localidad', EntityType::class, array(
                                                 'class' => 'CommonBundle:Localidad',
-                                                'property' => 'nombre',
+                                                'choice_label' => 'nombre',
                                                 'query_builder' => function(\Doctrine\ORM\EntityRepository $er )
                                                                     {
-                                                                            return $er->createQueryBuilder('p')
-                                                                                        ->where('p.partido = 162')
-                                                                                        ->orderBy('p.nombre');
+                                                                            return $er->createQueryBuilder('l')
+                                                                                        ->where('l.municipio = 162')
+                                                                                        ->orderBy('l.nombre');
                                                                     },
                                                 'multiple' => false,
                                                 'required' => true,
@@ -39,15 +41,15 @@ class EscenarioType extends AbstractType
                   )
             ;
     }
-    
+
     /**
-     * @param OptionsResolver $resolver
+     * @param OptionsResolverInterface $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array('data_class' => 'ResultadoBundle\Entity\Escenario'))
-        ;        
+        $resolver->setDefaults(array(
+            'data_class' => 'ResultadoBundle\Entity\Escenario'
+        ));
     }
 
     /**
