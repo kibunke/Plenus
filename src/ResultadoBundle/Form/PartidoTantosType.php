@@ -4,7 +4,19 @@ namespace ResultadoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Doctrine\ORM\EntityRepository;
 
 class PartidoTantosType extends AbstractType
 {
@@ -16,23 +28,18 @@ class PartidoTantosType extends AbstractType
     {
         $entity = $builder->getData();
         $builder
-            ->add('resultadoLocal','integer',array())
-            ->add('resultadoVisitante','integer',array())
-            ->add('resultadoSecundarioLocal','integer',array())
-            ->add('resultadoSecundarioVisitante','integer',array())            
-            ->add('tanteador','text',array(
-                                            'attr' => array(
-                                                            'style'=>'text-align: center;',
-                                                    )
-                                            )
-                  )
-            ;
+                ->add('resultadoLocal',IntegerType::class,array())
+                ->add('resultadoVisitante',IntegerType::class,array())
+                ->add('resultadoSecundarioLocal',IntegerType::class,array())
+                ->add('resultadoSecundarioVisitante',IntegerType::class,array())            
+                ->add('tanteador',TextType::class,array('attr' => array( 'style'=>'text-align: center;')))
+                ;
     }
     
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array('data_class' => 'ResultadoBundle\Entity\PartidoTantos'))

@@ -4,7 +4,19 @@ namespace ResultadoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Doctrine\ORM\EntityRepository;
 
 class PartidoPuntosType extends AbstractType
 {
@@ -16,27 +28,27 @@ class PartidoPuntosType extends AbstractType
     {
         $entity = $builder->getData();
         $builder
-            ->add('resultadoLocal','integer',array(
-                                                   'attr' => array(
-                                                                   'style' => 'width: 70px;float:right;text-align: center;',
-                                                                   'min' => 0
+                ->add('resultadoLocal',IntegerType::class,array(
+                                                                  'attr' => array(
+                                                                                    'style' => 'width: 70px;float:right;text-align: center;',
+                                                                                    'min'   => 0
+                                                                                  )
+                                                               )
+                     )
+                ->add('resultadoVisitante',IntegerType::class,array(
+                                                                      'attr' => array(
+                                                                                        'style' =>'width: 70px;float:left;text-align: center;',
+                                                                                        'min'   => 0
+                                                                                      )
                                                                    )
-                                                   )
-                  )
-            ->add('resultadoVisitante','integer',array(
-                                                       'attr' => array(
-                                                                       'style'=>'width: 70px;float:left;text-align: center;',
-                                                                       'min' => 0
-                                                                       )
-                                                       )
-                  )
-            ;
+                      )
+                ;
     }
     
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array('data_class' => 'ResultadoBundle\Entity\PartidoPuntos'))
