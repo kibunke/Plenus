@@ -18,9 +18,10 @@ class TorneoType extends AbstractType
             ->add('nombre')
             ->add('descripcion')
             ->add('isAdultosMayores')
+            ->add('isCultura')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

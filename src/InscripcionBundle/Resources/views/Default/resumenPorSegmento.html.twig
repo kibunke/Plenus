@@ -12,6 +12,19 @@
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
+                    {% if soloAprobadas %}
+                        <li class="dropdown">
+                            <a  href="{{ path('consulta_resumenPorSegmento_inscripcion') }}">
+                                <i class="fa fa-cubes"></i> TODAS
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="dropdown">
+                            <a  href="{{ path('consulta_resumenPorSegmento_inscripcion', {param: 'soloAprobadas'}) }}">
+                                <i class="fa fa-cube"></i> APROBADAS
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -101,7 +114,8 @@
                             message: '<i class="fa fa-spinner fa-spin"></i>',
                             css: { border: 'none', color: '#333', background: 'none' }
                         });
-                        $.post( '{{ path('consulta_resumenPorSegmento_inscripcion') }}', {'eventos':str}, function(data){
+                        console.log(window.location.href )
+                        $.post( window.location.href , {'eventos':str}, function(data){
                             $('#reloadTable').html(data);
                             el.unblock();
                             $.Default.initTable();

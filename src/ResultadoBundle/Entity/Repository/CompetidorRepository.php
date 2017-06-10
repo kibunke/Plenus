@@ -31,21 +31,26 @@ class CompetidorRepository extends EntityRepository
         $query = $this->getEntityManager()
                         ->createQueryBuilder()
                         ->select('c')
-                        ->from('ResultadoBundle:Competidor', 'c');
-        if ($user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
-            $query->join('c.municipio', 'm')
-                    ->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1')
-                    ->setParameter(1,'%'.$request->get('search')['value'].'%');
-        }else{
-            $query->join('c.competidorEquipos', 'ce')
-                    ->join('ce.equipo', 'e')
-                    ->join('e.planilla', 'p')
-                    ->join('p.municipio', 'm')
-                    ->where('m = ?2 AND (c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1)')
-                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->from('ResultadoBundle:Competidor', 'c')
+                        ->join('c.competidorEquipos', 'ce')
+                        ->join('ce.equipo', 'e')
+                        ->join('e.planilla', 'p')
+                        ->join('p.municipio', 'mp')
+                        ->join('c.municipio', 'mc');
+        $searchByPlanilla = !(strpos($request->get('search')['value'],'P:') === false);
+        $searchValue = $searchByPlanilla ? explode('P:',$request->get('search')['value'])[1] : '%'.$request->get('search')['value'].'%';
+        if ($searchByPlanilla){
+            $query->where('p.id = ?1');
+        }else {
+            $query->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR mc.nombre LIKE ?1');
+        }
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+            $query
+                    ->andwhere('mp = ?2')
                     ->setParameter(2,$user->getMunicipio());
         }
-        return $query->orderBy($columns[$request->get('order')[0]['column']],$request->get('order')[0]['dir'])
+        return $query->setParameter(1,$searchValue)
+                    ->orderBy($columns[$request->get('order')[0]['column']],$request->get('order')[0]['dir'])
                     ->setMaxResults($request->get('length'))
                     ->setFirstResult($request->get('start'))
                     ->getQuery()
@@ -56,22 +61,26 @@ class CompetidorRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
                         ->createQueryBuilder()
-                        ->select('COUNT(c)')
-                        ->from('ResultadoBundle:Competidor', 'c');
-        if ($user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
-            $query->join('c.municipio', 'm')
-                    ->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1')
-                    ->setParameter(1,'%'.$request->get('search')['value'].'%');
-        }else{
-            $query->join('c.competidorEquipos', 'ce')
-                    ->join('ce.equipo', 'e')
-                    ->join('e.planilla', 'p')
-                    ->join('p.municipio', 'm')
-                    ->where('m = ?2 AND (c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR m.nombre LIKE ?1)')
-                    ->setParameter(1,'%'.$request->get('search')['value'].'%')
+                        ->select('COUNT(DISTINCT(c))')
+                        ->from('ResultadoBundle:Competidor', 'c')
+                        ->join('c.competidorEquipos', 'ce')
+                        ->join('ce.equipo', 'e')
+                        ->join('e.planilla', 'p')
+                        ->join('p.municipio', 'mp')
+                        ->join('c.municipio', 'mc');
+        $searchByPlanilla = !(strpos($request->get('search')['value'],'P:') === false);
+        $searchValue = $searchByPlanilla ? explode('P:',$request->get('search')['value'])[1] : '%'.$request->get('search')['value'].'%';
+        if ($searchByPlanilla){
+            $query->where('p.id = ?1');
+        }else {
+            $query->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR mc.nombre LIKE ?1');
+        }
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+            $query
+                    ->andwhere('mp = ?2')
                     ->setParameter(2,$user->getMunicipio());
         }
-        return $query->getQuery()->getSingleScalarResult();
+        return $query->getQuery()->setParameter(1,$searchValue)->getSingleScalarResult();
     }
 
 

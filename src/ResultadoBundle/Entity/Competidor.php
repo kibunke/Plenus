@@ -147,11 +147,12 @@ class Competidor extends Persona
                 }
 
                 $cant = count($equipo->getEquipoCompetidores());
-                $nombre = ($cant > 1) ? "al EQUIPO con ".($cant)." participantes" : $this->getNombreCompleto();
+                $title = ($cant > 1) ? "EQUIPO" : $this->getNombreCompleto();
                 $equipos[] = [
                     "id" => $equipo->getId(),
                     "cant" => $cant,
-                    "nombre" => $nombre,
+                    "nombre" => $equipo->getNombre(),
+                    "title" => $title,
                     "planilla" => [
                         "id" => $equipo->getPlanilla()->getId(),
                     ],
@@ -221,6 +222,19 @@ class Competidor extends Persona
         }
 
         return $equipos;
+    }
+
+    public function getTorneosParticipa()
+    {
+        $torneos = [];
+        foreach($this->getEquipos() as $equipo){
+            foreach($equipo->getEtapas() as $etapa){
+                if ($etapa->containsEquipo($equipo)){
+                    $torneos[] = $etapa->getEvento()->getTorneo();
+                }
+            }
+        }
+        return $torneos;
     }
 
     /**

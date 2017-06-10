@@ -18461,6 +18461,14 @@ body.error-full-page {
     font-weight: 600;
 }
 
+/* ---------------------------------------------------------------------- */
+/*  sweetAlert add class
+/* ---------------------------------------------------------------------- */
+
+.noInputDisplay input{
+    display: none !important;
+}
+
 /*  Theme Default
 /* ---------------------------------------------------------------------- */
 /* line 10, ../../sass/themes/theme-default.scss */

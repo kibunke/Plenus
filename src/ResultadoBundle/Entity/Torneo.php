@@ -80,6 +80,13 @@ class Torneo
     protected $isAdultosMayores;
 
     /**
+     * @var boolean $isActive
+     *
+     * @ORM\Column(name="isCultura", type="boolean", options={"default" : false})
+     */
+    protected $isCultura;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -324,6 +331,29 @@ class Torneo
     }
 
     /**
+     * Set isCultura
+     *
+     * @param boolean $isCultura
+     *
+     * @return Torneo
+     */
+    public function setIsCultura($isCultura)
+    {
+        $this->isCultura = $isCultura;
+
+        return $this;
+    }
+
+    /**
+     * Get isCultura
+     *
+     * @return boolean
+     */
+    public function getIsCultura()
+    {
+        return $this->isCultura;
+    }
+    /**
      * Add segmento
      *
      * @param \InscripcionBundle\Entity\Segmento $segmento
@@ -372,5 +402,51 @@ class Torneo
                     )
                 )
             );
+    }
+    
+    /*
+     * RESTRICCIONES PARA LA ETAPA MUNICIPAL
+     * Juveniles
+     * 2 eventos deportivos mas 1 evento cultural, con excepción de los Municipios
+     * que tengan menos de 30.000 habitantes Según el Censo Nacional de Población 2010;
+     * en cuyo caso podrán avanzar en 3 eventos deportivos y 1 cultural.
+     *
+     * Adultos Mayores
+     * 1 evento deportivo mas 1 evento cultural.
+    */
+    public function validarGanadorMunicipal($equipo)
+    {
+        foreach ($equipo->getIntegrantes() as $competidor) {
+            $contTorneos = [
+                "cultura" => 0,
+                "deportes" => 0
+            ];
+            foreach ($competidor->getTorneosParticipa() as $torneo) {
+                if ($torneo->getIsCultura()){
+                    $contTorneos["cultura"] ++;
+                }else{
+                    $contTorneos["deportes"] ++;
+                }
+            }
+            if ($this->getIsAdultosMayores()){
+                if ($contTorneos["cultura"] > 0 && $this->getIsCultura()){
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en un evento cultural.');
+                }elseif($contTorneos["deportes"] > 0 && !$this->getIsCultura()){
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en un evento deportivo.');
+                }
+            }else{
+                if ($contTorneos["cultura"] > 0 && $this->getIsCultura()){
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en un evento cultural.');
+                }
+                if ($equipo->getPlanilla()->getMunicipio()->getHabitantes() > 30000){
+                    if ($contTorneos["deportes"] > 1 && !$this->getIsCultura()){
+                        throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en dos eventos deportivos.');
+                    }
+                }elseif($contTorneos["deportes"] > 2 && !$this->getIsCultura()){
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en tres eventos deportivos.');
+                }
+            }
+        }
+        return true;
     }
 }

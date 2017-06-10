@@ -74,6 +74,24 @@
             </div>
         </div>
         <div class="col-md-7">
+                    <div class="panel panel-white">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button class="btn btn-icon btn-block" onclick="$.Default.searchByPlanilla()">
+        								<i class="fa fa-search fa-lg"></i>
+        								Buscar por N° de planilla <span class="badge badge-danger"></span>
+        							</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button class="btn btn-icon btn-block" onclick="$.Default.showHelp()">
+        								<i class="fa fa-question-circle fa-lg" aria-hidden="true"></i>
+        								Ayuda <span class="badge badge-danger"></span>
+        							</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             <div class="panel panel-white">
                 <div class="panel-heading">
                     <h4 class="panel-title">Tabla de eventos disponibles para: <span class="text-bold"></span></h4>
@@ -118,7 +136,7 @@
 
             $.Default.init = function()
             {
-                $('#competidorTable').dataTable( {
+                _tableCompetidor = $('#competidorTable').dataTable( {
                     "autoWidth": false,
                     "processing": true,
                     "serverSide": true,
@@ -192,7 +210,6 @@
                 $panel.block($.Main.defaultBlockConf());
                 $('#eventoTable').data('competidor',id);
                 $.get(_pathLoad.replace('__00__',id)).done((data)=>{
-                    console.log(data);
                     if (data.equipos.length > 0){
                         $tbody.html('');
                         $panel.find('.panel-title span').html(data.persona.apellido+", "+data.persona.nombre);
@@ -228,51 +245,110 @@
                 let combinacion = _aCombinaciones[index],
                     $panel = $('#blockContenidoContent'),
                     title = "",
-                    text = combinacion.evento.nombreRaw
+                    text = (combinacion.equipo.nombre || combinacion.equipo.title) +
+                            '<br><small>(' + combinacion.equipo.cant + ' participante' + ((combinacion.equipo.cant > 1) ? 's' : '') + ')</small>' +
+                            '<br><i class="fa __ICON__ padding-10 animated bounce " aria-hidden="true"></i><br>' +
+                            combinacion.evento.nombreRaw,
                     btnText = 'Si, agregar!',
-                    btnColor = '#3085d6';
+                    btnColor = '#3085d6'
+                    customClass = (combinacion.evento.existe || combinacion.equipo.cant == 1) ? 'noInputDisplay' : '';
                 if (combinacion.evento.existe){
-                    title = 'Realmente desea eliminar a '+ combinacion.equipo.nombre +' de';
-                    btnText = 'Si, eliminar!';
+                    title = 'Realmente desea deshacer esta asignación';
+                    btnText = 'Si, deshacer!';
                     btnColor = '#e66b6b';
+                    text = text.replace('__ICON__','fa-arrow-circle-up fa-2x text-danger');
                 }else{
-                    title = 'Realmente desea agregar a '+ combinacion.equipo.nombre +' en';
+                    title = 'Realmente desea realizar esta asignación';
+                    text = text.replace('__ICON__','fa-arrow-circle-down fa-2x text-info');
                 }
 
                 $panel.block($.Main.defaultBlockConf());
                 swal({
-                    title: '¿ ' + title + ' ?',
+                    title: '<h3>¿ ' + title + ' ?</h3>',
                     text: text,
-                    type: 'warning',
+                    type: "input",
                     html: true,
                     closeOnConfirm: false,
                     animation: "slide-from-top",
                     showCancelButton: true,
-                    confirmButtonColor: btnColor,
                     cancelButtonColor: '#d33',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: btnColor,
                     confirmButtonText: btnText,
-                    closeOnCancel: false
-                },function (isConfirm) {
-                    if (isConfirm){
-                        $.post(_pathGanador.replace('__EQ__', combinacion.equipo.id).replace('__EV__', combinacion.evento.id))
-                            .done((data)=>{
-                                if (data.success){
-                                    swal('Excelente!',data.message,'success');
-                                    $.Default.select($('#eventoTable').data('competidor'));
-                                }else{
-                                    swal('Cuidado!',data.message,'error')
-                                }
-                            })
-                            .fail(()=>{
-                                swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
-                            }).always(()=>{
-                                $panel.unblock();
-                            })
-                    } else {
+                    closeOnCancel: true,
+                    inputValue: combinacion.equipo.nombre,
+                    inputPlaceholder: 'Ingrese el nombre del equipo aquí',
+                    customClass: customClass
+                },function (inputValue) {
+                    if (inputValue === false){
                         swal.close();
                         $panel.unblock();
-                    }
+                         return false;
+                    };
+                    $.post(_pathGanador.replace('__EQ__', combinacion.equipo.id).replace('__EV__', combinacion.evento.id),{'nombreEquipo' : inputValue})
+                        .done((data)=>{
+                            if (data.success){
+                                swal('Excelente!',data.message,'success');
+                                $.Default.select($('#eventoTable').data('competidor'));
+                            }else{
+                                swal('Cuidado!',data.message,'error')
+                            }
+                        })
+                        .fail(()=>{
+                            swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                        }).always(()=>{
+                            $panel.unblock();
+                        })
                 })
+            }
+            $.Default.searchByPlanilla = function()
+            {
+                swal({
+                    title: '<h3><i class="fa fa-search"></i> Buscar por planilla</h3>',
+                    text: 'Ingrese a continuación el número de planilla',
+                    type: "input",
+                    html: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Buscar',
+                    closeOnCancel: true,
+                    inputPlaceholder: 'Ingrese el número aquí',
+                },function (inputValue) {
+                    if (inputValue === false){
+                        return false;
+                    };
+                    _tableCompetidor.api().search('P:'+parseInt(inputValue)).draw();
+                     swal.close();
+                })
+            }
+            $.Default.showHelp = function()
+            {
+                $('#panel-config .modal-footer').hide();
+                //$('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html('<i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda de busqueda');
+                $('#panel-config .modal-body').html('<div class="row">'+
+                                                        '<div class="col-sm-12">'+
+													        '<h4 class="no-margin"><i class="fa fa-comment-o" aria-hidden="true"></i> Como funciona la búsqueda</h4>'+
+				                                            'En la tabla izquierda, <b>Tabla de inscriptos</b>, encontrará un listado con todos los participantes cargados en las planillas de su municipio que fueron aprobadas.<br>'+
+                                                            'Cada participante tiene dos acciones posibles.<br>'+
+                                                            '<li><i class="fa fa-eye"></i> Permite ver la información general del participante.</li>'+
+                                                            '<li><i class="fa fa-arrow-right"></i> Permite ver los eventos en los cuales pudo haber participado.</li>'+
+                                                            'En la tabla derecha, <b>Tabla de eventos</b>, se muestran los eventos en los cuales pudo haber participado un competidor. En cada evento del listado puede utilizar las acciones para asignar/desasignar el titulo de ganador de etapa municipal.<br>'+
+                                                            '<b>IMPORTANTE:</b> para las competencias en parejas/equipos las acciones de asignar y desasignar se aplican a todo el equipo como indica el cuadro de dialogo para confirma la acción.<br>'+
+                                                            'EJ: en el caso de un equipo de FUTBOL 11, con solo asignar como ganador a 1 de los integrantes, todo equipo pasa a la etapa siguiente.'+
+	                                                    '</div><div class="col-sm-12"></br>'+
+													        '<h4 class="no-margin"><i class="fa fa-comment-o" aria-hidden="true"></i> Como Buscar por planilla</h4>'+
+				                                            'Usted puede <b>buscar los participantes</b> de una planilla en particular solo con el número de planilla en la que fueron inscriptos. Para esto, debe hacer click en el botón <b>"Buscar por N° de planilla"</b><br>'+
+                                                            'En la ventana emergente debe indicar el número de planilla y hacer click en el botón "Buscar".'+
+	                                                   '</div><div class="col-sm-12"></br>'+
+                                                           '<h4 class="no-margin"><i class="fa fa-comment-o" aria-hidden="true"></i> Como Buscar por DNI, apellido o nombre</h4>'+
+                                                           'En caso de no tener el numero de planilla, puede buscar participantes por número de documento, apellido o nombre. Para ello utilice el cuadro de texto que se encuentra en la esquina superior derecha de la tabla de participantes.'+
+                                                      '</div>');
+                $('#panel-config').modal();
             }
         })(jQuery);
         $(document).ready(function(){$.Default.init();});

@@ -128,13 +128,14 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/consulta/resumenPorSegmento", name="consulta_resumenPorSegmento_inscripcion")
+     * @Route("/consulta/resumenPorSegmento/{param}", name="consulta_resumenPorSegmento_inscripcion", defaults={"param" = null})
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_INSCRIPCION_CONSULTA_SEGMENTO')")
      * @Template("InscripcionBundle:Default:resumenPorSegmento.html.twig")
      */
-    public function consultaResumenPorSegmentoAction(Request $request)
+    public function consultaResumenPorSegmentoAction(Request $request,$param)
     {
+        $param = ($param == 'soloAprobadas') ? TRUE : FALSE;
         $em = $this->getDoctrine()->getManager();
         $referencia=array('segmentos'=>array());
         $resumen = array();
@@ -151,7 +152,7 @@ class DefaultController extends Controller
                     $seg = $em->getRepository('InscripcionBundle:Segmento')->find($id);
                     $segmentos[$id]=$seg->getNombreCompleto();
                 }
-                $resumen = $this->parserResumenPorSegmentoData($em->getRepository('InscripcionBundle:Segmento')->getResumenPorSegmentos($arr),$arr);
+                $resumen = $this->parserResumenPorSegmentoData($em->getRepository('InscripcionBundle:Segmento')->getResumenPorSegmentos($arr,$param),$arr);
                 $referencia = array_values($resumen)[0];
             }
             return $this->render(
@@ -167,6 +168,7 @@ class DefaultController extends Controller
             'resumen' => $resumen,
             'segmentos' => $segmentos,
             'referencia' => $referencia,
+            'soloAprobadas' => $param
         );
     }
 

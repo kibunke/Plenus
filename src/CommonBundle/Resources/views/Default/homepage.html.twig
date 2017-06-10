@@ -242,6 +242,8 @@
             // no se sobreescribe el namespace, si ya existe
             $.HomePage = $.HomePage || {};
             $.HomePage.init = function() {
+                {#
+                /*
                 swal({
                     title: 'Atención',
                     text:   '<p>SE INFORMA A LOS SEÑORES <strong>“ORGANIZADORES MUNICIPALES”</strong> QUE SE HA CONCRETADO EL CIERRE DE INSCRIPCIÓN. ESTE CIERRE DEJO DENTRO DEL SISTEMA TODAS LAS PLANILLAS INGRESADAS (INCLUSO LAS QUE SE ENCUENTRAN EN ESTADO “(Ca) CARGADA”).</p>'+
@@ -251,6 +253,8 @@
                     closeOnConfirm: false,
                     type: "warning"
                 });
+                */
+                #}
             }
         })(jQuery);
         $(document).ready(function(){$.HomePage.init();});

@@ -213,15 +213,6 @@ class Evento
                 "</div>";
 
         return $nom;
-
-        //$nom =  "<div title='".$this->getNombreCompleto()."'>".
-        //            "<strong>".$this->getDisciplina()->getNombreCompleto()."</strong><br>".
-        //            "<small>".$this->getCategoria()->getNombre()." - ".$this->getGenero()->getNombre()."</small><br>".
-        //            "<strong><small>".$this->getModalidad()->getNombre()."</small></strong>";
-        //if ($this->nombre)
-        //    $nom .= "-<small>".$this->getNombre()."</small>";
-        //$nom .= "</div>";
-        //return $nom;
     }
 
     /**
@@ -758,6 +749,7 @@ class Evento
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
+            $equipo->getPlanilla()->getSegmento()->getTorneo()->validarGanadorMunicipal($equipo);
             $etapaMunicipal->addEquipo($equipo);
         }
         return $etapaMunicipal;

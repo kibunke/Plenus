@@ -43,6 +43,7 @@
 40 - CSS FOR MOBILE
 41 - jQuery UI
 42 - Genero - etc
+43 - swettAlert
 /* ---------------------------------------------------------------------- */
 /*
 
@@ -8159,4 +8160,12 @@ body.error-full-page {
     color: #5cb85c !important;
     font-size: 25px;
     font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------- */
+/*  sweetAlert add class
+/* ---------------------------------------------------------------------- */
+
+.noInputDisplay input{
+    display: none !important;
 }

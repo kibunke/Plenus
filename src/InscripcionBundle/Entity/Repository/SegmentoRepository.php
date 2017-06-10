@@ -297,23 +297,51 @@ class SegmentoRepository extends EntityRepository
         return $q->getArrayResult();
     }
 
-    public function getResumenPorSegmentos($segmentos)
+    public function getResumenPorSegmentos($segmentos, $soloAprobadas = FALSE)
     {
         if (!$segmentos) return [];
-        $query= '
-                SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, pla.planillas, pla.equipos, pla.inscriptos
-                FROM Municipio as m
-                LEFT JOIN (
-                    SELECT p.segmento, p.municipio, COUNT(p.id) as "planillas", COUNT(Equipo.id) as "equipos", COUNT(EquiposCompetidores.id) as "inscriptos"
-                    FROM Planilla as p
-                    INNER JOIN Equipo ON Equipo.planilla = p.id
-                    INNER JOIN EquiposCompetidores ON EquiposCompetidores.equipo_id = Equipo.id
-                    WHERE p.segmento in ('.implode(',', $segmentos).')
-                    GROUP BY p.segmento,p.municipio
-                ) as pla ON pla.municipio = m.id
-                WHERE m.idProvincia = 1
-                ORDER BY m.id,pla.segmento
-            ';
+        $estados[]=0;
+        if ($soloAprobadas){
+            $estados = array_map('current',$this->getEntityManager()
+                                                    ->createQuery(" SELECT MAX(e.id)
+                                                                    FROM InscripcionBundle:PlanillaEstado e
+                                                                    WHERE e.nombre = ?1
+                                                                    GROUP BY e.planilla")
+                                                    ->setParameter(1,"Aprobada")
+                                                    ->getArrayResult()
+                                );
+            $query= '
+                    SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, pla.planillas, pla.equipos, pla.inscriptos
+                    FROM Municipio as m
+                    LEFT JOIN (
+                        SELECT p.segmento, p.municipio, COUNT(p.id) as "planillas", COUNT(Equipo.id) as "equipos", COUNT(EquiposCompetidores.id) as "inscriptos"
+                        FROM Planilla as p
+                        INNER JOIN Equipo ON Equipo.planilla = p.id
+                        INNER JOIN EquiposCompetidores ON EquiposCompetidores.equipo_id = Equipo.id
+                        INNER JOIN PlanillaEstado pe ON pe.planilla = p.id
+                        WHERE p.segmento IN ('.implode(',', $segmentos).') AND pe.id IN ('.implode(',', $estados).')
+                        GROUP BY p.segmento,p.municipio
+                    ) as pla ON pla.municipio = m.id
+                    WHERE m.idProvincia = 1
+                    ORDER BY m.id,pla.segmento
+                ';
+        }else{
+            $query= '
+                    SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, pla.planillas, pla.equipos, pla.inscriptos
+                    FROM Municipio as m
+                    LEFT JOIN (
+                        SELECT p.segmento, p.municipio, COUNT(p.id) as "planillas", COUNT(Equipo.id) as "equipos", COUNT(EquiposCompetidores.id) as "inscriptos"
+                        FROM Planilla as p
+                        INNER JOIN Equipo ON Equipo.planilla = p.id
+                        INNER JOIN EquiposCompetidores ON EquiposCompetidores.equipo_id = Equipo.id
+                        WHERE p.segmento IN ('.implode(',', $segmentos).')
+                        GROUP BY p.segmento,p.municipio
+                    ) as pla ON pla.municipio = m.id
+                    WHERE m.idProvincia = 1
+                    ORDER BY m.id,pla.segmento
+                ';
+        }
+            //var_dump($query);die;
         return $this->getEntityManager()->getConnection()->query($query)->fetchAll();
     }
 }

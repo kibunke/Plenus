@@ -11,14 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-// use InscripcionBundle\Entity\Planilla;
-// use InscripcionBundle\Entity\Cargada;
-// use InscripcionBundle\Entity\Institucion;
-// use InscripcionBundle\Entity\Individual;
-// use InscripcionBundle\Entity\Equipo;
-// use ResultadoBundle\Entity\DirectorTecnico;
-// use InscripcionBundle\Form\PlanillaType;
-// use InscripcionBundle\Entity\Segmento;
 use ResultadoBundle\Entity\Competidor;
 use ResultadoBundle\Entity\Evento;
 use ResultadoBundle\Entity\Equipo;
@@ -72,8 +64,9 @@ class ClasificacionMunicipalController extends Controller
      * @Route("/ganador/equipo/{equipo}/evento/{evento}/toggle", name="resultados_clasificacionMunicipal_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__EQ__","evento":"__EV__"})
      * @Method("POST")
      */
-    public function ganadorAction(Equipo $equipo, Evento $evento)
+    public function ganadorAction(Request $request, Equipo $equipo, Evento $evento)
     {
+        $equipo->setNombre($request->request->get('nombreEquipo'));
         try{
             if ($this->canEdit($equipo,$evento)){
                 $em = $this->getDoctrine()->getManager();
