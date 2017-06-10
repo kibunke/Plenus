@@ -360,4 +360,9 @@ class Serie
     {
         $this->plazas->removeElement($plaza);
     }
+    
+    public function getEtapa()
+    {
+        return $this->getCompetencia()->getEtapa();
+    }
 }

@@ -4,7 +4,7 @@ namespace ResultadoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SerieType extends AbstractType
 {
@@ -14,7 +14,6 @@ class SerieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //$entity = $builder->getData();
         $builder
             ->add('nombre')
             ->add('descripcion')
@@ -24,7 +23,7 @@ class SerieType extends AbstractType
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array('data_class' => 'ResultadoBundle\Entity\Serie'))

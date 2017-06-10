@@ -9,6 +9,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Doctrine\ORM\EntityRepository;
 
 class DisciplinaType extends AbstractType
 {
@@ -19,29 +27,21 @@ class DisciplinaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre', TextType::class, array('required' => true))
-            ->add('abreviatura')
-            ->add('descripcion')
-            ->add('armarNombreRecursivo')
-            ->add('eventos')
-            ->add('parametros')
-            ->add('padre',  EntityType::class, array(
-                                                'class' => 'ResultadoBundle:Disciplina',
-                                                'choice_label' => 'nombreCompleto',
-                                                //'query_builder' => function(\Doctrine\ORM\EntityRepository $er )
-                                                //                    {
-                                                //                        return $er->createQueryBuilder('u')
-                                                //                                    ->join('u.funcion','f')
-                                                //                                    ->where('f.nombre <> :fun')
-                                                //                                    ->orderby('u.apellido','ASC')
-                                                //                                    ->setParameter('fun', 'Consulta municipal');
-                                                //                    },
-                                                'multiple' => false,
-                                                'required' => false,
-                                                'empty_data'  => null
-                                            )
-                  )
-        ;
+                ->add('nombre', TextType::class, array('required' => true))
+                ->add('abreviatura')
+                ->add('descripcion')
+                ->add('armarNombreRecursivo')
+                ->add('eventos')
+                ->add('parametros')
+                ->add('padre', EntityType::class, array(
+                                                          'class'        => 'ResultadoBundle:Disciplina',
+                                                          'choice_label' => 'nombreCompleto',
+                                                          'multiple'     => false,
+                                                          'required'     => false,
+                                                          'empty_data'   => null
+                                                       )
+                      )
+                ;
     }
     
     /**
