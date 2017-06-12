@@ -56,41 +56,24 @@ class EventoController extends Controller
     /**
      * Delete a Etapa entity.
      *
-     * @Route("/{evento}/remove", name="resultado_evento_etapas_remove")
-     * @Method("GET")
+     * @Route("/{evento}/remove", name="resultado_evento_etapas_remove", condition="request.isXmlHttpRequest()")
      * @Security("has_role('ROLE_RESULTADO_ETAPA_DELETE')")
      * @Template()
      */
     public function deleteAction(Request $request,Evento $evento)
     {
-        if (!$request->isXMLHttpRequest()){
-            return $this->redirect($this->getRequest()->headers->get('referer'));
+        if (!$evento)
+        {
+            throw $this->createNotFoundException('Unable to find Inscripto entity.');
         }
-
+        
         $form =  $this->createDeleteForm($evento);
-
-        return array(
-            'form' => $form->createView(),
-        );
-    }
-
-    /**
-     * Deletes a Etapa entity.
-     *
-     * @Route("/{evento}/delete", name="resultado_evento_etapas_delete")
-     * @Security("has_role('ROLE_RESULTADO_ETAPA_DELETE')")
-     * @Method("DELETE")
-     */
-    public function deleteFlushAction(Request $request, Evento $evento)
-    {
-        $form = $this->createDeleteForm($evento);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        
+        if($form->isSubmitted() && $form->isValid())
+        {
             $em = $this->getDoctrine()->getManager();
 
-            if (!$evento) {
-                throw $this->createNotFoundException('Unable to find Inscripto entity.');
-            }
             foreach ($evento->getEtapas() as $etapa)
             {
                 $em->remove($etapa);
@@ -102,7 +85,10 @@ class EventoController extends Controller
                 $this->addFlash('error', 'La etapas del evento no pudieron ser eliminadas.');
             }
         }
-        return $this->redirect($this->generateUrl('resultados'));
+        
+        return array(
+                        'form' => $form->createView(),
+                    );
     }
 
     /**
