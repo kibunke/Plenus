@@ -333,22 +333,25 @@
                 $('#panel-config .modal-title').html('<i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda de busqueda');
                 $('#panel-config .modal-body').html('<div class="row">'+
                                                         '<div class="col-sm-12">'+
-													        '<h4 class="no-margin"><i class="fa fa-comment-o" aria-hidden="true"></i> Como funciona la búsqueda</h4>'+
+													        '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> Como funciona la búsqueda</h4>'+
 				                                            'En la tabla izquierda, <b>Tabla de inscriptos</b>, encontrará un listado con todos los participantes cargados en las planillas de su municipio que fueron aprobadas.<br>'+
                                                             'Cada participante tiene dos acciones posibles.<br>'+
-                                                            '<li><i class="fa fa-eye"></i> Permite ver la información general del participante.</li>'+
-                                                            '<li><i class="fa fa-arrow-right"></i> Permite ver los eventos en los cuales pudo haber participado.</li>'+
+                                                            '<li><i class="fa fa-eye text-info fa-lg"></i> Permite ver la información general del participante.</li>'+
+                                                            '<li><i class="fa fa-arrow-right text-info fa-lg"></i> Permite ver los eventos en los cuales pudo haber participado.</li>'+
                                                             'En la tabla derecha, <b>Tabla de eventos</b>, se muestran los eventos en los cuales pudo haber participado un competidor. En cada evento del listado puede utilizar las acciones para asignar/desasignar el titulo de ganador de etapa municipal.<br>'+
-                                                            '<b>IMPORTANTE:</b> para las competencias en parejas/equipos las acciones de asignar y desasignar se aplican a todo el equipo como indica el cuadro de dialogo para confirma la acción.<br>'+
+                                                            '<b class="text-warning">IMPORTANTE:</b> para las competencias en parejas/equipos las acciones de asignar y desasignar se aplican a todo el equipo como indica el cuadro de dialogo para confirma la acción.<br>'+
                                                             'EJ: en el caso de un equipo de FUTBOL 11, con solo asignar como ganador a 1 de los integrantes, todo equipo pasa a la etapa siguiente.'+
 	                                                    '</div><div class="col-sm-12"></br>'+
-													        '<h4 class="no-margin"><i class="fa fa-comment-o" aria-hidden="true"></i> Como Buscar por planilla</h4>'+
+													        '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> Como Buscar por planilla</h4>'+
 				                                            'Usted puede <b>buscar los participantes</b> de una planilla en particular solo con el número de planilla en la que fueron inscriptos. Para esto, debe hacer click en el botón <b>"Buscar por N° de planilla"</b><br>'+
                                                             'En la ventana emergente debe indicar el número de planilla y hacer click en el botón "Buscar".'+
 	                                                   '</div><div class="col-sm-12"></br>'+
-                                                           '<h4 class="no-margin"><i class="fa fa-comment-o" aria-hidden="true"></i> Como Buscar por DNI, apellido o nombre</h4>'+
+                                                           '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> Como Buscar por DNI, apellido o nombre</h4>'+
                                                            'En caso de no tener el numero de planilla, puede buscar participantes por número de documento, apellido o nombre. Para ello utilice el cuadro de texto que se encuentra en la esquina superior derecha de la tabla de participantes.'+
-                                                      '</div>');
+                                                      '</div><div class="col-sm-12"></br>'+
+                                                          '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> Como cargar el nombre de los equipo</h4>'+
+                                                          'Al momento de dar pasar a una equipo a la etapa siguiente de manera opcional puede indicar el nombre de fantasía del equipo ganador.'+
+                                                     '</div>');
                 $('#panel-config').modal();
             }
         })(jQuery);

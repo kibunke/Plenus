@@ -403,7 +403,7 @@ class Torneo
                 )
             );
     }
-    
+
     /*
      * RESTRICCIONES PARA LA ETAPA MUNICIPAL
      * Juveniles
@@ -430,20 +430,20 @@ class Torneo
             }
             if ($this->getIsAdultosMayores()){
                 if ($contTorneos["cultura"] > 0 && $this->getIsCultura()){
-                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en un evento cultural.');
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está registrado en un evento cultural.');
                 }elseif($contTorneos["deportes"] > 0 && !$this->getIsCultura()){
-                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en un evento deportivo.');
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está registrado en un evento deportivo.');
                 }
             }else{
                 if ($contTorneos["cultura"] > 0 && $this->getIsCultura()){
-                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en un evento cultural.');
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está registrado en un evento cultural.');
                 }
                 if ($equipo->getPlanilla()->getMunicipio()->getHabitantes() > 30000){
                     if ($contTorneos["deportes"] > 1 && !$this->getIsCultura()){
-                        throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en dos eventos deportivos.');
+                        throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está registrado en dos eventos deportivos.');
                     }
                 }elseif($contTorneos["deportes"] > 2 && !$this->getIsCultura()){
-                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está inscripto en tres eventos deportivos.');
+                    throw new \Exception('Plenus: El competidor '.$competidor->getNombreCompleto().'('.$competidor->getDni().') ya está registrado en tres eventos deportivos.');
                 }
             }
         }
