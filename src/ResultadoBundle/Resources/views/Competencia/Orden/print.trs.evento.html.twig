@@ -39,7 +39,7 @@
                      <td style="border-bottom: 1px solid silver;"></td>
                   {% endif %}
                </tr>';
-            {% for item1 in participantes|slice(1, participantes | length) %} %}
+            {% for item1 in participantes|slice(1, rowspan) %} %}
                <tr><td style="border-bottom: 1px solid silver;"> {{item1.getNombreCompleto}}</td></tr>
             {% endfor %}
         {% endfor %}
@@ -71,7 +71,7 @@
                      <td style="border-bottom: 1px solid silver;"></td>
                   {% endif %}
             </tr>';
-            {% for item1 in participantes|slice(1, participantes | length) %} %}
+            {% for item1 in participantes|slice(1,rowspan) %} %}
                <tr>
                  <td style="border-bottom: 1px solid silver;">{{item1.getNombreCompleto}}</td>
                  <td style="border-bottom: 1px solid silver;">{{item1.getDocumentoNro}}</td>
