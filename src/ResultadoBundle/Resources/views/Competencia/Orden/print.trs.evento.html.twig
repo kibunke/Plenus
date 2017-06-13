@@ -1,0 +1,84 @@
+{% if competencia.getPlazas | length > 0) %}  
+     {% if flag == 0 %}
+         <table cellspacing="0" cellpadding="10">
+            <tr>
+                <th style="border-bottom: 1px solid silver;width:10%" align="center"><b>#</b></th>
+                <th style="border-bottom: 1px solid silver;width:20%" align="center"><b>Región</b></th>
+                <th style="border-bottom: 1px solid silver;width:70%"><b>Plaza</b></th>
+            </tr>                        
+            {% for item  for competencia.getPlazas %}
+                <tr>
+                    <td style="border-bottom: 1px solid silver;" align="center">{{loop.index}}</td>
+                    <td style="border-bottom: 1px solid silver;" align="center">{% if item.getEquipo %}{{item.getEquipo.getMunicipio.getCruceRegionalRaw}}{% endif%}</td>
+                    <td style="border-bottom: 1px solid silver;">{{item.getNombreCompetenciaRaw}}</td>
+                </tr>
+            {% endfor %}
+
+     {% elseif flag == 1 %}
+        <table cellspacing="0" cellpadding="10">
+            <tr>
+                <th style="border-bottom: 1px solid silver;width:10%" align="center"><b>#</b></th>
+                <th style="border-bottom: 1px solid silver;width:15%" align="center"><b>Región</b></th>
+                <th style="border-bottom: 1px solid silver;width:30%"><b>Plaza</b></th>
+                <th style="border-bottom: 1px solid silver;width:35%"><b>Participante</b></th>
+            </tr>                       
+        {% for item in competencia.getPlazas %}
+            {% set rowspan =  0 %}
+            
+            {% if item.getEquipo %}
+                {% set participantes = item.getEquipo.getParticipantes.toArray %}
+                {% set rowspan = participantes | length %}
+            {% endif %}
+               <tr>
+                  <td rowspan="{{rowspan}}" style="border-bottom: 1px solid silver;" align="center">{{loop.index}}</td>
+                  <td rowspan="{{rowspan}}" style="border-bottom: 1px solid silver;" align="center">{% if item.getEquipo %}{{item.getEquipo.getMunicipio.getCruceRegionalRaw}}{% endif %}</td>
+                  <td rowspan="{{rowspan}}" style="border-bottom: 1px solid silver;">{{item.getNombreCompetenciaRaw}}</td>
+                  {% if participantes | length >  0 %}
+                     <td style="border-bottom: 1px solid silver;">{{participantes[0].getNombreCompleto}}</td>
+                  {% else %}
+                     <td style="border-bottom: 1px solid silver;"></td>
+                  {% endif %}
+               </tr>';
+            {% for item1 in participantes|slice(1, rowspan) %} %}
+               <tr><td style="border-bottom: 1px solid silver;"> {{item1.getNombreCompleto}}</td></tr>
+            {% endfor %}
+        {% endfor %}
+     {% else %}
+        <table cellspacing="0" cellpadding="10">
+            <tr>
+               <th style="border-bottom: 1px solid silver;width:10%" align="center"><b>#</b></th>
+               <th style="border-bottom: 1px solid silver;width:12%" align="center"><b>Región</b></th>
+               <th style="border-bottom: 1px solid silver;width:30%"><b>Plaza</b></th>
+               <th style="border-bottom: 1px solid silver;width:35%"><b>Participante</b></th>
+               <th style="border-bottom: 1px solid silver;width:13%">DNI</th>
+            </tr>                        
+           
+        {% for item in competencia.getPlazas %}
+            {% set rowspan =  0%}
+
+             {% if item.getEquipo %}
+                {% set participantes = item.getEquipo.getParticipantes.toArray %}
+                {% set rowspan = participantes | length %}         
+            {% endif %}
+              <tr>
+               <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">{{loop.index}}</td>
+               <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">{% if item.getEquipo %}{{item.getEquipo.getMunicipio.getCruceRegionalRaw}}{% endif %}</td>
+               <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;">{{item.getNombreCompetenciaRaw}}</td>
+               {% if participantes | length >  0 %}
+                      <td style="border-bottom: 1px solid silver;">{{participantes[0].getNombreCompleto}}</td>
+                      <td style="border-bottom: 1px solid silver;">{{participantes[0].getDocumentoNro}}</td>
+                  {% else %}
+                     <td style="border-bottom: 1px solid silver;"></td>
+                  {% endif %}
+            </tr>';
+            {% for item1 in participantes|slice(1,rowspan) %} %}
+               <tr>
+                 <td style="border-bottom: 1px solid silver;">{{item1.getNombreCompleto}}</td>
+                 <td style="border-bottom: 1px solid silver;">{{item1.getDocumentoNro}}</td>
+               </tr>
+            {% endfor %}
+        {% endfor %}
+     {% endif %}
+     </table>      
+{% endif %}       
+         

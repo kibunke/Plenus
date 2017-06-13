@@ -127,60 +127,44 @@ class CompetenciaSerieController extends CompetenciaController
     }
     
     /**
-     * Delete a Etapa entity.
-     *
-     * @Route("/{id}/remove", name="competenciaSerie_delete")
-     * @Method("GET")
+     * @Route("/{id}/remove", name="competenciaSerie_delete", condition="request.isXmlHttpRequest()")
      * @Security("has_role('ROLE_COMPETENCIA_DELETE')")
      * @Template("ResultadoBundle:Etapa:delete.html.twig")
      */
     public function resetAction(Request $request,Competencia $competencia)
     {
-        if (!$request->isXMLHttpRequest()){
-            return $this->redirect($this->getRequest()->headers->get('referer'));
+        if(!$competencia)
+        {
+            throw $this->createNotFoundException('No existe la competencia.');
         }
         
-        $form =  $this->createDeleteForm($competencia);                    
-        
-        return array(
-            'form' => $form->createView(),
-        );
-    }
-    
-    /**
-     * Deletes a Etapa entity.
-     *
-     * @Route("/{id}/delete", name="competenciaSerie_delete_flush")
-     * @Security("has_role('ROLE_COMPETENCIA_DELETE')")
-     * @Method("DELETE")
-     */
-    public function resetFlushAction(Request $request, Competencia $competencia)
-    {
         $form = $this->createDeleteForm($competencia);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
+        $form->handleRequest($request);        
+       
+        if($form->isSubmitted() && $form->isValid())
+        {
             $em = $this->getDoctrine()->getManager();
-            
-            if (!$competencia) {
-                throw $this->createNotFoundException('No existe la competencia.');
-            }
-            //$em->remove($competencia);
-            foreach($competencia->getPlazas() as $item){
+            foreach($competencia->getPlazas() as $item)
+            {
                 $em->remove($item);
             }
             try{
                 $em->flush();
-                foreach($competencia->getSeries() as $item){
+                foreach($competencia->getSeries() as $item)
+                {
                     $em->remove($item);
                 }
                 $em->flush();
                 $em->remove($competencia);
                 $em->flush();
                 $this->addFlash('exito', 'La etapa fue reseteada con exito ');
+                return new JsonResponse(array('success' => true, 'reload' =>true));
             } catch (Exception $e) {
                 $this->addFlash('error', 'La etapa no pudo ser reseteada.');
             }
         }
-        return new JsonResponse(array('success' => true, 'reload' =>true));
-    }     
+        return array(
+            'form' => $form->createView(),
+        );
+    }
 }

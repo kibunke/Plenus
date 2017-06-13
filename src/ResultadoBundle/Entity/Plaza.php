@@ -378,7 +378,8 @@ class  Plaza
     public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
     {
         $this->updatedBy = $updatedBy;
-
+        $this->updatedAt = new \DateTime();
+        
         return $this;
     }
 

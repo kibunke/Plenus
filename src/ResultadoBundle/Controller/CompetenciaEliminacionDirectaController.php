@@ -40,10 +40,7 @@ class CompetenciaEliminacionDirectaController extends CompetenciaController
             throw $this->createNotFoundException('Unable to find Competencia entity.');
         }
 
-        return $this->render(
-            'ResultadoBundle:Competencia:EliminacionDirecta/edit.html.twig',
-            array('competencia' => $entity)
-        );
+        return $this->render('ResultadoBundle:Competencia:EliminacionDirecta/edit.html.twig',array('competencia' => $entity));
     }    
     /**
      * Creates a new CompetenciaEliminacionDirecta entities.
@@ -112,23 +109,23 @@ class CompetenciaEliminacionDirectaController extends CompetenciaController
      */
     public function competenciaEliminacionDirectaTemplateViewAction(Request $request, Competencia $competencia)
     {
-        $form8vos =  $this->createCompetenciaEliminacionTemplateForm($competencia,"8vos");
-        $form4tos =  $this->createCompetenciaEliminacionTemplateForm($competencia,"4tos");
-        $formSemi =  $this->createCompetenciaEliminacionTemplateForm($competencia,"semi");
-        $formFinal =  $this->createCompetenciaEliminacionTemplateForm($competencia,"final");
+        $form8vos  = $this->createCompetenciaEliminacionTemplateForm($competencia,"8vos");
+        $form4tos  = $this->createCompetenciaEliminacionTemplateForm($competencia,"4tos");
+        $formSemi  = $this->createCompetenciaEliminacionTemplateForm($competencia,"semi");
+        $formFinal = $this->createCompetenciaEliminacionTemplateForm($competencia,"final");
         
         return array(
-            'form8vos'   => $form8vos->createView(),
-            'form4tos'   => $form4tos->createView(),
-            'formSemi'   => $formSemi->createView(),
-            'formFinal'   => $formFinal->createView(),
+            'form8vos'  => $form8vos->createView(),
+            'form4tos'  => $form4tos->createView(),
+            'formSemi'  => $formSemi->createView(),
+            'formFinal' => $formFinal->createView(),
         );
     }    
     
     /**
      * Creates a new CompetenciaEliminacionDirecta entities.
      *
-     * @Route("/{id}/eliminacionDirecta/template/{desde}/apply", name="resultado_competenciaEliminacionDirecta_template_apply")
+     * @Route("/{competencia}/eliminacionDirecta/template/{desde}/apply", name="resultado_competenciaEliminacionDirecta_template_apply")
      * @Method("POST")
      * @Security("has_role('ROLE_COMPETENCIA_NEW')")
      * @Template()
@@ -184,17 +181,19 @@ class CompetenciaEliminacionDirectaController extends CompetenciaController
                     ->setAction($this->generateUrl('resultado_competenciaEliminacionDirecta_template_apply', array('id' => $competencia->getId(),'desde' => $desde)))
                     ->setMethod('POST')
                     ->add('tercero', 'checkbox', array(
-                                    'label'    => 'Juega 3er puesto ?',
-                                    "data" => true,
-                                    'required' => false,
-                    ))
+                                                        'label'    => 'Juega 3er puesto ?',
+                                                        'data'     => true,
+                                                        'required' => false,
+                                                      )
+                         )
                     ->add('desde', 'text', array(
-                                    'label'    => 'desde',
-                                    "data" => $desde,
-                                    'required' => false,
-                    ))                    
+                                                    'label'    => 'desde',
+                                                    'data'     => $desde,
+                                                    'required' => false,
+                                                )
+                         )                    
                     ->getForm();
-        ;
+                    ;
     }
     
     /**
@@ -215,56 +214,42 @@ class CompetenciaEliminacionDirectaController extends CompetenciaController
     }
     
     /**
-     * Delete a Etapa entity.
-     *
-     * @Route("/{id}/remove", name="competenciaEliminacionDirecta_delete")
-     * @Method("GET")
+     * @Route("/{competencia}/remove", name="competenciaEliminacionDirecta_delete", condition="request.isXmlHttpRequest()")
      * @Security("has_role('ROLE_COMPETENCIA_DELETE')")
      * @Template("ResultadoBundle:Etapa:delete.html.twig")
      */
     public function resetAction(Request $request,Competencia $competencia)
     {
-        if (!$request->isXMLHttpRequest()){
-            return $this->redirect($this->getRequest()->headers->get('referer'));
+        if(!$competencia)
+        {
+            throw $this->createNotFoundException('No existe la competencia.');
         }
         
         $form =  $this->createDeleteForm($competencia);                    
-        
-        return array(
-            'form' => $form->createView(),
-        );
-    }
-    
-    /**
-     * Deletes a Etapa entity.
-     *
-     * @Route("/{id}/delete", name="competenciaEliminacionDirecta_delete_flush")
-     * @Security("has_role('ROLE_COMPETENCIA_DELETE')")
-     * @Method("DELETE")
-     */
-    public function resetFlushAction(Request $request, Competencia $competencia)
-    {
-        $form = $this->createDeleteForm($competencia);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        
+        if($form->isSubmitted() && $form->isValid())
+        {
             $em = $this->getDoctrine()->getManager();
-            
-            if (!$competencia) {
-                throw $this->createNotFoundException('No existe la competencia.');
-            }
-            //$em->remove($competencia);
-            foreach($competencia->getPlazas() as $item){
+            foreach($competencia->getPlazas() as $item)
+            {
                 $em->remove($item);
             }
+            
             try{
                 $em->flush();
                 $em->remove($competencia);
                 $em->flush();
                 $this->addFlash('exito', 'La etapa fue reseteada con exito ');
+                
+                return new JsonResponse(array('success' => true, 'reload' =>true));
             } catch (Exception $e) {
                 $this->addFlash('error', 'La etapa no pudo ser reseteada.');
             }
         }
-        return new JsonResponse(array('success' => true, 'reload' =>true));
-    }    
+        
+        return array(
+            'form' => $form->createView(),
+        );
+    }
 }

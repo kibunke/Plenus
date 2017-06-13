@@ -100,7 +100,8 @@ abstract class Competencia
      */
     private $updatedBy;
 
-    public function __construct($user = NULL) {
+    public function __construct($user = NULL)
+    {
        $this->createdAt = new \DateTime();
        $this->createdBy = $user;
     }

@@ -146,7 +146,6 @@ class SerieController extends Controller
         if($form->isSubmitted() && $form->isValid())
         {
             $entity->setUpdatedBy($this->getUser());
-            $entity->setUpdatedAt(new \DateTime());
             try{
                 $this->getDoctrine()->getManager()->flush();
                 return new JsonResponse(array('success' => true, 'msj' => 'La información fue guardada correctamente'));
