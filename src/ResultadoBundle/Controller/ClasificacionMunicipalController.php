@@ -46,20 +46,6 @@ class ClasificacionMunicipalController extends Controller
     }
 
     /**
-     * show a Competidor entity.
-     *
-     * @Route("/competidor/{id}/show", name="resultados_clasificacionMunicipal_competidor_show", condition="request.isXmlHttpRequest()")
-     * @Method("GET")
-     */
-    public function showAction(Competidor $entity)
-    {
-        // return $this->render($planilla->getTemplateShow(), array(
-        //     'planilla' => $planilla,
-        //     'json' => json_encode($planilla->toArray())
-        // ));
-    }
-
-    /**
      * Add a Competidor entity into a EtapaMunicipal collection.
      * @Route("/ganador/equipo/{equipo}/evento/{evento}/toggle", name="resultados_clasificacionMunicipal_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__EQ__","evento":"__EV__"})
      * @Method("POST")

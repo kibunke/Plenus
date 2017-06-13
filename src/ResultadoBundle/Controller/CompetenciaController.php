@@ -25,31 +25,25 @@ use ResultadoBundle\Entity\CompetenciaOrden;
 class CompetenciaController extends Controller
 {        
     /**
-     * Displays a view to create a new Competencia entity.
-     *
-     * @Route("/{id}/new", name="resultado_competencia_new")
+     * @Route("/{id}/new", name="resultado_competencia_new", condition="request.isXmlHttpRequest()")
      * @Method("GET")
      * @Security("has_role('ROLE_COMPETENCIA_NEW')")
      * @Template("ResultadoBundle:Competencia:new.html.twig")
      */
     public function newAction(Request $request, Etapa $etapa)
     {
-        if (!$request->isXMLHttpRequest()){
-            return $this->redirect($this->getRequest()->headers->get('referer'));
-        }
-        
-        $formOrden =  $this->createCompetenciaOrdenForm($etapa);
-        $formLiga =  $this->createCompetenciaLigaForm($etapa);
+        $formOrden              =  $this->createCompetenciaOrdenForm($etapa);
+        $formLiga               =  $this->createCompetenciaLigaForm($etapa);
         $formEliminacionDirecta =  $this->createCompetenciaEliminacionDirectaForm($etapa);
-        $formSerie =  $this->createCompetenciaSerieForm($etapa);
+        $formSerie              =  $this->createCompetenciaSerieForm($etapa);
         
         return array(
-            'etapa' => $etapa,
-            'formOrden'=>$formOrden->createView(),
-            'formLiga'=>$formLiga->createView(),
-            'formSerie'=>$formSerie->createView(),
-            'formEliminacionDirecta'=>$formEliminacionDirecta->createView()
-        );
+                        'etapa'                  => $etapa,
+                        'formOrden'              => $formOrden->createView(),
+                        'formLiga'               => $formLiga->createView(),
+                        'formSerie'              => $formSerie->createView(),
+                        'formEliminacionDirecta' => $formEliminacionDirecta->createView()
+                    );
     }
     
     /**

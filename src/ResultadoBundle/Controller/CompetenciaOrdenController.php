@@ -98,8 +98,7 @@ class CompetenciaOrdenController extends CompetenciaController
             'form'   => $form->createView(),
         );
     }
-    
-    
+        
     /**
      * Creates a form to delete a Etapa entity by id.
      *
@@ -118,44 +117,22 @@ class CompetenciaOrdenController extends CompetenciaController
     }
     
     /**
-     * Delete a Etapa entity.
-     *
-     * @Route("/{id}/remove", name="competenciaOrden_delete")
-     * @Method("GET")
+     * @Route("/{competencia}/remove", name="competenciaOrden_delete", condition="request.isXmlHttpRequest()")
      * @Security("has_role('ROLE_COMPETENCIA_DELETE')")
      * @Template("ResultadoBundle:Etapa:delete.html.twig")
      */
     public function resetAction(Request $request,Competencia $competencia)
     {
-        if (!$request->isXMLHttpRequest()){
-            return $this->redirect($this->getRequest()->headers->get('referer'));
+        if (!$competencia)
+        {
+            throw $this->createNotFoundException('No existe la competencia.');
         }
         
         $form =  $this->createDeleteForm($competencia);                    
-        
-        return array(
-            'form' => $form->createView(),
-        );
-    }
-    
-    /**
-     * Deletes a Etapa entity.
-     *
-     * @Route("/{id}/delete", name="competenciaOrden_delete_flush")
-     * @Security("has_role('ROLE_COMPETENCIA_DELETE')")
-     * @Method("DELETE")
-     */
-    public function resetFlushAction(Request $request, Competencia $competencia)
-    {
-        $form = $this->createDeleteForm($competencia);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if($form->isSubmitted() && $form->isValid())
+        {
             $em = $this->getDoctrine()->getManager();
-            
-            if (!$competencia) {
-                throw $this->createNotFoundException('No existe la competencia.');
-            }
-            //$em->remove($competencia);
             foreach($competencia->getPlazas() as $item){
                 $em->remove($item);
             }
@@ -164,142 +141,35 @@ class CompetenciaOrdenController extends CompetenciaController
                 $em->remove($competencia);
                 $em->flush();
                 $this->addFlash('exito', 'La etapa fue reseteada con exito ');
+                return new JsonResponse(array('success' => true, 'reload' =>true));
             } catch (Exception $e) {
                 $this->addFlash('error', 'La etapa no pudo ser reseteada.');
             }
         }
-        return new JsonResponse(array('success' => true, 'reload' =>true));
+        
+        return array('form' => $form->createView());
     }
     
     /**
      * Print a Finalistas.
      *
-     * @Route("/print/{id}/{flag}", name="finalistas_orden_print", defaults={"flag" = null})
+     * @Route("/print/{competencia}/{flag}", name="finalistas_orden_print", defaults={"flag" = null})
      * @Method("GET")
      * @Security("has_role('ROLE_COMPETENCIA_PRINT')")
      */    
     public function printEventoAction(Request $request, Competencia $competencia, $flag)
     {
         $evento = $competencia->getEtapa()->getEvento();
-        $pdf = new DocumentoPDF();
+        $pdf    = new DocumentoPDF();
         $pdf->init();
         $pdf->writeHTML('<div style="text-align:center"><b>Orden de participación<br>'.$evento.'</b></div>');
         $pdf->SetFont('Helvetica', '', 10, '', 'false');
-        $trs = "";
-        if (count($competencia->getPlazas())>0){
-            if ($flag==0){
-                $trs .= '<table cellspacing="0" cellpadding="10">
-                            <tr>
-                                <th style="border-bottom: 1px solid silver;width:10%" align="center"><b>#</b></th>
-                                <th style="border-bottom: 1px solid silver;width:20%" align="center"><b>Región</b></th>
-                                <th style="border-bottom: 1px solid silver;width:70%"><b>Plaza</b></th>
-                            </tr>                        
-                    ';
-                $cont = 0;
-                foreach($competencia->getPlazas() as $item){
-                    $cont++;
-                    $reg = "";
-                    if ($item->getEquipo())
-                        $reg = $item->getEquipo()->getMunicipio()->getCruceRegionalRaw();
-                    $trs.='                    
-                        <tr>
-                            <td style="border-bottom: 1px solid silver;" align="center">'.$cont.'</td>
-                            <td style="border-bottom: 1px solid silver;" align="center">'.$reg.'</td>
-                            <td style="border-bottom: 1px solid silver;">'.$item->getNombreCompetenciaRaw().'</td>
-                        </tr>';
-                }
-                $trs.='</table>';
-            }elseif ($flag == 1){
-                $trs = $this->plazasConNombre($competencia);
-            }else{
-                $trs = $this->plazasConNombreYDni($competencia);
-            }
-        }
+        $trs = $this->renderView('ResultadoBundle:Competencia:Orden/print.trs.evento.html.twig', array(
+                                                                                                        'competencia' => $competencia,
+                                                                                                        'flag'        => $flag
+                                                                                                      )
+                                );
         $pdf->writeHTML($trs, true, false, true, false, '');
         return new Response($pdf->Output('Finalistas '.$evento.'.pdf','D'));
-    }
-    
-    private function plazasConNombreYDni($competencia){
-        $trs = '<table cellspacing="0" cellpadding="10">
-                    <tr>
-                        <th style="border-bottom: 1px solid silver;width:10%" align="center"><b>#</b></th>
-                        <th style="border-bottom: 1px solid silver;width:12%" align="center"><b>Región</b></th>
-                        <th style="border-bottom: 1px solid silver;width:30%"><b>Plaza</b></th>
-                        <th style="border-bottom: 1px solid silver;width:35%"><b>Participante</b></th>
-                        <th style="border-bottom: 1px solid silver;width:13%">DNI</th>
-                    </tr>                        
-            ';
-        $cont = 0;
-        foreach($competencia->getPlazas() as $item){
-            $cont ++;
-            $rowspan =  0;
-            $reg = "";
-            if ($item->getEquipo()){
-                $participantes = $item->getEquipo()->getParticipantes()->toArray();
-                $rowspan = count($participantes);
-                $reg = $item->getEquipo()->getMunicipio()->getCruceRegionalRaw();            
-            }
-            //
-            $part='<td style="border-bottom: 1px solid silver;"></td><td style="border-bottom: 1px solid silver;"></td>';
-            if ($participantes){
-                  $primero = array_shift($participantes);
-                $part='
-                    <td style="border-bottom: 1px solid silver;">'.$primero->getNombreCompleto().'</td>
-                    <td style="border-bottom: 1px solid silver;">'.$primero->getDocumentoNro().'</td>
-                    ';
-            }
-            $trs.='                    
-                <tr>
-                    <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">'.$cont.'</td>
-                    <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">'.$reg.'</td>
-                    <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;">'.$item->getNombreCompetenciaRaw().'</td>
-                    '.$part.'
-                </tr>';
-            foreach($participantes as $item1){
-                $trs.='<tr>
-                        <td style="border-bottom: 1px solid silver;">'.$item1->getNombreCompleto().'</td>
-                        <td style="border-bottom: 1px solid silver;">'.$item1->getDocumentoNro().'</td>
-                    </tr>';
-            }
-        }
-        return $trs.='</table>';
-    }
-    
-    private function plazasConNombre($competencia){
-        $trs = '<table cellspacing="0" cellpadding="10">
-                    <tr>
-                        <th style="border-bottom: 1px solid silver;width:10%" align="center"><b>#</b></th>
-                        <th style="border-bottom: 1px solid silver;width:15%" align="center"><b>Región</b></th>
-                        <th style="border-bottom: 1px solid silver;width:30%"><b>Plaza</b></th>
-                        <th style="border-bottom: 1px solid silver;width:35%"><b>Participante</b></th>
-                    </tr>                        
-            ';
-        $cont = 0;
-        foreach($competencia->getPlazas() as $item){
-            $cont ++;
-            $rowspan =  0;
-            $reg = "";
-            if ($item->getEquipo()){
-                $participantes = $item->getEquipo()->getParticipantes()->toArray();
-                $rowspan = count($participantes);
-                $reg = $item->getEquipo()->getMunicipio()->getCruceRegionalRaw();            
-            }
-            $part='<td style="border-bottom: 1px solid silver;"></td>';
-            if ($participantes){
-                  $primero = array_shift($participantes);
-                $part='<td style="border-bottom: 1px solid silver;">'.$primero->getNombreCompleto().'</td>';
-            }
-            $trs.='                    
-                <tr>
-                    <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">'.$cont.'</td>
-                    <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">'.$reg.'</td>
-                    <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;">'.$item->getNombreCompetenciaRaw().'</td>
-                    '.$part.'
-                </tr>';
-            foreach($participantes as $item1){
-                $trs.='<tr><td style="border-bottom: 1px solid silver;">'.$item1->getNombreCompleto().'</td></tr>';
-            }
-        }
-        return $trs.='</table>';
     }
 }
