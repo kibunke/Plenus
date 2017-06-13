@@ -88,7 +88,7 @@ class CompetidorRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
                         ->createQueryBuilder()
-                        ->select('COUNT(c)')
+                        ->select('COUNT(DISTINCT(c))')
                         ->from('ResultadoBundle:Competidor', 'c');
         if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
             $query->join('c.competidorEquipos', 'ce')
