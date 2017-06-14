@@ -131,6 +131,9 @@ class Equipo
         //     return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->nombre;
         // else
         //     return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre();
+        $str = $this->nombre;
+        if ($str == '')
+            $str = $this->getPlanilla()->getMunicipio()->getNombre();
         return '<div style="color:#555"><strong>'.$this->getNombre().'</strong><small> ( <i class="fa fa-users fa-xs"></i> '.count($this->getIntegrantes()).' )</small></div>';
     }
 
