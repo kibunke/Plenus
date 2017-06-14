@@ -52,6 +52,7 @@ class DefaultController extends Controller
         );
 
         foreach ($filter['rows'] as $evento){
+            //var_dump($evento);
             $data['data'][] = array(
                 "evento"  => array(
                                     "id" => $evento->getId(),

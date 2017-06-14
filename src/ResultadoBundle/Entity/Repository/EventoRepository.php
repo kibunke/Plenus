@@ -413,15 +413,17 @@ class EventoRepository extends EntityRepository
                         "e.orden",
                         "d.nombre ".$request->get('order')[0]['dir'].", e.orden",
                         "e.porcentajeCompletado",
-                        "",//cant participantes
+                        "equipos",//cant participantes
                         "",//definido si/no
                         ""//actions
                     ];
         $query = $this->getEntityManager()
                         ->createQueryBuilder()
-                        ->select('e')
+                        ->select('e, COUNT(DISTINCT(eq)) AS HIDDEN equipos')
                         ->from('ResultadoBundle:Evento', 'e')
                         ->join('e.segmento', 's')
+                        ->leftJoin('e.etapas', 'et')
+                        ->leftJoin('et.equipos', 'eq')
                         ->join('e.disciplina', 'd');
         $query->where('e.id LIKE ?1 OR e.orden LIKE ?1 OR e.nombre LIKE ?1 OR d.nombreRecursivo LIKE ?1');
         if ($user->hasRole('ROLE_COORDINADOR')){
@@ -429,6 +431,7 @@ class EventoRepository extends EntityRepository
                     ->setParameter(2,$user);
         }
         return $query->setParameter(1,'%'.$request->get('search')['value'].'%')
+                    ->groupBy('e')
                     ->orderBy($columns[$request->get('order')[0]['column']],$request->get('order')[0]['dir'])
                     ->setMaxResults($request->get('length'))
                     ->setFirstResult($request->get('start'))
