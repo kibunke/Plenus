@@ -134,7 +134,7 @@ class Equipo
         $str = $this->nombre;
         if ($str == '')
             $str = $this->getPlanilla()->getMunicipio()->getNombre();
-        return '<div style="color:#555"><strong>'.$this->getNombre().'</strong><small> ( <i class="fa fa-users fa-xs"></i> '.count($this->getIntegrantes()).' )</small></div>';
+        return '<div style="color:#555"><strong>'.$str.'</strong><small> ( <i class="fa fa-users fa-xs"></i> '.count($this->getIntegrantes()).' )</small></div>';
     }
 
     /**
