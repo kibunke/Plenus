@@ -8,8 +8,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-use ResultadoBundle\Entity\Participante;
+use ResultadoBundle\Entity\Competidor;
 
 /**
  * Default controller.
@@ -20,20 +22,50 @@ use ResultadoBundle\Entity\Participante;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="resultados")
+     * Lists all Evento entities.
+     *
+     * @Route("/eventos", name="resultado_evento_list")
      * @Method("GET")
      * @Security("has_role('ROLE_RESULTADO_LIST')")
      * @Template()
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        return array();
+    }
 
-        $eventos = $em->getRepository('ResultadoBundle:Evento')->getAllPorUsuarioSinDesiertos($this->get('security.context'));
+    /**
+     * @Route("/eventos/list/datatable", name="resultado_evento_list_datatable", condition="request.isXmlHttpRequest()")
+     * @Method("POST")
+     * @Security("has_role('ROLE_RESULTADO_LIST')")
+     */
+    public function listDataTableAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('ResultadoBundle:Evento')->datatable($request->request,$this->getUser());
 
-        return array(
-            'eventos' => $eventos
+        $data = array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
         );
+
+        foreach ($filter['rows'] as $evento){
+            $data['data'][] = array(
+                "evento"  => array(
+                                    "id" => $evento->getId(),
+                                    "nombre" => $evento->getNombreCompletoRaw(),
+                                    "orden" => $evento->getOrden(),
+                                    "descripcion" => $evento->getDescripcion(),
+                                    "completado" => $evento->getPorcentajeCompletado(),
+                                    "equipos" => count($evento->getEtapaMunicipal()->getEquipos()),
+                                    "definido" => $evento->getEtapaMunicipal() ? true : false
+                            ),
+                "actions"   => $this->renderView('ResultadoBundle:Evento:actions.html.twig', array('evento' => $evento)),
+            );
+        }
+        return new JsonResponse($data);
     }
 
     /**

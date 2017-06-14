@@ -374,6 +374,14 @@ abstract class  Etapa
     }
 
     /**
+     * isEtapaRegional
+     * @return integer
+     */
+    public function isEtapaRegional()
+    {
+        return false;
+    }
+    /**
      * Add equipo
      *
      * @param \ResultadoBundle\Entity\Equipo $equipo

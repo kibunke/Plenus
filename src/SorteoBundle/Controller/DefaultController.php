@@ -39,11 +39,11 @@ class DefaultController extends Controller
             'eventos' => $eventos
         );
     }
-    
+
     /**
      * Finds and displays a Finalistas info.
      *
-     * @Route("/{id}/show", name="ganadores_evento_show")
+     * @Route("/{evento}/show", name="ganadores_evento_show")
      * @Method("GET")
      * @Security("has_role('ROLE_SORTEO_SHOW')")
      * @Template()
@@ -54,7 +54,7 @@ class DefaultController extends Controller
             'evento' => $entity
         );
     }
-    
+
     /**
      * Finds and displays a Finalistas detalle.
      *
@@ -71,7 +71,7 @@ class DefaultController extends Controller
             'eventos' => $eventos
         );
     }
-    
+
     /**
      * @Route("/consulta/analitico", name="consulta_analitico_finalistas")
      * @Method({"GET","POST"})
@@ -81,9 +81,9 @@ class DefaultController extends Controller
     public function consultaAnaliticoAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        
+
         $result=$this->parserEventosData($em->getRepository('ResultadoBundle:Evento')->getAllConNombre($this->get('security.context'),false));
-        
+
         /*
         * controla que el array que viene por post no traiga ids de eventos q no puede ver
         * en tal caso reemplaza el array con el los ids que si puede ver
@@ -105,7 +105,7 @@ class DefaultController extends Controller
             'tree' => $result['tree']
         );
     }
-    
+
     private function parserEventosData($eventos){
         $em = $this->getDoctrine()->getManager();
         $tree='{"text":"Todos mis eventos","state" : {"selected" : true},"children":[';
@@ -122,14 +122,14 @@ class DefaultController extends Controller
                 $tree.='{"text":"'.$aux[0].'","children":[{"text":"'.$aux[1].'","children":[{"text":"'.$evento['evento'].' -'.$aux[2].'-'.$aux[3].'-'.$aux[4].'","icon" : "fa fa-thumb-tack text-green fa-lg","id":"ev-'.$evento['evento'].'"}';
                 $disciplinaIdAux=$evento['disciplina'];
                 $torneoIdAux=$evento['torneo'];
-            }else{            
+            }else{
                 if ($evento['torneo']==$torneoIdAux){
                     if ($evento['disciplina']==$disciplinaIdAux){
                         $tree.=',{"text":"'.$evento['evento'].' -'.$aux[2].'-'.$aux[3].'-'.$aux[4].'","icon" : "fa fa-thumb-tack text-green fa-lg","id":"ev-'.$evento['evento'].'"}';
                     }
                     else{
                         $disciplinaIdAux=$evento['disciplina'];
-                        $tree.=']},{"text":"'.$aux[1].'","children":[{"text":"'.$evento['evento'].' -'.$aux[2].'-'.$aux[3].'-'.$aux[4].'","icon" : "fa fa-thumb-tack text-green fa-lg","id":"ev-'.$evento['evento'].'"}'; 
+                        $tree.=']},{"text":"'.$aux[1].'","children":[{"text":"'.$evento['evento'].' -'.$aux[2].'-'.$aux[3].'-'.$aux[4].'","icon" : "fa fa-thumb-tack text-green fa-lg","id":"ev-'.$evento['evento'].'"}';
                     }
                 }else{
                     $torneoIdAux=$evento['torneo'];
@@ -141,14 +141,14 @@ class DefaultController extends Controller
         $tree.="]}]}]}";
         return array('tree'=>$tree,'ids'=>$eventosIds);
     }
-    
+
     /**
      * Print a Finalistas.
      *
      * @Route("/print/{id}", name="finalistas_evento_print", defaults={"evento" = null})
      * @Method("GET")
      * @Security("has_role('ROLE_SORTEO_PRINT')")
-     */    
+     */
     public function printEventoAction(Request $request, Evento $evento)
     {
         $em = $this->getDoctrine()->getManager();
@@ -164,7 +164,7 @@ class DefaultController extends Controller
                             <th style="border-bottom: 1px solid silver;width:25%"><b>Equipo</b></th>
                             <th style="border-bottom: 1px solid silver;width:38%"><b>Participante</b></th>
                             <th style="border-bottom: 1px solid silver;width:15%">DNI</th>
-                        </tr>                        
+                        </tr>
                 ';
             foreach($evento->getEquipos() as $item){
                 $rowspan =  (String) count($item->getParticipantes());
@@ -178,7 +178,7 @@ class DefaultController extends Controller
                         <td style="border-bottom: 1px solid silver;">'.$primero->getDocumentoNro().'</td>
                         ';
                 }
-                $trs.='                    
+                $trs.='
                     <tr>
                         <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;" align="center">'.$item->getMunicipio()->getCruceRegionalRaw().'</td>
                         <td rowspan="'.$rowspan.'" style="border-bottom: 1px solid silver;">'.$item->getNombreCompletoRaw().'</td>
@@ -191,11 +191,11 @@ class DefaultController extends Controller
                         </tr>';
                 }
             }
-            $trs.='</table>';            
+            $trs.='</table>';
         }
         //echo $trs;
         //die();
         $pdf->writeHTML($trs, true, false, true, false, '');
         return new Response($pdf->Output('Finalistas '.$evento.'.pdf','D'));
-    }     
+    }
 }

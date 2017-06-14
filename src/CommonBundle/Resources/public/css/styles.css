@@ -2024,6 +2024,29 @@ a.text-light:hover {
   transform: none !important;
 }
 
+.inputDirect{
+    width: 45px;
+    text-align: right;
+    height: 49px;
+    border: none;
+    font-size: 19px;
+}
+
+.dragging li.ui-state-hover {
+    min-width: 240px;
+    background-color:  red;
+}
+.dragging .ui-state-hover a {
+    color:green !important;
+    font-weight: bold;
+}
+.ui-sortable-helper {
+    visibility: hidden;
+}
+.ui-sortable-placeholder td {
+    border-bottom: 2px solid red;
+}
+
 /* ---------------------------------------------------------------------- */
 /*  Subview
 /* ---------------------------------------------------------------------- */

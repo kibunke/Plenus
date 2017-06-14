@@ -16,13 +16,15 @@
                     <i class="green fa fa-calendar-o"></i>
                     Fixture Completo
                 </a>
-            </li>        
+            </li>
     </ul>
     <div class="tab-content">
         {% for etapa in evento.etapas %}
             <div class="tab-pane fade {% if loop.index == 1 %} in active {% endif %}" id="myTab_{{ etapa.id }}">
                 {% if etapa.competencia %}
                     {% include 'ResultadoBundle:'~etapa.competencia.getFolder()~':edit.html.twig' with { 'competencia' : etapa.competencia } %}
+                {% elseif etapa.isEtapaMunicipal or etapa.isEtapaRegional %}
+                    {% include 'ResultadoBundle:Etapa:listadoGenerico.html.twig' with { 'etapa' : etapa } %}
                 {% else %}
                     <div class="alert alert-block alert-danger fade in">
                         <button data-dismiss="alert" class="close" type="button">×</button>
@@ -37,12 +39,12 @@
                                 <a href="#example-subview-1" onclick="$.Evento.etapa.add('{{ path('resultado_competencia_new', { 'id': etapa.id }) }}')" class="btn btn-green tooltips show-sv" data-placement="top" data-original-title="Crear" data-startFrom="right">
                                     <span class="fa fa-edit"></span> Definir forma de juego
                                 </a>
-                                
+
                                 <a class="btn btn-red" onclick="$.Evento.etapa.remove('{{ path('resultado_etapa_reset', { 'id': etapa.id }) }}')">
                                     <span class="fa fa-edit"></span> Eliminar Etapa
-                                </a>                                
+                                </a>
                             {% endif %}
-                            <a href="{{ path('resultados') }}" class="btn btn-light-grey">
+                            <a href="{{ path('resultado_evento_list') }}" class="btn btn-light-grey">
                                 <span class="fa fa-arrow-left"></span> Cancelar y volver.
                             </a>
                         </p>
@@ -62,6 +64,6 @@
                     </p>
                 </div>
             {% endif %}
-        </div>        
+        </div>
     </div>
 </div>

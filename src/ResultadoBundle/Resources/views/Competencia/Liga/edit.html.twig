@@ -3,7 +3,7 @@
         {% if competencia.zonas | length %}
             <div class="tabbable tabs-left">
                 <ul id="tab_zonas" class="nav nav-tabs">
-                    {% for zona in competencia.zonas %}                
+                    {% for zona in competencia.zonas %}
                         <li class="{% if loop.index == 1%}active{% endif %}">
                             <a href="#tab_zona_{{ zona.id }}" data-toggle="tab">
                                 <i class="pink fa fa-table"></i> {{ zona }}
@@ -14,10 +14,10 @@
                         <a href="#1" onclick="$.Evento.liga.zona.add('{{ path('zona_new', { 'id': competencia.id }) }}')" data-toggle="tab">
                             <i class="pink fa fa-plus"></i> Nueva
                         </a>
-                    </li>            
+                    </li>
                 </ul>
                 <div class="tab-content">
-                    {% for zona in competencia.zonas %}                
+                    {% for zona in competencia.zonas %}
                         <div class="tab-pane fade{% if loop.index == 1%} in active{% endif %}" id="tab_zona_{{ zona.id }}" >
                             <div class="dropdown pull-right">
                                 <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
@@ -46,13 +46,13 @@
                                             <a href="#1" onclick="$.Evento.liga.zona.edit('{{ path('zona_edit', { 'id': zona.id }) }}')">
                                                 <i class="fa fa-edit"></i> <span>Editar Zona</span>
                                             </a>
-                                        </li>                                        
+                                        </li>
                                     {% endif %}
                                 </ul>
                             </div>
                             <h2 style="margin-top: 0;" class="pull-left">
                                 <i class="fa fa-edit"></i>
-                                Detalle <span class="text-bold">{{ zona }}</span>                            
+                                Detalle <span class="text-bold">{{ zona }}</span>
                             </h2>
                             <div>
                                 {% include 'ResultadoBundle:Competencia:Liga/zona.html.twig' with { 'zona' : zona } %}
@@ -80,17 +80,17 @@
                         <a href="#1" onclick="$.Evento.etapa.remove('{{ path('resultado_etapa_reset', { 'id': competencia.etapa.id }) }}')" class="btn btn-red">
                             <span class="fa fa-edit"></span> Resetear competencia
                         </a>
-                    {% endif %#}                      
-                    <a href="{{ path('resultados') }}" class="btn btn-light-grey">
+                    {% endif %#}
+                    <a href="{{ path('resultado_evento_list') }}" class="btn btn-light-grey">
                         <span class="fa fa-arrow-left"></span> Cancelar y volver.
-                    </a>                  
+                    </a>
                 </p>
             </div>
         {% endif %}
     </div>
     <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datepicker/css/datepicker.css' ) }}" />
     <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/css/datetimepicker.css' ) }}" />
-    
+
     <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
@@ -139,7 +139,7 @@
                         return false;
                     });
                 });
-                $('#panel-config').modal();                
+                $('#panel-config').modal();
             }
             $.Evento.liga.zona.remove = function(url) {
                 jQuery.get(url, function(data){
@@ -166,7 +166,7 @@
                     });
                 });
             }
-            
+
             $.Evento.liga.zona.partido = function() {}
             $.Evento.liga.zona.partido.add = function(url) {
                 if (!_modoEdicion){
@@ -194,7 +194,7 @@
                         return false;
                     });
                 });
-                $('#panel-config').modal();                
+                $('#panel-config').modal();
             }
             $.Evento.liga.zona.partido.resultado = function(url) {
                 $('#okButton').button('reset');
@@ -207,7 +207,7 @@
                         return false;
                     });
                 });
-                $('#panel-config').modal();                
+                $('#panel-config').modal();
             }
             $.Evento.liga.zona.partido.resultado.reset = function(url) {
                 jQuery.get(url, function(data){
@@ -246,8 +246,8 @@
                         return false;
                     });
                 });
-                $('#panel-config').modal();                
-            }    
+                $('#panel-config').modal();
+            }
             $.Evento.liga.zona.partido.remove = function(url) {
                 jQuery.get(url, function(data){
                     swal({
@@ -272,7 +272,7 @@
                         }
                     });
                 });
-            }        
+            }
         })(jQuery);
     </script>
 </div>

@@ -15,7 +15,7 @@
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
                     <li class="dropdown">
-                        <a onclick="$.Default.openAjaxForm('{{ path('evento_new') }}','Nuevo Evento')">
+                        <a onclick="$.Default.openAjaxForm('{{ path('gestion_evento_new') }}','Nuevo Evento')">
                             <i class="fa fa-plus"></i> NUEVO
                         </a>
                     </li>
@@ -57,8 +57,9 @@
                     <th style="min-width: 55px">Id</th>
                     <th>Ord</th>
                     <th>Nombre</th>
-                    <!--<th><i class="fa fa-pencil tooltips" data-original-title="Inscribe" data-placement="top"></i></th>-->
-                    <!--<th>Total</th>-->
+                    <th class="center" title="% completado"><span class="fa fa-tachometer"></span></th>
+                    <th class="center" title="Cantidad de participantes"><span class="fa fa-users"></span></th>
+                    <th class="center" title="Evento Definido si/no"><span class="fa fa-pencil-square fa-lg"></span></th>
                     <th style="min-width: 95px"></th>
                 </tr>
             </thead>
@@ -78,7 +79,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '{{ path('evento_list_datatable') }}',
+                        "url": '{{ path('gestion_evento_list_datatable') }}',
                         "type": 'POST'
                     },
                     "language" : {
@@ -98,7 +99,7 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [3]
+                            "targets": [0,3,4,5,6]
                         },
                         {
                             "targets": 2,

@@ -25,7 +25,7 @@ use ResultadoBundle\Entity\Evento;
 class EquipoController extends Controller
 {
     /**
-     * @Route("/{id}/equipos", name="ganadores_evento")
+     * @Route("/{evento}/equipos", name="ganadores_evento")
      * @Method("GET")
      * @Security("has_role('ROLE_EQUIPO_SHOW')")
      * @Template()
@@ -49,7 +49,7 @@ class EquipoController extends Controller
     {
 
     }
-    
+
     /**
      * Creates a new Equipo entity.
      *
@@ -66,13 +66,13 @@ class EquipoController extends Controller
         /* CHEQUEA QUE EL USUARIO TENGA ACCESO AL EVENTO*/
         if(!$this->getUser()->hasAccessAtEvento($entity->getEvento())){
             $this->addFlash('primary', 'No puede ver información de un evento que no coordina.');
-            return new JsonResponse(array('success' => false, 'reload' =>true));        
+            return new JsonResponse(array('success' => false, 'reload' =>true));
         }
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             /*
-             * Evita duplicados en la misma area e intercabia 
+             * Evita duplicados en la misma area e intercabia
              * realaciones para evitar persistir participantes duplicados
             */
             foreach ($entity->getParticipantes() as $participante) {
@@ -90,7 +90,7 @@ class EquipoController extends Controller
                     $entity->removeParticipante($participante);
                     $entity->addParticipante($aux);
                 }
-            }            
+            }
             $em->persist($entity);
             try{
                 $em->flush();
@@ -102,7 +102,7 @@ class EquipoController extends Controller
                 }
                 $this->addFlash('error', 'La información no pudo ser guardada correctamente.');
             }
-            return $this->redirectToRoute('ganadores_evento', array('id' => $entity->getEvento()->getId()));
+            return $this->redirectToRoute('ganadores_evento', array('evento' => $entity->getEvento()->getId()));
         }
 
         return array(
@@ -147,13 +147,13 @@ class EquipoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = new Equipo(null,$evento);
         $form   = $this->createCreateForm($entity);
-        
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
     }
-    
+
     /**
      * Displays a form to edit an existing Equipo entity.
      *
@@ -171,15 +171,15 @@ class EquipoController extends Controller
         /* CHEQUEA QUE EL USUARIO TENGA ACCESO AL EVENTO*/
         if(!$this->getUser()->hasAccessAtEvento($entity->getEvento())){
             $this->addFlash('primary', 'No puede ver información de un evento que no coordina.');
-            return new JsonResponse(array('success' => false, 'reload' =>true));        
+            return new JsonResponse(array('success' => false, 'reload' =>true));
         }
-        
+
         $em = $this->getDoctrine()->getManager();
 
         if (!$entity) {
             throw $this->createNotFoundException('No existe el Equipo.');
         }
-    
+
         $editForm = $this->createEditForm($entity);
 
         return array(
@@ -226,18 +226,18 @@ class EquipoController extends Controller
         $participantes = new ArrayCollection();
         foreach ($entity->getParticipantes() as $item) {
             $participantes->add($item);
-        }        
-        
+        }
+
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
-        
+
         if ($editForm->isValid()) {
             $entity->setUpdatedBy($this->getUser());
             $entity->setUpdatedAt(new \DateTime());
             /*
-             * Evita duplicados en la misma area e intercabia 
+             * Evita duplicados en la misma area e intercabia
              * realaciones para evitar participantes duplicados
-            */            
+            */
             foreach ($entity->getParticipantes() as $participante) {
                 if (!$participante->getId()){
                     $participante->setCreatedBy($this->getUser());
@@ -262,7 +262,7 @@ class EquipoController extends Controller
             }
             /*
              * Remove the relationship between the equipo and the participante
-            */            
+            */
             foreach ($participantes as $participante) {
                 if (false === $entity->getParticipantes()->contains($participante)) {
                     $participante->removeEquipo($entity);
@@ -274,7 +274,7 @@ class EquipoController extends Controller
             }
             try{
                 $em->flush();
-                $this->addFlash('exito', 'La información fue guardada correctamente.');             
+                $this->addFlash('exito', 'La información fue guardada correctamente.');
                 return new JsonResponse(array('success' => true));
             } catch (\Exception $e) {
                 if (strpos($e->getMessage(),'Duplicate entry ')!== false){
@@ -285,7 +285,7 @@ class EquipoController extends Controller
         }
         return new JsonResponse(array('success' => false, 'msj' => 'La información no pudo ser guardada correctamente.'));
     }
-    
+
     /**
      * Deletes a Equipo entity.
      *
@@ -299,7 +299,7 @@ class EquipoController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-        
+
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Equipo entity.');
             }
@@ -308,7 +308,7 @@ class EquipoController extends Controller
                 //si no quedan más equipos asignados al participante lo elimina
                 if (count($participante->getEquipos()) == 0){
                     $em->remove($participante);
-                }                
+                }
             }
             $em->remove($entity);
             try{
@@ -318,7 +318,7 @@ class EquipoController extends Controller
                 $this->addFlash('error', 'El equipo no pudo ser eliminado. No debe estar asignado a ningúna plaza para poder ser eliminado.');
             }
         }
-        return $this->redirect($this->generateUrl('ganadores_evento', array('id' => $entity->getEvento()->getId())));
+        return $this->redirect($this->generateUrl('ganadores_evento', array('evento' => $entity->getEvento()->getId())));
     }
 
     /**
@@ -337,7 +337,7 @@ class EquipoController extends Controller
             ->getForm()
         ;
     }
-    
+
     /**
      * Deletes a Actividad entity.
      *
@@ -351,13 +351,13 @@ class EquipoController extends Controller
         if (!$request->isXMLHttpRequest()){
             return $this->redirectToRoute('ganadores_evento');
         }
-        
+
         /* CHEQUEA QUE EL USUARIO TENGA ACCESO AL EVENTO*/
         if(!$this->getUser()->hasAccessAtEvento($entity->getEvento())){
             $this->addFlash('primary', 'No puede ver información de un evento que no coordina.');
             return new JsonResponse(array('success' => false, 'reload' =>true));
         }
-        
+
         $em = $this->getDoctrine()->getManager();
         if (!$entity) {
             throw $this->createNotFoundException('No existe la Entidad.');
@@ -366,7 +366,7 @@ class EquipoController extends Controller
         //return new JsonResponse(array('success' => true, 'id' => $entity->getId(),'form' => $form->createView()));
         return array(
                 'entity' => $entity,
-                'form' => $form->createView()  
+                'form' => $form->createView()
             );
-    }       
+    }
 }

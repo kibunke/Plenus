@@ -3,7 +3,7 @@
         {% if competencia.series | length %}
             <div class="tabbable tabs-left">
                 <ul id="tab_series" class="nav nav-tabs">
-                    {% for serie in competencia.series %}                
+                    {% for serie in competencia.series %}
                         <li class="{% if loop.index == 1%}active{% endif %}">
                             <a href="#tab_serie_{{ serie.id }}" data-toggle="tab">
                                 <i class="pink fa fa-table"></i> {{ serie }}
@@ -14,10 +14,10 @@
                         <a href="#1" onclick="$.Evento.competenciaSerie.serie.add('{{ path('serie_new', { 'id': competencia.id }) }}')" data-toggle="tab">
                             <i class="pink fa fa-plus"></i> Nueva
                         </a>
-                    </li>            
+                    </li>
                 </ul>
                 <div class="tab-content">
-                    {% for serie in competencia.series %}                
+                    {% for serie in competencia.series %}
                         <div class="tab-pane fade{% if loop.index == 1%} in active{% endif %}" id="tab_serie_{{ serie.id }}" >
                             <div class="dropdown pull-right">
                                 <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
@@ -52,7 +52,7 @@
                             </div>
                             <h2 style="margin-top: 0;" class="pull-left">
                                 <i class="fa fa-edit"></i>
-                                Detalle <span class="text-bold">{{ serie }}</span>                            
+                                Detalle <span class="text-bold">{{ serie }}</span>
                             </h2>
                             <div>
                                 {% include 'ResultadoBundle:Competencia:Serie/serie.html.twig' with { 'serie' : serie } %}
@@ -80,17 +80,17 @@
                         <a href="#1" onclick="$.Evento.etapa.remove('{{ path('resultado_etapa_reset', { 'id': competencia.etapa.id }) }}')" class="btn btn-red">
                             <span class="fa fa-edit"></span> Resetear competencia
                         </a>
-                    {% endif %#}                      
-                    <a href="{{ path('resultados') }}" class="btn btn-light-grey">
+                    {% endif %#}
+                    <a href="{{ path('resultado_evento_list') }}" class="btn btn-light-grey">
                         <span class="fa fa-arrow-left"></span> Cancelar y volver.
-                    </a>                  
+                    </a>
                 </p>
             </div>
         {% endif %}
     </div>
     <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datepicker/css/datepicker.css' ) }}" />
     <link rel="stylesheet" href="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/css/datetimepicker.css' ) }}" />
-    
+
     <script src="{{ asset('bundles/common/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
@@ -140,7 +140,7 @@
                         return false;
                     });
                 });
-                $('#panel-config').modal();                
+                $('#panel-config').modal();
             }
             $.Evento.competenciaSerie.serie.remove = function(url) {
                 jQuery.get(url, function(data){
@@ -183,7 +183,7 @@
                     $("#juegosba_resultadobundle_plaza_marca").mask(String($form.data('mascara')),{placeholder:$form.data('placaholder')});
                     setTimeout(function(){$("#juegosba_resultadobundle_plaza_marca").focus();},500)
                 });
-                $('#panel-config').modal();                  
+                $('#panel-config').modal();
             }
             $.Evento.competenciaSerie.serie.marca.reset = function(url) {
                 //jQuery.get(url, function(data){
@@ -222,8 +222,8 @@
             //            return false;
             //        });
             //    });
-            //    $('#panel-config').modal();                
-            //}      
+            //    $('#panel-config').modal();
+            //}
         })(jQuery);
     </script>
 </div>

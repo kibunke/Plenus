@@ -127,11 +127,11 @@ class Equipo
      */
     public function __toString()
     {
-        return "Equipo - id: ".$this->getId();
-        if ($this->nombre != '')
-            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->nombre;
-        else
-            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre();
+        // if ($this->nombre != '')
+        //     return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->nombre;
+        // else
+        //     return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre();
+        return '<div style="color:#555"><strong>'.$this->getNombre().'</strong><small> ( <i class="fa fa-users fa-xs"></i> '.count($this->getIntegrantes()).' )</small></div>';
     }
 
     /**

@@ -33,7 +33,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     Sorteo
                 </li>
@@ -93,7 +93,7 @@
         }
         #irregularidadesTable .cambio2{
             background: #a0db8e
-        }        
+        }
     </style>
     <div class="panel-body" style="margin-top: 15px; ">
         <table id="irregularidadesTable" class="table table-striped table-hover">
@@ -129,15 +129,15 @@
                                 <div class="col-sm-4">
                                     <div class="visible-md visible-lg hidden-sm hidden-xs">
                                         {% if is_granted('ROLE_SORTEO_CONSULTA') %}
-                                            <a href="{{ path('ganadores_evento_show', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                            <a href="{{ path('ganadores_evento_show', { 'evento': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         {% endif %}
-                                        {% if is_granted('ROLE_SORTEO_CARGA') %}
-                                            <a href="{{ path('ganadores_evento', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                        {# % if is_granted('ROLE_SORTEO_CARGA') %}
+                                            <a href="{{ path('ganadores_evento', { 'evento': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
                                                 <i class="fa fa-arrow-right"></i>
                                             </a>
-                                        {% endif %}
+                                        {% endif % #}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -161,16 +161,16 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                        {% if is_granted('ROLE_SORTEO_CONSULTA') %}
-                                            <a href="{{ path('ganadores_evento_show', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                        {# % if is_granted('ROLE_SORTEO_CONSULTA') %}
+                                            <a href="{{ path('ganadores_evento_show', { 'evento': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                        {% endif %}
-                                        {% if is_granted('ROLE_SORTEO_CARGA') %}
-                                            <a href="{{ path('ganadores_evento', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                        {% endif % #}
+                                        {# % if is_granted('ROLE_SORTEO_CARGA') %}
+                                            <a href="{{ path('ganadores_evento', { 'evento': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
                                                 <i class="fa fa-arrow-right"></i>
                                             </a>
-                                        {% endif %}
+                                        {% endif % #}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -194,22 +194,22 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                        {% if is_granted('ROLE_SORTEO_CONSULTA') %}
-                                            <a href="{{ path('ganadores_evento_show', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                        {#% if is_granted('ROLE_SORTEO_CONSULTA') %}
+                                            <a href="{{ path('ganadores_evento_show', { 'evento': eq.evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                        {% endif %}
-                                        {% if is_granted('ROLE_SORTEO_CARGA') %}
-                                            <a href="{{ path('ganadores_evento', { 'id': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                        {% endif %#}
+                                        {#% if is_granted('ROLE_SORTEO_CARGA') %}
+                                            <a href="{{ path('ganadores_evento', { 'evento': eq.evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
                                                 <i class="fa fa-arrow-right"></i>
                                             </a>
-                                        {% endif %}
+                                        {% endif %#}
                                     </div>
                                 </div>
                             {% endfor %}
                         </td>
                     </tr>
-                {% endfor %}                 
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -237,12 +237,12 @@
                         "orderable": false,
                         "targets": [3]
                     } ],
-                    "order": [[ 1, 'desc' ]]            
-                });                
+                    "order": [[ 1, 'desc' ]]
+                });
             }
         })(jQuery);
         $(document).ready(function(){$.Default.init();$.TableExport.init()});
-        
+
         (function ($) {
             var exportTable = "#inscripcionTable";
             var ignoreColumn = 5;

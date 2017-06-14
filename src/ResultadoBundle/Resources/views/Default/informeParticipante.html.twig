@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" class="close-subviews">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a>            
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -33,11 +33,9 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
-                    <a href="{{ path('resultados') }}">
-                        Resultados
-                    </a>
+                    Resultados
                 </li>
                 <li class="active">
                     Listado
@@ -53,7 +51,7 @@
             <li>
                 <div class="pull-right" style="font-size: 20px" title="ID del Participante">
                     <i class="fa fa-key text-yellow"></i><span class="text-bold"> {{ participante.id }} </span>
-                </div>                
+                </div>
             </li>
             <li>
                 <div class="pull-right" style="font-size: 20px" title="Cantidad equipos que integra">
@@ -68,10 +66,10 @@
                 <div class="pull-right" style="font-size: 20px" title="Cantidad de municipio que representa">
                     <i class="fa fa-building-o text-blue"></i><span class="text-bold"> {{ participante.getMunicipios | length }} </span>
                 </div>
-            </li>            
+            </li>
             <li class="panel-tools">
                 {{ include('CommonBundle::dropdownTables.html.twig') }}
-            </li>            
+            </li>
         </ul>
     </div>
     <div class="panel-body">
@@ -243,7 +241,7 @@
                         <ul class="activities">
                             {% for equipo in participante.equipos %}
                                 <li>
-                                    <a class="activity" href="{{ path('resultado_evento_edit', {'id' : equipo.evento.id }) }}">
+                                    <a class="activity" href="{{ path('resultado_evento_edit', {'evento' : equipo.evento.id }) }}">
                                         {% if (equipo.hasMedalla()) %}
                                             <div class="fa-stack fa-2x pull-left">
                                                 <i class="fa fa-trophy fa-lg text-red"></i>
@@ -252,10 +250,8 @@
                                             <div class="fa-stack fa-2x pull-left">
                                                 <i class="fa fa-bookmark-o fa-lg text-yellow"></i>
                                             </div>
-                                        {% endif %}                                        
+                                        {% endif %}
 
-                                        
-                                        
                                         <div class="desc" class="pull-left">
                                             {{ equipo.evento.getNombreCompletoRaw | raw }}
                                         </div>
@@ -280,7 +276,7 @@
                         <ul class="activities">
                             {% for equipo in participante.equipos %}
                                 <li>
-                                    <a class="activity" href="{{ path('ganadores_evento_show', { 'id': equipo.evento.id }) }}">
+                                    <a class="activity" href="{{ path('ganadores_evento_show', { 'evento': equipo.evento.id }) }}">
                                         <div class="fa-stack fa-2x pull-left" style="margin-top: -5px;">
                                             <i class="fa fa-users fa-lg text-green"></i>
                                         </div>

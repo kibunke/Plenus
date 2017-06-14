@@ -33,7 +33,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="{{ path('sorteo_carga') }}">
                         Sorteo
@@ -71,28 +71,28 @@
                         <td>{{ evento.equipos | length }}</td>
                         <td class="center">
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                <a href="{{ path('ganadores_evento_show', { 'id': evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
+                                <a href="{{ path('ganadores_evento_show', { 'evento': evento.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver Detalle de Finalistas">
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 {% if is_granted('ROLE_EQUIPO_SHOW') %}
-                                <a href="{{ path('ganadores_evento', { 'id': evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
+                                <a href="{{ path('ganadores_evento', { 'evento': evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Cargar Equipos">
                                     <i class="fa fa-arrow-right"></i>
                                 </a>
                                 {% endif %}
-                            </div>                          
+                            </div>
                             <div class="visible-xs visible-sm hidden-md hidden-lg">
                                 <div class="btn-group">
                                     <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
                                         <i class="fa fa-cog"></i> <span class="caret"></span>
                                     </a>
                                     <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-                                        <li>                              
-                                            <a role="menuitem" tabindex="-1" href="{{ path('ganadores_evento_show', { 'id': evento.id }) }}">
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="{#{ path('ganadores_evento_show', { 'evento': evento.id }) }#}">
                                                 <i class="fa fa-print"></i> Impresión
                                             </a>
-                                        </li>                                        
-                                        <li>                              
-                                            <a role="menuitem" tabindex="-1" href="{{ path('ganadores_evento', { 'id': evento.id }) }}">
+                                        </li>
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" href="{#{ path('ganadores_evento', { 'evento': evento.id }) }#}">
                                                 <i class="fa fa-arrow-right"></i> Ver Ganadores
                                             </a>
                                         </li>
@@ -115,7 +115,7 @@
             // no se sobreescribe el namespace, si ya existe
             var table;
             $.Default = $.Default || {};
-            $.Default.init = function() {              
+            $.Default.init = function() {
                 table=$('#inscripcionTable').dataTable( {
                     "autoWidth": false,
                     "language": {
@@ -127,12 +127,12 @@
                         "targets": [3]
                     } ],
                     "aLengthMenu" : [[25, 50, 75, 100, -1], [25, 50, 75, 100, "Todas"]], // change per page values here
-                    "order": [[ 0, 'asc' ]]            
-                });     
+                    "order": [[ 0, 'asc' ]]
+                });
             }
         })(jQuery);
         $(document).ready(function(){$.Default.init();$.TableExport.init()});
-        
+
         (function ($) {
             var exportTable = "#inscripcionTable";
             var ignoreColumn = 5;
@@ -194,7 +194,7 @@
 						escape: 'false',
 						ignoreColumn: '['+ignoreColumn+']'
 					});
-				});                
+				});
             }
         })(jQuery);
     </script>

@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" class="close-subviews">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a>            
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -28,11 +28,9 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
-                    <a href="{{ path('resultados') }}">
-                        Resultados
-                    </a>
+                    Resultados
                 </li>
                 <li class="active">
                     Listado
@@ -58,7 +56,7 @@
                 <div class="pull-right" style="font-size: 20px" title="Posición">
                     <i class="fa fa-trophy text-red"></i><span class="text-bold"> {{ pos +1 }} </span>
                 </div>
-            </li>            
+            </li>
             <li>
                 <div class="pull-right" style="font-size: 20px" title="Oro">
                     <img style="height: 20px;" src="{{ asset('bundles/resultado/images/medallas/oro_thumb.png') }}"><span class="text-bold"> {{ municipios[pos]["medallero"][0] }} </span>
@@ -73,10 +71,10 @@
                 <div class="pull-right" style="font-size: 20px" title="Bronce">
                     <img style="height: 20px;" src="{{ asset('bundles/resultado/images/medallas/bronce_thumb.png') }}"><span class="text-bold"> {{ municipios[pos]["medallero"][2] }} </span>
                 </div>
-            </li>            
+            </li>
             <li class="panel-tools">
                 {{ include('CommonBundle::dropdownTables.html.twig') }}
-            </li>            
+            </li>
         </ul>
     </div>
     <div class="panel-body">

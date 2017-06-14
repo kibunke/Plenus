@@ -1,0 +1,52 @@
+<div class="visible-md visible-lg hidden-sm hidden-xs">
+    {% if is_granted('ROLE_RESULTADO_EVENTO_SHOW') %}
+        <a disabled="true" href="#1" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver">
+            <i class="fa fa-eye"></i>
+        </a>
+    {% endif %}
+    {% if is_granted('ROLE_RESULTADO_EVENTO_EDIT') %}
+        <a href="{{ path('resultado_evento_edit', {'evento' : evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar">
+            <i class="fa fa-edit"></i>
+        </a>
+    {% endif %}
+    {% if is_granted('ROLE_RESULTADO_EVENTO_DELETE') %}
+        <a onclick="$.Evento.etapa.remove('{{ path('resultado_evento_etapas_remove', {'evento' : evento.id }) }}')" href="#1" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar">
+            <i class="fa fa-times fa fa-white"></i>
+        </a>
+    {% endif %}
+    {% if is_granted('ROLE_RESULTADO_EVENTO') %}
+        <a href="#1" class="pop btn btn-xs btn-dark-yellow" data-toggle="popover" data-placement="left" data-animation="{'html':'true'}" title="Información de cambios" data-trigger="focus" data-content="{{ evento.getAuditoriaRaw() | raw }}">
+            <span title="Información de cambios" class="fa fa-info-circle"></span>
+        </a>
+    {% endif %}
+</div>
+<div class="visible-xs visible-sm hidden-md hidden-lg">
+    <div class="btn-group">
+        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </a>
+        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+            {% if is_granted('ROLE_RESULTADO_EVENTO_SHOW') %}
+                <li>
+                    <a role="menuitem" tabindex="-1" href="#1">
+                        <i class="fa fa-eye"></i> Ver
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_RESULTADO_EVENTO_EDIT') %}
+                <li>
+                    <a role="menuitem" tabindex="-1" href="#1" href="{{ path('resultado_evento_edit', {'evento' : evento.id }) }}">
+                        <i class="fa fa-edit"></i> Editar
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_RESULTADO_EVENTO_DELETE') %}
+                <li>
+                    <a role="menuitem" tabindex="-1" href="#1" onclick="$.Evento.etapa.remove('{{ path('resultado_evento_etapas_remove', {'evento' : evento.id }) }}')">
+                        <i class="fa fa-times"></i> Eliminar
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

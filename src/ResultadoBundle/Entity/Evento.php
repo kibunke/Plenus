@@ -51,6 +51,12 @@ class Evento
     private $orden;
 
     /**
+     * @var integer $porcentajeCompletado
+     * @ORM\Column(name="porcentajeCompletado", type="decimal")
+     */
+    private $porcentajeCompletado;
+
+    /**
      * @ORM\OneToMany(targetEntity="Etapa", mappedBy="evento")
      */
     private $etapas;
@@ -726,11 +732,11 @@ class Evento
     }
 
     /**
-     * agregarEquipoClasificado
+     * getEtapaMunicipal
      *
      * @return \InscripcionBundle\Entity\Etapa
      */
-    public function agregarEquipoClasificado($equipo)
+    public function getEtapaMunicipal()
     {
         $etapaMunicipal = null;
         /*
@@ -744,8 +750,18 @@ class Evento
             }
         }else{
             $etapaMunicipal = new EtapaMunicipal();
-            $this->addEtapa($etapaMunicipal);
         }
+        return $etapaMunicipal;
+    }
+    /**
+     * agregarEquipoClasificado
+     *
+     * @return \InscripcionBundle\Entity\Etapa
+     */
+    public function agregarEquipoClasificado($equipo)
+    {
+        $etapaMunicipal = $this->getEtapaMunicipal();
+        $this->addEtapa($etapaMunicipal);
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
@@ -782,5 +798,28 @@ class Evento
         $this->addEtapa($etapa);
 
         return $this;
+    }
+
+    /**
+     * Set porcentajeCompletado
+     *
+     * @param decimal $porcentajeCompletado
+     * @return Evento
+     */
+    public function setPorcentajeCompletado($porcentajeCompletado)
+    {
+        $this->porcentajeCompletado = $porcentajeCompletado;
+
+        return $this;
+    }
+
+    /**
+     * Get porcentajeCompletado
+     *
+     * @return string
+     */
+    public function getPorcentajeCompletado()
+    {
+        return $this->porcentajeCompletado;
     }
 }

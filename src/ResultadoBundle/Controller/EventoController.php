@@ -18,7 +18,7 @@ use GestionBundle\Form\EventoType;
  * Evento controller.
  *
  * @Route("/resultados")
- * @Security("has_role('ROLE_EVENTO')")
+ * @Security("has_role('ROLE_RESULTADO_EVENTO')")
  */
 class EventoController extends Controller
 {
@@ -66,10 +66,10 @@ class EventoController extends Controller
         {
             throw $this->createNotFoundException('Unable to find Inscripto entity.');
         }
-        
+
         $form =  $this->createDeleteForm($evento);
         $form->handleRequest($request);
-        
+
         if($form->isSubmitted() && $form->isValid())
         {
             $em = $this->getDoctrine()->getManager();
@@ -85,7 +85,7 @@ class EventoController extends Controller
                 $this->addFlash('error', 'La etapas del evento no pudieron ser eliminadas.');
             }
         }
-        
+
         return array(
                         'form' => $form->createView(),
                     );

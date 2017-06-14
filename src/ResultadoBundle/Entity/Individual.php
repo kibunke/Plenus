@@ -12,4 +12,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Individual extends Equipo
 {
+    /**
+     * __toString
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return '<div style="color:#555"><strong>'.$this->getIntegrantes()->first()->getNombreCompleto().'</strong></div>';
+    }
 }

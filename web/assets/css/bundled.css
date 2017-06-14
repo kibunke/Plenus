@@ -12323,6 +12323,14 @@ a.text-light:hover {
   transform: none !important;
 }
 
+.inputDirect{
+    width: 45px;
+    text-align: right;
+    height: 49px;
+    border: none;
+    font-size: 19px;
+}
+
 /* ---------------------------------------------------------------------- */
 /*  Subview
 /* ---------------------------------------------------------------------- */

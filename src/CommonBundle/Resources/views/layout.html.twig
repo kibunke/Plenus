@@ -9,9 +9,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta name="description" content="Web Oficial de los Juegos Bonaerenses, Subsecretaría de Deportes de La Provincia de Buenos Aires" />
-		<meta name="author" content="WitApp.com.ar"/>		
+		<meta name="author" content="WitApp.com.ar"/>
 
-        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png"> 
+        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 
 		{% block stylesheetsCore %}
 			<link rel="stylesheet" href="{{ asset('assets/css/bundled.min.css') }}">
@@ -28,15 +28,15 @@
 			{% endblock %}
 			{% block leftBar %}
 				{% include 'CommonBundle::leftBar.html.twig' %}
-			{% endblock %}	
+			{% endblock %}
 			{% block contenidoModal %}
 				{% include 'CommonBundle::modal.html.twig' with { 'idModal': 'panel-config' } %}
 			{% endblock %}
 			{#% block menu %}
-				{% include 'CommonBundle::menu.html.twig'%}            
+				{% include 'CommonBundle::menu.html.twig'%}
 			{% endblock %#}
 			{% block contenido %}
-				<!-- start: MAIN CONTAINER -->							
+				<!-- start: MAIN CONTAINER -->
 				<div class="main-container inner">
 					<!-- start: PAGE -->
 					<div class="main-content">
@@ -80,21 +80,21 @@
 						<!-- end: PAGE CONTENT-->
 						<div id="globalSubView" class="subviews">
 							<div class="subviews-container"></div>
-						</div>                
+						</div>
 					</div>
 					<!-- end: PAGE -->
 				</div>
 				<!-- end: MAIN CONTAINER -->
 			{% endblock %}
 		</div>
-        
+
 		{% block javaScript %}
 			<script src="{{ asset('assets/js/bundled.min.js') }}" type="text/javascript" charset="utf8"></script>
 		{% endblock %}
 		{% block otherAutomaticJavascripts %}{% endblock %}
 		<!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 		{% block otherJavascripts %}{% endblock %}
-		{% block otherAjaxJavascripts %}{% endblock %}		
+		{% block otherAjaxJavascripts %}{% endblock %}
 		{% block flashMessages %}
 			{% include 'CommonBundle::flash.messages.html.twig'%}
 		{% endblock %}
@@ -117,5 +117,5 @@
 				$.Main.init();
 			});
 		</script>
-    </body>  
+    </body>
 </html>

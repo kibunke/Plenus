@@ -25,25 +25,23 @@ class EventoController extends Controller
     /**
      * Lists all Evento entities.
      *
-     * @Route("/", name="evento")
+     * @Route("/", name="gestion_evento")
      * @Method("GET")
      * @Template("GestionBundle:Evento:index.html.twig")
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
         return array();
     }
 
     /**
-     * @Route("/list/datatable", name="evento_list_datatable", condition="request.isXmlHttpRequest()")
+     * @Route("/list/datatable", name="gestion_evento_list_datatable", condition="request.isXmlHttpRequest()")
      * @Method("POST")
      */
     public function listDataTableAction(Request $request)
     {
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('ResultadoBundle:Evento')->datatable($request->request);
+        $filter = $em->getRepository('ResultadoBundle:Evento')->datatable($request->request,$this->getUser());
 
         $data = array(
                     "draw"            => $request->request->get('draw'),
@@ -69,7 +67,7 @@ class EventoController extends Controller
     /**
      * Creates a new Evento entity.
      *
-     * @Route("/new", name="evento_new", condition="request.isXmlHttpRequest()")
+     * @Route("/new", name="gestion_evento_new", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:new.html.twig")
      */
@@ -99,7 +97,7 @@ class EventoController extends Controller
     /**
      * Creates a new Evento entity.
      *
-     * @Route("/new/from/segmento/{id}", name="evento_new_from_segmento", condition="request.isXmlHttpRequest()")
+     * @Route("/new/from/segmento/{id}", name="gestion_evento_new_from_segmento", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:new.html.twig")
      */
@@ -143,7 +141,7 @@ class EventoController extends Controller
     /**
      * Displays a form to edit an existing Evento entity.
      *
-     * @Route("/{evento}/edit", name="evento_edit", condition="request.isXmlHttpRequest()")
+     * @Route("/{evento}/edit", name="gestion_evento_edit", condition="request.isXmlHttpRequest()")
      * @Method({"GET", "POST"})
      * @Template("GestionBundle:Evento:edit.html.twig")
      */
@@ -170,7 +168,7 @@ class EventoController extends Controller
     }
 
     /**
-     * @Route("/{evento}/delete", name="evento_delete", condition="request.isXmlHttpRequest()")
+     * @Route("/{evento}/delete", name="gestion_evento_delete", condition="request.isXmlHttpRequest()")
      * @Method({"POST"})
      */
     public function deleteAction(Request $request,Evento $entity)
