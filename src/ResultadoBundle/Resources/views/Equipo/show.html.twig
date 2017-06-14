@@ -25,13 +25,32 @@
         </td>
     </tr>
 </table>
-<table class="table table-bordered table-condensed">
-	<tr class="info"><th>Competidores</th></tr>
-	<tr>
-        <td>
-            {% for competidor in equipo.integrantes %}
-                <i class="fa fa-user"></i> {{ competidor.getNombreCompleto }} <small>({{ competidor.getDni }})</small><br>
-            {% endfor %}
-        </td>
-    </tr>
-</table>
+{% if equipo.integrantes | length > 1 %}
+    <table class="table table-bordered table-condensed">
+        <tr class="info"><th>Equipo</th></tr>
+        <tr>
+            <td>
+                {{ equipo.getNombreCompletoRaw | raw }}
+            </td>
+        </tr>
+    	<tr class="info"><th>Integrantes</th></tr>
+    	<tr>
+            <td>
+                {% for competidor in equipo.integrantes %}
+                    <i class="fa fa-user"></i> {{ competidor.getNombreCompleto }} <small>({{ competidor.getDni }})</small><br>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+{% else %}
+    <table class="table table-bordered table-condensed">
+    	<tr class="info"><th>Competidor</th></tr>
+    	<tr>
+            <td>
+                {% for competidor in equipo.integrantes %}
+                    <i class="fa fa-user"></i> {{ competidor.getNombreCompleto }} <small>({{ competidor.getDni }})</small><br>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+{% endif %}
