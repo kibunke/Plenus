@@ -60,7 +60,7 @@ class DefaultController extends Controller
                                     "descripcion" => $evento->getDescripcion(),
                                     "completado" => $evento->getPorcentajeCompletado(),
                                     "equipos" => count($evento->getEtapaMunicipal()->getEquipos()),
-                                    "definido" => $evento->getEtapaMunicipal() ? true : false
+                                    "definido" => $evento->getEtapaMunicipal()->getId() ? true : false
                             ),
                 "actions"   => $this->renderView('ResultadoBundle:Evento:actions.html.twig', array('evento' => $evento)),
             );

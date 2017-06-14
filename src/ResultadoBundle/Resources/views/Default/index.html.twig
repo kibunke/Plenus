@@ -158,6 +158,8 @@
                             "targets": 5,
                             "data": true,
                             "render":   function ( data, type, full, meta ) {
+                                console.log(data);
+                                
                                             return type === 'display' && data ?
                                                 '<i class="fa fa-pencil"></i>':'<i class="fa fa-warning text-danger"></i>';
                                         }
