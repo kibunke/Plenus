@@ -173,9 +173,9 @@ class Equipo
      */
     public function getNombreCompletoRaw()
     {
-        $html = '';
+        $str = $this->nombre != '' ? $this->nombre : 'Equipo'.$this->getId();
         return  '<strong>'.$this->getPlanilla()->getMunicipio().'</strong><br>'.
-                '<small style="color:#555">'.$this->nombre.' ( <i class="fa fa-users"></i>  '.count($this->getIntegrantes()).' )'.
+                '<small style="color:#555">'.$str.' ( <i class="fa fa-users"></i>  '.count($this->getIntegrantes()).' )'.
                 '</small>';
     }
 
