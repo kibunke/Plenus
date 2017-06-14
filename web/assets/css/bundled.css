@@ -12331,6 +12331,21 @@ a.text-light:hover {
     font-size: 19px;
 }
 
+.dragging li.ui-state-hover {
+    min-width: 240px;
+    background-color:  red;
+}
+.dragging .ui-state-hover a {
+    color:green !important;
+    font-weight: bold;
+}
+.ui-sortable-helper {
+    visibility: hidden;
+}
+.ui-sortable-placeholder td {
+    border-bottom: 2px solid red;
+}
+
 /* ---------------------------------------------------------------------- */
 /*  Subview
 /* ---------------------------------------------------------------------- */

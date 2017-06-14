@@ -37157,6 +37157,9 @@ $.fn.editableTableWidget.defaultOptions = {
     $.Main.init = function() {
         console.log("Main functions load!");
         $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+        $('.table').on( 'draw.dt', function () {
+            $(".pop").popover({offset: 10,html: true,delay: { show: 50, hide: 25 }});
+        } );
         Main.init();
     },
     $.Main.moneyFormat = function(val){
