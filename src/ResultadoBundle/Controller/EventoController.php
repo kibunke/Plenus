@@ -25,11 +25,12 @@ class EventoController extends Controller
     /**
      * Edit Evento entity.
      *
-     * @Route("/{evento}/evento", name="resultado_evento_edit")
+     * @Route("/{evento}/evento", name="resultado_evento_show")
      * @Method("GET")
+     * @Security("has_role('ROLE_RESULTADO_EVENTO_SHOW')")
      * @Template()
      */
-    public function editAction(Evento $evento)
+    public function showAction(Evento $evento)
     {
         return array(
             'evento' => $evento

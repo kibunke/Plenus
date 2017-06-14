@@ -20,7 +20,7 @@ class EtapaRegional extends Etapa
      */
     public function getIcon()
     {
-        return "fa fa-table";
+        return "fa fa-angle-double-right";
     }
 
     /**
@@ -42,7 +42,7 @@ class EtapaRegional extends Etapa
     {
         return 444;
     }
-    
+
     public function getNombreInicial()
     {
         return 'Etapa Regional';

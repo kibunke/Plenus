@@ -85,7 +85,7 @@
     </div>
     <div class="panel-body">
         {% if evento.etapas | length  %}
-            {{ include('ResultadoBundle:Evento:edit.definido.html.twig') }}
+            {{ include('ResultadoBundle:Evento:show.definido.html.twig') }}
         {% else %}
             <div class="alert alert-block alert-danger fade in">
                 <button data-dismiss="alert" class="close" type="button">×</button>
@@ -120,8 +120,8 @@
 {% block otherJavascripts %}
     <script>
         (function ($) {
-            var _modoEdicion = false;
-            var _optionBloq = {
+            var _modoEdicion = false,
+                _optionBloq = {
                             overlayCSS: {
                                 backgroundColor: '#fff'
                             },
@@ -132,7 +132,8 @@
                                 background: 'none',
                                 padding: '0px'
                             }
-                        }
+                        },
+                pathEquipoShow = "{{ path('equipo_show') }}";
             // no se sobreescribe el namespace, si ya existe
             $.Evento = $.Evento || {};
             $.Evento.init = function() {
@@ -352,6 +353,15 @@
                         }
                     });
                 });
+            }
+            $.Evento.equipo = {},
+            $.Evento.equipo.show = function(id) {
+                $('#okButton').button('reset');
+                $('#panel-config .modal-footer').hide();
+                $('#panel-config .modal-title').html("Detalle de competidores");
+                $('#panel-config .modal-body').html("");
+                $('#panel-config .modal-body').load(pathEquipoShow.replace('__00__',id));
+                $('#panel-config').modal();
             }
         })(jQuery);
         $(document).ready(function(){$.Evento.init();});

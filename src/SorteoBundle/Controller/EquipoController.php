@@ -38,19 +38,6 @@ class EquipoController extends Controller
     }
 
     /**
-     * Finds and displays a Equipo entity.
-     *
-     * @Route("/{id}", name="equipo_show")
-     * @Method("GET")
-     * @Security("has_role('ROLE_EQUIPO_SHOW')")
-     * @Template()
-     */
-    public function showAction(Request $request, Equipo $entity)
-    {
-
-    }
-
-    /**
      * Creates a new Equipo entity.
      *
      * @Route("/equipo/{id}/new", name="equipo_create")

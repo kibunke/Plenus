@@ -241,7 +241,7 @@
                         <ul class="activities">
                             {% for equipo in participante.equipos %}
                                 <li>
-                                    <a class="activity" href="{{ path('resultado_evento_edit', {'evento' : equipo.evento.id }) }}">
+                                    <a class="activity" href="{{ path('resultado_evento_show', {'evento' : equipo.evento.id }) }}">
                                         {% if (equipo.hasMedalla()) %}
                                             <div class="fa-stack fa-2x pull-left">
                                                 <i class="fa fa-trophy fa-lg text-red"></i>

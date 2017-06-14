@@ -82,10 +82,10 @@
 <script>
     (function ($) {
         // no se sobreescribe el namespace, si ya existe
-        $.Dashboard = $.Dashboard || {};            
+        $.Dashboard = $.Dashboard || {};
         $.Dashboard.eventosPlazasSinAsignar=[
             {% for item in eventos_plazas_sin_definir %}
-                {"id":{{item.id}},"disciplina":"{{ item.disciplina }}","nombre":"{{ item.nombreCompleto }}", "path":"{{ path('resultado_evento_edit', {'id' : item.id }) }}"},
+                {"id":{{item.id}},"disciplina":"{{ item.disciplina }}","nombre":"{{ item.nombreCompleto }}", "path":"{{ path('resultado_evento_show', {'id' : item.id }) }}"},
             {% endfor %}
         ];
 

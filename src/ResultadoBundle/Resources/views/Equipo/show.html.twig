@@ -1,0 +1,37 @@
+<table class="table table-bordered table-condensed">
+	<tr class="success">
+        <th>Region</th><th>Municipio</th>
+    </tr>
+	<tr>
+        <td class="text-center">{{ equipo.planilla.municipio.regionDeportiva }}</td>
+        <td>{{ equipo.planilla.municipio.nombre }}</td>
+    </tr>
+	<tr class="success">
+        <th colspan="2">Segmento</th>
+    </tr>
+	<tr>
+        <td colspan="2">{{ equipo.planilla.segmento.getNombreCompletoRaw | raw }}</td>
+    </tr>
+	<tr class="success">
+        <th colspan="2">Evento</th>
+    </tr>
+	<tr>
+        <td colspan="2">
+            {% if equipo.etapas %}
+                {{ equipo.etapas[0].evento.getNombreCompletoRaw | raw }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+</table>
+<table class="table table-bordered table-condensed">
+	<tr class="info"><th>Competidores</th></tr>
+	<tr>
+        <td>
+            {% for competidor in equipo.integrantes %}
+                <i class="fa fa-user"></i> {{ competidor.getNombreCompleto }} <small>({{ competidor.getDni }})</small><br>
+            {% endfor %}
+        </td>
+    </tr>
+</table>

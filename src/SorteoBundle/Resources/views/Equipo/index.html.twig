@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" class="close-subviews">
                 <i class="fa fa-times"></i> CERRAR
-            </a>            
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -34,7 +34,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="{{ path('sorteo_carga') }}">
                         Sorteo
@@ -85,7 +85,7 @@
             <div class="pull-left">
                 <div id="sem_reg_03" class="full-circle">03</div>
                 <div id="sem_reg_05" class="full-circle">05</div>
-            </div>            
+            </div>
             <div class="pull-left">
                 <div id="sem_reg_06" class="full-circle">06</div>
                 <div id="sem_reg_07" class="full-circle">07</div>
@@ -147,7 +147,7 @@
                         <td class="center">
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
                                 {% if is_granted('ROLE_EQUIPO_SHOW') %}
-                                    <a disabled="true" href="#1" onclick="$.Equipo.show('{{ path('equipo_show', { 'id': equipo.id }) }}')" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver">
+                                    <a disabled="true" href="#1" onclick="$.Equipo.show('{#{ path('equipo_show', { 'id': equipo.id }) }#}')" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 {% endif %}
@@ -179,7 +179,7 @@
                                                     <i class="fa fa-eye"></i> Ver
                                                 </a>
                                             </li>
-                                        {% endif %}    
+                                        {% endif %}
                                         {% if is_granted('ROLE_EQUIPO_EDIT') %}
                                             <li>
                                                 <a role="menuitem" tabindex="-1" href="#1" onclick="$.Equipo.edit('{{ path('inscripto_edit', { 'id': inscripto.id }) }}')">
@@ -197,7 +197,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </td> 
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -224,7 +224,7 @@
     <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/sprintf.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/jspdf.js') }}"></script>
     <script src="{{ asset('bundles/common/plugins/tableExport/jspdf/libs/base64.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>    
+    <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
     <script>
         (function ($) {
             var table;
@@ -243,7 +243,7 @@
                         "orderable": false,
                         "targets": [5]
                     } ],
-                    "order": [[ 0, 'asc' ]]            
+                    "order": [[ 0, 'asc' ]]
                 });
                 $('#participantesTable > tbody tr').each(function(){
                     $('#sem_reg_'+$(this).data('reg')).css('background-color','#5CB85C');
@@ -281,16 +281,16 @@
                                     if ($(this).val()==data.dni) {
                                         $(this).css('color','red').parents('tr').addClass('danger');
                                     }
-                                });                                
+                                });
                             }
-                            toastr['warning'](data.msj, 'Cuidado');                                
+                            toastr['warning'](data.msj, 'Cuidado');
                         }
-                    });                    
+                    });
                     $('#panel-config [type="submit"]').trigger('click');
                 }else{
                     toastr['warning']('Aún tiene campos obligatorios sin llenar o con datos erroneos.', 'Cuidado');
                     toastr['warning']('*Recuerde no utilizar puntos para los números de documentos.', 'Cuidado');
-                } 
+                }
             }
             $.Equipo.add = function(url){
                 $('#example-subview-1 .ajax-cont').load(url);
@@ -304,18 +304,18 @@
                 $('#panel-config .modal-title').html("Eliminar Equipo");
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(url)
-                $('#panel-config').modal();                
-            }            
+                $('#panel-config').modal();
+            }
             $.Equipo.participante = function(){}
             $.Equipo.participante.remove = function(node){
                 node = $(node);
-                order = node.parents("tr").data("order"); 
+                order = node.parents("tr").data("order");
                 $("a[data-field='juegosba_resultadobundle_equipo_participantes_"+order+"']").trigger("click")
                 node.parents("tr").remove();
             }
             $.Equipo.participante.add = function(){
                 $("a[data-collection='juegosba_resultadobundle_equipo_participantes']").trigger("click")
-                
+
                 lis=$("a[data-field*='juegosba_resultadobundle_equipo_participantes_']")
                 data = $(lis[lis.length-1]).data('field').split("_");
                 //console.log(data[data.length-1]);
@@ -337,13 +337,13 @@
                             break;
                     case 'rol':
                                 $('#juegosba_resultadobundle_equipo_participantes_'+order+'_rol').val(node.val())
-                            break;                        
+                            break;
                     default:alert("Error gravisimo!")
                 }
-            }            
+            }
         })(jQuery);
         $(document).ready(function(){$.Equipo.init();$.TableExport.init();});
-        
+
         (function ($) {
             var exportTable = "#participantesTable";
             var ignoreColumn = 5;
@@ -381,8 +381,8 @@
 						escape: 'false',
 						ignoreColumn: '['+ignoreColumn+']'
 					});
-				});                
+				});
             }
-        })(jQuery);  
+        })(jQuery);
     </script>
 {% endblock %}

@@ -93,7 +93,7 @@
                         <td>{{ loop.index }}</td>
                         <td><img src="{{ asset(plaza.getMedalla) }}"></td>
                         <td>
-                            <a href="{{ path('resultado_evento_edit', {'id' : plaza.equipo.evento.id }) }}" style="color: inherit;cursor: pointer">
+                            <a href="{{ path('resultado_evento_show', {'id' : plaza.equipo.evento.id }) }}" style="color: inherit;cursor: pointer">
                                 {{ plaza.equipo.evento.getNombreCompletoRaw | raw }}
                             </a>
                         </td>

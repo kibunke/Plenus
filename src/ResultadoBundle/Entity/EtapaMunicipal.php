@@ -20,7 +20,7 @@ class EtapaMunicipal extends Etapa
      */
     public function getIcon()
     {
-        return "fa fa-table";
+        return "fa fa-angle-right";
     }
 
     /**

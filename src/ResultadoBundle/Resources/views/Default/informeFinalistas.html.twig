@@ -126,8 +126,8 @@
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 {% endif %}
-                                {#% if is_granted('ROLE_RESULTADO_EVENTO_EDIT') %}
-                                    <a href="{{ path('resultado_evento_edit', {'id' : evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar">
+                                {#% if is_granted('ROLE_RESULTADO_EVENTO_SHOW') %}
+                                    <a href="{{ path('resultado_evento_show', {'id' : evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                 {% endif %}
@@ -155,9 +155,9 @@
                                                 </a>
                                             </li>
                                         {% endif %}
-                                        {#% if is_granted('ROLE_RESULTADO_EVENTO_EDIT') %}
+                                        {#% if is_granted('ROLE_RESULTADO_EVENTO_SHOW') %}
                                             <li>
-                                                <a role="menuitem" tabindex="-1" href="#1" href="{{ path('resultado_evento_edit', {'id' : evento.id }) }}">
+                                                <a role="menuitem" tabindex="-1" href="#1" href="{{ path('resultado_evento_show', {'id' : evento.id }) }}">
                                                     <i class="fa fa-edit"></i> Editar
                                                 </a>
                                             </li>

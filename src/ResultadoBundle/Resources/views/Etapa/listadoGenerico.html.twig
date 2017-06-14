@@ -14,8 +14,14 @@
                 <td class="text-center"><i class="fa fa-ellipsis-v">&nbsp;&nbsp;</i></td>
                 <td class="text-center"><b>{{ equipo.planilla.municipio.regionDeportiva }}</b></td>
                 <td>{{ equipo.planilla.municipio.nombre }}</td>
-                <td>{{ equipo | raw }}</td>
-                <td class="text-center"></td>
+                <td>{{ equipo.getNombreCompletoRaw | raw }}</td>
+                <td class="text-center">
+                    {% if is_granted('ROLE_RESULTADO_EQUIPO_SHOW') %}
+                        <button onclick="$.Evento.equipo.show({{ equipo.id }})" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Ver detalle">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </tbody>

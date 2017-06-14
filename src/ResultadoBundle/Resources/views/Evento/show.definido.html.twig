@@ -1,15 +1,26 @@
 <div class="tabbable">
     <ul id="myTab" class="nav nav-tabs">
         {% for etapa in evento.etapas %}
-            <li class="{% if loop.index == 1 %} active {% endif %}">
-                <a href="#myTab_{{ etapa.id }}" data-toggle="tab" aria-expanded="false">
-                    <i class="green {{ etapa.getIcon }}"></i>
-                    {{ etapa.nombre }}
-                    <span class="stats" data-update="{{ path('resultado_etapa_stats_avance', {'id':etapa.id}) }}">
-                        {{ etapa.getStateBadgeRaw | raw }}
-                    </span>
-                </a>
-            </li>
+
+            {% if etapa.isEtapaMunicipal or etapa.isEtapaRegional %}
+                <li class="{% if loop.index == 1 %} active {% endif %}">
+                    <a href="#myTab_{{ etapa.id }}" data-toggle="tab" aria-expanded="false">
+                        <i class="green {{ etapa.getIcon }}"></i>
+                        {{ etapa.nombre }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="{% if loop.index == 1 %} active {% endif %}">
+                    <a href="#myTab_{{ etapa.id }}" data-toggle="tab" aria-expanded="false">
+                        <i class="green {{ etapa.getIcon }}"></i>
+                        {{ etapa.nombre }}
+                        <span class="stats" data-update="{{ path('resultado_etapa_stats_avance', {'id':etapa.id}) }}">
+                            {{ etapa.getStateBadgeRaw | raw }}
+                        </span>
+                    </a>
+                </li>
+            {% endif %}
+
         {% endfor %}
             <li class="">
                 <a href="#myTab_fixtures" data-toggle="tab" aria-expanded="false">
@@ -60,7 +71,7 @@
                     <button data-dismiss="alert" class="close" type="button">×</button>
                     <h4 class="alert-heading"><i class="fa fa-times"></i> Cuidado!</h4>
                     <p>
-                        Este <strong>evento</strong> no tiene una <strong>formas de juego</strong> definidas aún.<br>
+                        Este <strong>evento</strong>aún no tiene <strong>etapas</strong> definidas.<br>
                     </p>
                 </div>
             {% endif %}

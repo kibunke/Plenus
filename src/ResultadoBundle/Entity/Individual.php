@@ -19,6 +19,16 @@ class Individual extends Equipo
      */
     public function __toString()
     {
-        return '<div style="color:#555"><strong>'.$this->getIntegrantes()->first()->getNombreCompleto().'</strong></div>';
+        return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->getIntegrantes()->first()->getNombreCompleto();
+    }
+
+    /**
+     * Get nombreCompletoRaw
+     *
+     * @return string
+     */
+    public function getNombreCompletoRaw()
+    {
+        return "<strong>".$this->getPlanilla()->getMunicipio()."</strong><br><small>".$this->getIntegrantes()->first()->getNombreCompleto()."</small>";
     }
 }

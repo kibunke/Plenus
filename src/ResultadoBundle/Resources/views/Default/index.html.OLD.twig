@@ -118,7 +118,7 @@
                                     </a>
                                 {% endif %}
                                 {% if is_granted('ROLE_EVENTO_EDIT') %}
-                                    <a href="{{ path('resultado_evento_edit', {'id' : evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar">
+                                    <a href="{{ path('resultado_evento_show', {'id' : evento.id }) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                 {% endif %}
@@ -148,7 +148,7 @@
                                         {% endif %}
                                         {% if is_granted('ROLE_EVENTO_EDIT') %}
                                             <li>
-                                                <a role="menuitem" tabindex="-1" href="#1" href="{{ path('resultado_evento_edit', {'id' : evento.id }) }}">
+                                                <a role="menuitem" tabindex="-1" href="#1" href="{{ path('resultado_evento_show', {'id' : evento.id }) }}">
                                                     <i class="fa fa-edit"></i> Editar
                                                 </a>
                                             </li>
@@ -179,7 +179,7 @@
     <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
     <script>
         (function ($) {
-            var editPath = "{{ path('resultado_evento_edit', {'id' : "-id-" }) }}";
+            var editPath = "{{ path('resultado_evento_show', {'id' : "-id-" }) }}";
             // no se sobreescribe el namespace, si ya existe
             $.Evento = $.Evento || {};
             $.Evento.init = function() {

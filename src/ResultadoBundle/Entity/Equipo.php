@@ -127,14 +127,10 @@ class Equipo
      */
     public function __toString()
     {
-        // if ($this->nombre != '')
-        //     return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->nombre;
-        // else
-        //     return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre();
-        $str = $this->nombre;
-        if ($str == '')
-            $str = $this->getPlanilla()->getMunicipio()->getNombre();
-        return '<div style="color:#555"><strong>'.$str.'</strong><small> ( <i class="fa fa-users fa-xs"></i> '.count($this->getIntegrantes()).' )</small></div>';
+        if ($this->nombre != '')
+            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre()." - ".$this->nombre;
+        else
+            return $this->getPlanilla()->getMunicipio()->getRegionDeportiva()." - ".$this->getPlanilla()->getMunicipio()->getNombre();
     }
 
     /**
@@ -177,7 +173,10 @@ class Equipo
      */
     public function getNombreCompletoRaw()
     {
-        return "<strong>".$this->getPlanilla()->getMunicipio()."</strong><br><small>".$this->nombre."</small>";
+        $html = '';
+        return  '<strong>'.$this->getPlanilla()->getMunicipio().'</strong><br>'.
+                '<small style="color:#555">'.$this->nombre.' ( <i class="fa fa-users"></i>  '.count($this->getIntegrantes()).' )'.
+                '</small>';
     }
 
     /**
