@@ -750,6 +750,7 @@ class Evento
             }
         }else{
             $etapaMunicipal = new EtapaMunicipal();
+            $this->addEtapa($etapaMunicipal);
         }
         return $etapaMunicipal;
     }
@@ -761,11 +762,11 @@ class Evento
     public function agregarEquipoClasificado($equipo)
     {
         $etapaMunicipal = $this->getEtapaMunicipal();
-        $this->addEtapa($etapaMunicipal);
+
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
-            $equipo->getPlanilla()->getSegmento()->getTorneo()->validarGanadorMunicipal($equipo);
+            $etapaMunicipal->validarGanadorMunicipal($equipo);
             $etapaMunicipal->addEquipo($equipo);
         }
         return $etapaMunicipal;

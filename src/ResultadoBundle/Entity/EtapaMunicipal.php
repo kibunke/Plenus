@@ -56,4 +56,15 @@ class EtapaMunicipal extends Etapa
     {
         return 'Etapa Municipal';
     }
+
+    public function validarGanadorMunicipal($equipo)
+    {
+        $municipio = $equipo->getPlanilla()->getMunicipio();
+        foreach($this->getEquipos() as $eq){
+            if ($eq->getPlanilla()->getMunicipio() == $municipio){
+                throw new \Exception('Plenus: Este evento ya tiene un gandor de  '.$municipio->getNombre());
+            }
+        }
+        $equipo->getPlanilla()->getSegmento()->getTorneo()->validarGanadorMunicipal($equipo);
+    }
 }
