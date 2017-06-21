@@ -162,8 +162,17 @@ class PlanillaEstadoController extends Controller
         }
     }
 
+    /*
+     * $back en true si el cambio de estado es un rollback
+    */
     private function canEdit($planilla, $back = false)
     {
+        if ($this->isGranted('ROLE_ADMIN')){
+            return true;
+        }
+        if ($planilla->isAprobada() && !$this->isGranted('ROLE_ADMIN')){
+            return "Usted no tiene los permisos necesarios para DESAPROBAR una planilla.";
+        }
         if ($planilla->isAprobada() && !$this->isGranted('ROLE_ADMIN')){
             return "Usted no tiene los permisos necesarios para DESAPROBAR una planilla.";
         }
