@@ -796,7 +796,7 @@ class Evento
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
-            if ($this->getSaltaControlEtapaMunicipal()){
+            if (!$this->getSaltaControlEtapaMunicipal()){
                 $etapaMunicipal->validarGanadorMunicipal($equipo);
             }
             $etapaMunicipal->addEquipo($equipo);
