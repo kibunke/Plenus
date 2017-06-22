@@ -20,6 +20,7 @@ class EventoType extends AbstractType
             ->add('nombre')
             ->add('descripcion')
             ->add('eventoAdaptado')
+            ->add('saltaControlEtapaMunicipal')
             ->add('orden')
             ->add('torneo', EntityType::class, array(
                                                 'class' => 'ResultadoBundle:Torneo',

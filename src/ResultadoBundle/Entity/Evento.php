@@ -44,6 +44,13 @@ class Evento
     private $eventoAdaptado;
 
     /**
+    * @var boolean
+    *
+    * @ORM\Column(name="saltaControlEtapaMunicipal", type="boolean", nullable=true)
+    */
+    private $saltaControlEtapaMunicipal;
+
+    /**
      * @var integer $orden
      * @Assert\NotNull()
      * @ORM\Column(name="orden", type="integer")
@@ -499,6 +506,29 @@ class Evento
     }
 
     /**
+     * Set saltaControlEtapaMunicipal
+     *
+     * @param boolean $saltaControlEtapaMunicipal
+     * @return Evento
+     */
+    public function setSaltaControlEtapaMunicipal($saltaControlEtapaMunicipal)
+    {
+        $this->saltaControlEtapaMunicipal = $saltaControlEtapaMunicipal;
+
+        return $this;
+    }
+
+    /**
+     * Get saltaControlEtapaMunicipal
+     *
+     * @return boolean
+     */
+    public function getSaltaControlEtapaMunicipal()
+    {
+        return $this->saltaControlEtapaMunicipal;
+    }
+
+    /**
      * Set orden
      *
      * @param integer $orden
@@ -766,7 +796,9 @@ class Evento
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
-            $etapaMunicipal->validarGanadorMunicipal($equipo);
+            if ($this->getSaltaControlEtapaMunicipal()){
+                $etapaMunicipal->validarGanadorMunicipal($equipo);
+            }
             $etapaMunicipal->addEquipo($equipo);
         }
         return $etapaMunicipal;

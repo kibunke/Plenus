@@ -1,5 +1,5 @@
 <div class="visible-md visible-lg hidden-sm hidden-xs">
-    <a href="{{ path('gention_evento_show', {'evento': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>
+    {#<a href="{{ path('gention_evento_show', {'evento': entity.id }) }}" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver"><i class="fa fa-eye"></i></a>#}
     <button onclick="$.Default.openAjaxForm('{{ path('gestion_evento_edit', { 'evento': entity.id }) }}','Editar Evento')" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar"><i class="fa fa-edit"></i></button>
     <button title="El evento no debe tener etapas ni equipos asociados" onclick="$.Default.deleteConfirm('{{ path('gestion_evento_delete', { 'evento': entity.id }) }}')" href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times fa fa-white"></i></button>
 </div>
@@ -9,11 +9,11 @@
             <i class="fa fa-cog"></i> <span class="caret"></span>
         </a>
         <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
-            <li>
+            {#<li>
                 <a role="menuitem" tabindex="-1" href="{{ path('gention_evento_show', {'evento': entity.id }) }}">
                     <i class="fa fa-eye"></i> Ver
                 </a>
-            </li>
+            </li>#}
             <li>
                 <a role="menuitem" tabindex="-1"  href="#1" onclick="$.Default.openAjaxForm('{{ path('gestion_evento_edit', { 'evento': entity.id }) }}','Editar Evento')">
                     <i class="fa fa-edit"></i> Editar
