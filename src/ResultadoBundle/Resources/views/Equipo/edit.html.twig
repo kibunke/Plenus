@@ -181,7 +181,7 @@
                     <div class="panel-heading">
                         <h4 class="no-margin"><i class="fa fa-list"></i> Integrantes</h4>
                     </div>
-                    <div class="panel-body panel-scroll height-300 ps-container">
+                    <div class="panel-body panel-scroll-local height-300 ps-container">
                         <ul class="activities">
                             {% for equioCompetidor in equipo.getEquipoCompetidores %}
                                 <li>
@@ -237,7 +237,7 @@
                     <div class="panel-heading">
                         <h4 class="no-margin"><i class="fa fa-list"></i> Etapas</h4>
                     </div>
-                    <div class="panel-body panel-scroll height-300 ps-container">
+                    <div class="panel-body panel-scroll-local height-300 ps-container">
                         <ul class="activities">
                             {% for etapa in equipo.etapas %}
                                 <li>
@@ -275,11 +275,11 @@
             $.Equipo = $.Equipo || {};
             $.Equipo.init = function()
             {
-                // $('.panel-scroll').perfectScrollbar({
-                //     wheelSpeed: 50,
-                //     minScrollbarLength: 20,
-                //     suppressScrollX: true
-                // });
+                $('.panel-scroll-local').perfectScrollbar({
+                    wheelSpeed: 10,
+                    minScrollbarLength: 20,
+                    suppressScrollX: true
+                });
             }
             $.Equipo.competidor = {},
             $.Equipo.competidor.show = function(id)
