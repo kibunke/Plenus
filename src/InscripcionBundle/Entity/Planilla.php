@@ -845,7 +845,7 @@ abstract class Planilla
     public function getTipoInscripcion()
     {
         if ($this->institucion)
-            return "Institucional ($this->institucion->getLabel())";
+            return "Institucional ($this->institucion)";
         return "Municipal";
     }
 }
