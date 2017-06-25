@@ -841,4 +841,11 @@ abstract class Planilla
         return $this->validarInscripcion($competidorBase);
         $this->getEstado()->isAprobada();
     }
+
+    public function getTipoInscripcion()
+    {
+        if ($this->institucion)
+            return "Institucional ($this->institucion->getLabel())";
+        return "Municipal";
+    }
 }

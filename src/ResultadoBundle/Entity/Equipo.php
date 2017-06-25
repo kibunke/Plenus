@@ -647,4 +647,55 @@ class Equipo
     {
         return $this->etapas;
     }
+
+    /**
+     * getType
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return "Equipo";
+    }
+
+    /**
+     * canEdit
+     *
+     * @return boolean
+     */
+    public function canEdit()
+    {
+        return true;
+    }
+
+    /**
+     * getSustitutos
+     *
+     * @return ArrayCollection
+     */
+    public function getSustitutos()
+    {
+        $arr = [];
+        foreach ($this->getEquipoCompetidores() as $eqCom) {
+            if ($eqCom->getRol() == 'sustituto'){
+                $arr[] = $eqCom;
+            }
+        }
+        return $arr;
+    }
+
+    /**
+     * isSustituto
+     *
+     * @return boolean
+     */
+    public function isSustituto($competidorEntra)
+    {
+        foreach ($this->getSustitutos() as $eqCom) {
+            if ($eqCom->getCompetidor() == $competidorEntra){
+                return $eqCom;
+            }
+        }
+        return NULL;
+    }
 }

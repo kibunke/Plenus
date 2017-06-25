@@ -17,7 +17,7 @@ use GestionBundle\Form\EventoType;
 /**
  * Evento controller.
  *
- * @Route("/resultados")
+ * @Route("/evento")
  * @Security("has_role('ROLE_RESULTADO_EVENTO')")
  */
 class EventoController extends Controller
@@ -25,7 +25,7 @@ class EventoController extends Controller
     /**
      * Edit Evento entity.
      *
-     * @Route("/{evento}/evento", name="resultado_evento_show")
+     * @Route("/{evento}/show", name="resultado_evento_show")
      * @Method("GET")
      * @Security("has_role('ROLE_RESULTADO_EVENTO_SHOW')")
      * @Template()

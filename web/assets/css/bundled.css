@@ -10486,7 +10486,9 @@ h1, h2, h3, h4 {
   -o-animation: spin 2s infinite linear;
   animation: spin 2s infinite linear;
 }
-
+.cursor-pointer{
+    cursor: pointer;
+}
 /* ---------------------------------------------------------------------- */
 /*  Page Header and Page Header elements
 /* ---------------------------------------------------------------------- */
@@ -11883,6 +11885,21 @@ footer .footer-inner {
 /* line 133, ../sass/partials/_utilities.scss */
 .padding-bottom-15 {
   padding: 0 0 15px 0 !important;
+}
+
+/* line 127, ../sass/partials/_utilities.scss */
+.padding-top-5 {
+  padding: 5px 0 0 0 !important;
+}
+
+/* line 130, ../sass/partials/_utilities.scss */
+.padding-top-10 {
+  padding: 10px 0 0 0 !important;
+}
+
+/* line 133, ../sass/partials/_utilities.scss */
+.padding-top-15 {
+  padding: 15px 0 0 0 !important;
 }
 
 /* line 136, ../sass/partials/_utilities.scss */
@@ -15698,7 +15715,10 @@ Social Icons
 .user-left tr:hover .edit-user-info {
   visibility: visible;
 }
-
+.user-left td{
+    color: #777;
+    font-size: 13px;
+}
 /* line 18, ../sass/partials/_user-profile.scss */
 .user-left .user-image {
   position: relative;

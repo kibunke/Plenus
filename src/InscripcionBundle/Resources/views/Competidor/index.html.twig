@@ -131,7 +131,7 @@
             var _table1,
                 _table2,
                 _aCombinar = [],
-                _pathShow = "{{ path('competidor_show')}}",
+                _pathShow = "{{ path('competidor_show_ajax')}}",
                 _pathCombinar = "{{ path('competidor_combinar')}}",
                 _hasRole = {% if is_granted('ROLE_INSCRIPCION_COMPETIDORES_COMBINAR') %} true {% else %} false {% endif %};
             $.Default = $.Default || {};

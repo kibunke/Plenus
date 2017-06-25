@@ -1,0 +1,109 @@
+<div class="col-sm-12 padding-20">
+    <h3><i class="fa fa-exchange"></i> Sustituciones</h3>
+	<h5>En esta pantalla podrá realizar sustituciones en el equipo. En primera instancia se muestran los sustitutos declarados en la planilla de buena fe, pero puedo realizar un reemplazo por otra persona. CUIDADO: las sustituciones no requieren ningún tipo de intervención. Por otro lado los reemplazos requieren aprobación del coordinador provincial.</h5>
+</div>
+<div class="col-sm-12">
+    <div class="col-sm-5">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="col-sm-12 text-center"><h3>{{ equipoCompetidor.equipo.nombreCompletoRaw | raw }}</h3><hr></div>
+				<div class="col-sm-6 text-center">
+					<h4><i class="fa fa-arrow-circle-down text-red animated bounceInLeft" aria-hidden="true"></i> Sale</h4>
+					<div id="sustitucion_sale" data-equipocompetidor="{{ equipoCompetidor.id }}">
+						{{ equipoCompetidor.competidor.nombreCompleto }}<br>
+						<small>{{ equipoCompetidor.competidor.municipio }}</small><br>
+						<small>DNI: {{ equipoCompetidor.competidor.dni }}</small>
+					</div>
+				</div>
+				<div class="col-sm-6 text-center">
+					<h4><i class="fa fa-arrow-circle-up text-green animated bounceInRight" aria-hidden="true"></i> Entra</h4>
+					<div id="sustitucion_entra"></div>
+				</div>
+				<div class="col-sm-12 text-center">
+					<hr>
+					<div class="row">
+						<div class="col-sm-4">
+							<button class="btn btn-icon btn-block" onclick="$.Equipo.competidor.confirmarCambio()">
+								<i class="fa fa-save"></i>
+								Confirmar <span class="badge badge-danger"></span>
+							</button>
+						</div>
+						<div class="col-sm-8">
+							<button id="buscarSustituto" class="btn btn-icon btn-block hide no-margin" onclick="$.Equipo.competidor.sustituciones.table()">
+								<i class="fa fa-search"></i>
+								Buscar sustituto <span class="badge badge-danger"></span>
+							</button>
+							<button id="buscarReemplazo" class="btn btn-icon btn-block no-margin" onclick="$.Equipo.competidor.reemplazos.table()">
+								<i class="fa fa-search"></i>
+								Buscar reemplazo <span class="badge badge-danger"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+	<div class="col-sm-7">
+		<div class="panel panel-white">
+			<div class="panel-heading">
+				<h4 class="panel-title">Sustitutos disponibles</h4>
+			</div>
+			<div class="table-responsive">
+				<table  id="sustitutosTable" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th class="text-center">#</th>
+							<th>Nombre</th>
+							<th class="text-center">DNI</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for eqCom in equipoCompetidor.equipo.equipoCompetidores if eqCom.rol == "sustituto" %}
+							<tr id="row_{{ eqCom.competidor.id }}">
+								<td class="text-center">{{ loop.index }}</td>
+								<td>
+									{{ eqCom.competidor.nombreCompleto}}<br>
+									<small>{{ eqCom.competidor.municipio }}</small>
+								</td>
+								<td class="text-center">{{ eqCom.competidor.dni }}</td>
+								<td>
+									<button onclick="$.Equipo.competidor.select({{ eqCom.competidor.id }})" class="btn btn-xs btn-orange"><i class="fa fa-arrow-right"></i></button>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="4" class="text-danger text-center">No hay sustitutos disponibles</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="table-responsive hide">
+				<table id="reemplazosTable" class="table table-striped table-hover ">
+					<thead>
+						<tr>
+							<th class="text-center">#</th>
+							<th>Nombre</th>
+							<th class="text-center">DNI</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for eqCom in equipoCompetidor.equipo.equipoCompetidores if eqCom.rol == "sustituto" %}
+							<tr>
+								<td class="text-center">{{ loop.index }}</td>
+								<td>
+									{{ eqCom.competidor.nombreCompleto}}<br>
+									<small>DNI: {{ eqCom.competidor.dni }}</small>
+								</td>
+								<td class="text-center">{{ eqCom.competidor.municipio }}</td>
+								<th></th>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

@@ -34,7 +34,7 @@ class CompetidorController extends Controller
     }
 
     /**
-     * @Route("/competidor/list/datatable", name="competidor_list_datatable")
+     * @Route("/list/datatable", name="competidor_list_datatable")
      */
     public function listCompetidorDatatableAction(Request $request)
     {
@@ -67,10 +67,10 @@ class CompetidorController extends Controller
     }
 
     /**
-     * @Route("/competidor/{competidor}/show", name="competidor_show", condition="request.isXmlHttpRequest()", defaults={"competidor":"__00__"})
-     * @Template("InscripcionBundle:Competidor:competidor.show.html.twig")
+     * @Route("/{competidor}/show/ajax", name="competidor_show_ajax", condition="request.isXmlHttpRequest()", defaults={"competidor":"__00__"})
+     * @Template("InscripcionBundle:Competidor:show.ajax.html.twig")
      */
-    public function showCompetidorAction(Request $request, Competidor $competidor)
+    public function showAjaxAction(Request $request, Competidor $competidor)
     {
         $planillas = array("total" => 0, "data"=>[]);
         $municipio = "";
@@ -85,6 +85,20 @@ class CompetidorController extends Controller
             $segmentos['data'][] = $segmento->toArray();
         }
         return array('entity'=> $competidor);
+    }
+
+    /**
+     * @Route("/{competidor}/show", name="competidor_show", defaults={"competidor":"__00__"})
+     * @Method("GET")
+     * @Security("has_role('ROLE_COMPETIDOR_SHOW')")
+     * @Template()
+     */
+    public function showAction(Competidor $competidor)
+    {
+        $em = $this->getDoctrine()->getManager();
+        return array(
+            'competidor' => $competidor
+        );
     }
 
     /**

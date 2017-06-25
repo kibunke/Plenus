@@ -31,4 +31,24 @@ class Individual extends Equipo
     {
         return "<strong>".$this->getPlanilla()->getMunicipio()."</strong><br><small>".$this->getIntegrantes()->first()->getNombreCompleto()."</small>";
     }
+
+    /**
+     * getType
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return "Individual";
+    }
+
+    /**
+     * canEdit
+     *
+     * @return boolean
+     */
+    public function canEdit()
+    {
+        return false;
+    }
 }

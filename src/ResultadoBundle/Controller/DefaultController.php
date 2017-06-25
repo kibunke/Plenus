@@ -16,7 +16,7 @@ use ResultadoBundle\Entity\Competidor;
 /**
  * Default controller.
  *
- * @Route("/resultados")
+ * @Route("/")
  * @Security("has_role('ROLE_RESULTADO')")
  */
 class DefaultController extends Controller
@@ -84,20 +84,6 @@ class DefaultController extends Controller
         return array(
             'participantes' => $competidores,
             'contParticipantes' => $cont
-        );
-    }
-
-    /**
-     * @Route("/informeParticipante/{id}", name="resultados_informeParticipante")
-     * @Method("GET")
-     * @Security("has_role('ROLE_RESULTADO_PARTICIPANTE_SHOW')")
-     * @Template()
-     */
-    public function informeParticipanteAction(Participante $participante)
-    {
-        $em = $this->getDoctrine()->getManager();
-        return array(
-            'participante' => $participante
         );
     }
 

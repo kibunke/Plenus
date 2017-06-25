@@ -22,18 +22,18 @@ class EquiposCompetidores
      * @var integer $id
      */
     protected $id;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="Competidor", inversedBy="competidorEquipos")
+     * @ORM\ManyToOne(targetEntity="Competidor", inversedBy="competidorEquipos", cascade={"persist"})
      * @ORM\JoinColumn(name="competidor_id", referencedColumnName="id")
      * */
     protected $competidor;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="Equipo", inversedBy="equipoCompetidores")
+     * @ORM\ManyToOne(targetEntity="Equipo", inversedBy="equipoCompetidores", cascade={"persist"})
      * @ORM\JoinColumn(name="equipo_id", referencedColumnName="id")
      * */
-    protected $equipo;    
+    protected $equipo;
 
     /**
      * @var string $rol
@@ -41,11 +41,169 @@ class EquiposCompetidores
      * @ORM\Column(name="rol", type="string", length=100)
      */
     protected $rol;
-    
+
+    /**
+     * Un competidor en un equipo puede tener una salida por sustitucion.
+     * @ORM\OneToOne(targetEntity="EquiposCompetidores", mappedBy="sale")
+     */
+    private $entra;
+
+    /**
+     * Un competidor en un equipo puede tener una entrada por sustitucion.
+     * @ORM\OneToOne(targetEntity="EquiposCompetidores", inversedBy="entra")
+     * @ORM\JoinColumn(name="equioCompetidor_id", referencedColumnName="id")
+     */
+    private $sale;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
+     *
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */
+    private $updatedBy;
+
     /**
      * Constructor
      */
     public function __construct()
     {
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set rol
+     *
+     * @param string $rol
+     *
+     * @return EquiposCompetidores
+     */
+    public function setRol($rol)
+    {
+        $this->rol = $rol;
+
+        return $this;
+    }
+
+    /**
+     * Get rol
+     *
+     * @return string
+     */
+    public function getRol()
+    {
+        return $this->rol;
+    }
+
+    /**
+     * Set competidor
+     *
+     * @param \ResultadoBundle\Entity\Competidor $competidor
+     *
+     * @return EquiposCompetidores
+     */
+    public function setCompetidor(\ResultadoBundle\Entity\Competidor $competidor = null)
+    {
+        $this->competidor = $competidor;
+
+        return $this;
+    }
+
+    /**
+     * Get competidor
+     *
+     * @return \ResultadoBundle\Entity\Competidor
+     */
+    public function getCompetidor()
+    {
+        return $this->competidor;
+    }
+
+    /**
+     * Set equipo
+     *
+     * @param \ResultadoBundle\Entity\Equipo $equipo
+     *
+     * @return EquiposCompetidores
+     */
+    public function setEquipo(\ResultadoBundle\Entity\Equipo $equipo = null)
+    {
+        $this->equipo = $equipo;
+
+        return $this;
+    }
+
+    /**
+     * Get equipo
+     *
+     * @return \ResultadoBundle\Entity\Equipo
+     */
+    public function getEquipo()
+    {
+        return $this->equipo;
+    }
+
+    /**
+     * Set entra
+     *
+     * @param \ResultadoBundle\Entity\EquiposCompetidores $entra
+     *
+     * @return EquiposCompetidores
+     */
+    public function setEntra(\ResultadoBundle\Entity\EquiposCompetidores $entra = null)
+    {
+        $this->entra = $entra;
+
+        return $this;
+    }
+
+    /**
+     * Get entra
+     *
+     * @return \ResultadoBundle\Entity\EquiposCompetidores
+     */
+    public function getEntra()
+    {
+        return $this->entra;
+    }
+
+    /**
+     * Set sale
+     *
+     * @param \ResultadoBundle\Entity\EquiposCompetidores $sale
+     *
+     * @return EquiposCompetidores
+     */
+    public function setSale(\ResultadoBundle\Entity\EquiposCompetidores $sale = null)
+    {
+        $this->sale = $sale;
+
+        return $this;
+    }
+
+    /**
+     * Get sale
+     *
+     * @return \ResultadoBundle\Entity\EquiposCompetidores
+     */
+    public function getSale()
+    {
+        return $this->sale;
     }
 }

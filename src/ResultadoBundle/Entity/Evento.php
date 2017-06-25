@@ -784,6 +784,31 @@ class Evento
         }
         return $etapaMunicipal;
     }
+
+    /**
+     * getEtapaRegional
+     *
+     * @return \InscripcionBundle\Entity\Etapa
+     */
+    public function getEtapaRegional()
+    {
+        $etapaRegional = null;
+        /*
+         * Si no tiene etapas crea una, si tiene recupera la primera y verifica que sea de clasificación municipal.
+         * sino, lanza una Exception porque deben ser reacomodadas.
+         */
+        if (count($this->etapas) > 1){
+            $etapaRegional = $this->etapas[1];
+            if (!$etapaRegional->isEtapaMunicipal()){
+                throw new \Exception('Plenus: El evento tiene etapas creadas y la segunda no es la de ganadores regionales. Debe reacomodar las etapas antes de continuar.');
+            }
+        }else{
+            $etapaRegional = new etapaRegional();
+            $this->addEtapa($etapaRegional);
+        }
+        return $etapaRegional;
+    }
+
     /**
      * agregarEquipoClasificado
      *
@@ -796,6 +821,9 @@ class Evento
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
+            if ($this->getEtapaRegional()->getId()){
+                throw new \Exception('Plenus: La edición de etapa municipal para este evento ya esta cerrada.');
+            }
             if (!$this->getSaltaControlEtapaMunicipal()){
                 $etapaMunicipal->validarGanadorMunicipal($equipo);
             }

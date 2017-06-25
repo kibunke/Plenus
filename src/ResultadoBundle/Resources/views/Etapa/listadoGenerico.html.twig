@@ -17,9 +17,14 @@
                 <td>{{ equipo.getNombreCompletoRaw | raw }}</td>
                 <td class="text-center">
                     {% if is_granted('ROLE_RESULTADO_EQUIPO_SHOW') %}
-                        <button onclick="$.Evento.equipo.show({{ equipo.id }})" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Ver detalle">
+                        <button onclick="$.Evento.equipo.show({{ equipo.id }})" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver detalle">
                             <i class="fa fa-eye"></i>
                         </button>
+                    {% endif %}
+                    {% if equipo.canEdit() and is_granted('ROLE_RESULTADO_EQUIPO_EDIT') %}
+                        <a href="{{ path('equipo_edit', {'equipo': equipo.id}) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar equipo">
+                            <i class="fa fa-edit"></i>
+                        </a>
                     {% endif %}
                 </td>
             </tr>

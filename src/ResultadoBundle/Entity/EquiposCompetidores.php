@@ -43,6 +43,34 @@ class EquiposCompetidores
     protected $rol;
 
     /**
+     * Un competidor en un equipo puede tener una salida por sustitucion.
+     * @ORM\OneToOne(targetEntity="EquiposCompetidores", mappedBy="sale")
+     */
+    private $entra;
+
+    /**
+     * Un competidor en un equipo puede tener una entrada por sustitucion.
+     * @ORM\OneToOne(targetEntity="EquiposCompetidores", inversedBy="entra")
+     * @ORM\JoinColumn(name="equioCompetidor_id", referencedColumnName="id")
+     */
+    private $sale;
+
+    /**
+     * @var datetime $updatedAt
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var SeguridadBundle\Entity\Usuario $updatedBy
+     *
+     * @ORM\ManyToOne(targetEntity="SeguridadBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
+     */
+    private $updatedBy;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -129,5 +157,102 @@ class EquiposCompetidores
     public function getEquipo()
     {
         return $this->equipo;
+    }
+
+    /**
+     * Set entra
+     *
+     * @param \ResultadoBundle\Entity\EquiposCompetidores $entra
+     *
+     * @return EquiposCompetidores
+     */
+    public function setEntra(\ResultadoBundle\Entity\EquiposCompetidores $entra = null)
+    {
+        $this->entra = $entra;
+        $this->rol = "reemplazado";
+
+        return $this;
+    }
+
+    /**
+     * Get entra
+     *
+     * @return \ResultadoBundle\Entity\EquiposCompetidores
+     */
+    public function getEntra()
+    {
+        return $this->entra;
+    }
+
+    /**
+     * Set sale
+     *
+     * @param \ResultadoBundle\Entity\EquiposCompetidores $sale
+     *
+     * @return EquiposCompetidores
+     */
+    public function setSale(\ResultadoBundle\Entity\EquiposCompetidores $sale = null)
+    {
+        $this->sale = $sale;
+        $this->rol = "inscripto";
+        return $this;
+    }
+
+    /**
+     * Get sale
+     *
+     * @return \ResultadoBundle\Entity\EquiposCompetidores
+     */
+    public function getSale()
+    {
+        return $this->sale;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return EquiposCompetidores
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set updatedBy
+     *
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
+     *
+     * @return EquiposCompetidores
+     */
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    {
+        $this->updatedBy = $updatedBy;
+        $this->updatedAt = new \DateTime();
+        return $this;
+    }
+
+    /**
+     * Get updatedBy
+     *
+     * @return \SeguridadBundle\Entity\Usuario
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
     }
 }

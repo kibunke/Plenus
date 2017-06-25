@@ -47,4 +47,13 @@ class EtapaRegional extends Etapa
     {
         return 'Etapa Regional';
     }
+
+    /**
+     * isEtapaRegional
+     * @return boolean
+     */
+    public function isEtapaRegional()
+    {
+        return true;
+    }
 }
