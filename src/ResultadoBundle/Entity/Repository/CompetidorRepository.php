@@ -109,6 +109,95 @@ class CompetidorRepository extends EntityRepository
                     ->getSingleScalarResult();
     }
 
+    public function dataTableSegmento($request,$user,$segmento)
+    {
+        return array(
+                        "total"    => $this->getTotalRowsSegmento($request,$user,$segmento),
+                        "filtered" => $this->getFilteredRowsSegmento($request,$user,$segmento),
+                        "rows"     => $this->getRowsSegmento($request,$user,$segmento)
+                    );
+    }
+
+    public function getRowsSegmento($request,$user,$segmento)
+    {
+        $columns = ["c.id",
+                    "c.apellido ".$request->get('order')[0]['dir'].",c.nombre" ,
+                    "c.dni",
+                    "m.nombre","","","actions"];
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('c')
+                        ->from('ResultadoBundle:Competidor', 'c')
+                        ->join('c.competidorEquipos', 'ce')
+                        ->join('ce.equipo', 'e')
+                        ->join('e.planilla', 'p')
+                        ->join('p.segmento', 's')
+                        ->join('p.municipio', 'mp')
+                        ->join('c.municipio', 'mc');
+        $searchValue = '%'.$request->get('search')['value'].'%';
+        $query->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR mc.nombre LIKE ?1');
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+            $query
+                    ->andwhere('mp = ?2')
+                    ->setParameter(2,$user->getMunicipio());
+        }
+        return $query->andwhere('s = ?3')
+                    ->setParameter(1,$searchValue)
+                    ->setParameter(3,$segmento)
+                    ->orderBy($columns[$request->get('order')[0]['column']],$request->get('order')[0]['dir'])
+                    ->setMaxResults($request->get('length'))
+                    ->setFirstResult($request->get('start'))
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function getFilteredRowsSegmento($request,$user,$segmento)
+    {
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(c))')
+                        ->from('ResultadoBundle:Competidor', 'c')
+                        ->join('c.competidorEquipos', 'ce')
+                        ->join('ce.equipo', 'e')
+                        ->join('e.planilla', 'p')
+                        ->join('p.segmento', 's')
+                        ->join('p.municipio', 'mp')
+                        ->join('c.municipio', 'mc');
+        $searchValue = '%'.$request->get('search')['value'].'%';
+        $query->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR mc.nombre LIKE ?1');
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+            $query
+                    ->andwhere('mp = ?2')
+                    ->setParameter(2,$user->getMunicipio());
+        }
+        return $query->andwhere('s = ?3')
+                    ->setParameter(3,$segmento)
+                    ->setParameter(1,$searchValue)
+                    ->getQuery()
+                    ->getSingleScalarResult();
+    }
+
+
+    public function getTotalRowsSegmento($request,$user,$segmento)
+    {
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(c))')
+                        ->from('ResultadoBundle:Competidor', 'c')
+                        ->join('c.competidorEquipos', 'ce')
+                        ->join('ce.equipo', 'e')
+                        ->join('e.planilla', 'p')
+                        ->join('p.segmento', 's');
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+            $query->join('p.municipio', 'm')
+                    ->where('m = ?1')
+                    ->setParameter(1,$user->getMunicipio());
+        }
+        return $query->andwhere('s = ?3')
+                    ->setParameter(3,$segmento)
+                    ->getQuery()
+                    ->getSingleScalarResult();
+    }
     // public function getCompetidoresSospechosos()
     // {
     //     return $this->getEntityManager()

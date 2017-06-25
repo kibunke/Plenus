@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use InscripcionBundle\Entity\PlanillaEstado;
 use ResultadoBundle\Entity\Competidor;
+use InscripcionBundle\Entity\Segmento;
 /**
  * Competidor controller.
  *
@@ -40,6 +41,39 @@ class CompetidorController extends Controller
     {
         $em     = $this->getDoctrine()->getManager();
         $filter = $em->getRepository('ResultadoBundle:Competidor')->dataTable($request->request,$this->getUser());
+
+        $data=array(
+                    "draw"            => $request->request->get('draw'),
+                    "recordsTotal"    => $filter['total'],
+                    "recordsFiltered" => $filter['filtered'],
+                    "data"            => array()
+        );
+
+        foreach ($filter['rows'] as $competidor){
+            $data['data'][] = array(
+                                    "id"        => $competidor->getId(),
+                                    "name"      => $competidor->getNombreCompleto(),
+                                    "dni"       => $competidor->getDni(),
+                                    "municipio" => $competidor->getMunicipio()->getNombre(),
+                                    "auditoria" => array(
+                                                        "createdBy" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getNombreCompleto() : '-',
+                                                        "municipio" => $competidor->getCreatedBy() ? $competidor->getCreatedBy()->getMunicipio()->getNombre() : '-',
+                                                        "createdAt" => $competidor->getCreatedAt()->format('d/m/y H:i')
+                                                    ),
+                                    "actions"   => $this->renderView('InscripcionBundle:Default:actions.html.twig', array('entity' => $competidor))
+                                );
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/list/datatable/segmento/{segmento}", name="competidor_list_datatable_segmento")
+     */
+    public function listCompetidorDatatableSegmentoAction(Request $request, Segmento $segmento)
+    {
+        $em     = $this->getDoctrine()->getManager();
+        $filter = $em->getRepository('ResultadoBundle:Competidor')->dataTableSegmento($request->request,$this->getUser(), $segmento);
 
         $data=array(
                     "draw"            => $request->request->get('draw'),

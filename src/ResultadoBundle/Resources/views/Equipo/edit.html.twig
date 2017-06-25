@@ -179,7 +179,7 @@
                 </div>
                 <div class="panel panel-white space20">
                     <div class="panel-heading">
-                        <h4 class="no-margin"><i class="fa fa-list"></i> Integrantes</h4>
+                        <h4 class="no-margin"><i class="fa fa-list"></i> {{ equipo.getEquipoCompetidores | length }} Integrantes</h4>
                     </div>
                     <div class="panel-body panel-scroll-local height-300 ps-container">
                         <ul class="activities">
@@ -316,7 +316,6 @@
                             .done((data)=>{
                                 if (data.success){
                                     swal('Excelente!',data.message,'success');
-                                    //$.Default.select($('#eventoTable').data('competidor'));
                                 }else{
                                     swal('Cuidado!',data.message,'error')
                                 }
@@ -353,7 +352,7 @@
                         "processing": true,
                         "serverSide": true,
                         "ajax": {
-                            "url": '{{ path('competidor_list_datatable') }}',
+                            "url": '{{ path('competidor_list_datatable_segmento', {'segmento': equipo.planilla.segmento.id}) }}',
                             "type": 'POST'
                         },
                         "language" : {
@@ -363,10 +362,8 @@
                             { "data": "id", "className": "text-center" },
                             { "data":  "name"},
                             { "data": "dni" },
-                            //{ "data": "municipio" },
                             { "data": "actions" }
                         ],
-                        //"bLengthChange" : true,
                         "bInfo": false,
                         "bFilter" : true,
                         "order": [[ 1, 'asc' ]],
