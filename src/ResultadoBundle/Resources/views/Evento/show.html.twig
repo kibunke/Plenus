@@ -148,21 +148,19 @@
                 $('#okButton').on('click',function(){
                     $('#panel-config form').submit();
                 });
-                //$.List.init = function() {
-                    $('#equipoTable').dataTable( {
-                        "autoWidth": false,
-                        "language": {
-                            "url": "{{ asset('assets/common/Spanish.json') }}"
-                        },
-                        "columnDefs": [ {
-                            "searchable": false,
-                            "orderable": false,
-                            "targets": [0,4]
-                        } ],
-                        "order": [[ 1, 'asc' ]],
-                        "pageLength" : 50,
-                    });
-                //}
+                $('#equipoTable').dataTable( {
+                    "autoWidth": false,
+                    "language": {
+                        "url": "{{ asset('assets/common/Spanish.json') }}"
+                    },
+                    "columnDefs": [ {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": [0,4]
+                    } ],
+                    "order": [[ 1, 'asc' ]],
+                    "pageLength" : 50,
+                });
             }
             $.Evento.etapa = function() {}
             $.Evento.etapa.add = function(url) {
@@ -242,7 +240,7 @@
                     }else{
                         swal("Cuidado! Imposible guardar", data.msj, "error");
                     }
-                });un paty fiesta mpetencia.request = function($form) {
+                });
                 var $node = $('#'+$form.data('idreload'))
 
                 if (!$node) {
