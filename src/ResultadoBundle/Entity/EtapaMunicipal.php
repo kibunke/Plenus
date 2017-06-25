@@ -62,7 +62,7 @@ class EtapaMunicipal extends Etapa
         $municipio = $equipo->getPlanilla()->getMunicipio();
         foreach($this->getEquipos() as $eq){
             if ($eq->getPlanilla()->getMunicipio() == $municipio){
-                throw new \Exception('Plenus: Este evento ya tiene un ganador de  '.$municipio->getNombre());
+                throw new \Exception('Plenus: Este evento ya tiene un ganador de '.$municipio->getNombre());
             }
         }
         $equipo->getPlanilla()->getSegmento()->getTorneo()->validarGanadorMunicipal($equipo);

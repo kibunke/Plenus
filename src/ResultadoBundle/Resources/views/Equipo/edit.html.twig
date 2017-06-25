@@ -203,13 +203,13 @@
                                             <div class="pull-right">
                                                 {% if equioCompetidor.competidor.equipos | length > 2%}
                                                     Participa en<br>
-                                                    {{ equioCompetidor.competidor.equipos | length -1 }} equipos más
+                                                    {{ equioCompetidor.competidor.equipos | length -1 }} segmentos más
                                                 {% elseif equioCompetidor.competidor.equipos | length > 1%}
                                                         Participa en<br>
-                                                        1 equipo más
+                                                        1 segmento más
                                                 {% else %}
                                                     No participa<br>
-                                                    en otros equipos
+                                                    en otros segmento
                                                 {% endif %}
                                             </div>
                                             <div class="clearfix"></div>
@@ -227,8 +227,8 @@
                         </ul>
                     </div>
                     <div class="panel-footer padding-10">
-                        <div class="padding-horizontal-15 pull-left"><i class="fa fa-user fa-lg text-green"></i> Titulares</div>
-                        <div class="padding-horizontal-15 pull-left"><i class="fa fa-user-o fa-lg text-green"></i> Sustitutos</div>
+                        <div class="padding-horizontal-15 pull-left"><i class="fa fa-user fa-lg text-green"></i> Titular</div>
+                        <div class="padding-horizontal-15 pull-left"><i class="fa fa-user-o fa-lg text-green"></i> Sustituto</div>
                         <div class="padding-horizontal-15 pull-left"><i class="fa fa-user-times fa-lg text-red"></i> Competidor reemplazado</div>
                         <div class="clearfix"></div>
                     </div>
@@ -291,7 +291,7 @@
             $.Equipo.competidor.select = function(id)
             {
                 $('#sustitucion_entra').data('entra',id);
-                $('#sustitucion_entra').html($('#row_'+id).children().eq(1).html()+'<br><small>'+$('#row_'+id).children().eq(2).html()+'</small>');
+                $('#sustitucion_entra').html($('#row_'+id).children().eq(1).html()+'<br><small>DNI: '+$('#row_'+id).children().eq(2).html()+'</small>');
             }
             $.Equipo.competidor.confirmarCambio = function()
             {
@@ -392,7 +392,6 @@
                                 "searchable": true,
                                 "orderable": true,
                                 "render":   function ( data, type, full, meta ) {
-                                    return '';
                                                 return type === 'display' ?
                                                         $(data).html('<button onclick="$.Equipo.competidor.select('+full.id+')" class="btn btn-xs btn-orange"><i class="fa fa-arrow-right"></i></button>').html()
                                                     :'';

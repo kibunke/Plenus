@@ -36,6 +36,12 @@ class EquiposCompetidores
     protected $equipo;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Equipo")
+     * @ORM\JoinColumn(name="exEquipo_id", referencedColumnName="id")
+     * */
+    protected $exEquipo;
+
+    /**
      * @var string $rol
      *
      * @ORM\Column(name="rol", type="string", length=100)
@@ -44,7 +50,7 @@ class EquiposCompetidores
 
     /**
      * Un competidor en un equipo puede tener una salida por sustitucion.
-     * @ORM\OneToOne(targetEntity="EquiposCompetidores", mappedBy="sale")
+     * @ORM\OneToOne(targetEntity="EquiposCompetidores", mappedBy="sale", cascade={"persist"})
      */
     private $entra;
 
@@ -169,6 +175,7 @@ class EquiposCompetidores
     public function setEntra(\ResultadoBundle\Entity\EquiposCompetidores $entra = null)
     {
         $this->entra = $entra;
+        $this->rol = "reemplazado";
 
         return $this;
     }
@@ -193,7 +200,7 @@ class EquiposCompetidores
     public function setSale(\ResultadoBundle\Entity\EquiposCompetidores $sale = null)
     {
         $this->sale = $sale;
-
+        $this->rol = "inscripto";
         return $this;
     }
 
@@ -205,5 +212,53 @@ class EquiposCompetidores
     public function getSale()
     {
         return $this->sale;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return EquiposCompetidores
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set updatedBy
+     *
+     * @param \SeguridadBundle\Entity\Usuario $updatedBy
+     *
+     * @return EquiposCompetidores
+     */
+    public function setUpdatedBy(\SeguridadBundle\Entity\Usuario $updatedBy = null)
+    {
+        $this->updatedBy = $updatedBy;
+        $this->updatedAt = new \DateTime();
+        return $this;
+    }
+
+    /**
+     * Get updatedBy
+     *
+     * @return \SeguridadBundle\Entity\Usuario
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
     }
 }

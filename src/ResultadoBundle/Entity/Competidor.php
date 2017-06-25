@@ -211,6 +211,21 @@ class Competidor extends Persona
         return $segmentos;
     }
 
+    /**
+     * inscriptoEnSegmento
+     * return si el competidor esta inscripto en el segmento
+     * @return boolean
+     */
+    public function inscriptoEnSegmento($segmento)
+    {
+        foreach($this->getSegmentos() as $seg){
+            if ($segmento == $seg){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getEquipos()
     {
         $equipos = [];
@@ -231,6 +246,21 @@ class Competidor extends Persona
             foreach($equipo->getEtapas() as $etapa){
                 if ($etapa->containsEquipo($equipo)){
                     $torneos[] = $etapa->getEvento()->getTorneo();
+                }
+            }
+        }
+        return $torneos;
+    }
+
+    public function getTorneosParticipaSinPosta()
+    {
+        $torneos = [];
+        foreach($this->getEquipos() as $equipo){
+            foreach($equipo->getEtapas() as $etapa){
+                if ($etapa->containsEquipo($equipo)){
+                    if (!$etapa->getEvento()->getSaltaControlEtapaMunicipal()){
+                        $torneos[] = $etapa->getEvento()->getTorneo();
+                    }
                 }
             }
         }
@@ -280,5 +310,23 @@ class Competidor extends Persona
     {
         $this->competidorEquipos = [];
         return $this;
+    }
+
+    /**
+     * getEquipoCompetidorEnSegmento
+     * devuelve una relacion EquiposCompetidores en un segmento especifico
+     *
+     * @return EquiposCompetidores
+     */
+    public function getEquipoCompetidorEnSegmento($segmento)
+    {
+        foreach ($this->getCompetidorEquipos() as $eqCom) {
+            if ($eqCom->getEquipo()->getPlanilla()->getSegmento() == $segmento){
+                $eqCom->setSale(NULL);
+                $eqCom->setEntra(NULL);
+                return $eqCom;
+            }
+        }
+        return NULL;
     }
 }

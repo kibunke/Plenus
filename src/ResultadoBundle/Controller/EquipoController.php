@@ -66,23 +66,34 @@ class EquipoController extends Controller
     public function sustitucionAction(Request $request, EquiposCompetidores $equipoCompetidorSale)
     {
         if ($request->getMethod() == 'POST') {
-            $em = $this->getDoctrine()->getManager();
-            $competidorEntra = $em->getRepository('ResultadoBundle:Competidor')->find($request->request->get('equipoEntra'));
-            if (!$competidorEntra){
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor no existe'));
-            }
-            $equipoCompetidorEntra = $equipoCompetidorSale->getEquipo()->isSustituto($competidorEntra);
-            if (!$equipoCompetidorEntra){
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor no es un sustituto posible en este equipo'));
-            }
             try{
+                $em = $this->getDoctrine()->getManager();
+                $equipo = $equipoCompetidorSale->getEquipo();
+                $competidorEntra = $em->getRepository('ResultadoBundle:Competidor')->find($request->request->get('equipoEntra'));
+                if (!$competidorEntra){
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor no existe'));
+                }
+                if ($equipo->isReemplazado($competidorEntra)){
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor ya fue reemplazo en este equipo'));
+                }
+                if ($equipoCompetidorSale->getCompetidor() == $competidorEntra){
+                    return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor que entra no puede ser igual al competidor que sale.'));
+                }
+                $equipoCompetidorEntra = $equipo->isSustituto($competidorEntra);
+                if (!$equipoCompetidorEntra){
+                    //No es un sustituto por lo que tiene que ser un reemplazo
+                    $equipoCompetidorEntra = $equipo->isReemplazo($competidorEntra);
+                    if (!$equipoCompetidorEntra){
+                        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor no es un sustituto/reemplazo posible en este equipo'));
+                    }
+                }
                 $equipoCompetidorSale->setEntra($equipoCompetidorEntra);
                 $equipoCompetidorEntra->setSale($equipoCompetidorSale);
                 $equipoCompetidorSale->setUpdatedBy($this->getUser());
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'error' => false, 'message' => 'La sustitución fue compeltada!.'));
             }catch(\Exception $e ){
-                return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'No se pudo persistir la información', 'debug' => $e->getMessage()));
+                return new JsonResponse(array('success' => false, 'error' => true, 'message' => $e->getMessage()));
             }
         }
 

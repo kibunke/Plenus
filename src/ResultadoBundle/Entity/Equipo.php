@@ -698,4 +698,47 @@ class Equipo
         }
         return NULL;
     }
+
+    /**
+     * isReemplazo
+     * Solo si esta inscripto en el mismo segmento
+     * Solo si no se pasa de los límites de eventos (2 o 3)
+     * @return boolean
+     */
+    public function isReemplazo($competidorEntra)
+    {
+        $equipoCompetidor = NULL;
+        if ($competidorEntra->inscriptoEnSegmento($this->getPlanilla()->getSegmento())){
+            if ($competidorEntra->getMunicipio() == $this->getPlanilla()->getMunicipio()){
+                $equipoCompetidor = $competidorEntra->getEquipoCompetidorEnSegmento($this->getPlanilla()->getSegmento());
+                if ($equipoCompetidor){
+                    $equipoCompetidor->setExEquipo($equipoCompetidor->getEquipo());
+                    $equipoCompetidor->setEquipo($this);
+                    $this->getPlanilla()->getSegmento()->getTorneo()->validarCompetidorGanadorMunicipal($this->getPlanilla(),$competidorEntra);
+                }else{
+                    throw new \Exception('Plenus: El competidor que entra no pertence a ningún equipo del segmento.');
+                }
+            }else{
+                throw new \Exception('Plenus: El competidor que entra pertence a otro municipio.');
+            }
+        }else{
+            throw new \Exception('Plenus: El competidor que entra no está inscripto en el segmento.');
+        }
+        return $equipoCompetidor;
+    }
+
+    /**
+     * isReemplazado
+     * devuelve si un competidor ya fue reemplazado en este equipo
+     * @return boolean
+     */
+    public function isReemplazado($competidorEntra)
+    {
+        foreach ($this->getEquipoCompetidores() as $eqCom) {
+            if ($eqCom->getCompetidor() == $competidorEntra && $eqCom->getRol() == 'reemplazado'){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -49,7 +49,7 @@ class PlanillaType extends AbstractType
                                                 'required' => true,
                                                 //'placeholder' => 'Seleccione',
                                                 'data' => $entity->getMunicipio() ? $entity->getMunicipio() : $user->getPersona()->getMunicipio(),
-                                                'disabled' => !$user->hasRole('ROLE_COORDINADOR')
+                                                'disabled' => !($user->hasRole('ROLE_COORDINADOR') || $user->hasRole('ROLE_ADMIN'))
                                             )
                   )
             ->add('data', TextareaType::class, array("mapped" => false,"data" => json_encode($entity->toFullArray())))

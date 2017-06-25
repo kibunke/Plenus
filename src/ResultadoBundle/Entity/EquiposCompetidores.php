@@ -36,6 +36,12 @@ class EquiposCompetidores
     protected $equipo;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Equipo")
+     * @ORM\JoinColumn(name="exEquipo_id", referencedColumnName="id")
+     * */
+    protected $exEquipo;
+
+    /**
      * @var string $rol
      *
      * @ORM\Column(name="rol", type="string", length=100)
@@ -44,7 +50,7 @@ class EquiposCompetidores
 
     /**
      * Un competidor en un equipo puede tener una salida por sustitucion.
-     * @ORM\OneToOne(targetEntity="EquiposCompetidores", mappedBy="sale")
+     * @ORM\OneToOne(targetEntity="EquiposCompetidores", mappedBy="sale", cascade={"persist"})
      */
     private $entra;
 
@@ -254,5 +260,29 @@ class EquiposCompetidores
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+
+    /**
+     * Set exEquipo
+     *
+     * @param \ResultadoBundle\Entity\Equipo $exEquipo
+     *
+     * @return EquiposCompetidores
+     */
+    public function setExEquipo(\ResultadoBundle\Entity\Equipo $exEquipo = null)
+    {
+        $this->exEquipo = $exEquipo;
+
+        return $this;
+    }
+
+    /**
+     * Get exEquipo
+     *
+     * @return \ResultadoBundle\Entity\Equipo
+     */
+    public function getExEquipo()
+    {
+        return $this->exEquipo;
     }
 }

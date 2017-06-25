@@ -56,7 +56,7 @@ class ClasificacionMunicipalController extends Controller
         try{
             if ($this->canEdit($equipo,$evento)){
                 $em = $this->getDoctrine()->getManager();
-                $etapa = $evento->agregarEquipoClasificado($equipo);
+                $etapa = $evento->agregarEquipoClasificadoEtapaMunicipal($equipo);
                 $em->persist($etapa);
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' =>'OK'));

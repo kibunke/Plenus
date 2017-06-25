@@ -797,36 +797,36 @@ class Evento
          * Si no tiene etapas crea una, si tiene recupera la primera y verifica que sea de clasificación municipal.
          * sino, lanza una Exception porque deben ser reacomodadas.
          */
-        if (count($this->etapas) > 1){
-            $etapaRegional = $this->etapas[1];
-            if (!$etapaRegional->isEtapaMunicipal()){
-                throw new \Exception('Plenus: El evento tiene etapas creadas y la segunda no es la de ganadores regionales. Debe reacomodar las etapas antes de continuar.');
-            }
-        }else{
-            $etapaRegional = new etapaRegional();
-            $this->addEtapa($etapaRegional);
-        }
+        // if (count($this->etapas) > 1){
+        //     $etapaRegional = $this->etapas[1];
+        //     if (!$etapaRegional->isEtapaRegional()){
+        //         throw new \Exception('Plenus: El evento tiene etapas creadas y la segunda no es la de ganadores regionales. Debe reacomodar las etapas antes de continuar.');
+        //     }
+        // }elseif (count($this->etapas > 0)){
+        //     $etapaRegional = new etapaRegional();
+        //     $this->addEtapa($etapaRegional);
+        // }else{
+        //     throw new \Exception('Plenus: El evento no tiene la etapa de clasificación municipal.');
+        // }
         return $etapaRegional;
     }
 
     /**
-     * agregarEquipoClasificado
+     * agregarEquipoClasificadoEtapaMunicipal
      *
      * @return \InscripcionBundle\Entity\Etapa
      */
-    public function agregarEquipoClasificado($equipo)
+    public function agregarEquipoClasificadoEtapaMunicipal($equipo)
     {
         $etapaMunicipal = $this->getEtapaMunicipal();
 
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
-            if ($this->getEtapaRegional()->getId()){
-                throw new \Exception('Plenus: La edición de etapa municipal para este evento ya esta cerrada.');
-            }
-            if (!$this->getSaltaControlEtapaMunicipal()){
-                $etapaMunicipal->validarGanadorMunicipal($equipo);
-            }
+            // if ($this->getEtapaRegional()->getId()){
+            //     throw new \Exception('Plenus: La edición de etapa municipal para este evento ya esta cerrada.');
+            // }
+            $etapaMunicipal->validarGanadorMunicipal($equipo);
             $etapaMunicipal->addEquipo($equipo);
         }
         return $etapaMunicipal;
