@@ -275,6 +275,11 @@
             $.Equipo = $.Equipo || {};
             $.Equipo.init = function()
             {
+                $('.panel-scroll').perfectScrollbar({
+                    wheelSpeed: 50,
+                    minScrollbarLength: 20,
+                    suppressScrollX: true
+                });
             }
             $.Equipo.competidor = {},
             $.Equipo.competidor.show = function(id)
