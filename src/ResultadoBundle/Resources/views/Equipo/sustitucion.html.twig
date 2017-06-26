@@ -1,6 +1,5 @@
 <div class="col-sm-12 padding-20">
-    <h3><i class="fa fa-exchange"></i> Sustituciones</h3>
-	<h5>En esta pantalla podrá realizar sustituciones en el equipo. En primera instancia se muestran los sustitutos declarados en la planilla de buena fe, pero puedo realizar un reemplazo por otra persona. CUIDADO: las sustituciones no requieren ningún tipo de intervención. Por otro lado los reemplazos requieren aprobación del coordinador provincial.</h5>
+    <h2><i class="fa fa-exchange"></i> Sustituciones/Reemplazos</h2>
 </div>
 <div class="col-sm-12">
     <div class="col-sm-5">
@@ -22,20 +21,10 @@
 				<div class="col-sm-12 text-center">
 					<hr>
 					<div class="row">
-						<div class="col-sm-4">
+						<div class="col-sm-12">
 							<button class="btn btn-icon btn-block" onclick="$.Equipo.competidor.confirmarCambio()">
 								<i class="fa fa-save"></i>
 								Confirmar <span class="badge badge-danger"></span>
-							</button>
-						</div>
-						<div class="col-sm-8">
-							<button id="buscarSustituto" class="btn btn-icon btn-block hide no-margin" onclick="$.Equipo.competidor.sustituciones.table()">
-								<i class="fa fa-search"></i>
-								Buscar sustituto <span class="badge badge-danger"></span>
-							</button>
-							<button id="buscarReemplazo" class="btn btn-icon btn-block no-margin" onclick="$.Equipo.competidor.reemplazos.table()">
-								<i class="fa fa-search"></i>
-								Buscar reemplazo <span class="badge badge-danger"></span>
 							</button>
 						</div>
 					</div>
@@ -44,9 +33,31 @@
 		</div>
     </div>
 	<div class="col-sm-7">
+        <div class="panel panel-white">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button id="buscarSustituto" class="btn btn-icon btn-block hide no-margin" onclick="$.Equipo.competidor.sustituciones.table()">
+                            <i class="fa fa-search"></i>
+                            Buscar sustituto <span class="badge badge-danger"></span>
+                        </button>
+                        <button id="buscarReemplazo" class="btn btn-icon btn-block no-margin" onclick="$.Equipo.competidor.reemplazos.table()">
+                            <i class="fa fa-search"></i>
+                            Buscar reemplazo <span class="badge badge-danger"></span>
+                        </button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-icon btn-block" onclick="$.Equipo.competidor.sustituciones.showHelp()">
+                            <i class="fa fa-question-circle fa-lg" aria-hidden="true"></i>
+                            Ayuda <span class="badge badge-danger"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<div class="panel panel-white">
 			<div class="panel-heading">
-				<h4 class="panel-title">Sustitutos disponibles</h4>
+				<h4 class="panel-title">Sustitutos/Reemplazos disponibles</h4>
 			</div>
 			<div class="table-responsive">
 				<table  id="sustitutosTable" class="table table-striped table-hover">

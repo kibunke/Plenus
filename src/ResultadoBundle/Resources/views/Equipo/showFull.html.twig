@@ -299,6 +299,27 @@
                 $('#globalSubView .subviews-container').load(pathCompetidorSustitucion.replace('__00__', id));
 
             }
+            $.Equipo.competidor.sustituciones.showHelp = function()
+            {
+                $('#panel-config .modal-footer').hide();
+                //$('#panel-config .modal-dialog').addClass('modal-lg');
+                $('#panel-config .modal-title').html('<i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda para sustituciones/reemplazos');
+                $('#panel-config .modal-body').html('<div class="row">'+
+                                                        '<div class="col-sm-12">'+
+													        '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> Sustituciones</h4>'+
+				                                            'Las sustituciones, son los cambios realizados dentro del equipo por competidores inscriptos en la misma planilla.<br>'+
+                                                            'Por defecto la tabla izquierda muestra las posibles sustituciones en un equipo.<br>'+
+	                                                    '</div><div class="col-sm-12"></br>'+
+													        '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> Reemplazos</h4>'+
+				                                            'Los reemplazos, son los cambios realizados por competidores de otro equipo que haya paticipado en el mismo segmento de inscripción.<br>'+
+                                                            'Para cambiar a la tabla de reemplazos posibles debe hace click en <b>Buscar reemplazo</b>.'+
+	                                                   '</div><div class="col-sm-12"><br>'+
+                                                       '<h4 class="no-margin text-danger"><i class="fa fa-comment-o" aria-hidden="true"></i> ATENCIÓN</h4>'+
+                                                       'Tanto los reemplazos como sustituciones son irreversibles. No guarde si no está realmente seguro del cambio.<br>'+
+                                                       'Una vez seleccionado el reemplazo bastan con hacer click en <b>Confirmar</b> para completar el proceso.'+
+                                                     '</div>');
+                $('#panel-config').modal();
+            }
             $.Equipo.competidor.select = function(id)
             {
                 $('#sustitucion_entra').data('entra',id);

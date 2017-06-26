@@ -25,19 +25,6 @@ use ResultadoBundle\Entity\Equipo;
 class EtapaRegionalController extends Controller
 {
     /**
-     * List all Competidor entities.
-     *
-     * @Route("/list", name="resultados_etapaRegional_list")
-     * @Method("GET")
-     * @Security("has_role('ROLE_RESULTADO_ETAPA_REGIONAL_LIST')")
-     * @Template()
-     */
-    public function indexAction()
-    {
-        return array();
-    }
-
-    /**
      * Add a Competidor entity into a EtapaRegional collection.
      * @Route("/ganador/equipo/{equipo}/toggle", name="resultados_etapaRegiona_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__00__"})
      * @Method("POST")
