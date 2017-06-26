@@ -43,12 +43,12 @@ class Individual extends Equipo
     }
 
     /**
-     * canEdit
+     * isIndividual
      *
      * @return boolean
      */
-    public function canEdit()
+    public function isIndividual()
     {
-        return false;
+        return true;
     }
 }

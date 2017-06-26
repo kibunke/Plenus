@@ -4,7 +4,7 @@
     <div class="toolbar row">
         <div class="col-sm-6 hidden-xs">
             <div class="page-header">
-                <h1><i class="fa fa-edit"></i> Edición de equipo <small></small></h1>
+                <h1><i class="fa fa-edit"></i> Detalle de equipo <small></small></h1>
             </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -13,7 +13,13 @@
             </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
-                <ul class="nav navbar-right"></ul>
+                <ul class="nav navbar-right">
+                    <li>
+                        <a href="javascript:window.location.href=document.referrer">
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
         </div>
@@ -35,7 +41,7 @@
                     Equipo
                 </li>
                 <li class="active">
-                    Edición
+                    Detalle
                 </li>
             </ol>
         </div>
@@ -179,7 +185,7 @@
                 </div>
                 <div class="panel panel-white space20">
                     <div class="panel-heading">
-                        <h4 class="no-margin"><i class="fa fa-list"></i> {{ equipo.getEquipoCompetidores | length }} Integrantes</h4>
+                        <h4 class="no-margin"><i class="fa fa-list"></i> Integrantes: <small>{{ equipo.getEquipoCompetidores | length }}</small></h4>
                     </div>
                     <div class="panel-body panel-scroll-local height-300 ps-container">
                         <ul class="activities">
@@ -215,9 +221,14 @@
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="time" style="top: 30% !important;">
-                                            {% if equioCompetidor.rol == "inscripto" %}
+                                            {% if equioCompetidor.rol == "inscripto" and  is_granted('ROLE_RESULTADO_EQUIPO_CAMBIOS') and (is_granted('ROLE_COORDINADOR') or is_granted('ROLE_ADMIN') or equipo.planilla.municipio == app.user.municipio) %}
                                                 <button onclick="$.Equipo.competidor.sustituciones({{ equioCompetidor.id }})" class="btn btn-xs btn-green tooltips show-sv" data-placement="top" data-original-title="Reemplazar" data-startFrom="right">
                                                     <i class="fa fa-exchange"></i>
+                                                </button>
+                                            {% endif %}
+                                            {% if equioCompetidor.entra and is_granted('ROLE_ADMIN') %}
+                                                <button onclick="$.Equipo.competidor.sustituciones({{ equioCompetidor.id }})" class="btn btn-xs btn-purple tooltips show-sv" data-placement="top" data-original-title="Rollback" data-startFrom="right">
+                                                    <i class="fa fa-history"></i>
                                                 </button>
                                             {% endif %}
                                         </div>
@@ -315,7 +326,13 @@
                         $.post(pathCompetidorSustitucion.replace('__00__', equipoCompetidor),{'equipoEntra' : equipoEntra})
                             .done((data)=>{
                                 if (data.success){
-                                    swal('Excelente!',data.message,'success');
+                                    swal({
+                                        title: 'Excelente',
+                                        text: data.message,
+                                        type: "success",
+                                    },function (){
+                                        location.reload();
+                                    });
                                 }else{
                                     swal('Cuidado!',data.message,'error')
                                 }

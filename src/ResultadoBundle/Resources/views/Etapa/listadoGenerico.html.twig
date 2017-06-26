@@ -10,21 +10,32 @@
     </thead>
     <tbody>
         {% for equipo in etapa.equipos %}
-            <tr data-plaza="{{ equipo.id }}">
+            <tr id="row_{{ equipo.id }}" data-equipo="{{ equipo.id }}">
                 <td class="text-center"><i class="fa fa-ellipsis-v">&nbsp;&nbsp;</i></td>
                 <td class="text-center"><b>{{ equipo.planilla.municipio.regionDeportiva }}</b></td>
                 <td>{{ equipo.planilla.municipio.nombre }}</td>
                 <td>{{ equipo.getNombreCompletoRaw | raw }}</td>
                 <td class="text-center">
                     {% if is_granted('ROLE_RESULTADO_EQUIPO_SHOW') %}
-                        <button onclick="$.Evento.equipo.show({{ equipo.id }})" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver detalle">
-                            <i class="fa fa-eye"></i>
+                        <button onclick="$.Evento.equipo.show({{ equipo.id }})" class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Ver resumén">
+                            <i class="fa fa-eye-slash"></i>
                         </button>
                     {% endif %}
-                    {% if equipo.canEdit() and is_granted('ROLE_RESULTADO_EQUIPO_EDIT') %}
-                        <a href="{{ path('equipo_edit', {'equipo': equipo.id}) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar equipo">
-                            <i class="fa fa-edit"></i>
+                    {% if not equipo.isIndividual() and is_granted('ROLE_RESULTADO_EQUIPO_SHOW_FULL') %}
+                        <a href="{{ path('equipo_show_full', {'equipo': equipo.id}) }}" class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Ver detalle">
+                            <i class="fa fa-eye"></i>
                         </a>
+                    {% endif %}
+                    {% if is_granted('ROLE_RESULTADO_ETAPA_REGIONAL') %}
+                        {% if equipo.getEtapaRegional() %}
+                            <button onclick="$.Evento.equipo.ganadorRegionalToggle(true,{{ equipo.id }})" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Deshacer ganador regional">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        {% else %}
+                            <button onclick="$.Evento.equipo.ganadorRegionalToggle(false,{{ equipo.id }})" class="btn btn-xs btn-azure tooltips" data-placement="top" data-original-title="Ganador regional">
+                                <i class="fa fa-check"></i>
+                            </button>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

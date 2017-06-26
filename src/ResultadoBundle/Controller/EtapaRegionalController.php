@@ -17,19 +17,19 @@ use ResultadoBundle\Entity\Equipo;
 // use CommonBundle\PDFs\DocumentoPDF;
 
 /**
- * ClasificacionMunicipal controller.
+ * EtapaRegional controller.
  *
- * @Route("/clasificacionMunicipal")
- * @Security("has_role('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL')")
+ * @Route("/etapaRegiona")
+ * @Security("has_role('ROLE_RESULTADO_ETAPA_REGIONAL')")
  */
-class ClasificacionMunicipalController extends Controller
+class EtapaRegionalController extends Controller
 {
     /**
      * List all Competidor entities.
      *
-     * @Route("/list", name="resultados_clasificacionMunicipal_competidor_list")
+     * @Route("/list", name="resultados_etapaRegional_list")
      * @Method("GET")
-     * @Security("has_role('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL_LIST')")
+     * @Security("has_role('ROLE_RESULTADO_ETAPA_REGIONAL_LIST')")
      * @Template()
      */
     public function indexAction()
@@ -38,25 +38,17 @@ class ClasificacionMunicipalController extends Controller
     }
 
     /**
-     * @Route("/competidor/{competidor}/json", name="resultados_clasificacionMunicipal_competidor_json", condition="request.isXmlHttpRequest()", defaults={"competidor":"__00__"})
-     */
-    public function competidorJsonAction(Request $request, Competidor $competidor)
-    {
-        return new JsonResponse($competidor->toFullArray());
-    }
-
-    /**
-     * Add a Competidor entity into a EtapaMunicipal collection.
-     * @Route("/ganador/equipo/{equipo}/evento/{evento}/toggle", name="resultados_clasificacionMunicipal_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__EQ__","evento":"__EV__"})
+     * Add a Competidor entity into a EtapaRegional collection.
+     * @Route("/ganador/equipo/{equipo}/toggle", name="resultados_etapaRegiona_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__00__"})
      * @Method("POST")
      */
-    public function ganadorAction(Request $request, Equipo $equipo, Evento $evento)
+    public function ganadorAction(Request $request, Equipo $equipo)
     {
-        $equipo->setNombre($request->request->get('nombreEquipo'));
         try{
-            if ($this->canEdit($equipo,$evento)){
+            if ($this->canEdit($equipo)){
                 $em = $this->getDoctrine()->getManager();
-                $etapa = $evento->agregarEquipoClasificadoEtapaMunicipal($equipo);
+                $evento = $equipo->getEtapaMunicipal()->getEvento();
+                $etapa = $evento->agregarEquipoClasificadoEtapaRegional($equipo);
                 $em->persist($etapa);
                 $em->flush();
                 return new JsonResponse(array('success' => true, 'message' =>'OK'));
@@ -66,19 +58,16 @@ class ClasificacionMunicipalController extends Controller
         }
     }
 
-    private function canEdit($equipo,$evento)
+    private function canEdit($equipo)
     {
         $user = $this->getUser();
-        if (!$user->hasRole('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL_EDIT')){
+        if (!$user->hasRole('ROLE_RESULTADO_ETAPA_REGIONAL_EDIT')){
             throw new \Exception('Plenus: No tiene los permisos necesarios para realizar esta acción.');
         }
-
-        if (!$equipo->getPlanilla()->isAprobada()){
-            throw new \Exception('Plenus: El participante/equipo no tiene la planilla aprobada.');
+        if (!$equipo->getEtapaMunicipal()){
+            throw new \Exception('Plenus: El equipo no participó en la etapa regional.');
         }
-        if ($equipo->getPlanilla()->getSegmento() != $evento->getSegmento()){
-            throw new \Exception('Plenus: El participante/equipo no pertenece al segmento del evento.');
-        }
+        $evento = $equipo->getEtapaMunicipal()->getEvento();
         if (!$user->hasRole('ROLE_ADMIN')){
             if ($user->hasRole('ROLE_COORDINADOR')){
                 if (!$evento->hasAccess($user)){

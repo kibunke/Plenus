@@ -64,7 +64,7 @@ class Evento
     private $porcentajeCompletado;
 
     /**
-     * @ORM\OneToMany(targetEntity="Etapa", mappedBy="evento")
+     * @ORM\OneToMany(targetEntity="Etapa", mappedBy="evento", cascade={"persist"})
      */
     private $etapas;
 
@@ -768,20 +768,13 @@ class Evento
      */
     public function getEtapaMunicipal()
     {
-        $etapaMunicipal = null;
-        /*
-         * Si no tiene etapas crea una, si tiene recupera la primera y verifica que sea de clasificación municipal.
-         * sino, lanza una Exception porque deben ser reacomodadas.
-         */
-        if (count($this->etapas)){
-            $etapaMunicipal = $this->etapas->first();
-            if (!$etapaMunicipal->isEtapaMunicipal()){
-                throw new \Exception('Plenus: El evento tiene etapas creadas y la primera no es la de clasificación. Debe reacomodar las etapas antes de continuar.');
+        foreach ($this->etapas as $etapa) {
+            if ($etapa->isEtapaMunicipal()){
+                return $etapa;
             }
-        }else{
-            $etapaMunicipal = new EtapaMunicipal();
-            $this->addEtapa($etapaMunicipal);
         }
+        $etapaMunicipal = new EtapaMunicipal();
+        $this->addEtapa($etapaMunicipal);
         return $etapaMunicipal;
     }
 
@@ -792,22 +785,13 @@ class Evento
      */
     public function getEtapaRegional()
     {
-        $etapaRegional = null;
-        /*
-         * Si no tiene etapas crea una, si tiene recupera la primera y verifica que sea de clasificación municipal.
-         * sino, lanza una Exception porque deben ser reacomodadas.
-         */
-        // if (count($this->etapas) > 1){
-        //     $etapaRegional = $this->etapas[1];
-        //     if (!$etapaRegional->isEtapaRegional()){
-        //         throw new \Exception('Plenus: El evento tiene etapas creadas y la segunda no es la de ganadores regionales. Debe reacomodar las etapas antes de continuar.');
-        //     }
-        // }elseif (count($this->etapas > 0)){
-        //     $etapaRegional = new etapaRegional();
-        //     $this->addEtapa($etapaRegional);
-        // }else{
-        //     throw new \Exception('Plenus: El evento no tiene la etapa de clasificación municipal.');
-        // }
+        foreach ($this->etapas as $etapa) {
+            if ($etapa->isEtapaRegional()){
+                return $etapa;
+            }
+        }
+        $etapaRegional = new etapaRegional();
+        $this->addEtapa($etapaRegional);
         return $etapaRegional;
     }
 
@@ -820,16 +804,35 @@ class Evento
     {
         $etapaMunicipal = $this->getEtapaMunicipal();
 
+        if ($this->getEtapaRegional()->hayGanadorEnRegion($equipo->getPlanilla()->getMunicipio()->getRegionDeportiva())){
+            throw new \Exception('Plenus: La edición de etapa municipal para este evento en esta región está cerrada.');
+        }
+
         if ($etapaMunicipal->containsEquipo($equipo)){
             $etapaMunicipal->removeEquipo($equipo);
         }else{
-            // if ($this->getEtapaRegional()->getId()){
-            //     throw new \Exception('Plenus: La edición de etapa municipal para este evento ya esta cerrada.');
-            // }
             $etapaMunicipal->validarGanadorMunicipal($equipo);
             $etapaMunicipal->addEquipo($equipo);
         }
         return $etapaMunicipal;
+    }
+
+    /**
+     * agregarEquipoClasificadoEtapaRegional
+     *
+     * @return \InscripcionBundle\Entity\Etapa
+     */
+    public function agregarEquipoClasificadoEtapaRegional($equipo)
+    {
+        $etapaRegional = $this->getEtapaRegional();
+
+        if ($etapaRegional->containsEquipo($equipo)){
+            $etapaRegional->removeEquipo($equipo);
+        }else{
+            $etapaRegional->validarGanadorRegional($equipo);
+            $etapaRegional->addEquipo($equipo);
+        }
+        return $etapaRegional;
     }
 
     public function containsEquipo($equipo)

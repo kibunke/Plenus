@@ -43,12 +43,12 @@ class EquipoController extends Controller
     /**
      * Finds and displays a Equipo entity.
      *
-     * @Route("/{equipo}/edit", name="equipo_edit")
+     * @Route("/{equipo}/show/full", name="equipo_show_full")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_RESULTADO_EQUIPO_EDIT')")
+     * @Security("has_role('ROLE_RESULTADO_EQUIPO_SHOW_FULL')")
      * @Template()
      */
-    public function editAction(Request $request, Equipo $equipo)
+    public function showFullAction(Request $request, Equipo $equipo)
     {
         return array(
             'equipo' => $equipo
@@ -60,7 +60,7 @@ class EquipoController extends Controller
      *
      * @Route("/{equipoCompetidorSale}/sustitucion", name="equipo_competidor_sustitucion", defaults={"equipoCompetidorSale":"__00__"})
      * @Method({"GET","POST"})
-     * @Security("has_role('ROLE_RESULTADO_EQUIPO_EDIT')")
+     * @Security("has_role('ROLE_RESULTADO_EQUIPO_CAMBIOS')")
      * @Template()
      */
     public function sustitucionAction(Request $request, EquiposCompetidores $equipoCompetidorSale)

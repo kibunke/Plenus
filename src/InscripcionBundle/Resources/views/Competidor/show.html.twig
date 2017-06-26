@@ -13,7 +13,13 @@
             </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
-                <ul class="nav navbar-right"></ul>
+                <ul class="nav navbar-right">
+                    <li>
+                        <a href="javascript:window.location.href=document.referrer">
+                            <i class="fa fa-arrow-left"></i> VOLVER
+                        </a>
+                    </li>
+                </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
         </div>
@@ -78,7 +84,7 @@
                         <div class="fileupload fileupload-new" data-provides="fileupload">
                             <div class="user-image">
                                 <div class="fileupload-new thumbnail">
-                                    <img src="{{ asset('bundles/common/images/anonymous.jpg') }}" alt="Avartar anonimo" style="height:140px">
+                                    <i class="fa fa-user fa-5x"></i>
                                 </div>
                             </div>
                         </div>
@@ -233,11 +239,38 @@
                 <div class="panel panel-white space20">
                     <div class="panel-heading">
                         <i class="clip-menu"></i>
-                        <h3 class="no-margin">Eventos en que participa</h3>
+                        <h4 class="no-margin"><i class="fa fa-list"></i> Segmentos en que participa</h4>
                     </div>
-                    <div class="panel-body ps-container" style="max-height: 300px">
+                    <div class="panel-body panel-scroll-local height-300 ps-container">
                         <ul class="activities">
-                            {% for equipo in competidor.equipos %}
+                            {% for segmento in competidor.getSegmentos() %}
+                                <li>
+                                    <a class="activity" href="{#{ path('resultado_evento_show', {'evento' : equipo.evento.id }) }#}">
+                                        <div class="fa-stack fa-2x pull-left">
+                                            <i class="fa fa-bookmark-o fa-lg text-yellow"></i>
+                                        </div>
+
+                                        <div class="desc" class="pull-left">
+                                            {{ segmento.getNombreCompletoRaw | raw }}
+                                        </div>
+                                        <div class="time">
+                                            <i class="fa fa-ellipsis-v"></i>
+                                            <strong></strong>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel panel-white space20">
+                    <div class="panel-heading">
+                        <i class="clip-menu"></i>
+                        <h4 class="no-margin"><i class="fa fa-list"></i> Eventos en que participa</h4>
+                    </div>
+                    <div class="panel-body panel-scroll-local height-300 ps-container">
+                        <ul class="activities">
+                            {% for equipo in competidor.equipos if equipo.getEtapas | length %}
                                 <li>
                                     <a class="activity" href="{#{ path('resultado_evento_show', {'evento' : equipo.evento.id }) }#}">
                                         {% if (equipo.hasMedalla()) %}
@@ -265,35 +298,20 @@
                         </ul>
                     </div>
                 </div>
-                <div class="panel panel-white space20">
-                    <div class="panel-heading">
-                        <i class="clip-menu"></i>
-                        <h3 class="no-margin">Equipos que integra</h3>
-                    </div>
-                    <div class="panel-body ps-container" style="max-height: 300px">
-                        <ul class="activities">
-                            {% for equipo in competidor.equipos %}
-                                <li>
-                                    <a class="activity" href="{#{ path('ganadores_evento_show', { 'evento': equipo.evento.id }) }#}">
-                                        <div class="fa-stack fa-2x pull-left" style="margin-top: -5px;">
-                                            <i class="fa fa-users fa-lg text-green"></i>
-                                        </div>
-                                        <div class="desc" class="pull-left">
-                                            {{ equipo.getNombreCompletoRaw | raw }}
-                                        </div>
-                                        <div class="time">
-                                            <i class="fa fa-users"></i>
-                                            <strong>
-                                                {{ equipo.integrantes | length }} Integrantes
-                                            </strong>
-                                        </div>
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block otherJavascripts %}
+    <script>
+        (function ($) {
+            // no se sobreescribe el namespace, si ya existe
+            $.Competidor = $.Competidor || {};
+            $.Competidor.init = function()
+            {
+                $('.panel-scroll-local').perfectScrollbar();
+            }
+        })(jQuery);
+        $(document).ready(function(){$.Competidor.init();});
+    </script>
 {% endblock %}

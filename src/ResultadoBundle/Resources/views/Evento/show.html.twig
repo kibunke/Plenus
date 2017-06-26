@@ -133,7 +133,9 @@
                                 padding: '0px'
                             }
                         },
-                pathEquipoShow = "{{ path('equipo_show') }}";
+                pathEquipoShow = "{{ path('equipo_show') }}",
+                _pathGanadorRegional = "{{ path('resultados_etapaRegiona_competidor_ganador') }}",
+                _table;
             // no se sobreescribe el namespace, si ya existe
             $.Evento = $.Evento || {};
             $.Evento.init = function() {
@@ -148,7 +150,7 @@
                 $('#okButton').on('click',function(){
                     $('#panel-config form').submit();
                 });
-                $('#equipoTable').dataTable( {
+                _table = $('#equipoTable').dataTable( {
                     "autoWidth": false,
                     "language": {
                         "url": "{{ asset('assets/common/Spanish.json') }}"
@@ -358,6 +360,55 @@
                 $('#panel-config .modal-body').html("");
                 $('#panel-config .modal-body').load(pathEquipoShow.replace('__00__',id));
                 $('#panel-config').modal();
+            }
+            $.Evento.equipo.ganadorRegionalToggle = function(existe,id) {
+                let $row = $('#row_' + id),
+                    $tds = $row.children(),
+                    text =  'Región: ' + $tds.eq(1).text() +
+                            '<br>' + $tds.eq(3).html(),
+                    btnText = 'Si, es el ganador!',
+                    btnColor = '#3085d6';
+                if (existe){
+                    title = 'Realmente desea deshacer esta asignación';
+                    btnText = 'Si, deshacer!';
+                    btnColor = '#e66b6b';
+                }else{
+                    title = 'Realmente desea realizar esta asignación';
+                }
+
+                swal({
+                    title: '<h3>¿ ' + title + ' ?</h3>',
+                    text: text,
+                    type: "warning",
+                    html: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: btnColor,
+                    confirmButtonText: btnText,
+                    closeOnCancel: true,
+                },function () {
+                    $.post(_pathGanadorRegional.replace('__00__', id))
+                        .done((data)=>{
+                            if (data.success){
+                                swal({
+                                    title: 'Excelente',
+                                    text: data.message,
+                                    type: "success",
+                                },function (){
+                                    location.reload();
+                                });
+                            }else{
+                                swal('Cuidado!',data.message,'error')
+                            }
+                        })
+                        .fail(()=>{
+                            swal('Cuidado!','Ocurrio un error en la comunicación con el servidor','error')
+                        }).always(()=>{
+                        })
+                })
             }
         })(jQuery);
         $(document).ready(function(){$.Evento.init();});

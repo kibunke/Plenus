@@ -440,16 +440,16 @@
 									<a href="{#{ path('dashboard_resultado') }#}"><i class="fa fa-dashboard"></i> <span class="title"> Dashboard </span></a>
 								</li>
 							{% endif %}
-							{% if is_granted('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL') or is_granted('ROLE_RESULTADO_CLASIFICACION_REGIONAL') %}
+							{% if is_granted('ROLE_RESULTADO_ETAPA_MUNICIPAL') or is_granted('ROLE_RESULTADO_CLASIFICACION_REGIONAL') %}
 								<li>
 									<a href="javascript:;">
 										<i class="fa fa-random"></i>
 										Clasificación <i class="icon-arrow"></i>
 									</a>
 									<ul class="sub-menu">
-										{% if is_granted('ROLE_RESULTADO_CLASIFICACION_MUNICIPAL') %}
+										{% if is_granted('ROLE_RESULTADO_ETAPA_MUNICIPAL') %}
 											<li>
-												<a href="{{ path('resultados_clasificacionMunicipal_competidor_list') }}">
+												<a href="{{ path('resultados_etapaMunicipal_list') }}">
 													<i class="fa fa-angle-right"></i>
 													Municipal
 												</a>
@@ -457,7 +457,7 @@
 										{% endif %}
 										{% if is_granted('ROLE_RESULTADO_CLASIFICACION_REGIONAL') %}
 											<li>
-												<a href="{#{ path('resultados_informeFinalistas') }#}">
+												<a href="{{ path('resultados_etapaRegional_list') }}">
 													<i class="fa fa-angle-double-right"></i>
 													Regional
 												</a>

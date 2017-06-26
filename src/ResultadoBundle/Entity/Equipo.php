@@ -659,13 +659,13 @@ class Equipo
     }
 
     /**
-     * canEdit
+     * isIndividual
      *
      * @return boolean
      */
-    public function canEdit()
+    public function isIndividual()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -740,5 +740,35 @@ class Equipo
             }
         }
         return false;
+    }
+
+    /**
+     * getEtapaRegional
+     *
+     * @return \InscripcionBundle\Entity\Etapa
+     */
+    public function getEtapaRegional()
+    {
+        foreach ($this->etapas as $etapa) {
+            if ($etapa->isEtapaRegional()){
+                return $etapa;
+            }
+        }
+        return NULL;
+    }
+
+    /**
+     * getEtapaMunicipal
+     *
+     * @return \InscripcionBundle\Entity\Etapa
+     */
+    public function getEtapaMunicipal()
+    {
+        foreach ($this->etapas as $etapa) {
+            if ($etapa->isEtapaMunicipal()){
+                return $etapa;
+            }
+        }
+        return NULL;
     }
 }

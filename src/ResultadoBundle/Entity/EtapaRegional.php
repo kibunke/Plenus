@@ -56,4 +56,26 @@ class EtapaRegional extends Etapa
     {
         return true;
     }
+
+    /**
+     * isEtapaRegional
+     * @return boolean
+     */
+    public function hayGanadorEnRegion($region)
+    {
+        foreach ($this->getEquipos() as $equipo) {
+            if ($equipo->getPlanilla()->getMunicipio()->getRegionDeportiva() == $region){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function validarGanadorRegional($equipo)
+    {
+        $region = $equipo->getPlanilla()->getMunicipio()->getRegionDeportiva();
+        if ($this->hayGanadorEnRegion($region)){
+                throw new \Exception('Plenus: Este evento ya tiene un ganador en la region '.$region);
+        }
+    }
 }
