@@ -30,7 +30,7 @@ class EnRevision extends PlanillaEstado
     {
         return true;
     }
-    
+
     /**
      * Get isEditable
      *
@@ -40,51 +40,51 @@ class EnRevision extends PlanillaEstado
     {
         return true;
     }
-    
+
     public function getProximosEstados(\SeguridadBundle\Entity\Usuario $usuario)
     {
         if($usuario->hasRole('ROLE_INSCRIPTOR') && $this->getPlanilla()->getCreatedBy() == $usuario)
         {
             return array(new Enviada());
         }
-        
+
         if($usuario->hasRole('ROLE_ORGANIZADOR') && $this->getPlanilla()->getCreatedBy() == $usuario)
         {
             return array(new Presentada());
         }
-        
-        if($usuario->hasRole('ROLE_COORDINADOR') && $this->getPlanilla()->getCreatedBy() == $usuario)
+
+        if($usuario->hasRole('ROLE_ADMIN') || ($usuario->hasRole('ROLE_COORDINADOR') && $this->getPlanilla()->getCreatedBy() == $usuario))
         {
             return array(new Aprobada());
         }
 
         return parent::getProximosEstados($usuario);
     }
-    
+
     /**
      * get Class
-     */    
+     */
     public function getClass()
     {
         return "badge badge-default";
     }
-    
+
     /**
      * get Class
-     */    
+     */
     public function getAbr()
     {
         return "Re.";
     }
-    
+
     /**
      * get icon
-     */    
+     */
     public function getIcon()
     {
         return "reply";
     }
-    
+
     /**
      * Get getRoute
      *
@@ -94,10 +94,10 @@ class EnRevision extends PlanillaEstado
     {
         return 'planilla_toggle_enrevision';
     }
-    
+
     /**
      * get ClassButton
-     */    
+     */
     public function getClassButton()
     {
         return "danger";
@@ -105,9 +105,9 @@ class EnRevision extends PlanillaEstado
 
     /**
      * get Title
-     */    
+     */
     public function getTitleBefore()
     {
         return "Revisar planilla";
-    }    
+    }
 }

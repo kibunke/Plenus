@@ -27,34 +27,36 @@ class Observada extends PlanillaEstado
         {
             return array(new EnRevision(),new Presentada());
         }
-        
+        if($usuario->hasRole('ROLE_ADMIN')){
+            return array(new EnRevision());
+        }
         return parent::getProximosEstados($usuario);
     }
-    
+
     /**
      * get Class
-     */    
+     */
     public function getClass()
     {
         return "badge badge-warning";
     }
-    
+
     /**
      * get Class
-     */    
+     */
     public function getAbr()
     {
         return "Ob.";
     }
-    
+
     /**
      * get icon
-     */    
+     */
     public function getIcon()
     {
         return "reply";
     }
-    
+
     /**
      * Get getRoute
      *
@@ -64,10 +66,10 @@ class Observada extends PlanillaEstado
     {
         return 'planilla_toggle_observada';
     }
-    
+
     /**
      * get ClassButton
-     */    
+     */
     public function getClassButton()
     {
         return "warning";
@@ -75,9 +77,9 @@ class Observada extends PlanillaEstado
 
     /**
      * get Title
-     */    
+     */
     public function getTitleBefore()
     {
         return "Observar planilla";
-    }    
+    }
 }

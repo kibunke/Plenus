@@ -252,14 +252,17 @@ class Competidor extends Persona
         return $torneos;
     }
 
-    public function getTorneosParticipaSinPosta()
+    public function getTorneosParticipaGandorMunicipal()
     {
         $torneos = [];
-        foreach($this->getEquipos() as $equipo){
-            foreach($equipo->getEtapas() as $etapa){
-                if ($etapa->containsEquipo($equipo)){
-                    if (!$etapa->getEvento()->getSaltaControlEtapaMunicipal()){
-                        $torneos[] = $etapa->getEvento()->getTorneo();
+        foreach($this->getCompetidorEquipos() as $eqCom){
+            if ($eqCom->getRol() == 'inscripto'){
+                $equipo = $eqCom->getEquipo();
+                foreach($equipo->getEtapas() as $etapa){
+                    if ($etapa->containsEquipo($equipo)){
+                        if (!$etapa->getEvento()->getSaltaControlEtapaMunicipal()){
+                            $torneos[] = $etapa->getEvento()->getTorneo();
+                        }
                     }
                 }
             }

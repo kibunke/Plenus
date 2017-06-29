@@ -424,7 +424,6 @@ class Torneo
             if ($eqCom->getRol() == 'inscripto'){
                 $this->validarCompetidorGanadorMunicipal($equipo->getPlanilla(),$eqCom->getCompetidor());
             }
-
         }
         return true;
     }
@@ -446,7 +445,7 @@ class Torneo
             "deportes" => 0
         ];
 
-        foreach ($competidor->getTorneosParticipaSinPosta() as $torneo) {
+        foreach ($competidor->getTorneosParticipaGandorMunicipal() as $torneo) {
             if ($torneo->getIsCultura()){
                 $contTorneos["cultura"] ++;
             }else{
