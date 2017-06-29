@@ -416,8 +416,15 @@ class Torneo
     */
     public function validarGanadorMunicipal($equipo)
     {
-        foreach ($equipo->getIntegrantes() as $competidor) {
-            $this->validarCompetidorGanadorMunicipal($equipo->getPlanilla(),$competidor);
+        /*
+         * IMPORTANTE !!!
+         * Chequea todos los titulares del equipo, dejando afuera los reemplazos y sustitutos
+         */
+        foreach ($equipo->getEquipoCompetidores() as $eqCom) {
+            if ($eqCom->getRol() == 'inscripto'){
+                $this->validarCompetidorGanadorMunicipal($equipo->getPlanilla(),$eqCom->getCompetidor());
+            }
+
         }
         return true;
     }
