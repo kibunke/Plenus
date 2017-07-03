@@ -65,6 +65,9 @@ class EtapaMunicipal extends Etapa
                 throw new \Exception('Plenus: Este evento ya tiene un ganador de '.$municipio->getNombre());
             }
         }
-        $equipo->getPlanilla()->getSegmento()->getTorneo()->validarGanadorMunicipal($equipo);
+
+        if (!$this->getEvento()->getSaltaControlEtapaMunicipal()){
+            $equipo->getPlanilla()->getSegmento()->getTorneo()->validarGanadorMunicipal($equipo);
+        }
     }
 }
