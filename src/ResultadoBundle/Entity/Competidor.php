@@ -259,13 +259,14 @@ class Competidor extends Persona
         foreach($this->getCompetidorEquipos() as $eqCom){
             if ($eqCom->getRol() == 'inscripto'){
                 $equipo = $eqCom->getEquipo();
-                foreach($equipo->getEtapas() as $etapa){
+                $etapa = $equipo->getEtapaMunicipal();
+                //foreach($equipo->getEtapaMunicipal() as $etapa){
                     //if ($etapa->containsEquipo($equipo)){
-                        if (!$etapa->getEvento()->getSaltaControlEtapaMunicipal()){
-                            $torneos[] = $etapa->getEvento()->getTorneo();
-                        }
+                    if ($etapa && !$etapa->getEvento()->getSaltaControlEtapaMunicipal()){
+                        $torneos[] = $etapa->getEvento()->getTorneo();
+                    }
                     //}
-                }
+                //}
             }
         }
         return $torneos;
