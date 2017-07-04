@@ -82,9 +82,13 @@ class EquipoController extends Controller
                 $equipoCompetidorEntra = $equipo->isSustituto($competidorEntra);
                 if (!$equipoCompetidorEntra){
                     //No es un sustituto por lo que tiene que ser un reemplazo
-                    $equipoCompetidorEntra = $equipo->isReemplazo($competidorEntra);
-                    if (!$equipoCompetidorEntra){
-                        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor no es un sustituto/reemplazo posible en este equipo'));
+                    if ($this->getUser()->hasRole('ROLE_RESULTADO_EQUIPO_CAMBIOS_REEMPLAZOS')){
+                        $equipoCompetidorEntra = $equipo->isReemplazo($competidorEntra);
+                        if (!$equipoCompetidorEntra){
+                            return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'El competidor no es un sustituto/reemplazo posible en este equipo'));
+                        }
+                    }else{
+                        return new JsonResponse(array('success' => false, 'error' => true, 'message' => 'Usted no tiene los permisos necesarios para hacer un reemplazo. Contacte con el '));
                     }
                 }
                 $equipoCompetidorSale->setEntra($equipoCompetidorEntra);
