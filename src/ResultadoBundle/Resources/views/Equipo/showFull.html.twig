@@ -206,6 +206,27 @@
                                                 {{ equioCompetidor.competidor.getNombreCompleto }}<br>
                                                 <small>DNI: {{ equioCompetidor.competidor.dni }}</small>
                                             </div>
+                                            {% if equioCompetidor.entra %}
+                                                <div class="pull-left text-center">
+                                                    &nbsp&nbsp&nbsp
+                                                    <i class="fa fa-arrow-right fa-lg text-green padding-10" title="{% if equioCompetidor.exEquipo %}Sustituido{% else %}Reemplazado{% endif %}"></i>
+                                                    &nbsp&nbsp&nbsp
+                                                </div>
+                                                <div class="pull-left">
+                                                    {{ equioCompetidor.entra.competidor.getNombreCompleto }}<br>
+                                                    <small>DNI: {{ equioCompetidor.entra.competidor.dni }}</small>
+                                                </div>
+                                            {% elseif equioCompetidor.sale %}
+                                                <div class="pull-left">
+                                                    &nbsp&nbsp&nbsp
+                                                    <i class="fa fa-arrow-left fa-lg text-red padding-10 "></i>
+                                                    &nbsp&nbsp&nbsp
+                                                </div>
+                                                <div class="pull-left">
+                                                    {{ equioCompetidor.sale.competidor.getNombreCompleto }}<br>
+                                                    <small>DNI: {{ equioCompetidor.sale.competidor.dni }}</small>
+                                                </div>
+                                            {% endif %}
                                             <div class="pull-right">
                                                 {% if equioCompetidor.competidor.equipos | length > 2%}
                                                     Participa en<br>
@@ -230,6 +251,10 @@
                                                 <button onclick="$.Equipo.competidor.sustituciones({{ equioCompetidor.id }})" class="btn btn-xs btn-purple tooltips show-sv" data-placement="top" data-original-title="Rollback" data-startFrom="right">
                                                     <i class="fa fa-history"></i>
                                                 </button>
+                                                <button type="button" class="btn btn-warning btn-xs pop" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="<b>Por:</b> {{ equioCompetidor.updatedBy.getNombreCompleto }}<br><b>El:</b> {{ equioCompetidor.updatedAt | date('d/m/y g:ia') }}">
+                                                    <span class="fa fa-info-circle"></span>
+                                                </button>':
+
                                             {% endif %}
                                         </div>
                                     </a>

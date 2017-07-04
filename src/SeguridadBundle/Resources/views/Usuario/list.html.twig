@@ -12,28 +12,6 @@
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
                     <!-- start: TO-DO DROPDOWN -->
-                    {#
-                    <li class="menu-search">
-                        <!-- start: SEARCH POPOVER -->
-                        <div class="popover bottom search-box transition-all">
-                            <div class="arrow"></div>
-                            <div class="popover-content">
-                                <!-- start: SEARCH FORM -->
-                                <form class="" id="searchform" action="#">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Buscar">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-main-color btn-squared" type="button">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </form>
-                                <!-- end: SEARCH FORM -->
-                            </div>
-                        </div>
-                        <!-- end: SEARCH POPOVER -->
-                    </li>#}
                     {% if is_granted('ROLE_ADMIN')%}
                         <li class="dropdown">
                             <a  href="{{ path('logout_all_users')}}">
