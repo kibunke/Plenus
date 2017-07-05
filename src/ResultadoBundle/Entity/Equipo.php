@@ -185,7 +185,7 @@ class Equipo
     public function getNombreCompletoRaw()
     {
         return  '<strong>'.$this->getPlanilla()->getMunicipio().'</strong><br>'.
-                '<small style="color:#555">'.$this->getNombreOpcional().' ( <i class="fa fa-users"></i>  '.count($this->getIntegrantes()).' )'.
+                '<small style="color:#555">'.$this->getNombreOpcional().' ( <i class="fa fa-users"></i>  '.$this->getCantIntegrantes().' )'.
                 '</small>';
     }
 
