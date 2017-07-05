@@ -185,7 +185,7 @@
                 </div>
                 <div class="panel panel-white space20">
                     <div class="panel-heading">
-                        <h4 class="no-margin"><i class="fa fa-list"></i> Integrantes: <small>{{ equipo.getEquipoCompetidores | length }}</small></h4>
+                        <h4 class="no-margin"><i class="fa fa-list"></i> Integrantes: <small>{{ equipo.getCantIntegrantes }}</small></h4>
                     </div>
                     <div class="panel-body panel-scroll-local height-300 ps-container">
                         <ul class="activities">
@@ -251,10 +251,11 @@
                                                 <button onclick="$.Equipo.competidor.sustituciones({{ equioCompetidor.id }})" class="btn btn-xs btn-purple tooltips show-sv" data-placement="top" data-original-title="Rollback" data-startFrom="right">
                                                     <i class="fa fa-history"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-warning btn-xs pop" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="<b>Por:</b> {{ equioCompetidor.updatedBy.getNombreCompleto }}<br><b>El:</b> {{ equioCompetidor.updatedAt | date('d/m/y g:ia') }}">
+                                            {% endif %}
+                                            {% if equioCompetidor.sale %}
+                                                <button type="button" class="btn btn-warning btn-xs pop" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="<b>Por:</b> {{ equioCompetidor.sale.updatedBy.getNombreCompleto }}<br><b>El:</b> {{ equioCompetidor.sale.updatedAt | date('d/m/y g:ia') }}">
                                                     <span class="fa fa-info-circle"></span>
-                                                </button>':
-
+                                                </button>
                                             {% endif %}
                                         </div>
                                     </a>

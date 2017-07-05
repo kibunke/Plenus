@@ -44,7 +44,8 @@ class Equipo
 
     /**
      * @ORM\OneToMany(targetEntity="EquiposCompetidores", mappedBy="equipo", cascade={"all"})
-     * */
+     * @ORM\OrderBy({"rol" = "ASC"})
+     */
     protected $equipoCompetidores;
 
     /**
@@ -770,5 +771,21 @@ class Equipo
             }
         }
         return NULL;
+    }
+
+    /**
+     * getCantIntegrantes
+     *
+     * @return \InscripcionBundle\Entity\Etapa
+     */
+    public function getCantIntegrantes()
+    {
+        $cant = 0;
+        foreach ($this->getEquipoCompetidores() as $item) {
+            if ($item->getRol() == 'inscripto'){
+                $cant ++;
+            }
+        }
+        return $cant;
     }
 }
