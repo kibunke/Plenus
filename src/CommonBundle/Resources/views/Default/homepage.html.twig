@@ -254,12 +254,13 @@
                     type: "warning"
                 });
                 */
-                #}
+
                 $('#panel-config .modal-footer').hide();
                 $('#panel-config .modal-dialog').addClass('modal-lg');
                 $('#panel-config .modal-title').html('<i class="fa fa-exclamation-circle" aria-hidden="true"></i> IMPORTANTE: Carga de ganadores "Etapa Municipal"');
                 $('#panel-config .modal-body').html('<div class="col-sm-12 text-center"><img style="width:70%" src="{{ asset('assets/images/PopUp-Cambios.png') }}"></img></div><div class="clearfix"></div>');
                 $('#panel-config').modal();
+                #}
             }
         })(jQuery);
         $(document).ready(function(){$.HomePage.init();});
