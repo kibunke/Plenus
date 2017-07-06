@@ -411,7 +411,6 @@ abstract class  Etapa
      */
     public function getEquipos()
     {
-        //return $this->equipos;
         $return = $this->equipos->toArray();
         usort($return, function ($a, $b){
                 return $a->getPlanilla()->getMunicipio()->getRegionDeportiva() > $b->getPlanilla()->getMunicipio()->getRegionDeportiva();
