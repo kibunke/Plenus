@@ -65,6 +65,7 @@ class EtapaRegional extends Etapa
     {
         foreach ($this->getEquipos() as $equipo) {
             if ($equipo->getPlanilla()->getMunicipio()->getRegionDeportiva() == $region){
+                throw new \Exception('Plenus: Este evento ya tiene un ganador en la region '.$region. '-'.$equipo->getPlanilla()->getMunicipio()->getRegionDeportiva().'-'.$equipo->getPlanilla()->getid();
                 return true;
             }
         }
@@ -75,7 +76,7 @@ class EtapaRegional extends Etapa
     {
         $region = $equipo->getPlanilla()->getMunicipio()->getRegionDeportiva();
         if ($this->hayGanadorEnRegion($region)){
-                throw new \Exception('Plenus: Este evento ya tiene un ganador en la region '.$region);
+            throw new \Exception('Plenus: Este evento ya tiene un ganador en la region '.$region);
         }
     }
 }
