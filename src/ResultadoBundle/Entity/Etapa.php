@@ -107,7 +107,7 @@ abstract class  Etapa
        $this->createdBy = $user;
        $this->equipos   = new \Doctrine\Common\Collections\ArrayCollection();
        $this->nombre    = $this->getNombreInicial();
-       $this->orden     = 0;
+       $this->orden     = 9;
     }
 
     /**

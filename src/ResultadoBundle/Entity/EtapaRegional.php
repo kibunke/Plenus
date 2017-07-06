@@ -14,6 +14,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 class EtapaRegional extends Etapa
 {
     /**
+     * Construct
+     */
+    public function __construct($user = NULL)
+    {
+       $this->orden     = 1;
+       parent::__construct($user);
+    }
+
+    /**
      * get icon
      *
      * @return string
@@ -65,7 +74,7 @@ class EtapaRegional extends Etapa
     {
         foreach ($this->getEquipos() as $equipo) {
             if ($equipo->getPlanilla()->getMunicipio()->getRegionDeportiva() == $region){
-                throw new \Exception('Plenus: Este evento ya tiene un ganador en la region '.$region. '-'.$equipo->getPlanilla()->getMunicipio()->getRegionDeportiva().'-'.$equipo->getid(). '-'.$this->getId());
+                //throw new \Exception('Plenus: Este evento ya tiene un ganador en la region '.$region. '-'.$equipo->getPlanilla()->getMunicipio()->getRegionDeportiva().'-'.$equipo->getid(). '-'.$this->getId());
                 return true;
             }
         }

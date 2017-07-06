@@ -14,6 +14,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 class EtapaMunicipal extends Etapa
 {
     /**
+     * Construct
+     */
+    public function __construct($user = NULL)
+    {
+       $this->orden     = 0;
+       parent::__construct($user);
+    }
+
+    /**
      * get icon
      *
      * @return string
