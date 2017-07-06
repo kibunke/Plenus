@@ -28,11 +28,11 @@
                     {% endif %}
                     {% if is_granted('ROLE_RESULTADO_ETAPA_REGIONAL') %}
                         {% if equipo.getEtapaRegional() %}
-                            <button onclick="$.Evento.equipo.ganadorRegionalToggle(true,{{ equipo.id }})" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Deshacer ganador regional">
+                            <button onclick="$.Evento.equipo.ganadorRegionalToggle(true,{{ equipo.id }},{{ etapa.evento.id }})" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Deshacer ganador regional">
                                 <i class="fa fa-times"></i>
                             </button>
                         {% else %}
-                            <button onclick="$.Evento.equipo.ganadorRegionalToggle(false,{{ equipo.id }})" class="btn btn-xs btn-azure tooltips" data-placement="top" data-original-title="Ganador regional">
+                            <button onclick="$.Evento.equipo.ganadorRegionalToggle(false,{{ equipo.id }},{{ etapa.evento.id }})" class="btn btn-xs btn-azure tooltips" data-placement="top" data-original-title="Ganador regional">
                                 <i class="fa fa-check"></i>
                             </button>
                         {% endif %}

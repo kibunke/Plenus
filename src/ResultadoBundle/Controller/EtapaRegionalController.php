@@ -26,15 +26,14 @@ class EtapaRegionalController extends Controller
 {
     /**
      * Add a Competidor entity into a EtapaRegional collection.
-     * @Route("/ganador/equipo/{equipo}/toggle", name="resultados_etapaRegiona_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__00__"})
+     * @Route("/ganador/equipo/{equipo}/{evento}/toggle", name="resultados_etapaRegiona_competidor_ganador", condition="request.isXmlHttpRequest()", defaults={"equipo":"__00__","evento":"__11__"})
      * @Method("POST")
      */
-    public function ganadorAction(Request $request, Equipo $equipo)
+    public function ganadorAction(Request $request, Equipo $equipo, Evento $evento)
     {
         try{
             if ($this->canEdit($equipo)){
                 $em = $this->getDoctrine()->getManager();
-                $evento = $equipo->getEtapaMunicipal()->getEvento();
                 $etapa = $evento->agregarEquipoClasificadoEtapaRegional($equipo);
                 $em->persist($etapa);
                 $em->flush();

@@ -361,7 +361,7 @@
                 $('#panel-config .modal-body').load(pathEquipoShow.replace('__00__',id));
                 $('#panel-config').modal();
             }
-            $.Evento.equipo.ganadorRegionalToggle = function(existe,id) {
+            $.Evento.equipo.ganadorRegionalToggle = function(existe,id,evento) {
                 let $row = $('#row_' + id),
                     $tds = $row.children(),
                     text =  'Región: ' + $tds.eq(1).text() +
@@ -390,7 +390,7 @@
                     confirmButtonText: btnText,
                     closeOnCancel: true,
                 },function () {
-                    $.post(_pathGanadorRegional.replace('__00__', id))
+                    $.post(_pathGanadorRegional.replace('__00__', id).replace('__11__', evento))
                         .done((data)=>{
                             if (data.success){
                                 swal({
