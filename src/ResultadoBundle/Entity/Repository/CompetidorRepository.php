@@ -136,7 +136,7 @@ class CompetidorRepository extends EntityRepository
                         ->join('c.municipio', 'mc');
         $searchValue = '%'.$request->get('search')['value'].'%';
         $query->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR mc.nombre LIKE ?1');
-        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL') && !$user->hasRole('ROLE_COORDINADOR')){
             $query
                     ->andwhere('mp = ?2')
                     ->setParameter(2,$user->getMunicipio());
@@ -165,7 +165,7 @@ class CompetidorRepository extends EntityRepository
                         ->join('c.municipio', 'mc');
         $searchValue = '%'.$request->get('search')['value'].'%';
         $query->where('c.apellido LIKE ?1 OR c.nombre LIKE ?1 OR c.dni LIKE ?1 OR mc.nombre LIKE ?1');
-        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL') && !$user->hasRole('ROLE_COORDINADOR')){
             $query
                     ->andwhere('mp = ?2')
                     ->setParameter(2,$user->getMunicipio());
@@ -188,7 +188,7 @@ class CompetidorRepository extends EntityRepository
                         ->join('ce.equipo', 'e')
                         ->join('e.planilla', 'p')
                         ->join('p.segmento', 's');
-        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL')){
+        if (!$user->hasRole('ROLE_INSCRIPCION_COMPETIDORES_LIST_ALL') && !$user->hasRole('ROLE_COORDINADOR')){
             $query->join('p.municipio', 'm')
                     ->where('m = ?1')
                     ->setParameter(1,$user->getMunicipio());
