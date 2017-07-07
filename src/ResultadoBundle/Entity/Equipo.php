@@ -713,7 +713,7 @@ class Equipo
             if ($competidorEntra->getMunicipio() == $this->getPlanilla()->getMunicipio()){
                 $equipoCompetidor = $competidorEntra->getEquipoCompetidorEnSegmento($this->getPlanilla()->getSegmento());
                 if ($equipoCompetidor){
-                    $equipoCompetidor->setExEquipo($competidorEntra->getEquipo());
+                    $equipoCompetidor->setExEquipo($equipoCompetidor->getEquipo());
                     $equipoCompetidor->setEquipo($this);
                     $this->getPlanilla()->getSegmento()->getTorneo()->validarCompetidorGanadorMunicipal($this->getPlanilla(),$competidorEntra);
                 }else{
