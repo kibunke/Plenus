@@ -1,4 +1,36 @@
-<table id="equipoTable" class="table table-striped table-hover">
+<style>
+    .full-circle {
+        background-color: #D9534F;
+        -moz-border-radius:75px;
+        -webkit-border-radius: 75px;
+        width: 35px;
+        color: #FFF;
+        text-align: center;
+        padding: 8px;
+        font-weight: bold;
+    }
+</style>
+<div class="row" style="padding-bottom:15px;">
+    <div class="hidden-xs col-sm-12 text-center" title="Rojo: región sin finaliastas, verde con finalistas.">
+        <span class="sem_reg_01 full-circle">01</span>
+        <span class="sem_reg_02 full-circle">02</span>
+        <span class="sem_reg_03 full-circle">03</span>
+        <span class="sem_reg_04 full-circle">04</span>
+        <span class="sem_reg_05 full-circle">05</span>
+        <span class="sem_reg_06 full-circle">06</span>
+        <span class="sem_reg_07 full-circle">07</span>
+        <span class="sem_reg_08 full-circle">08</span>
+        <span class="sem_reg_09 full-circle">09</span>
+        <span class="sem_reg_10 full-circle">10</span>
+        <span class="sem_reg_11 full-circle">11</span>
+        <span class="sem_reg_12 full-circle">12</span>
+        <span class="sem_reg_13 full-circle">13</span>
+        <span class="sem_reg_14 full-circle">14</span>
+        <span class="sem_reg_15 full-circle">15</span>
+        <span class="sem_reg_16 full-circle">16</span>
+    </div>
+</div>
+<table class="genericTable table table-striped table-hover">
     <thead>
         <tr>
             <th class="text-center" style="width: 10px"></th>
@@ -10,7 +42,7 @@
     </thead>
     <tbody>
         {% for equipo in etapa.equipos %}
-            <tr id="row_{{ equipo.id }}" data-equipo="{{ equipo.id }}">
+            <tr id="row_{{ equipo.id }}" data-equipo="{{ equipo.id }}"  data-region="{{ equipo.planilla.municipio.regionDeportiva }}">
                 <td class="text-center"><i class="fa fa-ellipsis-v">&nbsp;&nbsp;</i></td>
                 <td class="text-center"><b>{{ equipo.planilla.municipio.regionDeportiva }}</b></td>
                 <td>{{ equipo.planilla.municipio.nombre }}</td>

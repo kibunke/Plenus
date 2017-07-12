@@ -150,7 +150,7 @@
                 $('#okButton').on('click',function(){
                     $('#panel-config form').submit();
                 });
-                _table = $('#equipoTable').dataTable( {
+                _table = $('.genericTable').dataTable( {
                     "autoWidth": false,
                     "language": {
                         "url": "{{ asset('assets/common/Spanish.json') }}"
@@ -163,6 +163,11 @@
                     "order": [[ 1, 'asc' ]],
                     "pageLength" : 50,
                 });
+                $('.genericTable > tbody tr').each(function(){
+                    $tab = $(this).parents('.tab-pane');
+                    console.log('.sem_reg_'+$(this).data('region'));
+                    $tab.find('.sem_reg_'+$(this).data('region')).css('background-color','#5CB85C');
+                })
             }
             $.Evento.etapa = function() {}
             $.Evento.etapa.add = function(url) {
