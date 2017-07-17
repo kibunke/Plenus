@@ -90,6 +90,7 @@
             // no se sobreescribe el namespace, si ya existe
             var table,
                 totales = [],
+                totalesSI = [],
                 modoTexto = true,
                 numcolums = 0;
 
@@ -170,7 +171,7 @@
             $.Default.initTable = function() {
                 numcolums = $('#analiticalTable').data('numcolums');
                 totales=[];
-                for (i = 0; i < numcolums; i++) {totales.push(0);}
+                for (i = 0; i < numcolums; i++) {totales.push(0);totalesSI.push(0);}
                 table=$('#analiticalTable').dataTable( {
                     "language": {
                         "url" : "{{ asset('assets/common/Spanish.json') }}"
@@ -183,14 +184,21 @@
                     "order": [[ 0, 'asc' ]],
                     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                         for (i = 0; i <  numcolums; i++) {
-                            totales[i]=totales[i]+parseInt($('td:eq('+(i+3)+')', nRow).attr('title'));
+                            let val = parseInt($('td:eq('+(i+3)+')', nRow).attr('title'));
+                            console.log(val);
+                            if (val > 0) {
+                                console.log("-"+val);
+                                totalesSI[i] ++;
+                            }
+                            totales[i]=totales[i]+val;
                         }
                     },
                     "fnDrawCallback": function(){
                         $tfoot=$('#analiticalTable tfoot');
                         for (i = 0; i <  numcolums; i++) {
-                            $tfoot.find("td:eq("+(i+1)+")").html(totales[i]);
+                            $tfoot.find("td:eq("+(i+1)+")").html(totales[i]+"/"+totalesSI[i]);
                             totales[i] = 0;
+                            totalesSI[i] = 0;
                         }
                         if (!modoTexto){
                             $.Default.toggleModoNumerico(false);

@@ -69,6 +69,9 @@
                             </button>
                         {% endif %}
                     {% endif %}
+                    {% if is_granted('ROLE_INSCRIPCION_PLANILLA_PRINT') %}
+                        <a href="{{ path('planilla_print', {'segmento': equipo.planilla.segmento.id, 'idPlanilla': equipo.planilla.id}) }}" class="btn btn-xs btn-blue" title="Imprimir la planilla"><i class="fa fa-print"></i></a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
