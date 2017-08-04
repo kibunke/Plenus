@@ -118,49 +118,6 @@
                             "orderable": false,
                             "targets": [4,5]
                         },
-                        // {
-                        //     "targets": 4,
-                        //     "data": false,
-                        //     "render":   function ( data, type, full, meta ) {
-                        //                     let aux="";
-                        //                     $.map(data.data, function(ele){
-                        //                         console.log(ele);
-                        //                         aux = aux + '<li style=\'list-style:none\'><b>'+ele.numero+'</b> '+ele.municipio+'</li>';
-                        //                     })
-                        //
-                        //                     return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
-                        //                                 '<i class="fa fa-file-o fa-stack-lg"></i>'+
-                        //                                 '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
-                        //                             '</span>';
-                        //
-                        //                     //return type === 'display' ?
-                        //                     //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
-                        //                     //        '<span class="glyphicon glyphicon-info-sign"></span>'+
-                        //                     //    '</button>':
-                        //                     //    '<span class="sr-only">0</span>';
-                        //                 }
-                        // },{
-                        //     "targets": 5,
-                        //     "data": false,
-                        //     "render":   function ( data, type, full, meta ) {
-                        //                     let aux="";
-                        //                     $.map(data.data, function(ele){
-                        //                         console.log(ele);
-                        //                         aux = aux + '<li style=\'list-style:none\'><b>'+ele.id+'</b> '+ele.nombre+'</li>';
-                        //                     })
-                        //
-                        //                     return  '<span class="fa-stack fa-2x" style=" cursor: pointer;"  data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+aux+'">'+
-                        //                                 '<i class="fa fa-file-o fa-stack-lg"></i>'+
-                        //                                 '<strong class="fa-stack-1x fa-stack-text file-text" style="font-size: 15px;">'+data.data.length+'</strong>'+
-                        //                             '</span>';
-                        //
-                        //                     //return type === 'display' ?
-                        //                     //    '<button type="button" class="btn btn-warning btn-xs" data-container="body" data-toggle="popover" data-placement="left" data-html="true" data-content="'+data+'">'+
-                        //                     //        '<span class="glyphicon glyphicon-info-sign"></span>'+
-                        //                     //    '</button>':
-                        //                     //    '<span class="sr-only">0</span>';
-                        //                 }
-                        // },
                         {
                             "targets": 4,
                             "searchable": false,
@@ -190,9 +147,7 @@
             }
             //$.Default.planilla = {},
             $.Default.show = function(id){
-                $.Main.openModal(_pathShow.replace("__00__",id),"Competidor: " + id, function(){
-                    }
-                );
+                $.Main.openModal(_pathShow.replace("__00__",id),"Competidor: " + id, function(){});
             }
         })(jQuery);
         $(document).ready(function(){$.Default.init();});

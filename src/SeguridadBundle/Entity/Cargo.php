@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="Cargo")
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\CargoRepository")
- * 
+ *
  */
 class Cargo
 {
@@ -38,18 +38,18 @@ class Cargo
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Perfil", inversedBy="cargos")
-     * @ORM\JoinTable(name="plenus_admin.perfil_cargo")
+     * @ORM\JoinTable(name="perfil_cargo")
      */
     private $perfiles;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="cargo")
      */
     private $usuarios;
-    
+
     /**
      * @var datetime $createdAt
      *
@@ -77,14 +77,14 @@ class Cargo
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */
     private $updatedBy;
-    
+
     /**
      * @var boolean $isActive
      *
      * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive;
-    
+
     /**
      * Constructor
      */
@@ -98,7 +98,7 @@ class Cargo
 
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->getName();
@@ -245,7 +245,7 @@ class Cargo
     {
         $this->updatedBy = $updatedBy;
         $this->updatedAt = new \DateTime();
-        
+
         return $this;
     }
 
@@ -350,12 +350,12 @@ class Cargo
     {
         return $this->usuarios;
     }
-    
+
     public function hasPerfil(Perfil $perfil)
     {
         return (in_array($perfil,$this->getPerfiles()->toArray()));
     }
-    
+
     public function toArray()
     {
         return array(

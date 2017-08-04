@@ -34,24 +34,24 @@ class Role implements RoleInterface
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Perfil", mappedBy="roles")
-     * @ORM\JoinTable(name="plenus_admin.perfil_role")
-     */  
+     * @ORM\JoinTable(name="perfil_role")
+     */
     private $perfiles;
-    
+
     /**
      * @var datetime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="id")
-     */       
+     */
     private $createdBy;
 
     /**
@@ -60,28 +60,28 @@ class Role implements RoleInterface
      * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive;
-    
+
     /**
      * @var datetime $updatedAt
      *
      * @ORM\Column(name="updatedAt", type="datetime",nullable=true)
      */
     private $updatedAt;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Usuario")
      * @ORM\JoinColumn(name="modifiedBy", referencedColumnName="id",nullable=true)
-     */       
+     */
     private $modifiedBy;
 
     /**
      * implement Interface
      *
-     */        
+     */
     public function getRole()
     {
     }
-    
+
     /**
      * Constructor
      */
@@ -91,10 +91,10 @@ class Role implements RoleInterface
         $this->createdAt = new \DateTime();
         $this->name      = 'ROLE_';
     }
-    
+
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->getName();
@@ -205,7 +205,7 @@ class Role implements RoleInterface
     {
         return $this->modifiedAt;
     }
-    
+
     /**
      * Add profile
      *
@@ -239,7 +239,7 @@ class Role implements RoleInterface
     {
         return $this->perfiles;
     }
-    
+
     /**
      * Set createdBy
      *
@@ -275,7 +275,7 @@ class Role implements RoleInterface
     {
         $this->modifiedBy = $modifiedBy;
         $this->modifiedAt = new \DateTime();
-        
+
         return $this;
     }
 
@@ -288,7 +288,7 @@ class Role implements RoleInterface
     {
         return $this->modifiedBy;
     }
-    
+
     /**
      * Set isActive
      *

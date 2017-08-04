@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="Perfil")
  * @ORM\Entity(repositoryClass="SeguridadBundle\Entity\Repository\PerfilRepository")
- * 
+ *
  */
 class Perfil
 {
@@ -38,25 +38,25 @@ class Perfil
      * @ORM\Column(name="legend", type="string", length=255)
      */
     private $legend;
-    
+
      /**
      * @var string $description
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="perfiles")
-     * @ORM\JoinTable(name="plenus_admin.perfil_role")
+     * @ORM\JoinTable(name="perfil_role")
      */
     private $roles;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="perfil")
      */
     private $usuarios;
-    
+
     /**
      * @var integer $orden
      *
@@ -91,21 +91,21 @@ class Perfil
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="id")
      */
     private $updatedBy;
-    
+
     /**
      * @var boolean $availableForNewUsers
      *
      * @ORM\Column(name="availableForNewUsers", type="boolean")
      */
     private $availableForNewUsers;
-    
+
     /**
      * @var boolean $isActive
      *
      * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive;
-    
+
     /**
      * @var boolean $muestraMunicipio
      *
@@ -122,7 +122,7 @@ class Perfil
      * @ORM\ManyToMany(targetEntity="Cargo", mappedBy="perfiles")
      */
     private $cargos;
-    
+
     /**
      * Constructor
      */
@@ -138,7 +138,7 @@ class Perfil
 
     /**
      * __toString
-     */    
+     */
     public function __toString()
     {
         return $this->getName();
@@ -201,7 +201,7 @@ class Perfil
     {
         return $this->legend;
     }
-    
+
     /**
      * Set description
      *
@@ -377,7 +377,7 @@ class Perfil
     {
         $this->updatedBy = $updatedBy;
         $this->updatedAt = new \DateTime();
-        
+
         return $this;
     }
 
@@ -439,7 +439,7 @@ class Perfil
     {
         return $this->availableForNewUsers;
     }
-    
+
     public function hasRole($role)
     {
         return (in_array($role,$this->getRoles()->toArray()));
@@ -516,17 +516,17 @@ class Perfil
     {
         return $this->municipio;
     }
-    
+
     public function getMunicipioId()
     {
         if ($this->municipio)
         {
             return $this->municipio->getId();
         }
-        
+
         return 0;
     }
-    
+
     public function getArrayCargos()
     {
         $resultado = array();
@@ -534,10 +534,10 @@ class Perfil
         {
             $resultado[] = $cargo->toArray();
         }
-        
+
         return $resultado;
     }
-    
+
     public function toArray()
     {
         return array(
