@@ -58,7 +58,7 @@
                             <i class="fa fa-eye"></i>
                         </a>
                     {% endif %}
-                    {% if is_granted('ROLE_RESULTADO_ETAPA_REGIONAL') %}
+                    {% if is_granted('ROLE_RESULTADO_ETAPA_REGIONAL_EDIT') %}
                         {% if etapa.evento.getEtapaRegional().containsEquipo(equipo) %}
                             <button onclick="$.Evento.equipo.ganadorRegionalToggle(true,{{ equipo.id }},{{ etapa.evento.id }})" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Deshacer ganador regional">
                                 <i class="fa fa-times"></i>
