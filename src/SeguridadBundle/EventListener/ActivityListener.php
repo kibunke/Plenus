@@ -57,32 +57,32 @@ class ActivityListener
 						}
 					}
 					$user->setLastActivity(new \DateTime());
-					$this->em->flush();
+					//$this->em->flush();
 
 					if ($user->getChangePassword()){
-						$url = $this->router->generate('_changePassword');     
+						$url = $this->router->generate('_changePassword');
 						$event->setController(function() use ($url) {
 							return new RedirectResponse($url);
-						});          
+						});
 					}
 					if ($user->getCheckData()){
 						$url = $this->router->generate('_checkUserData');
 						$event->setController(function() use ($url) {
 							return new RedirectResponse($url);
-						});          
-					}			
-		
+						});
+					}
+
 					$log = new Log($user,$request->getClientIp(),'activity',$request->attributes->get('_route'));
 					$log->setDescription($request->getPathInfo());
-		
-					$this->em->persist($log);
+
+					//$this->em->persist($log);
 					//SI no se puede hacer el flush redirecciona al logout
 					try {
-						$this->em->flush();
+						//$this->em->flush();
 					}
 					catch(\Exception $e){
 						$response = new RedirectResponse($this->router->generate('_logout'));
-					}				
+					}
 				}else{
 					/* Atiende requerimientos Ajax para usuarios no logueados */
 					if ($request->isXmlHttpRequest()) {
