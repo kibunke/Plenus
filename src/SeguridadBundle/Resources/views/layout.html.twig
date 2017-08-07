@@ -9,9 +9,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta name="description" content="Web Oficial de los Juegos Bonaerenses, Subsecretaría de Deportes de La Provincia de Buenos Aires" />
-		<meta name="author" content="WitApp.com.ar"/>		
+		<meta name="author" content="WitApp.com.ar"/>
 
-        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png"> 
+        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 
 		{% block stylesheetsCore %}
 			<link rel="stylesheet" href="{{ asset('assets/css/login.min.css') }}">
@@ -28,11 +28,11 @@
 				<div class="container-fluid fix-top" >
 					{% block content %}
 						{% block ajax %}{% endblock %}
-					{% endblock %}              
+					{% endblock %}
 				</div>
 			{% endblock %}
 		</div>
-        
+
 		{% block javaScript %}
 			<script src="{{ asset('assets/js/login.min.js') }}" type="text/javascript" charset="utf8"></script>
 			<script src="{{ asset('assets/js/bootstrap-datetimepicker.js') }}" type="text/javascript" charset="utf8"></script>
@@ -46,9 +46,9 @@
 				{% block footer %}
 					<div class="copyright">
 						{{ "now"|date("Y") }} &copy; WitApp.com.ar.
-					</div>					
+					</div>
 				{% endblock %}
 			</footer>
 		{% endblock %}
-    </body>  
+    </body>
 </html>

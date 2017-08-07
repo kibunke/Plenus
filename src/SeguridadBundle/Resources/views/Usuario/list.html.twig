@@ -130,7 +130,8 @@
 
             $.Usuario = $.Usuario || {};
             $.Usuario.init = function() {
-                 _table=$('#list_users').DataTable({
+                _table = $('#list_users').dataTable({
+                    "autoWidth": false,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
@@ -240,16 +241,7 @@
                     },
                     "fnDrawCallback": function(oSettings) {
                         $('[data-toggle="popover"]').popover();
-                        //$input = $('#list_users_filter input');
-                        //if ($input.val().length>0) {
-                        //    $('#list_users tbody td').each(function(){
-                        //        $td=$(this);
-                        //        if ($td.text().toUpperCase().indexOf($input.val().toUpperCase())>-1) {
-                        //            $td.html($td.text().toUpperCase().replace($input.val().toUpperCase(),'<span class="occurrence">'+$input.val().toUpperCase()+'</span>'))
-                        //        }
-                        //    });
-                        //}
-                        $.Usuario.charts(_table.ajax.json().cantUsers);
+                        //$.Usuario.charts(_table.ajax.json().cantUsers);
                         $('[data-toggle="popover"]').popover();
                     },
                     "initComplete": function(settings, json) {
