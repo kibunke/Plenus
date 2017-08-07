@@ -37205,7 +37205,7 @@ $.fn.editableTableWidget.defaultOptions = {
 jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay = function ( oSettings, iDelay ) {
    var _that = this;
    if ( iDelay === undefined ) {
-       iDelay = 1000;
+       iDelay = 1500;
    }
 
    this.each( function ( i ) {
