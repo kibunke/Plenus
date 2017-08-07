@@ -106,7 +106,10 @@
                                                 '<div title="'+ data.descripcion +'">'+ data.nombre +'</div>':'';
                                         }
                         }
-                    ]
+                    ],
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
+                    }
                 });
             }
             $.Default.openAjaxForm = function(url,title) {

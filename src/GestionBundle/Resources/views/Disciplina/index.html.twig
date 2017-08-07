@@ -164,6 +164,7 @@
                             $('#tree').jstree(true).search(this.value);
                         })
                         $('#disciplinaTable').parents('.panel').unblock();
+                        _tableModalidad.fnSetFilteringDelay();
                     }
                 });
                 $("#tree").on('ready.jstree refresh.jstree', function (e, data) {

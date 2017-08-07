@@ -168,7 +168,10 @@
                         return nRow;
                     },
                     "fnDrawCallback": function(oSettings, json) {
-                        $('.dataTable').dataTable().fnSetFilteringDelay();
+                        //$('.dataTable').dataTable().fnSetFilteringDelay();
+                    },
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
                     }
                 });
             }

@@ -261,6 +261,9 @@
                     },
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
+                    },
+                    "initComplete": function(settings, json) {
+                        $('#competidorTable-1,#competidorTable-2').dataTable().fnSetFilteringDelay();
                     }
                 });
             }

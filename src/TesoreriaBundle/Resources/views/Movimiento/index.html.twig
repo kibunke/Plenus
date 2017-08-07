@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12">
             <a href="#" class="close-subviews">
                 <i class="fa fa-arrow-left"></i> VOLVER
-            </a>            
+            </a>
             <div class="toolbar-tools pull-right">
                 <!-- start: TOP NAVIGATION MENU -->
                 <ul class="nav navbar-right">
@@ -41,7 +41,7 @@
 {% endblock %}
 {% block contenidoContent %}
     <div class="row">
-        <div class="col-sm-8">            
+        <div class="col-sm-8">
             {% include 'TesoreriaBundle:Movimiento:tablas.slider.html.twig' with {'areas': areas} %}
         </div>
         {#
@@ -68,14 +68,14 @@
                             <h4 id="progress_utilizado_text"><i class="fa fa-spinner fa-pulse fa-fw"></i></h4>
                             <div class="progress progress-xs transparent-black no-margin no-radius">
                                 <div id="progress_utilizado_bar" class="progress-bar progress-bar-success partition-blue animate-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"></div>
-                            </div>                            
+                            </div>
                             Utilizado
                         </div>
                         <div class="col-sm-4">
                             <h4 id="progress_fondos_text"><i class="fa fa-spinner fa-pulse fa-fw"></i></h4>
                             <div class="progress progress-xs transparent-black no-margin no-radius">
                                 <div id="progress_fondos_bar" class="progress-bar progress-bar-success partition-yellow animate-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"></div>
-                            </div>                            
+                            </div>
                             Fondos
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                                 <a href="#" class="btn btn-success pagar" role="button"><span class="badge">0</span> <i class="fa fa-fast-forward"></i></a>
                                 <a href="#" class="btn btn-danger deshacerPago" role="button"><span class="badge">0</span> <i class="fa fa-fast-backward"></i></a>
                                 <a href="#" class="btn btn-warning deshacerReserva" role="button"><span class="badge">0</span> <i class="fa fa-backward"></i></a>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
     <a id="sub_go" href="#example-subview-1" class="hidden show-sv"></a>
     <div id="example-subview-1" class="no-display">
         <div class="col-md-10 col-md-offset-1 ajax-cont"></div>
-    </div>    
+    </div>
 {% endblock %}
 {% block otherStylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.css' ) }}" />
@@ -180,11 +180,11 @@
 {% block otherJavascripts %}
     <script src="{{ asset('bundles/common/plugins/sweetalert/lib/sweet-alert.min.js' )}}"></script>
     <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/highcharts.js' )}}"></script>
-    
+
     <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/heatmap.js' )}}"></script>
     <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/treemap.js' )}}"></script>
     <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/modules/drilldown.js') }}"></script>
-    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/themes/grid-light.js') }}"></script>    
+    <script src="{{ asset('bundles/common/plugins/Highcharts-4.1.5/themes/grid-light.js') }}"></script>
     <script>
         (function ($) {
             var _tablePersonas,
@@ -255,7 +255,7 @@
                             {
                                 "targets": 0,
                                 "searchable": false,
-                                "orderable": false,                                
+                                "orderable": false,
                                 "data": false,
                                 "render":   function ( data, type, full, meta ) {
                                                 //return '<img class="img-circle"  style="width: 45px;" src="data:image/jpg;base64,'+data+'" alt="Foto de Acreditación"/>'
@@ -278,7 +278,7 @@
                             },{
                                 "targets": 5,
                                 //"searchable": false,
-                                //"orderable": false,                                
+                                //"orderable": false,
                                 "data": true,
                                 "render":   function ( data, type, full, meta ) {
                                                 html = '-'
@@ -338,7 +338,7 @@
                                 case "deshacerPago":
                                         $(row).addClass('danger');
                                     break;
-                            }   
+                            }
                         }
                         $(row).data('json',data.persona);
                     },
@@ -348,6 +348,7 @@
                         },250);
                     },
                     "initComplete": function( oSettings ) {
+                        _tablePersonas.fnSetFilteringDelay();
                         $('#table_search_input').on('keyup', function(){
                             $('#panel-personal-list').block(_jDefaultBlock);
                             op = $('#search_option').data('op');
@@ -360,7 +361,7 @@
                         })
                     }
                 });
-                
+
                 $('#search_option li').on('click', function(){
                     $('#search_option').data('op', $(this).data('op'));
                     $('#search_option button b').html($(this).text());
@@ -425,7 +426,7 @@
             }
             $.Movimiento.area.print = function(idArea){
                 location.href = "{{ path('tesoreria_recibo_print_area', {"area":'__X__'}) }}".replace("__X__",idArea);
-            }                        
+            }
             $.Movimiento.area.limpiarAcciones = function(ele){
                 idArea = $(ele).data('id');
                 auxLength = _aAcciones.length;
@@ -470,7 +471,7 @@
                     });
                     $('#panel-area-list').unblock();
                 });
-            }            
+            }
             $.Movimiento.area.informe = function(vecPersonas){
                 if (vecPersonas.agregado.length == 0 && vecPersonas.ignorarPorAccPendiente.length == 0 && vecPersonas.ignorarPorFondoAsignado.length == 0) {
                     toastr['warning']("No hay personas sobre las cuales aplicar esta acción en el Area.","Cuidado!");
@@ -480,10 +481,10 @@
                     if (vecPersonas.ignorarPorAccPendiente.length > 0)
                         toastr['warning']("Hay "+ vecPersonas.ignorarPorAccPendiente.length +" persona/s que tienen acciones pendientes.","Cuidado!");
                     if (vecPersonas.ignorarPorFondoAsignado.length > 0)
-                        toastr['warning']("Hay "+ vecPersonas.ignorarPorFondoAsignado.length +" persona/s que tienen acciones en otro fondo.","Cuidado!");                        
+                        toastr['warning']("Hay "+ vecPersonas.ignorarPorFondoAsignado.length +" persona/s que tienen acciones en otro fondo.","Cuidado!");
                 }
             }
-            
+
             $.Movimiento.area.preFiltrar = function(elem,estadoActual,proximoEstado){
                 var vec = { "agregado" : [],
                             "ignorarPorAccPendiente" : [],
@@ -507,7 +508,7 @@
                                     }else{
                                         vec.ignorarPorFondoAsignado.push(json);
                                     }
-                                }                                
+                                }
                             })
                             $.Movimiento.area.informe(vec);
                             $.Movimiento.refreshPanel();
@@ -599,7 +600,7 @@
                                     $.Movimiento.fondo.remove(json);
                                     toastr['success']("Se reemplazo la acción pendiente en el listado.","Atención")
                                     $.Movimiento.pagar(elem);
-                                });                                
+                                });
                             }
                             return;
                         }
@@ -709,7 +710,7 @@
                     $.Movimiento.refreshPanel();
                 }
             }
-            
+
             $.Movimiento.balance.load = function(){
                 //$.map(_tablePersonas.fnGetData(), function(elem){
                 //    if (elem[4].indexOf('fa-frown-o')>0) {//sin asignar
@@ -752,7 +753,7 @@
                                 $.Movimiento.balance.load();
                                  $.Movimiento.refreshPanel();
                             }else{
-                                toastr['warning']('Aún no hay cargado ningún FONDO.', 'Atención!');        
+                                toastr['warning']('Aún no hay cargado ningún FONDO.', 'Atención!');
                             }
                         }
                     })
@@ -761,24 +762,24 @@
                 });
                 //setTimeout(function(){$.Movimiento.fondo.update()},120000);
             }
-            
+
             $.Movimiento.fondo.initTable = function() {
                 setTimeout(function(){
                     $("#tablaAux").dataTable( {
                         "autoWidth": false,
                         "language": {
                             "url": "{{ asset('bundles/common/plugins/DataTables/Spanish.json') }}"
-                        },                
+                        },
                         "columnDefs": [ {
                             "searchable": false,
                             "orderable": false,
                             "targets": [3]
                         } ],
-                        "order": [[ 1, 'asc' ]]   
+                        "order": [[ 1, 'asc' ]]
                     });
                 },2800);
             }
-            
+
             $.Movimiento.fondo.showInforme = function(data){
                 //console.log(data);
                 $('#panel-config .modal-footer').hide();
@@ -806,7 +807,7 @@
                     type: "error",
                     html: true
                 });
-            }            
+            }
             $.Movimiento.fondo.showResult = function(data){
                 $.map(data.success, function(per){
                     _aAcciones = $.grep(_aAcciones, function(e){ return e.id != per.id; });
@@ -839,7 +840,7 @@
                     });
                 }
             }
-            
+
             $.Movimiento.fondo.asignar = function(){
                 fondo = $.Movimiento.fondo.getActive(true);
                 result  = $.grep(_aAcciones, function(e){ return e.action == 'reservar'; });
@@ -913,14 +914,14 @@
                     location.href = "{{ path('tesoreria_recibo_print', {"id":'__X__'}) }}".replace("__X__",ultMov.recibo);
                 }
             }
-            
+
             $.Movimiento.fondo.getActive = function(json = false){
                 id = $('#carousel-fondos-generic .active').first().data('id');
                 fondo = $.grep(_jfondos.fondos, function(e){ return e.id == id; })[0];
                 if (json) {
                     return fondo;
                 }
-                return $('#fondo_'+id);                
+                return $('#fondo_'+id);
             }
             $.Movimiento.checkArrays = function(persona,action){
                 var auxCat = $.grep(_aCategorias, function(e){ return e.id == persona.categoria.id; });
@@ -966,9 +967,9 @@
                 $.map(_aAcciones, function(persona){
                     actions[persona.action].total += persona.remuneracion;
                     actions[persona.action].count ++;
-                    
+
                     $.Movimiento.checkArrays(persona,actions[persona.action]);
-                    
+
                     $('#acciones_tab tbody').prepend(
                         templateRow.replace('__class',actions[persona.action].style)
                                 .replace('__col1','<i class="fa '+ actions[persona.action].icon +' fa-lg"></i>')
@@ -1024,13 +1025,13 @@
                 $fondo.find('.progress_work_total_bar').css("width",Math.round((disponible*100)/fondo.monto)+"%");
                 $fondo.find('.progress_work_total_bar_stimated').css("width",Math.round(((fondo.montoDisponible-disponible)*100)/fondo.monto)+"%");
                 $fondo.find('.progress_work_total_bar_stimated_plus').css("width",Math.round(((disponible-fondo.montoDisponible)*100)/fondo.monto)+"%");
-                
+
                 $fondo.find('.progress_work_total_text').html('<i class="fa fa-xs '+ auxClass +'"></i>' +Math.round(((disponible)*100)/fondo.monto)+'%');
                 $fondo.find('.progress_work_total_text').append('<span class="block text-small text-left">' + $.Main.moneyFormat(disponible) + '</span>');
-                
+
                 setTimeout(function(){
                     $('#panel-personal').unblock();
-                },250)                
+                },250)
             }
             $.Movimiento.chartDraw = function(){
                 //data = {
@@ -1068,23 +1069,23 @@
                         spacingBottom: 5,
                         spacingTop: 0,
                         spacingLeft: 0,
-                        spacingRight: 0,                        
+                        spacingRight: 0,
                         events : {
                             load : function () {
                                 // set up the updating of the chart each second
                                 var series = this.series[0];
                                 var chart = this;
                                 setInterval(function () {
-                                    
+
                                     var current = _jfondos[chart.userOptions.iteratorFlag];
                                     var pUsado = (current.montoDisponible * 100 ) / current.monto;
-                                    
+
                                     shift = series.data.length > 8;
                                     series.addPoint([current.nombre,100-pUsado], true, shift);
                                     chart.userOptions.iteratorFlag ++;
                                     if (_jfondos.length-1 < chart.userOptions.iteratorFlag) {
                                         chart.userOptions.iteratorFlag = 0;
-                                    }                                    
+                                    }
                                 }, 2000);
                             }
                         }

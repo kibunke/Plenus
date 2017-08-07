@@ -166,18 +166,18 @@
                                         {
                                             resultado += '<a class="btn btn-xs btn-green tooltips" data-placement="top" data-original-title="Editar" href='+ url_edit + ' title="Editar"><i class="fa fa-edit fa-lg"></i></a> ';
                                         }
-                                        
+
                                         url_delete  = "'" + _path_delete_cargo.replace('__00__',row.id) + "'";
-                                        
+
                                         if(!row.perfiles)
                                         {
                                             resultado += '<a href="#2" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Eliminar" onclick="$.Cargos.borrar(' + url_delete + ')" title="Eliminar"><i class="fa fa-trash fa-lg"></i></a>';
                                         }
-                                        
+
                                         return resultado;
                                     }
                        }
-                       
+
                     ],
                     "fnDrawCallback": function(oSettings, json) {
                         $('[data-toggle="popover"]').popover();
@@ -191,6 +191,9 @@
                             });
                         }
                        // $.Cargos.charts(_table.ajax.json().cantPerfiles);
+                    },
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
                     }
                 });
                 //Comportamiento del boton 'Listo' del modal -> manda el formulario del modal-
@@ -226,7 +229,7 @@
                                     _table.ajax.reload( null, false );
                                     $('#panel-config').modal('toggle');
                                   });
-                                    
+
                                   }else{
                                     swal({
                                     title: "Resultado",
@@ -246,7 +249,7 @@
                         //return false;
                     });
                 });
-                $('#panel-config').modal();  
+                $('#panel-config').modal();
             },
             $.Cargos.editar = function(url){
                 $.Cargos.crearModal(url,"Editar Cargo");
@@ -257,4 +260,4 @@
         })(jQuery);
         $(document).ready(function(){$.Cargos.init();});
     </script>
-{% endblock %} 
+{% endblock %}

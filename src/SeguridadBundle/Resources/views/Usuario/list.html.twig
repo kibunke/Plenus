@@ -251,6 +251,9 @@
                         //}
                         $.Usuario.charts(_table.ajax.json().cantUsers);
                         $('[data-toggle="popover"]').popover();
+                    },
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
                     }
                 });
             },

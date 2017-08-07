@@ -31,7 +31,7 @@
                                             <a  href="#1" onclick="$.Dimension.openAjaxForm('{{ path('modalidad_new') }}','Nueva Modalidad')">
                                                 <i class="fa fa-plus"></i> Nueva Modalidad
                                             </a>
-                                        </li>                    
+                                        </li>
                                         <li class="unread">
                                             <a  href="#1" onclick="$.Dimension.openAjaxForm('{{ path('categoria_new') }}','Nueva Categoría')">
                                                 <i class="fa fa-plus"></i> Nueva Categoría
@@ -46,7 +46,7 @@
                                 </div>
                             </li>
                         </ul>
-                    </li>                    
+                    </li>
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
             </div>
@@ -61,7 +61,7 @@
                     <a href="{{ path('homepage') }}">
                         <i class="fa fa-home" aria-hidden="true"></i>
                     </a>
-                </li>                
+                </li>
                 <li>
                     <a href="{{ path('homepage_gestion') }}">
                         Gestion
@@ -90,7 +90,7 @@
         <div class="col-md-6">
             {% include 'GestionBundle:Categoria:list.html.twig' %}
         </div>
-    </div>    
+    </div>
 {% endblock %}
 {% block otherJavascripts %}
     <script>
@@ -138,7 +138,7 @@
                             });
                         });
                     }
-                );            
+                );
             }
             $.Dimension.table.torneo = function() {
                 _tableTorneo = $('#tableTorneo').dataTable( {
@@ -179,6 +179,9 @@
                     ],
                     "drawCallback": function( oSettings ) {
                         $('#tableTorneo').parents('.panel').unblock();
+                    },
+                    "initComplete": function(settings, json) {
+                        _tableTorneo.fnSetFilteringDelay();
                     }
                 });
             },
@@ -221,6 +224,9 @@
                     ],
                     "drawCallback": function( oSettings ) {
                         $('#tableGenero').parents('.panel').unblock();
+                    },
+                    "initComplete": function(settings, json) {
+                        _tableGenero.fnSetFilteringDelay();
                     }
                 });
             },
@@ -263,6 +269,9 @@
                     ],
                     "drawCallback": function( oSettings ) {
                         $('#tableCategoria').parents('.panel').unblock();
+                    },
+                    "initComplete": function(settings, json) {
+                        _tableCategoria.fnSetFilteringDelay();
                     }
                 });
             }
@@ -305,10 +314,13 @@
                     ],
                     "drawCallback": function( oSettings ) {
                         $('#tableModalidad').parents('.panel').unblock();
+                    },
+                    "initComplete": function(settings, json) {
+                        _tableModalidad.fnSetFilteringDelay();
                     }
                 });
             }
         })(jQuery);
         $(document).ready(function(){$.Dimension.init();});
     </script>
-{% endblock %}    
+{% endblock %}

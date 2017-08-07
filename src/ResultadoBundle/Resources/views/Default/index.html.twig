@@ -162,7 +162,10 @@
                                                 '<i class="fa fa-pencil"></i>':'<i class="fa fa-warning text-danger"></i>';
                                         }
                         }
-                    ]
+                    ],
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
+                    }
                 });
             }
         })(jQuery);

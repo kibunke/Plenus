@@ -196,6 +196,9 @@
                             });
                         }
                        // $.Roles.charts(_table.ajax.json().cantRoles);
+                    },
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
                     }
                 });
                 //Comportamiento del boton 'Listo' del modal -> manda el formulario del modal-

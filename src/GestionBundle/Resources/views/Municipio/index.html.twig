@@ -87,7 +87,9 @@
                             "targets": [6]
                         }
                     ],
-                    "initComplete": function( oSettings ) {}
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
+                    }
                 });
             }
             $.Municipio.openAjaxForm = function(url,title) {

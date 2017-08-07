@@ -100,7 +100,10 @@
                             "targets": [0,4]
                         }
                     ],
-                    "order": [[ 1, 'asc' ]]
+                    "order": [[ 1, 'asc' ]],
+                    "initComplete": function(settings, json) {
+                        _table.fnSetFilteringDelay();
+                    }
                 });
             }
             $.Default.openAjaxForm = function(url,title) {
