@@ -144,19 +144,19 @@ class PlanillaController extends Controller
             $data['data'][] = array(
                 "id"        => "<strong>".$planilla->getNumero()."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
-                "inscriptos"   => $planilla->getTotalInscriptos(),
+                "inscriptos"   => "-",//$planilla->getTotalInscriptos(),
                 "estado"  => array(
-                        "nombre" => $planilla->getEstado()->getNombreRaw(),
-                        "observacion" => $planilla->getEstado()->getObservacion() ? $planilla->getEstado()->getObservacion() : '',
+                        "nombre" => "-",//$planilla->getEstado()->getNombreRaw(),
+                        "observacion" => "-",//$planilla->getEstado()->getObservacion() ? $planilla->getEstado()->getObservacion() : '',
                         "auditoria"  => array(
-                            "createdBy" => $planilla->getEstado()->getCreatedBy()->getNombreCompleto(),
-                            "createdAt" => $planilla->getEstado()->getCreatedAt()->format('d/m/y H:i')
+                            "createdBy" => "-",//$planilla->getEstado()->getCreatedBy()->getNombreCompleto(),
+                            "createdAt" => "-",//$planilla->getEstado()->getCreatedAt()->format('d/m/y H:i')
                         )
                     ),
                 "auditoria"  => array(
-                        "createdBy" => $planilla->getCreatedBy()->getNombreCompleto(),
-                        "createdAt" => $planilla->getCreatedAt()->format('d/m/y H:i'),
-                        "updatedAt" => $planilla->getUpdatedAt()?$planilla->getUpdatedAt()->format('d/m/y H:i'):''
+                        "createdBy" => "-",//$planilla->getCreatedBy()->getNombreCompleto(),
+                        "createdAt" => "-",//$planilla->getCreatedAt()->format('d/m/y H:i'),
+                        "updatedAt" => "-",//$planilla->getUpdatedAt()?$planilla->getUpdatedAt()->format('d/m/y H:i'):''
                     ),
                 "actions"   => $this->renderView('InscripcionBundle:Planilla:actions.html.twig', array('entity' => $planilla)),
             );
@@ -491,16 +491,6 @@ class PlanillaController extends Controller
         $pdf->deletePage(1);
         $pdf->AddPage('L', 'LEGAL');
         $html = '';
-        //$html = '<table cellspacing="0" cellpadding="0">
-        //            <tr>
-        //                <th style="border-bottom: 1px solid silver;width: 50%" align="left">
-        //                    <img src="'.$request->getBasePath().'/assets/images/logos/logojuegos.png'.'" style="height:50px">
-        //                </th>
-        //                <th style="border-bottom: 1px solid silver;width: 50%" align="right">
-        //                    <img src="'.$request->getBasePath().'/assets/images/logos/buenosAiresProvBlack.png'.'" style="height:50px;">
-        //                </th>
-        //            </tr>
-        //        </table>';
         $txtModalidad = $segmento->getModalidad()->getNombre();
         $txtModalidad .= $segmento->getNombre()? " - " . $segmento->getNombre() : '';
         $municipio = $planilla->getMunicipio() ? $planilla->getMunicipio()->getNombre():'Municipio:';
@@ -741,5 +731,4 @@ class PlanillaController extends Controller
 
         return $html;
     }
-
 }
