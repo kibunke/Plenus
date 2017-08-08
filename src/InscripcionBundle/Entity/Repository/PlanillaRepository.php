@@ -78,6 +78,7 @@ class PlanillaRepository extends EntityRepository
 
     public function getFilteredRows($request,$user,$auth_checker)
     {
+        return 0;
         $where = "( p.id LIKE ?1 OR
                     s.nombre LIKE ?1 OR
                     municipio.nombre LIKE ?1 OR
@@ -98,6 +99,7 @@ class PlanillaRepository extends EntityRepository
 
     public function getTotalRows($user,$auth_checker)
     {
+        return 0;
         $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
         return $this->getEntityManager()
                         ->createQuery(" SELECT COUNT(DISTINCT(p))
