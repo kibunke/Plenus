@@ -73,7 +73,7 @@
 
             $.PersonaSinUsuario = $.PersonaSinUsuario || {};
             $.PersonaSinUsuario.init = function() {
-                 _table=$('#list_personas_sin_user').dataTable({
+                 _table = $('#list_personas_sin_user').dataTable({
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
@@ -126,11 +126,15 @@
                             });
                         }
                         $('[data-toggle="popover"]').popover();
+                        $('#list_personas_sin_user').parents('.panel').unblock();
                     },
                     "initComplete": function(settings, json) {
                         _table.fnSetFilteringDelay();
                     }
                 });
+                _table.on( 'search.dt', function () {
+                    $('#disciplinaTable').parents('.panel').block($.Main.defaultBlockConf());
+                } );
             },
             $.PersonaSinUsuario.openAjaxForm = function(url,title) {
                 $('#cancelButton').html('Descartar').removeClass('btn-primary');
