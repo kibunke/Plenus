@@ -50,10 +50,16 @@ abstract class PlanillaEstado
     private $observacion;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Planilla", inversedBy="estados")
-     * @ORM\JoinColumn(name="planilla", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Planilla", mappedBy="estado", cascade={"persist","remove"})
      */
     private $planilla;
+
+    /**
+     * Estado anterior
+     * @ORM\OneToOne(targetEntity="PlanillaEstado")
+     * @ORM\JoinColumn(name="estadoAnterior_id", referencedColumnName="id")
+     */
+    private $estadoAnterior;
 
     /**
      * @var datetime $createdAt
@@ -172,6 +178,30 @@ abstract class PlanillaEstado
     public function getPlanilla()
     {
         return $this->planilla;
+    }
+
+    /**
+     * Set estadoAnterior
+     *
+     * @param \InscripcionBundle\Entity\PlanillaEstado $planillaEstado
+     *
+     * @return PlanillaEstado
+     */
+    public function setEstadoAnterior(\InscripcionBundle\Entity\PlanillaEstado $planillaEstado = null)
+    {
+        $this->estadoAnterior = $planillaEstado;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoAnterior
+     *
+     * @return \InscripcionBundle\Entity\PlanillaEstado
+     */
+    public function getEstadoAnterior()
+    {
+        return $this->estadoAnterior;
     }
 
     public function __construct()

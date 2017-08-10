@@ -38,186 +38,192 @@ class PlanillaRepository extends EntityRepository
     private $onlyPendientes = false;
     private $idEstados;
 
-    public function dataTable($request,$user,$auth_checker)
+    public function dataTable($request,$user)
     {
         $this->onlyPendientes = false;
         return array(
-                      "total"    => $this->getTotalRows($user,$auth_checker),
-                      "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
-                      "rows"     => $this->getRows($request,$user,$auth_checker),
+                      "total"    => $this->getTotalRows($user),
+                      "filtered" => $this->getFilteredRows($request,$user),
+                      "rows"     => $this->getRows($request,$user),
             );
     }
 
-    public function getRows($request,$user,$auth_checker)
+    public function dataTableAccPendientes($request,$user)
+    {
+        $this->onlyPendientes = true;
+        return array(
+                "total"    => $this->getTotalRows($user),
+                "filtered" => $this->getFilteredRows($request,$user),
+                "rows"     => $this->getRows($request,$user),
+            );
+    }
+
+    public function getRows($request,$user)
     {
         $columns = ["p.id",
                     "d.nombre ".$request->get('order')[0]['dir'].
                     ",s.nombre ",
                     ""];
-        $where = "( p.id LIKE ?1 OR
-                    s.nombre LIKE ?1 OR
-                    municipio.nombre LIKE ?1 OR
-                    d.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('p')
+                        ->from('InscripcionBundle:Planilla', 'p')
+                        ->join('p.municipio', 'municipio')
+                        //->join('p.estado', 'estado')
+                        ->join('p.segmento', 's')
+                        ->join('s.disciplina', 'd');
+        $query->where(' (p.id LIKE ?1 OR
+                        s.nombre LIKE ?1 OR
+                        municipio.nombre LIKE ?1 OR
+                        d.nombre LIKE ?1)');
+        $query = $this->applyRoleFilter($user,$query);
 
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT p
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.municipio municipio
-                                        JOIN p.segmento s
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        JOIN s.disciplina d
-                                        WHERE $where
-                                        GROUP BY p
-                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->setMaxResults($request->get('length'))
-                        ->setFirstResult($request->get('start'))
-                        ->getResult();
+        $searchValue = '%'.$request->get('search')['value'].'%';
+        return $query->setParameter(1,$searchValue)
+                    ->orderBy($columns[$request->get('order')[0]['column']],$request->get('order')[0]['dir'])
+                    ->groupBy('p.id')
+                    ->setMaxResults($request->get('length'))
+                    ->setFirstResult($request->get('start'))
+                    ->getQuery()
+                    ->getResult();
     }
 
-    public function getFilteredRows($request,$user,$auth_checker)
+    public function getFilteredRows($request,$user)
     {
-        $where = "( p.id LIKE ?1 OR
-                    s.nombre LIKE ?1 OR
-                    municipio.nombre LIKE ?1 OR
-                    d.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);;
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(p.id))')
+                        ->from('InscripcionBundle:Planilla', 'p')
+                        ->join('p.municipio', 'municipio')
+                        //->join('p.estado', 'estado')
+                        ->join('p.segmento', 's')
+                        ->join('s.disciplina', 'd');
+        $query->where(' (p.id LIKE ?1 OR
+                        s.nombre LIKE ?1 OR
+                        municipio.nombre LIKE ?1 OR
+                        d.nombre LIKE ?1)');
+        $query = $this->applyRoleFilter($user,$query);
 
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(p))
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.municipio municipio
-                                        JOIN p.segmento s
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        JOIN s.disciplina d
-                                        WHERE $where ")
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->getSingleScalarResult();
+        $searchValue = '%'.$request->get('search')['value'].'%';
+        return $query
+                    ->setParameter(1,$searchValue)
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
 
-    public function getTotalRows($user,$auth_checker)
+    public function getTotalRows($user)
     {
-        $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(p))
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.municipio municipio
-                                        JOIN p.segmento s
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        WHERE $where")
-                        ->getSingleScalarResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(p.id))')
+                        ->from('InscripcionBundle:Planilla', 'p')
+                        ->join('p.municipio', 'municipio')
+                        ->join('p.estado', 'estado')
+                        ->join('p.segmento', 's')
+                        ->join('s.disciplina', 'd');
+        $query = $this->applyRoleFilter($user,$query);
+
+        return $query->getQuery()
+                    ->getSingleScalarResult();
     }
 
 
-    public function dataTableAccPendientes($request,$user,$auth_checker)
-    {
-        $estados = array_map('current',$this->getEntityManager()
-                        ->createQuery(" SELECT MAX(e.id)
-                                        FROM InscripcionBundle:PlanillaEstado e
-                                        GROUP BY e.planilla")
-                        ->getArrayResult());
-        $estados[]=0;
-        $this->idEstados = implode(",",$estados);
 
-        $this->onlyPendientes = true;
-        return array(
-                      "total"    => $this->getTotalAccPendientesRows($user,$auth_checker),
-                      "filtered" => $this->getFilteredAccPendientesRows($request,$user,$auth_checker),
-                      "rows"     => $this->getAccPendientesRows($request,$user,$auth_checker),
-            );
-    }
+    // public function getAccPendientesRows($request,$user,$auth_checker)
+    // {
+    //     $where = "( p.id LIKE ?1 OR
+    //                 s.nombre LIKE ?1 OR
+    //                 municipio.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
+    //     return $this->getEntityManager()
+    //                     ->createQuery(" SELECT p
+    //                                     FROM InscripcionBundle:Planilla p
+    //                                     JOIN p.municipio municipio
+    //                                     JOIN p.segmento s
+    //                                     JOIN p.createdBy creador
+    //                                     LEFT JOIN s.coordinadores coordinador
+    //                                     JOIN p.estados est
+    //                                     WHERE $where
+    //                                     GROUP BY p ")
+    //                     ->setParameter(1,'%'.$request->get('search')['value'].'%')
+    //                     ->setMaxResults($request->get('length'))
+    //                     ->setFirstResult($request->get('start'))
+    //                     ->getResult();
+    // }
+    //
+    // public function getFilteredAccPendientesRows($request,$user,$auth_checker)
+    // {
+    //     $where = "( p.id LIKE ?1 OR
+    //                 s.nombre LIKE ?1 OR
+    //                 municipio.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
+    //     return $this->getEntityManager()
+    //                     ->createQuery(" SELECT COUNT(DISTINCT(p))
+    //                                     FROM InscripcionBundle:Planilla p
+    //                                     JOIN p.municipio municipio
+    //                                     JOIN p.segmento s
+    //                                     JOIN p.createdBy creador
+    //                                     LEFT JOIN s.coordinadores coordinador
+    //                                     JOIN p.estados est
+    //                                     WHERE $where ")
+    //                     ->setParameter(1,'%'.$request->get('search')['value'].'%')
+    //                     ->getSingleScalarResult();
+    // }
+    //
+    // public function getTotalAccPendientesRows($user,$auth_checker)
+    // {
+    //     return $this->getEntityManager()
+    //                     ->createQuery(" SELECT COUNT(DISTINCT(p))
+    //                                     FROM InscripcionBundle:Planilla p
+    //                                     JOIN p.municipio municipio
+    //                                     JOIN p.segmento s
+    //                                     JOIN p.createdBy creador
+    //                                     LEFT JOIN s.coordinadores coordinador
+    //                                     JOIN p.estados est
+    //                                     WHERE 1 = 1 ".$this->applyRoleFilter($user,$auth_checker))
+    //                     ->getSingleScalarResult();
+    // }
 
-    public function getAccPendientesRows($request,$user,$auth_checker)
+    private function applyRoleFilter($user,$query)
     {
-        $where = "( p.id LIKE ?1 OR
-                    s.nombre LIKE ?1 OR
-                    municipio.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT p
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.municipio municipio
-                                        JOIN p.segmento s
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        JOIN p.estados est
-                                        WHERE $where
-                                        GROUP BY p ")
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->setMaxResults($request->get('length'))
-                        ->setFirstResult($request->get('start'))
-                        ->getResult();
-    }
-
-    public function getFilteredAccPendientesRows($request,$user,$auth_checker)
-    {
-        $where = "( p.id LIKE ?1 OR
-                    s.nombre LIKE ?1 OR
-                    municipio.nombre LIKE ?1)". $this->applyRoleFilter($user,$auth_checker);
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(p))
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.municipio municipio
-                                        JOIN p.segmento s
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        JOIN p.estados est
-                                        WHERE $where ")
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->getSingleScalarResult();
-    }
-
-    public function getTotalAccPendientesRows($user,$auth_checker)
-    {
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(p))
-                                        FROM InscripcionBundle:Planilla p
-                                        JOIN p.municipio municipio
-                                        JOIN p.segmento s
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        JOIN p.estados est
-                                        WHERE 1 = 1 ".$this->applyRoleFilter($user,$auth_checker))
-                        ->getSingleScalarResult();
-    }
-
-    private function applyRoleFilter($user,$auth_checker)
-    {
-        $where = "";
-        if ($this->onlyPendientes){
-            $where = " AND est.id IN (".$this->idEstados.")";
-        }
-        if(!$auth_checker->isGranted('ROLE_ADMIN')){
-            if($auth_checker->isGranted('ROLE_COORDINADOR')){
+        // if ($this->onlyPendientes){
+        //     $where = " AND est.id IN (".$this->idEstados.")";
+        // }
+        if(!$query->hasRole('ROLE_ADMIN')){
+            if($query->hasRole('ROLE_COORDINADOR')){
                 //COORDINADORES ven todas las planillas de sus Segmentos
-                $where .= " AND (coordinador.id = " . $user->getId() . ")";
+                $query->join('s.coordinadores', 'coordinador');
+                $query->andwhere("coordinador.id = ".$user->getId());
                 //En mis pendientes ven solo las que estan en estado Presentada más las creadas por ellos en estado Cargada , en revision y observadas
                 if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Presentada' OR (creador.id = " . $user->getId() ." AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión' OR est.nombre = 'Observada')))";
+                    $query->andwhere("(estado.nombre = 'Presentada' OR (creador.id = " . $user->getId() ." AND (estado.nombre = 'Cargada' OR estado.nombre = 'En Revisión' OR estado.nombre = 'Observada')))");
+                    //$where .= " AND (est.nombre = 'Presentada' OR (creador.id = " . $user->getId() ." AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión' OR est.nombre = 'Observada')))";
                 }
-            }elseif($auth_checker->isGranted('ROLE_ORGANIZADOR')){
+            }elseif($query->hasRole('ROLE_ORGANIZADOR')){
                 //ORGANIZADORES ven todas las planillas de su Municipio
-                $where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
+                $query->andwhere("municipio.id = ".$user->getMunicipio()->getId());
+                //$where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
                 //En mis pendientes ven solo las que estan en estado Enviada u Observadas más las creadas por ellos en estado Cargada o En revision
                 if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Enviada' OR est.nombre = 'Observada' OR (creador.id = " . $user->getId() ." AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')))";
+                    $query->andwhere("(estado.nombre = 'Enviada' OR estado.nombre = 'Observada' OR (creador.id = " . $user->getId() ." AND (estado.nombre = 'Cargada' OR estado.nombre = 'En Revisión')))");
+                    //$where .= " AND (est.nombre = 'Enviada' OR est.nombre = 'Observada' OR (creador.id = " . $user->getId() ." AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')))";
                 }
             }else{
                 //INSCRIPTORES ven todas las planillas que crearon
-                $where .= " AND (creador.id = " . $user->getId() . ")";
+                //$where .= " AND (creador.id = " . $user->getId() . ")";
+                $query->andwhere("p.createdBy = ".$user->getId());
                 //En mis pendientes ven solo las que estan en estado Carga o En revision
                 if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')";
+                    //$where .= " AND (est.nombre = 'Cargada' OR est.nombre = 'En Revisión')";
+                    $query->andwhere("(estado.nombre = 'Cargada' OR estado.nombre = 'En Revisión')");
                 }
             }
         }else{
             //En mis pendientes ven las que estan en estado Aprobada
             if ($this->onlyPendientes){
-                    $where .= " AND (est.nombre = 'Aprobada')";
+                    //$where .= " AND (est.nombre = 'Aprobada')";
+                    $query->andwhere("(estado.nombre = 'Aprobada')");
                 }
         }
-        return $where;
+        return $query;
     }
 
     //public function findAllByEvento($evento)

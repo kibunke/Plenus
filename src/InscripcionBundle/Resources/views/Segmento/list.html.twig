@@ -142,7 +142,7 @@
                         {
                             "searchable": false,
                             "orderable": false,
-                            "targets": [6,7]
+                            "targets": [5,6,7]
                         },
                         {
                             "targets": 6,
@@ -168,16 +168,18 @@
                         return nRow;
                     },
                     "fnDrawCallback": function(oSettings, json) {
-                        //$('.dataTable').dataTable().fnSetFilteringDelay();
+                        $('#segmentoTable').parents('.panel').unblock();
                     },
                     "initComplete": function(settings, json) {
                         _table.fnSetFilteringDelay();
                     }
                 });
+                _table.on( 'search.dt', function () {
+                    $('#segmentoTable').parents('.panel').block($.Main.defaultBlockConf());
+                } );
             }
             $.Segmento.initDatePicker = function(){
                 $('.datetimepicker').datetimepicker({
-                    // después ver cómo cargar el moment.locale("es") y me dé pelota :P
                     //locale: 'es',
                     viewMode: 'years',
                     format: 'DD/MM/YYYY'

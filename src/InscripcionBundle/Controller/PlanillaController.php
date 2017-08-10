@@ -99,13 +99,13 @@ class PlanillaController extends Controller
                     "recordsFiltered" => $filter['filtered'],
                     "data"            => array()
         );
-
+        //var_dump($filter['rows']);die;
         foreach ($filter['rows'] as $planilla){
             $data['data'][] = array(
                 "id"        => "<strong>".$planilla->getNumero()."</strong><br><small>". $planilla->getMunicipio()->getNombre()."</small>",
                 "segmento"  => $planilla->getSegmento()->getNombreCompletoRaw(),
                 "inscriptos"   => "-",//$planilla->getTotalInscriptos(),
-                "estado"  => array(
+                "estado" => array(
                         "nombre" => "-",//$planilla->getEstado()->getNombreRaw(),
                         "observacion" => "-",//$planilla->getEstado()->getObservacion() ? $planilla->getEstado()->getObservacion() : '',
                         "auditoria"  => array(

@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                     'js/toastr.js': 'toastr/toastr.js',
                     'js/velocity.js': 'velocity/velocity.js',
                     'js/scrollTo.js': 'jquery.scrollTo/jquery.scrollTo.js',
-                    'js/sweetalert.js': 'sweetalert/dist/sweetalert.min.js',
+                    'js/sweetalert.js': 'sweetalert2/dist/sweetalert2.min.js',
                     'js/select2.js': 'select2/dist/js/select2.min.js',
                     'js/highcharts.js': 'highcharts/js/highcharts.js',
                     'js/highstock.js': 'highcharts/js/highstock.js',
@@ -39,7 +39,7 @@ module.exports = function (grunt) {
                     'css/data-tables.bootstrap.css': 'datatables.net-bs/css/dataTables.bootstrap.css',
                     'css/animate.min.css': 'animate.css/animate.min.css',
                     'css/toastr.min.css': 'toastr/toastr.min.css',
-                    'css/sweetalert.css': 'sweetalert/dist/sweetalert.css',
+                    'css/sweetalert.css': 'sweetalert2/dist/sweetalert2.css',
                     'css/select2.css': 'select2/dist/css/select2.min.css',
                     'css/highcharts.css': 'highcharts/css/highcharts.css'
                 }

@@ -101,10 +101,10 @@ abstract class Planilla
     protected $directorTecnicoApellido;
 
     /**
-     * this is OneToMany because the historial is important
-     * @ORM\OneToMany(targetEntity="PlanillaEstado", mappedBy="planilla", cascade={"persist","remove"})
-     */
-    private $estados;
+      * @ORM\OneToOne(targetEntity="PlanillaEstado", inversedBy="planilla")
+      * @ORM\JoinColumn(name="estado", referencedColumnName="id")
+      */
+    private $estado;
 
     /**
      * @var datetime $createdAt
@@ -139,7 +139,6 @@ abstract class Planilla
     {
         $this->createdAt = new \DateTime();
         $this->equipos   = new ArrayCollection();
-        $this->estados   = new ArrayCollection();
         //$this->addEstado(new Cargada());
     }
 
@@ -351,37 +350,19 @@ abstract class Planilla
     }
 
     /**
-     * Add estado
+     * set estado
      *
      * @param \InscripcionBundle\Entity\PlanillaEstado $estado
      *
      * @return Planilla
      */
-    public function addEstado(\InscripcionBundle\Entity\PlanillaEstado $estado)
+    public function setEstado(\InscripcionBundle\Entity\PlanillaEstado $estado)
     {
-        $this->estados[] = $estado;
-        $estado->setPlanilla($this);
+        if ($this->estado){
+            $estado->setEstadoAnterior($this->estado);
+        }
+        $this->estado = $estado;
         return $this;
-    }
-
-    /**
-     * Remove estado
-     *
-     * @param \InscripcionBundle\Entity\PlanillaEstado $estado
-     */
-    public function removeEstado(\InscripcionBundle\Entity\PlanillaEstado $estado)
-    {
-        $this->estados->removeElement($estado);
-    }
-
-    /**
-     * Get estados
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEstados()
-    {
-        return $this->estados;
     }
 
     /**
@@ -391,7 +372,7 @@ abstract class Planilla
      */
     public function getEstado()
     {
-        return $this->estados->last();
+        return $this->estado;
     }
 
     /**

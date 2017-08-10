@@ -102,37 +102,6 @@ class SegmentoController extends Controller
         $tree['children'][] = $torneoAux;
         return array('tree'=>$tree,'ids'=>$segmentosIds);
     }
-    // private function parseSegmentos($disciplinas = null)
-    // {
-    //     $em = $this->getDoctrine()->getManager();
-    //     if (!$disciplinas){
-    //         $disciplinas = $em->getRepository('ResultadoBundle:Disciplina')->getOnlyRoot();
-    //     }
-    //
-    //     $resultado = array();
-    //     foreach ($disciplinas as $item)
-    //     {
-    //         $aux = array();
-    //         $aux['text']  = $item->getNombre();
-    //         $aux['id']  = $item->getId();
-    //         if (count($item->getHijos())){
-    //             $aux['children'] = $this->parseSegmentos($item->getHijos());
-    //             $aux['state'] = array('opened'=>true);
-    //             $aux["icon"] = "fa fa-folder text-red fa-lg";
-    //         }else{
-    //             $aux["icon"] = "fa fa-folder text-blue fa-lg";
-    //         }
-    //         foreach ($item->getSegmentos() as $segmento){
-    //             $aux['children'][] = array(
-    //                     'id' => $segmento->getId(),
-    //                     'text' => $segmento->getNombre(),
-    //                     'icon' => "fa fa-thumb-tack text-green fa-lg"
-    //                 );
-    //         }
-    //         $resultado[]=$aux;
-    //     }
-    //     return $resultado;
-    // }
 
     /**
      * Lists all Segmento entities.
@@ -147,7 +116,7 @@ class SegmentoController extends Controller
     }
 
     /**
-     * show a Segmento entiti.
+     * show a Segmento entity.
      *
      * @Route("/{id}/show", name="segmento_show", condition="request.isXmlHttpRequest()")
      * @Method("GET")
@@ -164,8 +133,9 @@ class SegmentoController extends Controller
      */
     public function listDataTableAction(Request $request)
     {
+        $user = $this->getUser();
         $em     = $this->getDoctrine()->getManager();
-        $filter = $em->getRepository('InscripcionBundle:Segmento')->datatable($request->request,$this->getUser(),$this->get('security.authorization_checker'));
+        $filter = $em->getRepository('InscripcionBundle:Segmento')->datatable($request->request,$user,$this->get('security.authorization_checker'));
 
         $data = array(
                     "draw"            => $request->request->get('draw'),
@@ -176,13 +146,13 @@ class SegmentoController extends Controller
         );
         $logger = $this->get('logger');
         foreach ($filter['rows'] as $segmento){
-            $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$this->getUser());
+            $inscriptos = $em->getRepository('InscripcionBundle:Segmento')->getTotalInscriptos($segmento,$user);
             $inscriptos = $segmento->getTotalInscriptosFromQuery($inscriptos);
             $data['data'][] = array(
                 "id"        => $segmento->getId(),
                 "segmento"  => $segmento->getNombreCompletoRaw(),
-                "planillas"   => count($segmento->getPlanillas()),
-                "eventos"   => count($segmento->getEventos()),
+                "planillas"   => $em->getRepository('InscripcionBundle:Segmento')->getTotalPlanillas($user,$segmento),
+                "eventos"   => $em->getRepository('InscripcionBundle:Segmento')->getTotalEventos($segmento),
                 "coordinadores" => count($segmento->getCoordinadores()),
                 "inscriptos"=> '<span class="text-danger" title="Planillas en cualquier estado / Planillas es estado Aprobadas">'.$inscriptos['total'].'</span> / <small class="text-success">'.$inscriptos['aprobadas'].'</small>',
                 "parametros"=> array(

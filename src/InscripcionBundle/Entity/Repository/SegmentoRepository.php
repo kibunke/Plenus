@@ -15,166 +15,178 @@ class SegmentoRepository extends EntityRepository
     public function dataTable($request,$user,$auth_checker)
     {
         return array(
-                      "total"    => $this->getTotalRows($user,$auth_checker),
-                      "filtered" => $this->getFilteredRows($request,$user,$auth_checker),
-                      "rows"     => $this->getRows($request,$user,$auth_checker),
-                      "actives"   => $this->getActives($user,$auth_checker)
+                      "total"    => $this->getTotalRows($user),
+                      "filtered" => $this->getFilteredRows($request,$user),
+                      "rows"     => $this->getRows($request,$user),
+                      "actives"   => $this->getActives($user)
             );
     }
 
-    public function getRows($request,$user,$auth_checker)
+    private function applyRoleAndPlanillaFilter($user,$query)
     {
-        $columns = ["s.id",
-                    "d.nombreRecursivo ".$request->get('order')[0]['dir'].
-                    ",c.nombre ".$request->get('order')[0]['dir'].
-                    ",g.nombre ".$request->get('order')[0]['dir'].
-                    ",m.nombre ".$request->get('order')[0]['dir'].
-                    ",s.nombre ",
+        if(!$user->hasRole('ROLE_ADMIN')){
+            if($user->hasRole('ROLE_COORDINADOR')){
+                //COORDINADORES ven todas las planillas de sus Segmentos
+                $query
+                    ->join('segmento.coordinadores', 'coordinador')
+                    ->andwhere('coordinador.id = '.$user->getId());
+            }elseif($user->hasRole('ROLE_ORGANIZADOR')){
+                //ORGANIZADORES ven todas las planillas de su Municipio
+                $query
+                    ->andwhere('planilla.municipio = '.$user->getMunicipio()->getId());
+            }else{
+                //INSCRIPTORES ven todas las planillas que crearon
+                $query
+                    ->andwhere('planilla.createdBy = '.$user->getId());
+            }
+        }
+        return $query;
+    }
+
+    public function getRows($request,$user)
+    {
+        $columns = ["segmento.id",
+                    "disciplina.nombreRecursivo ".$request->get('order')[0]['dir'].
+                    ",categoria.nombre ".$request->get('order')[0]['dir'].
+                    ",genero.nombre ".$request->get('order')[0]['dir'].
+                    ",modalidad.nombre ".$request->get('order')[0]['dir'].
+                    ",segmento.nombre",
                     "planillas",
                     "inscriptos",
                     "eventos",
                     "coordinadores"];
-        $where = "( s.id LIKE ?1 OR
-                    s.nombre LIKE ?1 OR
-                    d.nombre LIKE ?1 OR
-                    d.nombreRecursivo LIKE ?1 OR
-                    t.nombre LIKE ?1 OR
-                    g.nombre LIKE ?1 OR
-                    c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)"
-                    . $this->applyRoleFilter($user,$auth_checker);
 
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT s,s.id AS HIDDEN, COUNT(DISTINCT(e)) AS HIDDEN eventos, COUNT(DISTINCT(u)) AS HIDDEN coordinadores, COUNT(DISTINCT(com)) as HIDDEN inscriptos, COUNT(DISTINCT(p)) as HIDDEN planillas
-                                        FROM InscripcionBundle:Segmento s
-                                        JOIN s.disciplina d
-                                        JOIN s.torneo t
-                                        JOIN s.categoria c
-                                        JOIN s.modalidad m
-                                        JOIN s.genero g
-                                        LEFT JOIN s.coordinadores u
-                                        LEFT JOIN s.eventos e
-                                        LEFT JOIN s.planillas p
-                                        LEFT JOIN p.equipos eq
-                                        LEFT JOIN eq.equipoCompetidores eqc
-                                        LEFT JOIN eqc.competidor com
-                                        WHERE $where
-                                        GROUP BY s.id
-                                        ORDER BY ".$columns[$request->get('order')[0]['column']]." ".$request->get('order')[0]['dir'])
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->setMaxResults($request->get('length'))
-                        ->setFirstResult($request->get('start'))
-                        ->getResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('segmento,segmento.id AS HIDDEN, COUNT(DISTINCT(evento)) AS HIDDEN eventos, COUNT(DISTINCT(equipoCompetidor.competidor)) as HIDDEN inscriptos, COUNT(DISTINCT(planilla)) as HIDDEN planillas')
+                        ->from('InscripcionBundle:Segmento', 'segmento')
+                        ->join('segmento.disciplina', 'disciplina')
+                        ->join('segmento.torneo', 'torneo')
+                        ->join('segmento.categoria', 'categoria')
+                        ->join('segmento.modalidad', 'modalidad')
+                        ->join('segmento.genero', 'genero')
+                        ->leftjoin('segmento.eventos', 'evento')
+                        ->leftjoin('segmento.planillas', 'planilla')
+                        ->leftjoin('planilla.equipos', 'equipo')
+                        ->leftjoin('equipo.equipoCompetidores', 'equipoCompetidor');
+        $query = $this->applyRoleAndPlanillaFilter($user,$query);
+        $searchValue = '%'.$request->get('search')['value'].'%';
+        return $query
+                    ->andwhere('(segmento.id LIKE ?1 OR
+                                segmento.nombre LIKE ?1 OR
+                                disciplina.nombreRecursivo LIKE ?1 OR
+                                torneo.nombre LIKE ?1 OR
+                                genero.nombre LIKE ?1 OR
+                                categoria.nombre LIKE ?1 OR
+                                modalidad.nombre LIKE ?1)')
+                    ->setParameter(1,$searchValue)
+                    ->orderBy($columns[$request->get('order')[0]['column']],$request->get('order')[0]['dir'])
+                    ->groupBy('segmento.id')
+                    ->setMaxResults($request->get('length'))
+                    ->setFirstResult($request->get('start'))
+                    ->getQuery()
+                    ->getResult();
     }
 
-    public function getFilteredRows($request,$user,$auth_checker)
+    public function getFilteredRows($request,$user)
     {
-        $where = "( s.id LIKE ?1 OR
-                    s.nombre LIKE ?1 OR
-                    d.nombre LIKE ?1 OR
-                    d.nombreRecursivo LIKE ?1 OR
-                    t.nombre LIKE ?1 OR
-                    g.nombre LIKE ?1 OR
-                    c.nombre LIKE ?1 OR
-                    m.nombre LIKE ?1)"
-                    . $this->applyRoleFilter($user,$auth_checker);
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(s))
-                                        FROM InscripcionBundle:Segmento s
-                                        JOIN s.disciplina d
-                                        JOIN s.torneo t
-                                        JOIN s.categoria c
-                                        JOIN s.modalidad m
-                                        JOIN s.genero g
-                                        LEFT JOIN s.coordinadores u
-                                        WHERE $where")
-                        ->setParameter(1,'%'.$request->get('search')['value'].'%')
-                        ->getSingleScalarResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(segmento.id))')
+                        ->from('InscripcionBundle:Segmento', 'segmento')
+                        ->leftjoin('segmento.planillas', 'planilla')
+                        ->join('segmento.disciplina', 'disciplina')
+                        ->join('segmento.torneo', 'torneo')
+                        ->join('segmento.categoria', 'categoria')
+                        ->join('segmento.modalidad', 'modalidad')
+                        ->join('segmento.genero', 'genero');
+        $query = $this->applyRoleAndPlanillaFilter($user,$query);
+        $searchValue = '%'.$request->get('search')['value'].'%';
+        return $query
+                    ->andwhere('(segmento.id LIKE ?1 OR
+                                segmento.nombre LIKE ?1 OR
+                                disciplina.nombreRecursivo LIKE ?1 OR
+                                torneo.nombre LIKE ?1 OR
+                                genero.nombre LIKE ?1 OR
+                                categoria.nombre LIKE ?1 OR
+                                modalidad.nombre LIKE ?1)')
+                    ->setParameter(1,$searchValue)
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
 
-    public function getTotalRows($user,$auth_checker)
+    public function getTotalRows($user)
     {
-        $where = "1 = 1". $this->applyRoleFilter($user,$auth_checker);
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(s))
-                                        FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.coordinadores u
-                                        WHERE $where ")
-                        ->getSingleScalarResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(segmento.id))')
+                        ->from('InscripcionBundle:Segmento', 'segmento')
+                        ->leftjoin('segmento.planillas', 'planilla');
+        $query = $this->applyRoleAndPlanillaFilter($user,$query);
+        return $query
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
 
-    public function getActives($user,$auth_checker)
+    public function getActives($user)
     {
-        $where = "s.isActive = 1". $this->applyRoleFilter($user,$auth_checker);
-
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(s))
-                                        FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.coordinadores u
-                                        WHERE $where")
-                        ->getSingleScalarResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(segmento.id))')
+                        ->from('InscripcionBundle:Segmento', 'segmento')
+                        ->where('segmento.isActive = 1');
+        $query = $this->applyRoleAndPlanillaFilter($user,$query);
+        return $query
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
 
     public function getTotalInscriptos($segmento,$user)
     {
-        $where = "s.id = ". $segmento->getId();
-        $estados = array_map('current',$this->getEntityManager()
-                        ->createQuery(" SELECT MAX(e.id)
-                                        FROM InscripcionBundle:Segmento s
-                                        JOIN s.planillas p
-                                        JOIN p.estados e
-                                        WHERE $where
-                                        GROUP BY p.id")
-                        ->getArrayResult());
-        $estados[]=0;
-        $where .= " AND e.id IN (".implode(",",$estados).")". $this->applyRoleAndPlanillaFilter($user);
 
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(com.id)) as cant, e.nombre
-                                        FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.planillas p
-                                        LEFT JOIN p.estados e
-                                        LEFT JOIN p.equipos eq
-                                        LEFT JOIN eq.equipoCompetidores eqc
-                                        LEFT JOIN eqc.competidor com
-                                        JOIN p.municipio municipio
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        WHERE $where
-                                        GROUP BY s.id,e.nombre ")
-                        ->getScalarResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(equipoCompetidor.competidor)) as cant, estado.nombre')
+                        ->from('InscripcionBundle:Segmento', 'segmento')
+                        ->join('segmento.planillas', 'planilla')
+                        ->join('planilla.estado', 'estado')
+                        ->join('planilla.equipos', 'equipo')
+                        ->join('equipo.equipoCompetidores', 'equipoCompetidor')
+                        ->where('segmento.id = ?1');
+        $query = $this->applyRoleAndPlanillaFilter($user,$query);
+        return $query
+                    ->setParameter(1,$segmento->getId())
+                    ->groupBy('segmento.id')
+                    ->getQuery()
+                    ->getScalarResult();
     }
 
-
-    public function getTotalPlanillas($segmento,$user)
+    public function getTotalPlanillas($user,$segmento)
     {
-        $where = "s.id = ". $segmento->getId(). $this->applyRoleAndPlanillaFilter($user);
-
-        return $this->getEntityManager()
-                        ->createQuery(" SELECT COUNT(DISTINCT(p)) as cant
-                                        FROM InscripcionBundle:Segmento s
-                                        LEFT JOIN s.planillas p
-                                        JOIN p.municipio municipio
-                                        JOIN p.createdBy creador
-                                        LEFT JOIN s.coordinadores coordinador
-                                        WHERE $where
-                                        GROUP BY s.id")
-                        ->getOneOrNullResult();
+        $query = $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(DISTINCT(planilla.id))')
+                        ->from('InscripcionBundle:Segmento', 'segmento')
+                        ->join('segmento.planillas', 'planilla')
+                        ->where('segmento.id = ?1');
+        $query = $this->applyRoleAndPlanillaFilter($user,$query);
+        return $query
+                    ->setParameter(1,$segmento->getId())
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
 
-    private function applyRoleFilter($user,$auth_checker)
+    public function getTotalEventos($segmento)
     {
-        $where = '';
-        if(!$auth_checker->isGranted('ROLE_ADMIN')){
-            if($auth_checker->isGranted('ROLE_COORDINADOR')){
-                $where .= " AND (u.id = " . $user->getId() . ")";
-            }else{
-                $where .= " AND (s.isActive = 1)";
-            }
-        }
-        return $where;
+        return $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('COUNT(e.id)')
+                        ->from('ResultadoBundle:Evento', 'e')
+                        ->where('e.segmento = ?1')
+                    ->setParameter(1,$segmento->getId())
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
-
 
     public function dataTableInscripcion($request,$user,$auth_checker)
     {
@@ -252,24 +264,6 @@ class SegmentoRepository extends EntityRepository
                         ->getSingleScalarResult();
     }
 
-    private function applyRoleAndPlanillaFilter($user)
-    {
-        $where = '';
-        if(!$user->hasRole('ROLE_ADMIN')){
-            if($user->hasRole('ROLE_COORDINADOR')){
-                //COORDINADORES ven todas las planillas de sus Segmentos
-                $where .= " AND (coordinador.id = " . $user->getId() . ")";
-            }elseif($user->hasRole('ROLE_ORGANIZADOR')){
-                //ORGANIZADORES ven todas las planillas de su Municipio
-                $where .= " AND (municipio.id = " . $user->getMunicipio()->getId() . ")";
-            }else{
-                //INSCRIPTORES ven todas las planillas que crearon
-                $where .= " AND (creador.id = " . $user->getId() . ")";
-            }
-        }
-        return $where;
-    }
-
     /*
      * Se utiliza para armar el arbol de segmentos de inscripcion
     */
@@ -300,16 +294,7 @@ class SegmentoRepository extends EntityRepository
     public function getResumenPorSegmentos($segmentos, $soloAprobadas = FALSE)
     {
         if (!$segmentos) return [];
-        $estados[]=0;
         if ($soloAprobadas){
-            $estados = array_map('current',$this->getEntityManager()
-                                                    ->createQuery(" SELECT MAX(e.id)
-                                                                    FROM InscripcionBundle:PlanillaEstado e
-                                                                    WHERE e.nombre = ?1
-                                                                    GROUP BY e.planilla")
-                                                    ->setParameter(1,"Aprobada")
-                                                    ->getArrayResult()
-                                );
             $query= '
                     SELECT m.id,m.nombre,m.cruceRegional,m.regionDeportiva,pla.segmento, pla.planillas, pla.equipos, pla.inscriptos
                     FROM Municipio as m
@@ -319,7 +304,7 @@ class SegmentoRepository extends EntityRepository
                         INNER JOIN Equipo ON Equipo.planilla = p.id
                         INNER JOIN EquiposCompetidores ON EquiposCompetidores.equipo_id = Equipo.id
                         INNER JOIN PlanillaEstado pe ON pe.planilla = p.id
-                        WHERE p.segmento IN ('.implode(',', $segmentos).') AND pe.id IN ('.implode(',', $estados).')
+                        WHERE p.segmento IN ('.implode(',', $segmentos).') AND pe.nombre = "Aprobada")
                         GROUP BY p.segmento,p.municipio
                     ) as pla ON pla.municipio = m.id
                     WHERE m.idProvincia = 1
