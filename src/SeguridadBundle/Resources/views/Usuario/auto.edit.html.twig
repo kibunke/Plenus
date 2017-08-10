@@ -257,7 +257,7 @@
             $.UsuarioEdit.charts = function(){}
 			$.UsuarioEdit.readFile = function ()
 			{
-				var tamanio_maximo     = 1 * (1024*1024);
+				var tamanio_maximo     = 1 * (1024*50);
 				var imagenesPermitidas = new Array('image/jpg','image/jpeg','image/gif','image/png');
 				if (this.files && this.files[0]) {
 				  
@@ -290,7 +290,7 @@
 				  }else{
 					    swal({
 								title: "Error",
-								text: 'El archivo debe ser menor que 1Mb',
+								text: 'El archivo debe ser menor que 50kb',
 								type: "error",
 								showCancelButton: false,
 								confirmButtonColor: "#DD6B55",
